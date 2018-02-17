@@ -19,9 +19,8 @@ import java.util.Map;
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * February 2018
  */
-public class ClearCLIJDemo
+public class FlipCLDemo
 {
-
   public static void main(String... args) throws IOException
   {
     new ImageJ();
@@ -42,7 +41,7 @@ public class ClearCLIJDemo
     ClearCLIJ lCLIJ = ClearCLIJ.getInstance();
 
     // ---------------------------------------------------------------
-    // Example 1: Downsampling
+    // Example 1: Flip image in X
     {
       ClearCLImage
           lSrcImage =
@@ -54,42 +53,12 @@ public class ClearCLIJDemo
       Map<String, Object> lParameterMap = new HashMap<>();
       lParameterMap.put("src", lSrcImage);
       lParameterMap.put("dst", lDstImage);
+      lParameterMap.put("flipx", 1);
+      lParameterMap.put("flipy", 0);
+      lParameterMap.put("flipz", 0);
 
-      lCLIJ.execute(DownsampleXYbyHalfTask.class,
-                    "kernels/downsampling.cl",
-                    "downsample_xy_by_half_nearest",
-                    lParameterMap);
-
-      RandomAccessibleInterval
-          lResultImg =
-          lCLIJ.converter(lDstImage).getRandomAccessibleInterval();
-
-      ImageJFunctions.show(lResultImg);
-    }
-
-    // ---------------------------------------------------------------
-    // Example 2: Bluring
-    {
-      ClearCLImage
-          lSrcImage =
-          lCLIJ.converter(lInputImg).getClearCLImage();
-      ClearCLImage
-          lDstImage =
-          lCLIJ.converter(lOutputImg).getClearCLImage();
-
-      HashMap<String, Object> lParameterMap = new HashMap<>();
-      lParameterMap.put("Nx", 3);
-      lParameterMap.put("Ny", 3);
-      lParameterMap.put("Nz", 3);
-      lParameterMap.put("sx", 2.0f);
-      lParameterMap.put("sy", 2.0f);
-      lParameterMap.put("sz", 2.0f);
-      lParameterMap.put("src", lSrcImage);
-      lParameterMap.put("dst", lDstImage);
-
-      lCLIJ.execute(DownsampleXYbyHalfTask.class,
-                                      "kernels/blur.cl",
-                                      "gaussian_blur_image3d",
+      lCLIJ.execute("src/main/java/clearcl/imagej/demo/kernels/flip.cl",
+                    "flip_ui",
                     lParameterMap);
 
       RandomAccessibleInterval

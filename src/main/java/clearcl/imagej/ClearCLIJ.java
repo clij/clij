@@ -15,6 +15,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.RealType;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,6 +54,14 @@ public class ClearCLIJ
     mFastFusionEngine = new FastFusionEngine(mClearCLContext);
 
     FastFusionMemoryPool.getInstance(mClearCLContext);
+  }
+
+  public boolean execute(String pProgramFilename,
+                         String pKernelname,
+                         Map<String, Object> pParameterMap) throws
+                                                            IOException
+  {
+    return execute(Object.class, pProgramFilename, pKernelname, pParameterMap);
   }
 
   public boolean execute(Class pAnchorClass,
@@ -123,9 +132,24 @@ public class ClearCLIJ
     }
   }
 
+  /**
+   * Deprecated because it should not be neccessary to get the context.
+   * The context should be shadowed inside.
+   *
+   * @return
+   */
+  @Deprecated
   public ClearCLContext getClearCLContext()
   {
     return mClearCLContext;
+  }
+
+  public Map<String, Object> parameters(Object... pParameterList) {
+    Map<String, Object> lResultMap = new HashMap<String, Object>();
+    for (int i = 0; i < pParameterList.length; i+=2) {
+      lResultMap.put((String)pParameterList[i], pParameterList[i+1]);
+    }
+    return lResultMap;
   }
 
   public ImageTypeConverter converter(OffHeapPlanarStack pStack) {

@@ -13,9 +13,8 @@ lImagePlus = IJ.getImage()
 # initialize ClearCL context and convenience layer
 lCLIJ = ClearCLIJ.getInstance();
 
-# convert imglib2 image to clearcontrol stack
+# convert imglib2 image to CL images (ready for the GPU)
 lInputCLImage = lCLIJ.converter(lImagePlus).getOffHeapPlanarStack();
-
 lOutputCLImage = lCLIJ.converter(lImagePlus).getOffHeapPlanarStack();
 
 # downsample the image stack using ClearCL / OpenCL
