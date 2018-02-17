@@ -12,17 +12,17 @@
 		<relativePath />
 	</parent>
 
-	<groupId>net.clearvolume</groupId>
+	<groupId>net.clearcontrol</groupId>
 	<artifactId>clearclij</artifactId>
 	<version>0.1.0</version>
 
 	<name>ClearCLIJ</name>
 	<description>ClearCLIJ</description>
-	<url>https://github.com/Haesleinhuepf/ClearCLIJ</url>
+	<url>https://github.com/ClearControl/ClearCLIJ</url>
 	<inceptionYear>2018</inceptionYear>
 	<organization>
-		<name>ClearVolume</name>
-		<url>http://clearvolume.net</url>
+		<name>ClearControl</name>
+		<url>http://clearcontrol.net</url>
 	</organization>
 	<licenses>
 		<license>
@@ -62,14 +62,14 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/ClearVolume/ClearCLIJ</connection>
-        <developerConnection>scm:git:git@github.com/ClearVolume/ClearCLIJ</developerConnection>
+		<connection>scm:git:git://github.com/ClearControl/ClearCLIJ</connection>
+        <developerConnection>scm:git:git@github.com/ClearControl/ClearCLIJ</developerConnection>
         <tag>HEAD</tag>
-		<url>https://github.com/ClearVolume/ClearCLIJ</url>
+		<url>https://github.com/ClearControl/ClearCLIJ</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/ClearVolume/ClearCLIJ/issues</url>
+		<url>https://github.com/ClearControl/ClearCLIJ/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>

@@ -44,7 +44,7 @@ lCLIJ.execute(<Class>, "filename_open.cl", "kernelfunction", {"src":image, "dst"
 
 Clone this repo
 ```
-git clone https://github.com/Haesleinhuepf/ClearCLIJ
+git clone https://github.com/ClearControl/ClearCLIJ
 ```
 
 Open pom.xml and enter the path of your Fiji installation in the line containing
