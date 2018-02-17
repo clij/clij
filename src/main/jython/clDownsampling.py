@@ -14,8 +14,8 @@ lImagePlus = IJ.getImage()
 lCLIJ = ClearCLIJ.getInstance();
 
 # convert imglib2 image to CL images (ready for the GPU)
-lInputCLImage = lCLIJ.converter(lImagePlus).getOffHeapPlanarStack();
-lOutputCLImage = lCLIJ.converter(lImagePlus).getOffHeapPlanarStack();
+lInputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
+lOutputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
 
 # downsample the image stack using ClearCL / OpenCL
 lResultStack = lCLIJ.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
