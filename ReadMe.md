@@ -9,8 +9,8 @@ Example code:
 lCLIJ = ClearCLIJ.getInstance();
 
 # convert ImageJ image to CL images (ready for the GPU)
-lInputCLImage = lCLIJ.converter(lImagePlus).getOffHeapPlanarStack();
-lOutputCLImage = lCLIJ.converter(lImagePlus).getOffHeapPlanarStack(); # copy again to allocate memory for result image
+lInputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
+lOutputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage(); # copy again to allocate memory for result image
 
 # downsample the image stack using ClearCL / OpenCL
 lResultStack = lCLIJ.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
