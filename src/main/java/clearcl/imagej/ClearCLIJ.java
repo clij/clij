@@ -96,33 +96,6 @@ public class ClearCLIJ
 
   }
 
-  private ImageChannelDataType determineType(NativeTypeEnum dataType)
-  {
-    if (dataType == NativeTypeEnum.Byte)
-    {
-      return ImageChannelDataType.UnsignedInt8;
-    }
-    if (dataType == NativeTypeEnum.UnsignedShort)
-    {
-      return ImageChannelDataType.UnsignedInt16;
-    }
-    if (dataType == NativeTypeEnum.Float)
-    {
-      return ImageChannelDataType.Float;
-    }
-    // todo: complete conversion list
-
-    return null;
-  }
-
-  private ClearCLProgram initializeProgram(Class pAnchorClass,
-                                           String pProgramFilename) throws
-                                                                    IOException
-  {
-    return mClearCLContext.createProgram(pAnchorClass,
-                                         pProgramFilename);
-  }
-
   public void dispose()
   {
     mClearCLContext.close();
