@@ -1,3 +1,5 @@
+# this example ImageJ/Fiji jython script shows how to downsample an
+# open image by half using an OpenCL kernel.
 
 from fastfuse.tasks import DownsampleXYbyHalfTask;
 from clearcl.imagej import ClearCLIJ;

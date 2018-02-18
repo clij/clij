@@ -1,4 +1,5 @@
-
+// Taken / modified from https://github.com/ClearControl/FastFuse/blob/master/src/fastfuse/tasks/kernels/flip.cl
+//
 
 __kernel void flip_ui  (    __read_only   image3d_t  src,
                            __write_only   image3d_t  dst,

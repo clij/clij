@@ -12,11 +12,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * CLInfo is thought to help depugging OpenCL devices. E.g. it lists
+ * the available devices and supported pixel types.
+ *
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * February 2018
  */
 public class CLInfo
 {
+  /**
+   * Information on available OpenCL devices
+   * @return String containing  list of devices and information known
+   * about them.
+   */
   public static String clinfo()
   {
 
@@ -93,6 +101,14 @@ public class CLInfo
     return output.toString();
   }
 
+  /**
+   * Checks for a given context, if all image pixel types are
+   * supported.
+   *
+   * @param lContext OpenCL context to use to create some small test
+   *                 images
+   * @return the list of supported types
+   */
   public static ArrayList<ImageChannelDataType> listSupportedTypes(ClearCLContext lContext)
   {
     ArrayList<ImageChannelDataType> lTypeNameList = new ArrayList<ImageChannelDataType>();

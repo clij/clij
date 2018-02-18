@@ -24,6 +24,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * ClearCLIJ is an entry point for ImageJ/OpenCL compatibility.
+ * Simply create an instance using the SingleTon implementation:
+ *
+ * clij = ClearCLIJ.getInstance();
+ *
+ * Alternatively, you can get an instance associated to a particular
+ * OpenCL device by handing over its name to the constructor
+ *
+ * clji = new ClearCLIJ("geforce");
+ *
+ * To get a list of available devices, call
+ * ClearCLIJ.getAvailableDevices()  to learn more about these devices,
+ * call ClearCLIJ.clinfo();
+ *
+ *
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * February 2018
  */

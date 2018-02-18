@@ -38,7 +38,7 @@ import java.util.UnknownFormatConversionException;
 /**
  * This class converts many kinds of images to each other. Hand over
  * whatever type of image you have to the constructor and afterwards
- * ask explictly for the tpye of image you want. So far, ClearCL
+ * ask explictly for the type of image you want. So far, ClearCL
  * images, CoreMems OffHeapPlanarStacks, Imglib2
  * RandomAccessibleInterval and ImageJ1 ImagePlus are supported.
  * <p>

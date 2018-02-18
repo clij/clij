@@ -13,6 +13,12 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * This generic task class is wrapped around all given .cl files. It
+ * uses some functionality from FastFuse, to make .cl file handling
+ * easier. For example, it ensures that the right
+ * image_read/image_write methods are called depending on the image
+ * type.
+ *
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * February 2018
  */
@@ -35,6 +41,11 @@ public class GenericBinaryFastFuseTask extends TaskBase
     mContext = pFastFusionEngine.getContext();
   }
 
+  /**
+   * Map of all parameters. It is recommended that input and output
+   * images are given with the names "src" and "dst", respectively.
+   * @param pParameterMap
+   */
   public void setParameterMap(Map<String, Object> pParameterMap)
   {
     mParameterMap = pParameterMap;

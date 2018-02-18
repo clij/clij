@@ -20,6 +20,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
+ * This test goes through all available OpenCL devices and test if
+ * type conversion works. Therefore, OffHeapPlanarStacks,
+ * ClearCLImages and Imglib2 images are converted into each other.
+ * Afterwards, it is checked if the images still contain the pixels
+ * and are the same size.
+ *
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * February 2018
  */
@@ -33,63 +39,56 @@ public class ImageConverterTest
     for (String lDeviceName : ClearCLIJ.getAvailableDeviceNames())
     {
       mCLIJ = new ClearCLIJ(lDeviceName);
-      //if (!lDeviceName.contains("CPU"))
-      {
-        System.out.println("Testing device " + lDeviceName);
+      System.out.println("Testing device " + lDeviceName);
 
-        RandomAccessibleInterval<FloatType>
-            lFloatImg =
-            ArrayImgs.floats(new long[] { 5, 6, 7 });
-        fillTestImage(lFloatImg);
-        testBackAndForthConversionViaCLImage(lFloatImg);
-        testBackAndForthConversionViaOffHeapPlanarStack(lFloatImg);
-        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-            lFloatImg);
+      RandomAccessibleInterval<FloatType>
+          lFloatImg =
+          ArrayImgs.floats(new long[] { 5, 6, 7 });
+      fillTestImage(lFloatImg);
+      testBackAndForthConversionViaCLImage(lFloatImg);
+      testBackAndForthConversionViaOffHeapPlanarStack(lFloatImg);
+      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+          lFloatImg);
 
-        RandomAccessibleInterval<UnsignedByteType>
-            lUnsignedByteImg =
-            ArrayImgs.unsignedBytes(new long[] { 5, 6, 7 });
-        fillTestImage(lUnsignedByteImg);
-        testBackAndForthConversionViaCLImage(lUnsignedByteImg);
-        testBackAndForthConversionViaOffHeapPlanarStack(
-            lUnsignedByteImg);
-        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-            lUnsignedByteImg);
+      RandomAccessibleInterval<UnsignedByteType>
+          lUnsignedByteImg =
+          ArrayImgs.unsignedBytes(new long[] { 5, 6, 7 });
+      fillTestImage(lUnsignedByteImg);
+      testBackAndForthConversionViaCLImage(lUnsignedByteImg);
+      testBackAndForthConversionViaOffHeapPlanarStack(
+          lUnsignedByteImg);
+      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+          lUnsignedByteImg);
 
-        RandomAccessibleInterval<ByteType>
-            lByteImg =
-            ArrayImgs.bytes(new long[] { 5, 6, 7 });
-        fillTestImage(lByteImg);
-        testBackAndForthConversionViaCLImage(lByteImg);
-        testBackAndForthConversionViaOffHeapPlanarStack(lByteImg);
-        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-            lByteImg);
+      RandomAccessibleInterval<ByteType>
+          lByteImg =
+          ArrayImgs.bytes(new long[] { 5, 6, 7 });
+      fillTestImage(lByteImg);
+      testBackAndForthConversionViaCLImage(lByteImg);
+      testBackAndForthConversionViaOffHeapPlanarStack(lByteImg);
+      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+          lByteImg);
 
-        RandomAccessibleInterval<UnsignedShortType>
-            lUnsignedShortImg =
-            ArrayImgs.unsignedShorts(new long[] { 5, 6, 7 });
-        fillTestImage(lUnsignedShortImg);
-        testBackAndForthConversionViaCLImage(lUnsignedShortImg);
-        testBackAndForthConversionViaOffHeapPlanarStack(
-            lUnsignedShortImg);
-        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-            lUnsignedShortImg);
+      RandomAccessibleInterval<UnsignedShortType>
+          lUnsignedShortImg =
+          ArrayImgs.unsignedShorts(new long[] { 5, 6, 7 });
+      fillTestImage(lUnsignedShortImg);
+      testBackAndForthConversionViaCLImage(lUnsignedShortImg);
+      testBackAndForthConversionViaOffHeapPlanarStack(
+          lUnsignedShortImg);
+      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+          lUnsignedShortImg);
 
-        RandomAccessibleInterval<ShortType>
-            lShortImg =
-            ArrayImgs.shorts(new long[] { 5, 6, 7 });
-        fillTestImage(lShortImg);
-        testBackAndForthConversionViaCLImage(lShortImg);
-        testBackAndForthConversionViaOffHeapPlanarStack(lShortImg);
-        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-            lShortImg);
-      }
+      RandomAccessibleInterval<ShortType>
+          lShortImg =
+          ArrayImgs.shorts(new long[] { 5, 6, 7 });
+      fillTestImage(lShortImg);
+      testBackAndForthConversionViaCLImage(lShortImg);
+      testBackAndForthConversionViaOffHeapPlanarStack(lShortImg);
+      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+          lShortImg);
     }
   }
-
-
-
-
 
 
   private <T extends RealType<T>> void fillTestImage(RandomAccessibleInterval<T> lFloatImg) {
@@ -161,7 +160,7 @@ public class ImageConverterTest
     }
     System.out.println("sum " + lSum);
 
-    // if one image is longer than the other
+    // check if one image is longer than the other
     if (lCursor1.hasNext() || lCursor2.hasNext()) {
       return false;
     }

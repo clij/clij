@@ -1,6 +1,6 @@
 # ClearCLIJ
 
-ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL code from withing Fijis script editor (e.g. jython).
+ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL code from withing Fijis script editor (e.g. jython). ClearCLIJ is based on [ClearCL](http://github.com/ClearVolume/ClearCL), [FastFuse](https://github.com/ClearControl/FastFuse), [Imglib2](https://github.com/imglib) and [SciJava](https://github.com/SciJava).
 
 Example code:
 
@@ -19,6 +19,7 @@ lResultStack = lCLIJ.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", 
 lResultImg = lCLIJ.converter(lResultStack).getRandomAccessibleInterval();
 ImageJFunctions.show(lResultImg);
 ```
+More examples can be found in the package clearcl.imagej.demo
 
 ## OpenCL Kernel calls with CLIJ.execute()
 The execute function asks for four parameters
@@ -64,4 +65,3 @@ deploy.bat
 ```
 
 Take care: ClearCLIJ is in early developmental stage. Installing it to your Fiji may harm your Fiji installation as it brings dependencies which may be incompatible with other plugins. It is recommended not to work in a production environment.
-
