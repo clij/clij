@@ -3,9 +3,7 @@ package clearcl.imagej.utilities;
 import clearcl.*;
 import clearcl.backend.ClearCLBackendInterface;
 import clearcl.backend.ClearCLBackends;
-import clearcl.enums.HostAccessType;
-import clearcl.enums.ImageChannelDataType;
-import clearcl.enums.KernelAccessType;
+import clearcl.enums.*;
 import coremem.enums.NativeTypeEnum;
 
 import java.util.ArrayList;
@@ -119,11 +117,20 @@ public class CLInfo
       {
         ClearCLImage
             lImage =
-            lContext.createSingleChannelImage(HostAccessType.ReadWrite,
+            /*lContext.createSingleChannelImage(HostAccessType.ReadWrite,
                                               KernelAccessType.ReadWrite,
                                               lType,
-                                              new long[] { 2, 3, 4 });
+                                              new long[] { 16, 16, 16 });*/
+            lContext.createImage(
+            MemAllocMode.Best,
+            HostAccessType.ReadWrite,
+            KernelAccessType.ReadWrite,
+            ImageChannelOrder.R,
+            lType,
+            new long[] { 16, 16, 16 });
+
       } catch (Exception e) {
+        System.out.println("Type " + lType + " didn't work because " + e.toString());
         continue;
       }
       lTypeNameList.add(lType);

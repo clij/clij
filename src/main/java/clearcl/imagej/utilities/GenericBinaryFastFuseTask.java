@@ -3,6 +3,7 @@ package clearcl.imagej.utilities;
 import clearcl.ClearCLContext;
 import clearcl.ClearCLImage;
 import clearcl.ClearCLKernel;
+import clearcl.enums.ImageChannelDataType;
 import fastfuse.FastFusionEngine;
 import fastfuse.FastFusionEngineInterface;
 import fastfuse.tasks.TaskBase;
@@ -10,6 +11,7 @@ import fastfuse.tasks.TaskBase;
 import fastfuse.tasks.TaskHelper;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**

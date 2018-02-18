@@ -101,7 +101,8 @@ public class ImageTypeConverter<T extends RealType<T>>
       if (mRandomAccessibleInterval != null)
       {
         mClearCLImage =
-            convertRanomdAccessibleIntervalToClearCLImage(mRandomAccessibleInterval);
+            convertRanomdAccessibleIntervalToClearCLImage(
+                mRandomAccessibleInterval);
       }
       else if (mImageStack != null)
       {
@@ -207,9 +208,8 @@ public class ImageTypeConverter<T extends RealType<T>>
     else
     {
       throw new UnknownFormatConversionException("Unknown type: "
-                                                 + pPixel
-                                                     .getClass()
-                                                     .getCanonicalName());
+                                                 + pPixel.getClass()
+                                                         .getCanonicalName());
     }
 
     OffHeapPlanarStack
@@ -222,7 +222,8 @@ public class ImageTypeConverter<T extends RealType<T>>
 
     long lOffSet = 0;
     long lElementSize = lType.getSizeInBytes();
-    if (lType == NativeTypeEnum.UnsignedShort || lType == NativeTypeEnum.Short)
+    if (lType == NativeTypeEnum.UnsignedShort
+        || lType == NativeTypeEnum.Short)
     {
       while (cursor.hasNext())
       {
@@ -232,7 +233,8 @@ public class ImageTypeConverter<T extends RealType<T>>
         lOffSet += lElementSize;
       }
     }
-    else if (lType == NativeTypeEnum.UnsignedByte || lType == NativeTypeEnum.Byte)
+    else if (lType == NativeTypeEnum.UnsignedByte
+             || lType == NativeTypeEnum.Byte)
     {
       while (cursor.hasNext())
       {
@@ -408,9 +410,10 @@ public class ImageTypeConverter<T extends RealType<T>>
 
     ClearCLImage
         lClearClImage =
-        mContext.createSingleChannelImage(HostAccessType.ReadWrite,
+        mContext.createImage(HostAccessType.ReadWrite,
                              KernelAccessType.ReadWrite,
-                               lImageChannelType,
+                             ImageChannelOrder.R,
+                             lImageChannelType,
                              dimensions);
 
     lClearClImage.readFrom(pImageStack.getContiguousMemory(), true);
@@ -433,8 +436,9 @@ public class ImageTypeConverter<T extends RealType<T>>
       lFactory = (ImgFactory<T>) new ArrayImgFactory<ByteType>();
     }
     else if (pClearCLImage.getChannelDataType()
-             == ImageChannelDataType.UnsignedInt8 || pClearCLImage.getChannelDataType()
-                                                     == ImageChannelDataType.UnsignedNormalizedInt8)
+             == ImageChannelDataType.UnsignedInt8
+             || pClearCLImage.getChannelDataType()
+                == ImageChannelDataType.UnsignedNormalizedInt8)
     {
       System.out.println("ubyte TYPE2");
 
@@ -451,8 +455,9 @@ public class ImageTypeConverter<T extends RealType<T>>
       lFactory = (ImgFactory<T>) new ArrayImgFactory<ShortType>();
     }
     else if (pClearCLImage.getChannelDataType()
-             == ImageChannelDataType.UnsignedInt16 || pClearCLImage.getChannelDataType()
-                                                      == ImageChannelDataType.UnsignedNormalizedInt16)
+             == ImageChannelDataType.UnsignedInt16
+             || pClearCLImage.getChannelDataType()
+                == ImageChannelDataType.UnsignedNormalizedInt16)
     {
       System.out.println("ushort TYPE2");
 
@@ -468,8 +473,12 @@ public class ImageTypeConverter<T extends RealType<T>>
 
       lPixel = (T) new FloatType();
       lFactory = (ImgFactory<T>) new ArrayImgFactory<FloatType>();
-    } else {
-      throw new UnknownFormatConversionException("Cannot convert image of type " + pClearCLImage.getChannelDataType().name());
+    }
+    else
+    {
+      throw new UnknownFormatConversionException(
+          "Cannot convert image of type "
+          + pClearCLImage.getChannelDataType().name());
     }
 
     return convertClearClImageToRandomAccessibleInterval(pContext,
@@ -534,8 +543,10 @@ public class ImageTypeConverter<T extends RealType<T>>
         pContext.createBuffer(lInputType, lNumberOfPixels);
 
     System.out.println("numberOfPixels " + lNumberOfPixels);
-    System.out.println("buffer.getSizeInBytes() " + buffer.getSizeInBytes());
-    System.out.println("contOut.getSizeInBytes() " + contOut.getSizeInBytes());
+    System.out.println("buffer.getSizeInBytes() "
+                       + buffer.getSizeInBytes());
+    System.out.println("contOut.getSizeInBytes() "
+                       + contOut.getSizeInBytes());
 
     pClearCLImage.copyTo(buffer, true);
     buffer.writeTo(contOut, true);
@@ -568,7 +579,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       sum += lCursor.get().getRealDouble();
       lMemoryOffset += lBytesPerPixel;
     }
-    System.out.println("sumss "+  sum);
+    System.out.println("sumss " + sum);
     return img;
   }
 
@@ -592,7 +603,7 @@ public class ImageTypeConverter<T extends RealType<T>>
 
       lImageChannelType = ImageChannelDataType.UnsignedInt8;
     }
-    else if ( lPixel instanceof ByteType)
+    else if (lPixel instanceof ByteType)
     {
       System.out.println("byte TYPE3");
 
@@ -615,18 +626,22 @@ public class ImageTypeConverter<T extends RealType<T>>
       System.out.println("float TYPE3");
 
       lImageChannelType = ImageChannelDataType.Float;
-    } else {
-      throw new IllegalArgumentException("Cannot convert image of type " + lImageChannelType.name());
+    }
+    else
+    {
+      throw new IllegalArgumentException(
+          "Cannot convert image of type " + lImageChannelType.name());
     }
 
     lImageChannelType = checkAndFixType(lImageChannelType);
 
     ClearCLImage
         lClearClImage =
-        mContext.createSingleChannelImage(HostAccessType.ReadWrite,
-                                                   KernelAccessType.ReadWrite,
-                                                   lImageChannelType,
-                                                   dimensions);
+        mContext.createImage(HostAccessType.ReadWrite,
+                             KernelAccessType.ReadWrite,
+                             ImageChannelOrder.R,
+                             lImageChannelType,
+                             dimensions);
 
     long sumDimensions = 1;
     for (int i = 0; i < dimensions.length; i++)
@@ -678,31 +693,47 @@ public class ImageTypeConverter<T extends RealType<T>>
     return lClearClImage;
   }
 
-  private static HashMap<ImageChannelDataType, ImageChannelDataType> mBackupTypes = null;
+  private static HashMap<ImageChannelDataType, ImageChannelDataType>
+      mBackupTypes =
+      null;
   private ArrayList<ImageChannelDataType> mSupportedTypes = null;
+
   private ImageChannelDataType checkAndFixType(ImageChannelDataType lImageChannelType)
   {
-    if (mBackupTypes == null) {
+    if (true) return lImageChannelType;
+    if (mBackupTypes == null)
+    {
       mBackupTypes = new HashMap<>();
       // the following are some chains of backup types.
       // if the OpenCL device does not support SignedInt8, try if it supports SignedNormalisedInt8 and so on
-      mBackupTypes.put(ImageChannelDataType.Float, ImageChannelDataType.HalfFloat);
-      mBackupTypes.put(ImageChannelDataType.SignedInt8, ImageChannelDataType.SignedNormalizedInt8);
-      mBackupTypes.put(ImageChannelDataType.SignedNormalizedInt8, ImageChannelDataType.UnsignedInt8);
-      mBackupTypes.put(ImageChannelDataType.UnsignedInt8, ImageChannelDataType.UnsignedNormalizedInt8);
-      mBackupTypes.put(ImageChannelDataType.SignedInt16,ImageChannelDataType.SignedNormalizedInt16);
-      mBackupTypes.put(ImageChannelDataType.SignedNormalizedInt16,ImageChannelDataType.UnsignedInt16);
-      mBackupTypes.put(ImageChannelDataType.UnsignedInt16,ImageChannelDataType.UnsignedNormalizedInt16);
-      mBackupTypes.put(ImageChannelDataType.SignedInt32,ImageChannelDataType.UnsignedInt32);
+      mBackupTypes.put(ImageChannelDataType.Float,
+                       ImageChannelDataType.HalfFloat);
+      mBackupTypes.put(ImageChannelDataType.SignedInt8,
+                       ImageChannelDataType.SignedNormalizedInt8);
+      mBackupTypes.put(ImageChannelDataType.SignedNormalizedInt8,
+                       ImageChannelDataType.UnsignedInt8);
+      mBackupTypes.put(ImageChannelDataType.UnsignedInt8,
+                       ImageChannelDataType.UnsignedNormalizedInt8);
+      mBackupTypes.put(ImageChannelDataType.SignedInt16,
+                       ImageChannelDataType.SignedNormalizedInt16);
+      mBackupTypes.put(ImageChannelDataType.SignedNormalizedInt16,
+                       ImageChannelDataType.UnsignedInt16);
+      mBackupTypes.put(ImageChannelDataType.UnsignedInt16,
+                       ImageChannelDataType.UnsignedNormalizedInt16);
+      mBackupTypes.put(ImageChannelDataType.SignedInt32,
+                       ImageChannelDataType.UnsignedInt32);
     }
-    if (mSupportedTypes == null) {
+    if (mSupportedTypes == null)
+    {
       mSupportedTypes = CLInfo.listSupportedTypes(mContext);
     }
-    if (mSupportedTypes.contains(lImageChannelType)) {
+    if (mSupportedTypes.contains(lImageChannelType))
+    {
       // type is supported; go ahead
       return lImageChannelType;
     }
-    if (mBackupTypes.keySet().contains(lImageChannelType)) {
+    if (mBackupTypes.keySet().contains(lImageChannelType))
+    {
       return checkAndFixType(mBackupTypes.get(lImageChannelType));
     }
 

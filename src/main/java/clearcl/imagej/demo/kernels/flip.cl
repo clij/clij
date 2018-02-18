@@ -1,4 +1,4 @@
-// Taken / modified from https://github.com/ClearControl/FastFuse/blob/master/src/fastfuse/tasks/kernels/flip.cl
+// Taken / modified from
 //
 
 __kernel void flip_ui  (    __read_only   image3d_t  src,
@@ -22,7 +22,7 @@ __kernel void flip_ui  (    __read_only   image3d_t  src,
                           flipy?(height-1-y):y,
                           flipz?(depth-1-z):z,0};
 
-  const ushort value = READ_IMAGE(src, intsampler, pos).x;
+  const DTYPE_IN value = READ_IMAGE(src, intsampler, pos).x;
 
-  WRITE_IMAGE (dst, (int4){x,y,z,0}, (uint4){value,0,0,0});
+  WRITE_IMAGE (dst, (int4){x,y,z,0}, (DTYPE_OUT){value,0,0,0});
 }
