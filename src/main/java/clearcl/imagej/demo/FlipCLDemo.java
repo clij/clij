@@ -38,7 +38,7 @@ public class FlipCLDemo
 
     ImageJFunctions.show(lInputImg);
 
-    ClearCLIJ lCLIJ = ClearCLIJ.getInstance();
+    ClearCLIJ lCLIJ = new ClearCLIJ("hd"); //ClearCLIJ.getInstance();
 
     // ---------------------------------------------------------------
     // Example 1: Flip image in X

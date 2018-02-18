@@ -1,9 +1,12 @@
 package clearcl.imagej;
 
 import clearcl.*;
+import clearcl.backend.ClearCLBackendBase;
 import clearcl.backend.ClearCLBackendInterface;
+import clearcl.backend.ClearCLBackends;
 import clearcl.backend.javacl.ClearCLBackendJavaCL;
 import clearcl.enums.ImageChannelDataType;
+import clearcl.imagej.utilities.CLInfo;
 import clearcl.imagej.utilities.GenericBinaryFastFuseTask;
 import clearcl.imagej.utilities.ImageTypeConverter;
 import clearcontrol.stack.OffHeapPlanarStack;
@@ -12,9 +15,11 @@ import fastfuse.FastFusionEngine;
 import fastfuse.FastFusionMemoryPool;
 import ij.ImagePlus;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,8 +49,8 @@ public class ClearCLIJ
   public ClearCLIJ(String pDeviceNameMustContain)
   {
     ClearCLBackendInterface
-        lClearCLBackend =
-        new ClearCLBackendJavaCL();
+        lClearCLBackend = ClearCLBackends.getBestBackend();
+        //new ClearCLBackendJavaCL();
 
     mClearCL = new ClearCL(lClearCLBackend);
     if (pDeviceNameMustContain == null)
@@ -153,61 +158,18 @@ public class ClearCLIJ
   }
 
   public static String clinfo() {
-    StringBuffer output = new StringBuffer();
+    return CLInfo.clinfo();
+  }
 
-    try
-    {
-      ClearCLBackendInterface lClearCLBackend = new ClearCLBackendJavaCL();
+  public static ArrayList<String> getAvailableDeviceNames() {
+    ArrayList<String> lResultList = new ArrayList<>();
 
-      output.append("CL backend: " + lClearCLBackend + "\n");
-
-      ClearCL lClearCL = new ClearCL(lClearCLBackend);
-
-      output.append("ClearCL: " + lClearCL + "\n");
-      output.append("  Number of platforms:" + lClearCL.getNumberOfPlatforms() + "\n");
-      for (int p = 0; p < lClearCL.getNumberOfPlatforms(); p++)
-      {
-        ClearCLPlatform lClearCLPlatform = lClearCL.getPlatform(p);
-        output.append("  [" + p + "] " + lClearCLPlatform.getName() + "\n");
-        output.append("     Number of devices: " + lClearCLPlatform.getNumberOfDevices() + "\n");
-
-        output.append("     Available devices: \n");
-        for (int d = 0; d < lClearCLPlatform.getNumberOfDevices(); d++)
-        {
-          ClearCLDevice lDevice = lClearCLPlatform.getDevice(d);
-          output.append("     [" + d + "] " + lDevice.getName() + " \n");
-          output.append("        NumberOfComputeUnits: "
-                        + lDevice.getNumberOfComputeUnits()
-                        + " \n");
-          output.append("        Clock frequency: "
-                        + lDevice.getClockFrequency()
-                        + " \n");
-          output.append("        Version: " + lDevice.getVersion() + " \n");
-          output.append("        Extensions: " + lDevice.getExtensions() + " \n");
-          output.append("        GlobalMemorySizeInBytes: "
-                        + lDevice.getGlobalMemorySizeInBytes()
-                        + " \n");
-          output.append("        LocalMemorySizeInBytes: "
-                        + lDevice.getLocalMemorySizeInBytes()
-                        + " \n");
-          output.append("        MaxMemoryAllocationSizeInBytes: "
-                        + lDevice.getMaxMemoryAllocationSizeInBytes()
-                        + " \n");
-          output.append("        MaxWorkGroupSize: "
-                        + lDevice.getMaxWorkGroupSize()
-                        + " \n");
-        }
-      }
-
-      output.append("Best GPU device for images: " + lClearCL.getFastestGPUDeviceForImages().getName() + "\n");
-      output.append("Best largest GPU device: " + lClearCL.getLargestGPUDevice().getName() + "\n");
-      output.append("Best CPU device: " + lClearCL.getBestCPUDevice().getName() + "\n");
+    ClearCLBackendInterface lClearCLBackend = ClearCLBackends.getBestBackend();
+    ClearCL lClearCL = new ClearCL(lClearCLBackend);
+    for (ClearCLDevice lDevice : lClearCL.getAllDevices()) {
+      lResultList.add(lDevice.getName());
     }
-    catch (Exception e) {
-      output.append("\n\nException: " + e.toString());
-      return output.toString();
-    }
-    return output.toString();
+    return lResultList;
   }
 
 }

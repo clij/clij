@@ -36,6 +36,11 @@ lCLIJ.execute(<Class>, "filename_open.cl", "kernelfunction", {"src":image, "dst"
   parameter, because CLIJ derives image data types and global space from
   these parameters.
 
+## Supported / tested platforms
+There is a rudimentary list of tests implemented in the clearcl.imagej.test package mainly testing conversion of types between CPU, GPU and JVM. Following OpenCL devices were tested successfully:
+* GeForce 940MX (OpenCL 2.0, Feb 2018)
+* Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz (OpenCL 1.2, Feb 2018)
+* Intel(R) HD Graphics 620 (OpenCL 1.2, Feb 2018)
 
 
 ## Installation

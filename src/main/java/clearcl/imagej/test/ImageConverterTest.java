@@ -25,45 +25,66 @@ import static org.junit.Assert.assertTrue;
  */
 public class ImageConverterTest
 {
+  ClearCLIJ mCLIJ = null;
+
   @Test
   public void testImgClearCLImageConverter()
   {
-    RandomAccessibleInterval<FloatType>
-        lFloatImg = ArrayImgs.floats(new long[] { 5, 6, 7 });
-    fillTestImage(lFloatImg);
-    testBackAndForthConversionViaCLImage(lFloatImg);
-    testBackAndForthConversionViaOffHeapPlanarStack(lFloatImg);
-    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lFloatImg);
+    for (String lDeviceName : ClearCLIJ.getAvailableDeviceNames())
+    {
+      mCLIJ = new ClearCLIJ(lDeviceName);
+      //if (!lDeviceName.contains("CPU"))
+      {
+        System.out.println("Testing device " + lDeviceName);
 
-    RandomAccessibleInterval<UnsignedByteType>
-        lUnsignedByteImg = ArrayImgs.unsignedBytes(new long[] { 5, 6, 7 });
-    fillTestImage(lUnsignedByteImg);
-    testBackAndForthConversionViaCLImage(lUnsignedByteImg);
-    testBackAndForthConversionViaOffHeapPlanarStack(lUnsignedByteImg);
-    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lUnsignedByteImg);
+        RandomAccessibleInterval<FloatType>
+            lFloatImg =
+            ArrayImgs.floats(new long[] { 5, 6, 7 });
+        fillTestImage(lFloatImg);
+        testBackAndForthConversionViaCLImage(lFloatImg);
+        testBackAndForthConversionViaOffHeapPlanarStack(lFloatImg);
+        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+            lFloatImg);
 
-    RandomAccessibleInterval<ByteType>
-        lByteImg = ArrayImgs.bytes(new long[] { 5, 6, 7 });
-    fillTestImage(lByteImg);
-    testBackAndForthConversionViaCLImage(lByteImg);
-    testBackAndForthConversionViaOffHeapPlanarStack(lByteImg);
-    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lByteImg);
+        RandomAccessibleInterval<UnsignedByteType>
+            lUnsignedByteImg =
+            ArrayImgs.unsignedBytes(new long[] { 5, 6, 7 });
+        fillTestImage(lUnsignedByteImg);
+        testBackAndForthConversionViaCLImage(lUnsignedByteImg);
+        testBackAndForthConversionViaOffHeapPlanarStack(
+            lUnsignedByteImg);
+        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+            lUnsignedByteImg);
 
-    RandomAccessibleInterval<UnsignedShortType>
-        lUnsignedShortImg = ArrayImgs.unsignedShorts(new long[] { 5, 6, 7 });
-    fillTestImage(lUnsignedShortImg);
-    testBackAndForthConversionViaCLImage(lUnsignedShortImg);
-    testBackAndForthConversionViaOffHeapPlanarStack(lUnsignedShortImg);
-    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lUnsignedShortImg);
+        RandomAccessibleInterval<ByteType>
+            lByteImg =
+            ArrayImgs.bytes(new long[] { 5, 6, 7 });
+        fillTestImage(lByteImg);
+        testBackAndForthConversionViaCLImage(lByteImg);
+        testBackAndForthConversionViaOffHeapPlanarStack(lByteImg);
+        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+            lByteImg);
 
+        RandomAccessibleInterval<UnsignedShortType>
+            lUnsignedShortImg =
+            ArrayImgs.unsignedShorts(new long[] { 5, 6, 7 });
+        fillTestImage(lUnsignedShortImg);
+        testBackAndForthConversionViaCLImage(lUnsignedShortImg);
+        testBackAndForthConversionViaOffHeapPlanarStack(
+            lUnsignedShortImg);
+        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+            lUnsignedShortImg);
 
-    RandomAccessibleInterval<ShortType>
-        lShortImg = ArrayImgs.shorts(new long[] { 5, 6, 7 });
-    fillTestImage(lShortImg);
-    testBackAndForthConversionViaCLImage(lShortImg);
-    testBackAndForthConversionViaOffHeapPlanarStack(lShortImg);
-    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lShortImg);
-
+        RandomAccessibleInterval<ShortType>
+            lShortImg =
+            ArrayImgs.shorts(new long[] { 5, 6, 7 });
+        fillTestImage(lShortImg);
+        testBackAndForthConversionViaCLImage(lShortImg);
+        testBackAndForthConversionViaOffHeapPlanarStack(lShortImg);
+        testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
+            lShortImg);
+      }
+    }
   }
 
 
@@ -78,7 +99,7 @@ public class ImageConverterTest
   }
 
   private <T extends RealType<T>> void testBackAndForthConversionViaCLImage(RandomAccessibleInterval<T> lRAI) {
-    ClearCLIJ lCLIJ = ClearCLIJ.getInstance();
+    ClearCLIJ lCLIJ = mCLIJ;
 
     ClearCLImage lClearCLImage = lCLIJ.converter(lRAI).getClearCLImage();
 
@@ -90,7 +111,7 @@ public class ImageConverterTest
   }
 
   private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStack(RandomAccessibleInterval<T> lRAI) {
-    ClearCLIJ lCLIJ = ClearCLIJ.getInstance();
+    ClearCLIJ lCLIJ = mCLIJ;
 
     OffHeapPlanarStack lOffHeapPlanarStack = lCLIJ.converter(lRAI).getOffHeapPlanarStack();
 
@@ -102,7 +123,7 @@ public class ImageConverterTest
   }
 
   private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(RandomAccessibleInterval<T> lRAI) {
-    ClearCLIJ lCLIJ = ClearCLIJ.getInstance();
+    ClearCLIJ lCLIJ = mCLIJ;
 
     OffHeapPlanarStack lOffHeapPlanarStack = lCLIJ.converter(lRAI).getOffHeapPlanarStack();
 
