@@ -48,6 +48,8 @@ GeForce GTX 960M (1.2)
 Intel(R) HD Graphics 530 (2.0)
 Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz (2.0)
 
+AMD A10-8700P Radeon R6, 10 Compute Cores 4C+6G 12
+
  Intel(R) Core(TM) m3-6Y30 CPU @ 0.90GHz
  Intel(R) HD Graphics 515
 
