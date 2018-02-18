@@ -40,8 +40,10 @@ lCLIJ.execute(<Class>, "filename_open.cl", "kernelfunction", {"src":image, "dst"
 ## Supported / tested platforms
 There is a rudimentary list of tests implemented in the clearcl.imagej.test package mainly testing conversion of types between CPU, GPU and JVM. Following OpenCL devices were tested successfully:
 * GeForce 940MX (OpenCL 2.0, Feb 2018)
-* Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz (OpenCL 1.2, Feb 2018)
-* Intel(R) HD Graphics 620 (OpenCL 1.2, Feb 2018)
+* Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz (OpenCL 1.2, Win 10 64bit, Feb 2018)
+* Intel(R) Atom(TM) x7-Z8750  CPU @ 1.60GHz (OpenCL 1.2, Win 10 64bit, Feb 2018)
+* Intel(R) HD Graphics 620 (OpenCL 1.2, Win 10 64bit, Feb 2018)
+* Intel(R) HD Graphics 405 (OpenCL 1.2, Win 10 64bit, Feb 2018)
 
 
 ## Installation
