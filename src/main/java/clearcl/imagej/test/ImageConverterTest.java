@@ -3,8 +3,6 @@ package clearcl.imagej.test;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcontrol.stack.OffHeapPlanarStack;
-import net.imglib2.Cursor;
-import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
@@ -106,7 +104,7 @@ public class ImageConverterTest
         lRAIconvertedTwice =
         (RandomAccessibleInterval<T>) lCLIJ.converter(lClearCLImage).getRandomAccessibleInterval();
 
-    assertTrue(compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconvertedTwice)));
+    assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconvertedTwice)));
   }
 
   private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStack(RandomAccessibleInterval<T> lRAI) {
@@ -118,7 +116,7 @@ public class ImageConverterTest
         lRAIconvertedTwice =
         (RandomAccessibleInterval<T>) lCLIJ.converter(lOffHeapPlanarStack).getRandomAccessibleInterval();
 
-    assertTrue(compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconvertedTwice)));
+    assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconvertedTwice)));
   }
 
   private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(RandomAccessibleInterval<T> lRAI) {
@@ -138,33 +136,7 @@ public class ImageConverterTest
 
     RandomAccessibleInterval<T> lRAIconverted = lCLIJ.converter(lOffHeapPlanarStack2).getRandomAccessibleInterval();
 
-    assertTrue(compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconverted)));
+    assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconverted)));
   }
 
-
-  private <T extends RealType<T>> boolean compareIterableIntervals(IterableInterval<T> lIterableInterval1,
-                                                                  IterableInterval<T> lIterableInterval2)
-  {
-    double lSum = 0;
-    Cursor<T> lCursor1 = lIterableInterval1.cursor();
-    Cursor<T> lCursor2 = lIterableInterval2.cursor();
-
-    while (lCursor1.hasNext() && lCursor2.hasNext()) {
-      if (lCursor1.next().getRealFloat() != lCursor2.next().getRealFloat()) {
-        System.out.println("lCursor1 " + lCursor1.get().getRealFloat());
-        System.out.println("lCursor2 " + lCursor2.get().getRealFloat());
-        System.out.println("Value different ");
-        return false;
-      }
-      lSum += lCursor1.get().getRealDouble();
-    }
-    System.out.println("sum " + lSum);
-
-    // check if one image is longer than the other
-    if (lCursor1.hasNext() || lCursor2.hasNext()) {
-      return false;
-    }
-
-    return true;
-  }
 }
