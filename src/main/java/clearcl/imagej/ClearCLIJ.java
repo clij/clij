@@ -26,7 +26,7 @@ public class ClearCLIJ
 {
 
   protected ClearCLContext mClearCLContext;
-  private final ClearCLDevice mClearCLDevice;
+  private ClearCLDevice mClearCLDevice;
   private ClearCL mClearCL;
   private static ClearCLIJ sInstance = null;
 
@@ -36,19 +36,30 @@ public class ClearCLIJ
   {
     if (sInstance == null)
     {
-      sInstance = new ClearCLIJ();
+      sInstance = new ClearCLIJ(null);
     }
     return sInstance;
   }
 
-  private ClearCLIJ()
+  public ClearCLIJ(String pDeviceNameMustContain)
   {
     ClearCLBackendInterface
         lClearCLBackend =
         new ClearCLBackendJavaCL();
 
     mClearCL = new ClearCL(lClearCLBackend);
-    mClearCLDevice = mClearCL.getFastestGPUDeviceForImages();
+    if (pDeviceNameMustContain == null)
+    {
+      mClearCLDevice = mClearCL.getFastestGPUDeviceForImages();
+    } else {
+      mClearCLDevice = mClearCL.getDeviceByName(pDeviceNameMustContain);
+    }
+
+    if (mClearCLDevice == null) {
+      System.err.println("Warning: Optimal ClearCL device determination failed. Retrying using first device found.");
+      mClearCLDevice = mClearCL.getAllDevices().get(0);
+    }
+
     mClearCLContext = mClearCLDevice.createContext();
 
     mFastFusionEngine = new FastFusionEngine(mClearCLContext);
@@ -139,6 +150,64 @@ public class ClearCLIJ
 
   public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLImage pClearCLImage) {
     return new ImageTypeConverter<T>(mClearCLContext, pClearCLImage);
+  }
+
+  public static String clinfo() {
+    StringBuffer output = new StringBuffer();
+
+    try
+    {
+      ClearCLBackendInterface lClearCLBackend = new ClearCLBackendJavaCL();
+
+      output.append("CL backend: " + lClearCLBackend + "\n");
+
+      ClearCL lClearCL = new ClearCL(lClearCLBackend);
+
+      output.append("ClearCL: " + lClearCL + "\n");
+      output.append("  Number of platforms:" + lClearCL.getNumberOfPlatforms() + "\n");
+      for (int p = 0; p < lClearCL.getNumberOfPlatforms(); p++)
+      {
+        ClearCLPlatform lClearCLPlatform = lClearCL.getPlatform(p);
+        output.append("  [" + p + "] " + lClearCLPlatform.getName() + "\n");
+        output.append("     Number of devices: " + lClearCLPlatform.getNumberOfDevices() + "\n");
+
+        output.append("     Available devices: \n");
+        for (int d = 0; d < lClearCLPlatform.getNumberOfDevices(); d++)
+        {
+          ClearCLDevice lDevice = lClearCLPlatform.getDevice(d);
+          output.append("     [" + d + "] " + lDevice.getName() + " \n");
+          output.append("        NumberOfComputeUnits: "
+                        + lDevice.getNumberOfComputeUnits()
+                        + " \n");
+          output.append("        Clock frequency: "
+                        + lDevice.getClockFrequency()
+                        + " \n");
+          output.append("        Version: " + lDevice.getVersion() + " \n");
+          output.append("        Extensions: " + lDevice.getExtensions() + " \n");
+          output.append("        GlobalMemorySizeInBytes: "
+                        + lDevice.getGlobalMemorySizeInBytes()
+                        + " \n");
+          output.append("        LocalMemorySizeInBytes: "
+                        + lDevice.getLocalMemorySizeInBytes()
+                        + " \n");
+          output.append("        MaxMemoryAllocationSizeInBytes: "
+                        + lDevice.getMaxMemoryAllocationSizeInBytes()
+                        + " \n");
+          output.append("        MaxWorkGroupSize: "
+                        + lDevice.getMaxWorkGroupSize()
+                        + " \n");
+        }
+      }
+
+      output.append("Best GPU device for images: " + lClearCL.getFastestGPUDeviceForImages().getName() + "\n");
+      output.append("Best largest GPU device: " + lClearCL.getLargestGPUDevice().getName() + "\n");
+      output.append("Best CPU device: " + lClearCL.getBestCPUDevice().getName() + "\n");
+    }
+    catch (Exception e) {
+      output.append("\n\nException: " + e.toString());
+      return output.toString();
+    }
+    return output.toString();
   }
 
 }
