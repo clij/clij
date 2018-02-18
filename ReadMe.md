@@ -22,23 +22,29 @@ ImageJFunctions.show(lResultImg);
 Complete jython examples can be found in the src/main/jython directory. More Java example code can be found in the package clearcl.imagej.demo
 
 ## OpenCL Kernel calls with CLIJ.execute()
-The execute function asks for four parameters
+The execute function asks for three or four parameters
 ```
 lCLIJ.execute(<Class>, "filename_open.cl", "kernelfunction", {"src":image, "dst":image, "more":5, "evenmore":image})
+
+lCLIJ.execute("absolute/or/relative/path/filename_open.cl", "kernelfunction", {"src":image, "dst":image, "more":5, "evenmore":image})
 ```
 * An optional class file as an anchor to have a point for where to start
   searching for the program file (second parameter).
 * The open.cl program file will be searched for in the same folder where the
-  class (first parameter) is defined. In the example here, this class
-  comes with the dependency FastFuse
+  class (first parameter) is defined. In the first example above, this class
+  comes with the dependency FastFuse. Alternatively, an absolute path can be
+  proveded if there is no class given as first parameter. In case a relative
+  path is given, it must be relative from the current dir of Fiji.
 * The name of the kernel function defined in the program file
 * A dictionary with all the parameters of the kernel function, such as
   "src" and "dst". It is recommended to have at least a "src" and a "dst"
   parameter, because CLIJ derives image data types and global space from
   these parameters.
 
+
+
 ## Supported / tested platforms
-There is a rudimentary list of tests implemented in the clearcl.imagej.test package mainly testing conversion of types between CPU, GPU and JVM. Furthermore, there is one test appling an OpenCL kernel to images of type UnsignedShort. Following OpenCL devices were tested successfully:
+There is a rudimentary list of tests implemented in the clearcl.imagej.test package mainly testing conversion of types between CPU, GPU and JVM. Furthermore, there is one test applying an OpenCL kernel to images of type UnsignedShort. Following OpenCL devices were tested successfully:
 * GeForce 940MX (OpenCL 2.0, Win 10 64 bit, Feb 2018)
 * GeForce GTX 960M (OpenCL 1.2, Win 10 64 bit, Feb 2018)
 * Intel(R) HD Graphics 620 (OpenCL 1.2, Win 10 64bit, Feb 2018)
