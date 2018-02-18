@@ -406,7 +406,6 @@ public class ImageTypeConverter<T extends RealType<T>>
     {
       lImageChannelType = ImageChannelDataType.Float;
     }
-    lImageChannelType = checkAndFixType(lImageChannelType);
 
     ClearCLImage
         lClearClImage =
@@ -633,8 +632,6 @@ public class ImageTypeConverter<T extends RealType<T>>
           "Cannot convert image of type " + lImageChannelType.name());
     }
 
-    lImageChannelType = checkAndFixType(lImageChannelType);
-
     ClearCLImage
         lClearClImage =
         mContext.createImage(HostAccessType.ReadWrite,
@@ -680,7 +677,6 @@ public class ImageTypeConverter<T extends RealType<T>>
     }
     else if (lPixel instanceof FloatType)
     {
-
       float[] inputArray = new float[(int) sumDimensions];
       while (cursor.hasNext())
       {
@@ -691,53 +687,5 @@ public class ImageTypeConverter<T extends RealType<T>>
     }
 
     return lClearClImage;
-  }
-
-  private static HashMap<ImageChannelDataType, ImageChannelDataType>
-      mBackupTypes =
-      null;
-  private ArrayList<ImageChannelDataType> mSupportedTypes = null;
-
-  private ImageChannelDataType checkAndFixType(ImageChannelDataType lImageChannelType)
-  {
-    if (true) return lImageChannelType;
-    if (mBackupTypes == null)
-    {
-      mBackupTypes = new HashMap<>();
-      // the following are some chains of backup types.
-      // if the OpenCL device does not support SignedInt8, try if it supports SignedNormalisedInt8 and so on
-      mBackupTypes.put(ImageChannelDataType.Float,
-                       ImageChannelDataType.HalfFloat);
-      mBackupTypes.put(ImageChannelDataType.SignedInt8,
-                       ImageChannelDataType.SignedNormalizedInt8);
-      mBackupTypes.put(ImageChannelDataType.SignedNormalizedInt8,
-                       ImageChannelDataType.UnsignedInt8);
-      mBackupTypes.put(ImageChannelDataType.UnsignedInt8,
-                       ImageChannelDataType.UnsignedNormalizedInt8);
-      mBackupTypes.put(ImageChannelDataType.SignedInt16,
-                       ImageChannelDataType.SignedNormalizedInt16);
-      mBackupTypes.put(ImageChannelDataType.SignedNormalizedInt16,
-                       ImageChannelDataType.UnsignedInt16);
-      mBackupTypes.put(ImageChannelDataType.UnsignedInt16,
-                       ImageChannelDataType.UnsignedNormalizedInt16);
-      mBackupTypes.put(ImageChannelDataType.SignedInt32,
-                       ImageChannelDataType.UnsignedInt32);
-    }
-    if (mSupportedTypes == null)
-    {
-      mSupportedTypes = CLInfo.listSupportedTypes(mContext);
-    }
-    if (mSupportedTypes.contains(lImageChannelType))
-    {
-      // type is supported; go ahead
-      return lImageChannelType;
-    }
-    if (mBackupTypes.keySet().contains(lImageChannelType))
-    {
-      return checkAndFixType(mBackupTypes.get(lImageChannelType));
-    }
-
-    // Error: no backup type found
-    return null;
   }
 }

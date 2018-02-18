@@ -38,18 +38,12 @@ public class DoubleFlipTest
   {
     for (String lDeviceName : ClearCLIJ.getAvailableDeviceNames())
     {
-      /*
-      if (!lDeviceName.contains("CPU")) {
-        continue;
-      }*/
       ClearCLIJ lCLIJ = new ClearCLIJ(lDeviceName);
-      //CLInfo.listSupportedTypes(lCLIJ.getClearCLContext());
 
       System.out.println("Testing " + lDeviceName);
 
       ImagePlus
-          lInputImagePlus = NewImage.createUnsignedShortImage("bla", 4, 4, 2, NewImage.FILL_RAMP);
-          //IJ.openImage("src/main/resources/flybrain.tif");
+          lInputImagePlus = IJ.openImage("src/main/resources/flybrain.tif");
 
       ClearCLImage lCLImage = lCLIJ.converter(lInputImagePlus).getClearCLImage();
 
