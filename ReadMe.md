@@ -19,7 +19,7 @@ lResultStack = lCLIJ.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", 
 lResultImg = lCLIJ.converter(lResultStack).getRandomAccessibleInterval();
 ImageJFunctions.show(lResultImg);
 ```
-More examples can be found in the package clearcl.imagej.demo
+Complete jython examples can be found in the src/main/jython directoru. More Java example code can be found in the package clearcl.imagej.demo
 
 ## OpenCL Kernel calls with CLIJ.execute()
 The execute function asks for four parameters
