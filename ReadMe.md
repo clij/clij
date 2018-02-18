@@ -44,7 +44,8 @@ There is a rudimentary list of tests implemented in the clearcl.imagej.test pack
 * Intel(R) Atom(TM) x7-Z8750  CPU @ 1.60GHz (OpenCL 1.2, Win 10 64bit, Feb 2018)
 * Intel(R) HD Graphics 620 (OpenCL 1.2, Win 10 64bit, Feb 2018)
 * Intel(R) HD Graphics 405 (OpenCL 1.2, Win 10 64bit, Feb 2018)
-
+ Intel(R) Core(TM) m3-6Y30 CPU @ 0.90GHz
+ Intel(R) HD Graphics 515
 
 ## Installation
 
