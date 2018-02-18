@@ -20,8 +20,8 @@ lInputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
 lOutputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
 
 # downsample the image stack using ClearCL / OpenCL
-lResultStack = lCLIJ.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
+lCLIJ.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
 
 # convert the result back to imglib2 and show it
-lResultImg = lCLIJ.converter(lResultStack).getRandomAccessibleInterval();
+lResultImg = lCLIJ.converter(lOutputCLImage).getRandomAccessibleInterval();
 ImageJFunctions.show(lResultImg);
