@@ -45,6 +45,7 @@ lCLIJ.execute("absolute/or/relative/path/filename_open.cl", "kernelfunction", {"
 
 ## Supported / tested platforms
 There is a rudimentary list of tests implemented in the clearcl.imagej.test package mainly testing conversion of types between CPU, GPU and JVM. Furthermore, there is one test applying an OpenCL kernel to images of type UnsignedShort. Following OpenCL devices were tested successfully:
+
 * GeForce 940MX (OpenCL 2.0, Win 10 64 bit, Feb 2018)
 * GeForce GTX 960M (OpenCL 1.2, Win 10 64 bit, Feb 2018)
 * Intel(R) HD Graphics 620 (OpenCL 1.2, Win 10 64bit, Feb 2018)
@@ -57,7 +58,9 @@ There is a rudimentary list of tests implemented in the clearcl.imagej.test pack
 * Intel(R) Atom(TM) x7-Z8750  CPU @ 1.60GHz (OpenCL 1.2, Win 10 64 bit, Feb 2018)
 
 Tests failed on these devices:
+
 * AMD A10-8700P Radeon R6, 10 Compute Cores 4C+6G (OpenCL 1.2, Win 10 64 bit, Feb 2018)
+* Intel(R) Core(TM) i7-4980HQ CPU @ 2.80GHz (OpenCL 1.2, macOS 10.12.6, Feb 2018)
 
 
 ## Installation
