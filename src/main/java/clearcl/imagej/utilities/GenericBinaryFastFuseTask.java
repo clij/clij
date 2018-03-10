@@ -61,9 +61,9 @@ public class GenericBinaryFastFuseTask extends TaskBase
 
     if (mParameterMap != null) {
       for (String key : mParameterMap.keySet()) {
-        if (key == "src") {
+        if (key.contains("src") || key.contains("input")) {
           lSrcImage = (ClearCLImage) mParameterMap.get(key);
-        } else if (key == "dst") {
+        } else if (key.contains("dst") || key.contains("output")) {
           lDstImage = (ClearCLImage) mParameterMap.get(key);
         }
       }
