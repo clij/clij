@@ -41,6 +41,19 @@ lCLIJ.execute("absolute/or/relative/path/filename_open.cl", "kernelfunction", {"
   parameter, because CLIJ derives image data types and global space from
   these parameters.
 
+## Type agnostic OpenCL
+As jython is a type-agnostic programming language, ClearCLIJ targets bringing the same convenience to OpenCL as well. However, in order to make the executed OpenCL programs image pixel type agnostic, some conventions must be introduced. The conventions are all optional. OpenCL programmers who know how to pass images of a defined type to OpenCL programs using the correct access functions can skip this section.
+
+* Instead of using functions like `read_imagef()`, `write_imagef()`, `write_imageui()` etc.,
+it is recommended to use `WRITE_IMAGE()` and `READ_IMAGE()` function calls. These function
+calls will be replaced during runtime with the function accessing the correct image data
+type. However, in order to allow ClearCLIJ to detect the right image data type, there must
+be at least two image type parameters containing "src", "dst", "input", or "output" in their
+parameter names. ClearCLIJ will then for example detect the type of an image parameter called
+"src_image" and replace all calls to `READ_IMAGE()` with the respective call to
+`image_readui()` or `image_readf()` calls.
+* Furthermore, variables inside OpenCL programs can be typed with `DTYPE_IN` and `DTYPE_OUT`
+instead of `float` or `int4` in order to make the OpenCL code type agnostic.
 
 
 ## Supported / tested platforms
@@ -86,3 +99,9 @@ deploy.bat
 ```
 
 Take care: ClearCLIJ is in early developmental stage. Installing it to your Fiji may harm your Fiji installation as it brings dependencies which may be incompatible with other plugins. It is recommended not to work in a production environment.
+
+# Troubleshooting
+* "java.io.IOException: Cannot find source: [Object] <path/filename.cl>" exception: Navigate to the jars subdirectory of your Fiji installation and locate `clearcl.jar` files, e.g. by typing `dir clearcl*` or `ls clearcl*`. If there are several versions installed, remove the older one. In order to fix this exception, you need at least `clearcl-0.5.5-RH.jar`.
+* "clearcl.exceptions.ClearCLException: problem while setting argument 'parameter_of_type_float'": To hand over parameters of type float, you need to explicitly type it. Use `from java.lang import Float` and `Float(1.5)` to handover a value of 1.5 to an OpenCL parameter of type float.
+
+
