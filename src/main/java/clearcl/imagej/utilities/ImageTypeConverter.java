@@ -222,14 +222,23 @@ public class ImageTypeConverter<T extends RealType<T>>
 
     long lOffSet = 0;
     long lElementSize = lType.getSizeInBytes();
-    if (lType == NativeTypeEnum.UnsignedShort
-        || lType == NativeTypeEnum.Short)
+    if (lType == NativeTypeEnum.Short)
     {
       while (cursor.hasNext())
       {
         T element = cursor.next();
         lStack.getContiguousMemory()
               .setShort(lOffSet, (short) element.getRealDouble());
+        lOffSet += lElementSize;
+      }
+    }
+    else if (lType == NativeTypeEnum.UnsignedShort)
+    {
+      while (cursor.hasNext())
+      {
+        T element = cursor.next();
+        lStack.getContiguousMemory()
+                .setShort(lOffSet, (short)element.getRealDouble());
         lOffSet += lElementSize;
       }
     }
@@ -305,8 +314,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       contiguousMemory.copyTo(pixelArray);
       lReturnImg = (Img<T>) ArrayImgs.floats(pixelArray, dimensions);
     }
-    else if (pImageStack.getDataType() == NativeTypeEnum.Short
-             || pImageStack.getDataType()
+    else if (pImageStack.getDataType()
                 == NativeTypeEnum.UnsignedShort)
     {
       System.out.println("short TYPE");
@@ -316,11 +324,33 @@ public class ImageTypeConverter<T extends RealType<T>>
                            / pImageStack.getBytesPerVoxel())
                     % Integer.MAX_VALUE];
       contiguousMemory.copyTo(pixelArray);
+      lReturnImg = (Img<T>) ArrayImgs.unsignedShorts(pixelArray, dimensions);
+    }
+    else if (pImageStack.getDataType() == NativeTypeEnum.Short)
+    {
+      System.out.println("short TYPE");
+      short[]
+              pixelArray =
+              new short[(int) (contiguousMemory.getSizeInBytes()
+                      / pImageStack.getBytesPerVoxel())
+                      % Integer.MAX_VALUE];
+      contiguousMemory.copyTo(pixelArray);
       lReturnImg = (Img<T>) ArrayImgs.shorts(pixelArray, dimensions);
     }
-    else if (pImageStack.getDataType() == NativeTypeEnum.Byte
-             || pImageStack.getDataType()
-                == NativeTypeEnum.UnsignedByte)
+
+    else if (pImageStack.getDataType() == NativeTypeEnum.Byte)
+    {
+
+      System.out.println("byte TYPE");
+      byte[]
+              pixelArray =
+              new byte[(int) (contiguousMemory.getSizeInBytes()
+                      / pImageStack.getBytesPerVoxel())
+                      % Integer.MAX_VALUE];
+      contiguousMemory.copyTo(pixelArray);
+      lReturnImg = (Img<T>) ArrayImgs.bytes(pixelArray, dimensions);
+    }
+    else if (pImageStack.getDataType() == NativeTypeEnum.UnsignedByte)
     {
 
       System.out.println("byte TYPE");
@@ -330,19 +360,29 @@ public class ImageTypeConverter<T extends RealType<T>>
                           / pImageStack.getBytesPerVoxel())
                    % Integer.MAX_VALUE];
       contiguousMemory.copyTo(pixelArray);
-      lReturnImg = (Img<T>) ArrayImgs.bytes(pixelArray, dimensions);
+      lReturnImg = (Img<T>) ArrayImgs.unsignedBytes(pixelArray, dimensions);
     }
-    else if (pImageStack.getDataType() == NativeTypeEnum.Int
-             || pImageStack.getDataType()
-                == NativeTypeEnum.UnsignedInt)
+    else if (pImageStack.getDataType() == NativeTypeEnum.UnsignedInt)
     {
 
       System.out.println("int TYPE");
       int[]
-          pixelArray =
-          new int[(int) (contiguousMemory.getSizeInBytes()
-                         / pImageStack.getBytesPerVoxel())
-                  % Integer.MAX_VALUE];
+              pixelArray =
+              new int[(int) (contiguousMemory.getSizeInBytes()
+                      / pImageStack.getBytesPerVoxel())
+                      % Integer.MAX_VALUE];
+      contiguousMemory.copyTo(pixelArray);
+      lReturnImg = (Img<T>) ArrayImgs.unsignedInts(pixelArray, dimensions);
+    }
+    else if (pImageStack.getDataType() == NativeTypeEnum.Int)
+    {
+
+      System.out.println("int TYPE");
+      int[]
+              pixelArray =
+              new int[(int) (contiguousMemory.getSizeInBytes()
+                      / pImageStack.getBytesPerVoxel())
+                      % Integer.MAX_VALUE];
       contiguousMemory.copyTo(pixelArray);
       lReturnImg = (Img<T>) ArrayImgs.ints(pixelArray, dimensions);
     }

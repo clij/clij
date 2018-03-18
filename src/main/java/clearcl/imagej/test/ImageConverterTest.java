@@ -93,6 +93,11 @@ public class ImageConverterTest
     RandomAccess<T> lRandomAccess = lFloatImg.randomAccess();
     lRandomAccess.setPosition(new long[]{1,2,3});
     lRandomAccess.get().setReal(4);
+
+    if (!(lRandomAccess.get() instanceof ByteType || lRandomAccess.get() instanceof UnsignedByteType)) {
+      lRandomAccess.setPosition(new long[]{1, 3, 3});
+      lRandomAccess.get().setReal(40000);
+    }
   }
 
   private <T extends RealType<T>> void testBackAndForthConversionViaCLImage(RandomAccessibleInterval<T> lRAI) {
@@ -137,6 +142,37 @@ public class ImageConverterTest
     RandomAccessibleInterval<T> lRAIconverted = lCLIJ.converter(lOffHeapPlanarStack2).getRandomAccessibleInterval();
 
     assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconverted)));
+  }
+
+  @Test
+  public void convertHugeUnsignedShortImageTest() {
+    mCLIJ = new ClearCLIJ("CPU");
+    RandomAccessibleInterval<UnsignedShortType> lRAI = ArrayImgs.unsignedShorts(new long[]{10,10});
+    RandomAccess<UnsignedShortType> lRA = lRAI.randomAccess();
+    lRA.setPosition(new long[]{1,1});
+    lRA.get().set(40000);
+
+    testBackAndForthConversionViaOffHeapPlanarStack(lRAI);
+
+    testBackAndForthConversionViaCLImage(lRAI);
+
+    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
+  }
+
+
+  @Test
+  public void convertHugeSignedShortImageTest() {
+    mCLIJ = new ClearCLIJ("CPU");
+    RandomAccessibleInterval<ShortType> lRAI = ArrayImgs.shorts(new long[]{1,1});
+    RandomAccess<ShortType> lRA = lRAI.randomAccess();
+    lRA.setPosition(new long[]{0,0});
+    lRA.get().setReal(-25400);
+
+    testBackAndForthConversionViaOffHeapPlanarStack(lRAI);
+
+    testBackAndForthConversionViaCLImage(lRAI);
+
+    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
   }
 
 }
