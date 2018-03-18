@@ -22,7 +22,7 @@ __kernel void subtract_convolved_images_2d_fast(
         {
             const int2 kernelPos = {x+radius, y+radius};
 
-            float image_pixel_value = read_imagef(input, sampler, pos + (int2)( x, y )).x;
+            float image_pixel_value = READ_IMAGE(input, sampler, pos + (int2)( x, y )).x;
 
             float weight_minuend = exp(-((float) (x * x + y * y) / (2.0f
                                                           * sigma_minuend
@@ -39,6 +39,6 @@ __kernel void subtract_convolved_images_2d_fast(
         }
     }
 
-    float4 pix = {weighted_sum_minuend / sum_minuend - weighted_sum_subtrahend / sum_subtrahend,0,0,0};
-	write_imagef(output, pos, pix);
+    float pix = weighted_sum_minuend / sum_minuend  - weighted_sum_subtrahend / sum_subtrahend; //,0,0,0};
+	WRITE_IMAGE(output, pos, (DTYPE_OUT){pix, 0, 0, 0});
 }

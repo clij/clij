@@ -175,4 +175,20 @@ public class ImageConverterTest
     testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
   }
 
+
+  @Test
+  public void convertHugeFloatImageTest() {
+    mCLIJ = new ClearCLIJ("CPU");
+    RandomAccessibleInterval<FloatType> lRAI = ArrayImgs.floats(new long[]{1,1});
+    RandomAccess<FloatType> lRA = lRAI.randomAccess();
+    lRA.setPosition(new long[]{0,0});
+    lRA.get().setReal(-25400);
+
+    testBackAndForthConversionViaOffHeapPlanarStack(lRAI);
+
+    testBackAndForthConversionViaCLImage(lRAI);
+
+    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
+  }
+
 }
