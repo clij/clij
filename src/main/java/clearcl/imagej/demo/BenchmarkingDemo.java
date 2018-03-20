@@ -20,6 +20,7 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
@@ -32,6 +33,7 @@ public class BenchmarkingDemo {
 
     private static ImageJ ij;
     private static ClearCLIJ lCLIJ;
+    private static double sigma = 3;
 
     public static void main(String... args) throws IOException {
         ij = new ImageJ();
@@ -65,7 +67,7 @@ public class BenchmarkingDemo {
         ImagePlus copy = new Duplicator().run(input, 1, input.getNSlices());
         //copy.show();
         Prefs.blackBackground = false;
-        IJ.run(copy,"Gaussian Blur 3D...", "x=3 y=3 z=3");
+        IJ.run(copy,"Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
         IJ.setRawThreshold(copy, 100, 255, null);
         IJ.run(copy, "Convert to Mask", "method=Default background=Dark");
         IJ.run(copy, "Erode", "stack");
@@ -79,8 +81,10 @@ public class BenchmarkingDemo {
 
     private static void demoImageJ2() {
         UnsignedByteType threshold = new UnsignedByteType();
+        //FloatType threshold = new FloatType();
+
         threshold.setReal(100);
-        RandomAccessibleInterval gauss = ij.op().filter().gauss(img, 3);
+        RandomAccessibleInterval gauss = ij.op().filter().gauss(img, sigma);
         IterableInterval ii = ij.op().threshold().apply(Views.iterable(gauss), threshold);
 
         // apparently, there is no erosion/dilation availale in ops
@@ -99,12 +103,12 @@ public class BenchmarkingDemo {
         lCLIJ.converter(input).getImagePlus().show();
 
         lParameters.clear();
-        lParameters.put("Nx", 6);
-        lParameters.put("Ny", 6);
-        lParameters.put("Nz", 6);
-        lParameters.put("sx", 3f);
-        lParameters.put("sy", 3f);
-        lParameters.put("sz", 3f);
+        lParameters.put("Nx", new Integer((int)(sigma * 3)));
+        lParameters.put("Ny", new Integer((int)(sigma * 3)));
+        lParameters.put("Nz", new Integer((int)(sigma * 3)));
+        lParameters.put("sx", new Float(sigma));
+        lParameters.put("sy", new Float(sigma));
+        lParameters.put("sz", new Float(sigma));
 
         lParameters.put("src", flip);
         lParameters.put("dst", flop);
