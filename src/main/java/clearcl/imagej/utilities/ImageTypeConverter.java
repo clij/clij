@@ -305,7 +305,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     if (pImageStack.getDataType() == NativeTypeEnum.Float
         || pImageStack.getDataType() == NativeTypeEnum.HalfFloat)
     {
-      System.out.println("float TYPE");
+      //System.out.println("float TYPE");
       float[]
           pixelArray =
           new float[(int) (contiguousMemory.getSizeInBytes()
@@ -317,7 +317,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     else if (pImageStack.getDataType()
                 == NativeTypeEnum.UnsignedShort)
     {
-      System.out.println("short TYPE");
+      //System.out.println("short TYPE");
       short[]
           pixelArray =
           new short[(int) (contiguousMemory.getSizeInBytes()
@@ -328,7 +328,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     }
     else if (pImageStack.getDataType() == NativeTypeEnum.Short)
     {
-      System.out.println("short TYPE");
+      //System.out.println("short TYPE");
       short[]
               pixelArray =
               new short[(int) (contiguousMemory.getSizeInBytes()
@@ -341,7 +341,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     else if (pImageStack.getDataType() == NativeTypeEnum.Byte)
     {
 
-      System.out.println("byte TYPE");
+      //System.out.println("byte TYPE");
       byte[]
               pixelArray =
               new byte[(int) (contiguousMemory.getSizeInBytes()
@@ -353,7 +353,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     else if (pImageStack.getDataType() == NativeTypeEnum.UnsignedByte)
     {
 
-      System.out.println("byte TYPE");
+      //System.out.println("byte TYPE");
       byte[]
           pixelArray =
           new byte[(int) (contiguousMemory.getSizeInBytes()
@@ -365,7 +365,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     else if (pImageStack.getDataType() == NativeTypeEnum.UnsignedInt)
     {
 
-      System.out.println("int TYPE");
+      //System.out.println("int TYPE");
       int[]
               pixelArray =
               new int[(int) (contiguousMemory.getSizeInBytes()
@@ -377,7 +377,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     else if (pImageStack.getDataType() == NativeTypeEnum.Int)
     {
 
-      System.out.println("int TYPE");
+      //System.out.println("int TYPE");
       int[]
               pixelArray =
               new int[(int) (contiguousMemory.getSizeInBytes()
@@ -391,7 +391,7 @@ public class ImageTypeConverter<T extends RealType<T>>
                 == NativeTypeEnum.UnsignedLong)
     {
 
-      System.out.println("long TYPE");
+      //System.out.println("long TYPE");
       long[]
           pixelArray =
           new long[(int) (contiguousMemory.getSizeInBytes()
@@ -469,7 +469,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     if (pClearCLImage.getChannelDataType()
         == ImageChannelDataType.SignedInt8)
     {
-      System.out.println("byte TYPE2");
+      //System.out.println("byte TYPE2");
 
       lPixel = (T) new ByteType();
       lFactory = (ImgFactory<T>) new ArrayImgFactory<ByteType>();
@@ -479,7 +479,7 @@ public class ImageTypeConverter<T extends RealType<T>>
              || pClearCLImage.getChannelDataType()
                 == ImageChannelDataType.UnsignedNormalizedInt8)
     {
-      System.out.println("ubyte TYPE2");
+      //System.out.println("ubyte TYPE2");
 
       lPixel = (T) new UnsignedByteType();
       lFactory =
@@ -488,7 +488,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     else if (pClearCLImage.getChannelDataType()
              == ImageChannelDataType.SignedInt16)
     {
-      System.out.println("short TYPE2");
+      //System.out.println("short TYPE2");
 
       lPixel = (T) new ShortType();
       lFactory = (ImgFactory<T>) new ArrayImgFactory<ShortType>();
@@ -498,7 +498,7 @@ public class ImageTypeConverter<T extends RealType<T>>
              || pClearCLImage.getChannelDataType()
                 == ImageChannelDataType.UnsignedNormalizedInt16)
     {
-      System.out.println("ushort TYPE2");
+      //System.out.println("ushort TYPE2");
 
       lPixel = (T) new UnsignedShortType();
       lFactory =
@@ -508,7 +508,7 @@ public class ImageTypeConverter<T extends RealType<T>>
              == ImageChannelDataType.Float)
     {
 
-      System.out.println("float TYPE2");
+      //System.out.println("float TYPE2");
 
       lPixel = (T) new FloatType();
       lFactory = (ImgFactory<T>) new ArrayImgFactory<FloatType>();
@@ -560,7 +560,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     NativeTypeEnum lInputType = pClearCLImage.getNativeType();
 
     long lBytesPerPixel = lInputType.getSizeInBytes();
-    System.out.println("lBytesPerPixel " + lBytesPerPixel);
+    //System.out.println("lBytesPerPixel " + lBytesPerPixel);
     long
         lNumberOfPixels =
         pClearCLImage.getWidth()
@@ -581,11 +581,11 @@ public class ImageTypeConverter<T extends RealType<T>>
         buffer =
         pContext.createBuffer(lInputType, lNumberOfPixels);
 
-    System.out.println("numberOfPixels " + lNumberOfPixels);
-    System.out.println("buffer.getSizeInBytes() "
-                       + buffer.getSizeInBytes());
-    System.out.println("contOut.getSizeInBytes() "
-                       + contOut.getSizeInBytes());
+    //System.out.println("numberOfPixels " + lNumberOfPixels);
+    //System.out.println("buffer.getSizeInBytes() "
+    //                   + buffer.getSizeInBytes());
+    //System.out.println("contOut.getSizeInBytes() "
+    //                  + contOut.getSizeInBytes());
 
     pClearCLImage.copyTo(buffer, true);
     buffer.writeTo(contOut, true);
@@ -618,7 +618,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       sum += lCursor.get().getRealDouble();
       lMemoryOffset += lBytesPerPixel;
     }
-    System.out.println("sumss " + sum);
+    //System.out.println("sumss " + sum);
     return img;
   }
 
@@ -638,31 +638,31 @@ public class ImageTypeConverter<T extends RealType<T>>
 
     if (lPixel instanceof UnsignedByteType)
     {
-      System.out.println("ubyte TYPE3");
+      //System.out.println("ubyte TYPE3");
 
       lImageChannelType = ImageChannelDataType.UnsignedInt8;
     }
     else if (lPixel instanceof ByteType)
     {
-      System.out.println("byte TYPE3");
+      //System.out.println("byte TYPE3");
 
       lImageChannelType = ImageChannelDataType.SignedInt8;
     }
     else if (lPixel instanceof UnsignedShortType)
     {
-      System.out.println("ushort TYPE3");
+      //System.out.println("ushort TYPE3");
 
       lImageChannelType = ImageChannelDataType.UnsignedInt16;
     }
     else if (lPixel instanceof ShortType)
     {
-      System.out.println("short TYPE3");
+      //System.out.println("short TYPE3");
 
       lImageChannelType = ImageChannelDataType.SignedInt16;
     }
     else if (lPixel instanceof FloatType)
     {
-      System.out.println("float TYPE3");
+      //System.out.println("float TYPE3");
 
       lImageChannelType = ImageChannelDataType.Float;
     }
