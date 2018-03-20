@@ -187,4 +187,8 @@ public class ClearCLIJ
     return lResultList;
   }
 
+  public ClearCLImage createCLImage(ClearCLImage pInputImage) {
+    return mClearCLContext.createImage(pInputImage);
+  }
+
 }
