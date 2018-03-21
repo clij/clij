@@ -5,7 +5,10 @@ import clearcl.backend.ClearCLBackendBase;
 import clearcl.backend.ClearCLBackendInterface;
 import clearcl.backend.ClearCLBackends;
 import clearcl.backend.javacl.ClearCLBackendJavaCL;
+import clearcl.enums.HostAccessType;
 import clearcl.enums.ImageChannelDataType;
+import clearcl.enums.ImageChannelOrder;
+import clearcl.enums.KernelAccessType;
 import clearcl.imagej.utilities.CLInfo;
 import clearcl.imagej.utilities.GenericBinaryFastFuseTask;
 import clearcl.imagej.utilities.ImageTypeConverter;
@@ -191,4 +194,12 @@ public class ClearCLIJ
     return mClearCLContext.createImage(pInputImage);
   }
 
+  public ClearCLImage createCLImage(long[] dimensions, ImageChannelDataType pImageChannelType) {
+
+    return mClearCLContext.createImage(HostAccessType.ReadWrite,
+            KernelAccessType.ReadWrite,
+            ImageChannelOrder.R,
+            pImageChannelType,
+            dimensions);
+  }
 }

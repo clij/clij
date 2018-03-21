@@ -41,8 +41,7 @@ public class BenchmarkingDemo {
 
         lCLIJ = new ClearCLIJ("HD");
 
-        input = NewImage.createByteImage("input",1024, 1024, 100, NewImage.FILL_RANDOM);
-                //IJ.openImage("src/main/resources/flybrain.tif");
+        input = IJ.openImage("src/main/resources/flybrain.tif");
         input.show();
         IJ.run(input, "8-bit","");
         img = ImageJFunctions.wrapReal(input);
@@ -96,11 +95,13 @@ public class BenchmarkingDemo {
     private static void demoClearCLIJ() throws IOException {
         HashMap<String, Object> lParameters = new HashMap<>();
 
+        long timestamp = System.currentTimeMillis();
         ClearCLImage input = lCLIJ.converter(img).getClearCLImage();
-        ClearCLImage flip = lCLIJ.converter(img).getClearCLImage();
-        ClearCLImage flop = lCLIJ.converter(img).getClearCLImage();
-
-        lCLIJ.converter(input).getImagePlus().show();
+        ClearCLImage flip = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
+        //ClearCLImage flip = lCLIJ.converter(img).getClearCLImage();
+        ClearCLImage flop = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
+        //ClearCLImage flop = lCLIJ.converter(img).getClearCLImage();
+        System.out.println("copy took " + (System.currentTimeMillis() - timestamp));
 
         lParameters.clear();
         lParameters.put("Nx", new Integer((int)(sigma * 3)));
@@ -110,7 +111,7 @@ public class BenchmarkingDemo {
         lParameters.put("sy", new Float(sigma));
         lParameters.put("sz", new Float(sigma));
 
-        lParameters.put("src", flip);
+        lParameters.put("src", input);
         lParameters.put("dst", flop);
 
         lCLIJ.execute(GaussianBlurTask.class, "kernels/blur.cl", "gaussian_blur_image3d", lParameters);
@@ -118,7 +119,7 @@ public class BenchmarkingDemo {
         //lCLIJ.converter(flop).getImagePlus().show();
 
         lParameters.clear();
-        lParameters.put("threshold", 100f);
+        lParameters.put("threshold", new Float(100));
         lParameters.put("src", flop);
         lParameters.put("dst", flip);
         lCLIJ.execute(BenchmarkingDemo.class, "kernels/thresholding.cl", "applyThreshold", lParameters);
