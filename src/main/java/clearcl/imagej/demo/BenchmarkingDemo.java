@@ -29,6 +29,15 @@ import org.scijava.plugin.Plugin;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * This class (rather its main method) applies a simple pipeline to a given image. It blurs it, creates a mask by
+ * thresholding, does some erosion and dilatation to make the edges smoother and finally sets all background pixels in
+ * the original image to zero. This pipeline is executed in the ImageJ1 way and in OpenCL to compare performance and
+ * results.
+ *
+ * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
+ * March 2018
+ */
 public class BenchmarkingDemo {
 
     private static ImageJ ij;
@@ -36,9 +45,11 @@ public class BenchmarkingDemo {
     private static double sigma = 3;
 
     public static void main(String... args) throws IOException {
+
+        // ---------------------------------------
+        // Initialize ImageJ, ClearCLIJ and test image
         ij = new ImageJ();
         ij.ui().showUI();
-
         lCLIJ = new ClearCLIJ("HD");
 
         input = IJ.openImage("src/main/resources/flybrain.tif");
@@ -46,6 +57,8 @@ public class BenchmarkingDemo {
         IJ.run(input, "8-bit","");
         img = ImageJFunctions.wrapReal(input);
 
+        // ---------------------------------------
+        // three test scenarios
         long timestamp = System.currentTimeMillis();
         demoImageJ1();
         System.out.println("The ImageJ1 way took " + (System.currentTimeMillis() - timestamp) + " msec");
@@ -57,6 +70,7 @@ public class BenchmarkingDemo {
         timestamp = System.currentTimeMillis();
         demoClearCLIJ();
         System.out.println("The ClearCL way took " + (System.currentTimeMillis() - timestamp) + " msec");
+        // ---------------------------------------
     }
 
     private static ImagePlus input;
@@ -64,7 +78,6 @@ public class BenchmarkingDemo {
 
     private static void demoImageJ1() {
         ImagePlus copy = new Duplicator().run(input, 1, input.getNSlices());
-        //copy.show();
         Prefs.blackBackground = false;
         IJ.run(copy,"Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
         IJ.setRawThreshold(copy, 100, 255, null);
@@ -88,6 +101,7 @@ public class BenchmarkingDemo {
 
         // apparently, there is no erosion/dilation availale in ops
 
+        // This crashes because I cannot multiply BitType with UnsignedShortType
         //IterableInterval multiply = ij.op().math().multiply(img, ii);
 
     }
@@ -95,13 +109,9 @@ public class BenchmarkingDemo {
     private static void demoClearCLIJ() throws IOException {
         HashMap<String, Object> lParameters = new HashMap<>();
 
-        long timestamp = System.currentTimeMillis();
         ClearCLImage input = lCLIJ.converter(img).getClearCLImage();
         ClearCLImage flip = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
-        //ClearCLImage flip = lCLIJ.converter(img).getClearCLImage();
         ClearCLImage flop = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
-        //ClearCLImage flop = lCLIJ.converter(img).getClearCLImage();
-        System.out.println("copy took " + (System.currentTimeMillis() - timestamp));
 
         lParameters.clear();
         lParameters.put("Nx", new Integer((int)(sigma * 3)));
