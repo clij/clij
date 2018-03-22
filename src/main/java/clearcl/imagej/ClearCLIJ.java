@@ -79,9 +79,11 @@ public class ClearCLIJ
     }
 
     if (mClearCLDevice == null) {
-      System.err.println("Warning: Optimal ClearCL device determination failed. Retrying using first device found.");
+      System.out.println("Warning: Optimal ClearCL device determination failed. Retrying using first device found.");
       mClearCLDevice = mClearCL.getAllDevices().get(0);
     }
+    System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
+
 
     mClearCLContext = mClearCLDevice.createContext();
 
