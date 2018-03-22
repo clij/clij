@@ -15,12 +15,17 @@ import net.imagej.ImageJPlugin;
 import net.imagej.ops.OpService;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.algorithm.neighborhood.DiamondShape;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.roi.Regions;
+import net.imglib2.type.BooleanType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.util.Pair;
 import net.imglib2.view.Views;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
@@ -91,19 +96,49 @@ public class BenchmarkingDemo {
         result.show();
     }
 
-    private static void demoImageJ2() {
+    private static <T extends RealType<T>, B extends BooleanType<B>> void demoImageJ2() {
+
+        // Thanks to @imagejan, @tpietscht and @Awalter from forum.imagej.net
+
         UnsignedByteType threshold = new UnsignedByteType();
         //FloatType threshold = new FloatType();
 
         threshold.setReal(100);
         RandomAccessibleInterval gauss = ij.op().filter().gauss(img, sigma);
-        IterableInterval ii = ij.op().threshold().apply(Views.iterable(gauss), threshold);
 
-        // apparently, there is no erosion/dilation availale in ops
+        // Gaussian blur
+        IterableInterval blurredIi = ij.op().threshold().apply(Views.iterable(gauss), threshold);
+        RandomAccessibleInterval blurredImg = makeRai(blurredIi);
 
-        // This crashes because I cannot multiply BitType with UnsignedShortType
-        //IterableInterval multiply = ij.op().math().multiply(img, ii);
+        // erode
+        IterableInterval erodedIi = ij.op().morphology().erode(blurredImg, new DiamondShape(1));
+        RandomAccessibleInterval erodedImg = makeRai(erodedIi);
 
+        // dilate
+        IterableInterval dilatedIi = ij.op().morphology().dilate(erodedImg, new DiamondShape(1));
+        RandomAccessibleInterval dilatedImg = makeRai(dilatedIi);
+
+        // mask original image
+        Img output = ij.op().create().img(img);
+        IterableInterval<Pair<T, T>> sample = Regions.sample(
+                Regions.iterable(dilatedImg),
+                Views.pair(output, img)
+        );
+        sample.forEach(pair -> pair.getA().set(pair.getB()) );
+
+        ImageJFunctions.show(output);
+
+    }
+
+    private static RandomAccessibleInterval makeRai(IterableInterval ii) {
+        RandomAccessibleInterval rai;
+        if (ii instanceof RandomAccessibleInterval) {
+            rai = (RandomAccessibleInterval)ii;
+        } else {
+            rai = ij.op().create().img(ii);
+            ij.op().copy().iterableInterval((Img) rai, ii);
+        }
+        return rai;
     }
 
     private static void demoClearCLIJ() throws IOException {
