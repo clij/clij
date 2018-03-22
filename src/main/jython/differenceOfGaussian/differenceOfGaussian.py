@@ -14,13 +14,10 @@ from net.imglib2.view import Views;
 from ij import IJ;
 from java.lang import Float
 import os;
+import inspect
 
 # retrieve the folder where this script is located (thanks to @mountain_man from the ImageJ forum)
-import inspect
-print inspect.getsourcefile(lambda:0)
 lCLFilesPath = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda:0))) + "/"
-
-#lCLFilesPath = "/home/rhaase/code/ClearCLIJ/src/main/jython/differenceOfGaussian/"
 
 # take the current image which is open in ImageJ
 lImagePlus = IJ.getImage()
@@ -28,11 +25,9 @@ lImagePlus = IJ.getImage()
 # initialize ClearCL context and convenience layer
 lCLIJ = ClearCLIJ.getInstance();
 
-print(lCLIJ.getClearCLContext())
-
 # convert imglib2 image to CL images (ready for the GPU)
 lInputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
-lOutputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
+lOutputCLImage = lCLIJ.createCLImage([lInputCLImage.getWidth(), lInputCLImage.getHeight()], lInputCLImage.getChannelDataType());
 
 # apply a filter to the image using ClearCL / OpenCL
 lCLIJ.execute(lCLFilesPath + "differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", {
@@ -45,3 +40,5 @@ lCLIJ.execute(lCLFilesPath + "differenceOfGaussian.cl", "subtract_convolved_imag
 # convert the result back to imglib2 and show it
 lResultImg = lCLIJ.converter(lOutputCLImage).getRandomAccessibleInterval();
 ImageJFunctions.show(lResultImg);
+IJ.run("Enhance Contrast", "saturated=0.35");
+
