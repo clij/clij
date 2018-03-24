@@ -12,6 +12,8 @@ import clearcl.enums.KernelAccessType;
 import clearcl.imagej.utilities.CLInfo;
 import clearcl.imagej.utilities.GenericBinaryFastFuseTask;
 import clearcl.imagej.utilities.ImageTypeConverter;
+import clearcl.util.ElapsedTime;
+import clearcontrol.core.variable.Variable;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
 import com.nativelibs4java.opencl.CLImage;
@@ -20,6 +22,7 @@ import fastfuse.FastFusionEngine;
 import fastfuse.FastFusionMemoryPool;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.plugin.Duplicator;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
@@ -109,30 +112,27 @@ public class ClearCLIJ
                          Map<String, Object> pParameterMap) throws
                                                             IOException
   {
-    GenericBinaryFastFuseTask
-        lGenericUnaryFastFuseTask =
-        new GenericBinaryFastFuseTask(mFastFusionEngine,
-                                      pAnchorClass,
-                                      pProgramFilename,
-                                      pKernelname);
-    lGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
+    final Variable<Boolean> result = new Variable<Boolean>("", true);
 
-    //mFastFusionEngine.addTask(lGenericUnaryFastFuseTask);
+    ElapsedTime.measure(pKernelname, () -> {
+        GenericBinaryFastFuseTask
+            lGenericUnaryFastFuseTask =
+                null;
+        try {
+            lGenericUnaryFastFuseTask = new GenericBinaryFastFuseTask(mFastFusionEngine,
+                                          pAnchorClass,
+                                          pProgramFilename,
+                                          pKernelname);
+        } catch (IOException e) {
+            e.printStackTrace();
+            result.set(false);
+            return;
+        }
+        lGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
 
-    //ImageChannelDataType lType = determineType(pInputImageStack.getDataType());
-
-    //mFastFusionEngine.passImage(lGenericSrcImageName, pInputImageStack.getContiguousMemory(), lType, pInputImageStack.getDimensions());
-
-    //mFastFusionEngine.executeAllTasks();
-
-    return lGenericUnaryFastFuseTask.enqueue(null, true);
-
-    //if (mFastFusionEngine.isImageAvailable(lGenericDstImageName)) {
-    //  return convertToOffHeapPlanarStack(mFastFusionEngine.getImage(lGenericDstImageName));
-    //} else {
-    //  return null;
-    //}
-
+        result.set(lGenericUnaryFastFuseTask.enqueue(null, true));
+    });
+    return result.get();
   }
 
   public void dispose()
@@ -221,11 +221,14 @@ public class ClearCLIJ
     show(converter(input), title);
   }
   public void show(ImageTypeConverter input, String title) {
-    ImagePlus imp = input.getImagePlus();
+    ImagePlus imp = new Duplicator().run(input.getImagePlus());
     imp.setTitle(title);
     imp.setZ(imp.getNSlices() / 2);
     imp.setC(imp.getNChannels() / 2);
     IJ.run(imp,"Enhance Contrast", "saturated=0.35");
+    if (imp.getNChannels() > 1 && imp.getNSlices() == 1) {
+        IJ.run(imp, "Properties...", "channels=1 slices=" + imp.getNChannels() + " frames=1 unit=pixel pixel_width=1.0000 pixel_height=1.0000 voxel_depth=1.0000");
+    }
     imp.show();
   }
 
