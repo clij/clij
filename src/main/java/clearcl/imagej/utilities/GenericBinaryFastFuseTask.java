@@ -28,6 +28,8 @@ public class GenericBinaryFastFuseTask extends TaskBase
 {
   ClearCLContext mContext;
 
+  Class mAnchorClass;
+  String mProgramFilename;
   String mKernelName;
   Map<String, Object> mParameterMap;
 
@@ -35,10 +37,10 @@ public class GenericBinaryFastFuseTask extends TaskBase
                                    Class pAnchorClass,
                                    String pProgramFilename,
                                    String pKernelName) throws
-                                                           IOException
-  {
+                                                           IOException {
     super();
-    setupProgram(pAnchorClass, pProgramFilename);
+    mProgramFilename = pProgramFilename;
+    mAnchorClass = pAnchorClass;
     mKernelName = pKernelName;
     mContext = pFastFusionEngine.getContext();
   }
@@ -56,6 +58,8 @@ public class GenericBinaryFastFuseTask extends TaskBase
   @Override public boolean enqueue(FastFusionEngineInterface pFastFusionEngine,
                                    boolean pWaitToFinish)
   {
+    setupProgram(mAnchorClass, mProgramFilename);
+
     ClearCLImage lSrcImage = null;
     ClearCLImage lDstImage = null;
 
@@ -115,5 +119,17 @@ public class GenericBinaryFastFuseTask extends TaskBase
     }
 
     return true;
+  }
+
+  public void setAnchorClass(Class mAnchorClass) {
+    this.mAnchorClass = mAnchorClass;
+  }
+
+  public void setProgramFilename(String mProgramFilename) {
+    this.mProgramFilename = mProgramFilename;
+  }
+
+  public void setKernelName(String mKernelName) {
+    this.mKernelName = mKernelName;
   }
 }

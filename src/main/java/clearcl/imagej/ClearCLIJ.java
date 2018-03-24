@@ -60,8 +60,11 @@ public class ClearCLIJ
   private static ClearCLIJ sInstance = null;
 
   private FastFusionEngine mFastFusionEngine;
+  private GenericBinaryFastFuseTask
+            mGenericUnaryFastFuseTask = null;
 
-  public static ClearCLIJ getInstance()
+
+    public static ClearCLIJ getInstance()
   {
     if (sInstance == null)
     {
@@ -114,23 +117,26 @@ public class ClearCLIJ
   {
     final Variable<Boolean> result = new Variable<Boolean>("", true);
 
-    ElapsedTime.measure(pKernelname, () -> {
-        GenericBinaryFastFuseTask
-            lGenericUnaryFastFuseTask =
-                null;
-        try {
-            lGenericUnaryFastFuseTask = new GenericBinaryFastFuseTask(mFastFusionEngine,
-                                          pAnchorClass,
-                                          pProgramFilename,
-                                          pKernelname);
-        } catch (IOException e) {
-            e.printStackTrace();
-            result.set(false);
-            return;
+    ElapsedTime.measure("kernel + build " + pKernelname, () -> {
+        if (mGenericUnaryFastFuseTask == null) {
+            try {
+                mGenericUnaryFastFuseTask = new GenericBinaryFastFuseTask(mFastFusionEngine,
+                        pAnchorClass,
+                        pProgramFilename,
+                        pKernelname);
+            } catch (IOException e) {
+                e.printStackTrace();
+                result.set(false);
+                return;
+            }
+        } else {
+            mGenericUnaryFastFuseTask.setProgramFilename(pProgramFilename);
+            mGenericUnaryFastFuseTask.setKernelName(pKernelname);
+            mGenericUnaryFastFuseTask.setAnchorClass(pAnchorClass);
+            mGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
         }
-        lGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
-
-        result.set(lGenericUnaryFastFuseTask.enqueue(null, true));
+        mGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
+        result.set(mGenericUnaryFastFuseTask.enqueue(null, true));
     });
     return result.get();
   }
