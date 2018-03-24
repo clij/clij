@@ -8,6 +8,7 @@ import clearcl.enums.ImageChannelDataType;
 import clearcl.enums.ImageChannelOrder;
 import clearcl.enums.KernelAccessType;
 import clearcontrol.stack.OffHeapPlanarStack;
+import clearcontrol.stack.StackInterface;
 import coremem.ContiguousMemoryInterface;
 import coremem.enums.NativeTypeEnum;
 import coremem.offheap.OffHeapMemory;
@@ -63,7 +64,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       mRandomAccessibleInterval =
       null;
   private ClearCLImage mClearCLImage = null;
-  private OffHeapPlanarStack mImageStack = null;
+  private StackInterface mImageStack = null;
 
   public ImageTypeConverter(ClearCLContext pClearCLContext,
                             RandomAccessibleInterval<T> pRandomAccessibleInterval) throws
@@ -88,7 +89,7 @@ public class ImageTypeConverter<T extends RealType<T>>
   }
 
   public ImageTypeConverter(ClearCLContext pClearCLContext,
-                            OffHeapPlanarStack pStack)
+                            StackInterface pStack)
   {
     mContext = pClearCLContext;
     mImageStack = pStack;
@@ -113,7 +114,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     return mClearCLImage;
   }
 
-  public OffHeapPlanarStack getOffHeapPlanarStack()
+  public StackInterface getOffHeapPlanarStack()
   {
     if (mImageStack == null)
     {
@@ -275,7 +276,7 @@ public class ImageTypeConverter<T extends RealType<T>>
   }
 
   public static <T extends RealType<T>> RandomAccessibleInterval<T> convertOffHeapPlanarStackToRandomAccessibleInterval(
-      OffHeapPlanarStack pImageStack)
+      StackInterface pImageStack)
   {
     Img<T> lReturnImg = null;
 
@@ -418,7 +419,7 @@ public class ImageTypeConverter<T extends RealType<T>>
   }
 
   public ClearCLImage convertOffHeapPlanarStackToClearCLImage(
-      OffHeapPlanarStack pImageStack)
+      StackInterface pImageStack)
   {
     long[] dimensions = pImageStack.getDimensions();
 

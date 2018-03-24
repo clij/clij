@@ -13,9 +13,12 @@ import clearcl.imagej.utilities.CLInfo;
 import clearcl.imagej.utilities.GenericBinaryFastFuseTask;
 import clearcl.imagej.utilities.ImageTypeConverter;
 import clearcontrol.stack.OffHeapPlanarStack;
+import clearcontrol.stack.StackInterface;
+import com.nativelibs4java.opencl.CLImage;
 import coremem.enums.NativeTypeEnum;
 import fastfuse.FastFusionEngine;
 import fastfuse.FastFusionMemoryPool;
+import ij.IJ;
 import ij.ImagePlus;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
@@ -161,7 +164,7 @@ public class ClearCLIJ
     return lResultMap;
   }
 
-  public ImageTypeConverter converter(OffHeapPlanarStack pStack) {
+  public ImageTypeConverter converter(StackInterface pStack) {
     return new ImageTypeConverter(mClearCLContext, pStack);
   }
 
@@ -204,4 +207,31 @@ public class ClearCLIJ
             pImageChannelType,
             dimensions);
   }
+
+  public void show(ImagePlus input, String title) {
+    show(converter(input), title);
+  }
+  public void show(RandomAccessibleInterval input, String title) {
+    show(converter(input), title);
+  }
+  public void show(ClearCLImage input, String title) {
+    show(converter(input), title);
+  }
+  public void show(StackInterface input, String title) {
+    show(converter(input), title);
+  }
+  public void show(ImageTypeConverter input, String title) {
+    ImagePlus imp = input.getImagePlus();
+    imp.setTitle(title);
+    imp.setZ(imp.getNSlices() / 2);
+    imp.setC(imp.getNChannels() / 2);
+    IJ.run(imp,"Enhance Contrast", "saturated=0.35");
+    imp.show();
+  }
+
+
+
+
+
+
 }
