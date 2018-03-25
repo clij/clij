@@ -13,6 +13,7 @@ import coremem.ContiguousMemoryInterface;
 import coremem.enums.NativeTypeEnum;
 import coremem.offheap.OffHeapMemory;
 import coremem.offheap.OffHeapMemoryAccess;
+import ij.IJ;
 import ij.ImagePlus;
 import net.imagej.ops.create.img.Imgs;
 import net.imglib2.Cursor;
@@ -155,7 +156,11 @@ public class ImageTypeConverter<T extends RealType<T>>
 
   public ImagePlus getImagePlus()
   {
-    return ImageJFunctions.wrap(getRandomAccessibleInterval(), "img");
+    ImagePlus result = ImageJFunctions.wrap(getRandomAccessibleInterval(), "img");
+    if (result.getNChannels() > 1 && result.getNSlices() == 1) {
+      IJ.run(result, "Properties...", "channels=1 slices=" + result.getNChannels() + " frames=1 unit=pixel pixel_width=1.0000 pixel_height=1.0000 voxel_depth=1.0000");
+    }
+    return result;
   }
 
   public static <T extends RealType<T>> OffHeapPlanarStack convertClearClImageToOffHeapPlanarStack(
