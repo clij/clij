@@ -32,17 +32,20 @@ public class GenericBinaryFastFuseTask extends TaskBase
   String mProgramFilename;
   String mKernelName;
   Map<String, Object> mParameterMap;
+  long[] mGlobalSizes;
 
   public GenericBinaryFastFuseTask(FastFusionEngine pFastFusionEngine,
                                    Class pAnchorClass,
                                    String pProgramFilename,
-                                   String pKernelName) throws
+                                   String pKernelName,
+                                   long[] pGlobalSizes) throws
                                                            IOException {
     super();
     mProgramFilename = pProgramFilename;
     mAnchorClass = pAnchorClass;
     mKernelName = pKernelName;
     mContext = pFastFusionEngine.getContext();
+    mGlobalSizes = pGlobalSizes;
   }
 
   /**
@@ -106,8 +109,11 @@ public class GenericBinaryFastFuseTask extends TaskBase
 
     if (lClearCLKernel != null)
     {
-      lClearCLKernel.setGlobalSizes(lDstImage.getDimensions());
-
+      if (mGlobalSizes != null) {
+          lClearCLKernel.setGlobalSizes(mGlobalSizes);
+      } else {
+          lClearCLKernel.setGlobalSizes(lDstImage.getDimensions());
+      }
       if (mParameterMap != null)
       {
         for (String key : mParameterMap.keySet())
@@ -131,5 +137,9 @@ public class GenericBinaryFastFuseTask extends TaskBase
 
   public void setKernelName(String mKernelName) {
     this.mKernelName = mKernelName;
+  }
+
+  public void setGlobalSizes(long[] pGlobalSizes) {
+      mGlobalSizes = pGlobalSizes;
   }
 }

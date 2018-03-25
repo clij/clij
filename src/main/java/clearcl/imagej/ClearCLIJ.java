@@ -103,8 +103,7 @@ public class ClearCLIJ
 
   public boolean execute(String pProgramFilename,
                          String pKernelname,
-                         Map<String, Object> pParameterMap) throws
-                                                            IOException
+                         Map<String, Object> pParameterMap)
   {
     return execute(Object.class, pProgramFilename, pKernelname, pParameterMap);
   }
@@ -112,8 +111,16 @@ public class ClearCLIJ
   public boolean execute(Class pAnchorClass,
                          String pProgramFilename,
                          String pKernelname,
-                         Map<String, Object> pParameterMap) throws
-                                                            IOException
+                         Map<String, Object> pParameterMap)
+  {
+    return execute(pAnchorClass, pProgramFilename, pKernelname, null, pParameterMap);
+  }
+
+  public boolean execute(Class pAnchorClass,
+                         String pProgramFilename,
+                         String pKernelname,
+                         long[] pGlobalsizes,
+                         Map<String, Object> pParameterMap)
   {
     final Variable<Boolean> result = new Variable<Boolean>("", true);
 
@@ -123,7 +130,8 @@ public class ClearCLIJ
                 mGenericUnaryFastFuseTask = new GenericBinaryFastFuseTask(mFastFusionEngine,
                         pAnchorClass,
                         pProgramFilename,
-                        pKernelname);
+                        pKernelname,
+                        pGlobalsizes);
             } catch (IOException e) {
                 e.printStackTrace();
                 result.set(false);
@@ -134,6 +142,7 @@ public class ClearCLIJ
             mGenericUnaryFastFuseTask.setKernelName(pKernelname);
             mGenericUnaryFastFuseTask.setAnchorClass(pAnchorClass);
             mGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
+            mGenericUnaryFastFuseTask.setGlobalSizes(pGlobalsizes);
         }
         mGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
         result.set(mGenericUnaryFastFuseTask.enqueue(null, true));
