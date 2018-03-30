@@ -3,6 +3,7 @@ package clearcl.imagej.test;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcontrol.stack.OffHeapPlanarStack;
+import clearcontrol.stack.StackInterface;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
@@ -115,7 +116,7 @@ public class ImageConverterTest
   private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStack(RandomAccessibleInterval<T> lRAI) {
     ClearCLIJ lCLIJ = mCLIJ;
 
-    OffHeapPlanarStack lOffHeapPlanarStack = lCLIJ.converter(lRAI).getOffHeapPlanarStack();
+    StackInterface lOffHeapPlanarStack = lCLIJ.converter(lRAI).getOffHeapPlanarStack();
 
     RandomAccessibleInterval<T>
         lRAIconvertedTwice =
@@ -127,7 +128,7 @@ public class ImageConverterTest
   private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(RandomAccessibleInterval<T> lRAI) {
     ClearCLIJ lCLIJ = mCLIJ;
 
-    OffHeapPlanarStack lOffHeapPlanarStack = lCLIJ.converter(lRAI).getOffHeapPlanarStack();
+    StackInterface lOffHeapPlanarStack = lCLIJ.converter(lRAI).getOffHeapPlanarStack();
 
     ClearCLImage lCLImage = lCLIJ.converter(lOffHeapPlanarStack).getClearCLImage();
 
@@ -137,7 +138,7 @@ public class ImageConverterTest
 
     ClearCLImage lCLImage2 = lCLIJ.converter(lRAIconvertedTwice).getClearCLImage();
 
-    OffHeapPlanarStack lOffHeapPlanarStack2 = lCLIJ.converter(lCLImage2).getOffHeapPlanarStack();
+    StackInterface lOffHeapPlanarStack2 = lCLIJ.converter(lCLImage2).getOffHeapPlanarStack();
 
     RandomAccessibleInterval<T> lRAIconverted = lCLIJ.converter(lOffHeapPlanarStack2).getRandomAccessibleInterval();
 
