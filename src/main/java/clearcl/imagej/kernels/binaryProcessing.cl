@@ -66,3 +66,23 @@ __kernel void dilate_6_neighborhood_3d(__read_only    image3d_t  src,
   WRITE_IMAGE (dst, pos, value);
 }
 
+__kernel void invert_3d(__read_only    image3d_t  src,
+                          __write_only    image3d_t  dst
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+  const int z = get_global_id(2);
+
+  const int4 pos = (int4){x,y,z,0};
+
+  DTYPE_OUT value = READ_IMAGE(src, pos).x;
+  if (value != 0) {
+    value = 0;
+  } else {
+    value = 1;
+  }
+
+  WRITE_IMAGE (dst, pos, value);
+}
+

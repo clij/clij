@@ -1,14 +1,13 @@
 package clearcl.imagej.kernels;
 
+import clearcl.ClearCL;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.gui.Roi;
-import ij.plugin.Duplicator;
-import ij.plugin.GaussianBlur3D;
-import ij.plugin.ImageCalculator;
+import ij.plugin.*;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
@@ -164,7 +163,38 @@ public class KernelsTest {
 
     @Test
     public void argMaxProjection() {
-        System.out.println("Todo: implement test for argMaxProjection");
+      ImagePlus maxProjection = NewImage.createShortImage("", testImp1.getWidth(), testImp2.getHeight(), 1, NewImage.FILL_BLACK);
+      ImageProcessor ipMax = maxProjection.getProcessor();
+      ImagePlus argMaxProjection = NewImage.createShortImage("", testImp1.getWidth(), testImp2.getHeight(), 1, NewImage.FILL_BLACK);
+      ImageProcessor ipArgMax = maxProjection.getProcessor();
+
+      ImagePlus testImp1copy = new Duplicator().run(testImp1);
+      for (int z = 0; z < testImp1copy.getNSlices(); z++) {
+        testImp1copy.setZ(z + 1);
+        ImageProcessor ip = testImp1copy.getProcessor();
+        for (int x = 0; x < testImp1copy.getWidth(); x++) {
+          for (int y = 0; y < testImp1copy.getHeight(); y++)
+          {
+            float value = ip.getf(x, y);
+            if (value > ipMax.getf(x, y)) {
+              ipMax.setf(x, y, value);
+              ipArgMax.setf(x, y, z);
+            }
+          }
+        }
+      }
+
+      ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+      ClearCLImage dst = clij.createCLImage(new long[]{src.getWidth(), src.getHeight()}, src.getChannelDataType());
+      ClearCLImage dst_arg = clij.createCLImage(new long[]{src.getWidth(), src.getHeight()}, src.getChannelDataType());
+
+      Kernels.argMaxProjection(clij, src, dst, dst_arg);
+
+      ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
+      ImagePlus argMaxProjectionCL = clij.converter(dst_arg).getImagePlus();
+
+      assertTrue(compareImages(maxProjection, maxProjectionCL));
+      assertTrue(compareImages(argMaxProjection, argMaxProjectionCL));
     }
 
     @Test
@@ -298,20 +328,77 @@ public class KernelsTest {
         assertTrue(sum == 1);
     }
 
-    @Test
+  @Test
+  public void invertBinary() {
+    ClearCLImage maskCL = clij.converter(mask).getClearCLImage();
+    ClearCLImage maskCLafter = clij.converter(mask).getClearCLImage();
+
+    Kernels.invertBinary(clij, maskCL, maskCLafter);
+
+    double sumCL = Kernels.sumPixels(clij, maskCL);
+    double sumCLafter = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sumCLafter == maskCL.getWidth() * maskCL.getHeight() * maskCL.getDepth() - sumCL);
+  }
+
+
+  @Test
     public void mask() {
         System.out.println("Todo: implement test for mask");
     }
 
 
     @Test
-    public void maxProjection() {
-      System.out.println("Todo: implement test for maxProjection");
+    public void maxProjection() throws InterruptedException
+    {
+      ImagePlus maxProjection = NewImage.createShortImage("", testImp1.getWidth(), testImp2.getHeight(), 1, NewImage.FILL_BLACK);
+      ImageProcessor ipMax = maxProjection.getProcessor();
+
+      ImagePlus testImp1copy = new Duplicator().run(testImp1);
+      for (int z = 0; z < testImp1copy.getNSlices(); z++) {
+        testImp1copy.setZ(z + 1);
+        ImageProcessor ip = testImp1copy.getProcessor();
+        for (int x = 0; x < testImp1copy.getWidth(); x++) {
+          for (int y = 0; y < testImp1copy.getHeight(); y++)
+          {
+            float value = ip.getf(x, y);
+            if (value > ipMax.getf(x, y)) {
+              ipMax.setf(x, y, value);
+            }
+          }
+        }
+      }
+
+      ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+      ClearCLImage dst = clij.createCLImage(new long[]{src.getWidth(), src.getHeight()}, src.getChannelDataType());
+
+      Kernels.maxProjection(clij, src, dst);
+
+      ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(compareImages(maxProjection, maxProjectionCL));
+
     }
 
     @Test
     public void multiplyPixelwise() {
         System.out.println("Todo: implement test for multiplPixelwise");
+    }
+
+
+    @Test
+    public void multiplyScalar() {
+      ImagePlus added = new Duplicator().run(testImp1);
+      IJ.run(added, "Multiply...", "value=2 stack");
+
+      ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+      ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+      Kernels.multiplyScalar(clij, src, dst, 2);
+      ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(compareImages(added, addedFromCL));
+
     }
 
     @Test

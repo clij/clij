@@ -144,8 +144,6 @@ public class Kernels {
         return clij.execute(Kernels.class, "binaryProcessing.cl", "erode_6_neighborhood_3d", parameters);
     }
 
-    // invert
-    // invertBinary
 
     public static boolean mask(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage mask, ClearCLImage dst) {
         HashMap<String, Object> lParameters = new HashMap<>();
@@ -157,7 +155,7 @@ public class Kernels {
     }
 
 
-  public static boolean maxProjection(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage dst_max, ClearCLImage dst_arg) {
+  public static boolean maxProjection(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage dst_max) {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
     lParameters.put("dst_max", dst_max);
@@ -174,6 +172,14 @@ public class Kernels {
         lParameters.put("src1", pImage1);
         lParameters.put("dst", pOutputImage);
         return pCLIJ.execute(Kernels.class, "math.cl", "multiplyPixelwise", lParameters);
+    }
+
+    public static boolean multiplyScalar(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage dst, float scalar) {
+      HashMap<String, Object> lParameters = new HashMap<>();
+      lParameters.put("src", src);
+      lParameters.put("scalar", scalar);
+      lParameters.put("dst", dst);
+      return pCLIJ.execute(Kernels.class, "math.cl", "multiplScalar", lParameters);
     }
 
     public static double sumPixels(ClearCLIJ clij, ClearCLImage clImage) {
@@ -214,5 +220,18 @@ public class Kernels {
     // multiply all planes in the stack with the one given 2d plane
     return true;
   }
+
+  public static boolean invert(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage output3d) {
+    return multiplyScalar(clij, input3d, input3d, -1);
+  }
+
+
+  public static boolean invertBinary(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
+    HashMap<String, Object> parameters = new HashMap<>();
+    parameters.put("src", src);
+    parameters.put("dst", dst);
+    return clij.execute(Kernels.class, "binaryProcessing.cl", "invert_3d", parameters);
+  }
+
 
 }

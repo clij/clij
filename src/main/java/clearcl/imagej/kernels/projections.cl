@@ -34,8 +34,8 @@ __kernel void arg_max_project_3d_2d(
       max_pos = z;
     }
   }
-  WRITE_IMAGE(dst,(int2)(x,y),(DTYPE_OUT)max);
-  WRITE_IMAGE(dst,(int2)(x,y),(DTYPE_OUT)max_pos);
+  WRITE_IMAGE(dst_max,(int2)(x,y),(DTYPE_OUT)max);
+  WRITE_IMAGE(dst_arg,(int2)(x,y),(DTYPE_OUT)max_pos);
 }
 
 __kernel void max_project_3d_2d(
@@ -54,5 +54,5 @@ __kernel void max_project_3d_2d(
       max = value;
     }
   }
-  WRITE_IMAGE(dst,(int2)(x,y),(DTYPE_OUT)max);
+  WRITE_IMAGE(dst_max,(int2)(x,y),(DTYPE_OUT)max);
 }
