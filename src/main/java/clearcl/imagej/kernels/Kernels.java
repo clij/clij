@@ -211,7 +211,7 @@ public class Kernels {
       lParameters.put("src", src);
       lParameters.put("scalar", scalar);
       lParameters.put("dst", dst);
-      return pCLIJ.execute(Kernels.class, "math.cl", "multiplScalar", lParameters);
+      return pCLIJ.execute(Kernels.class, "math.cl", "multiplyScalar", lParameters);
     }
 
 

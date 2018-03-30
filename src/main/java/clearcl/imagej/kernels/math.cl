@@ -28,7 +28,7 @@ __kernel void multiplyStackWithPlanePixelwise(__read_only    image3d_t  src,
   const int z = get_global_id(2);
 
   const int4 pos3d = (int4){x,y,z,0};
-  const int2 pos2d = (int4){x,y};
+  const int2 pos2d = (int2){x,y};
 
   const DTYPE_OUT value = READ_IMAGE(src, pos3d).x * READ_IMAGE(src1, pos2d).x;
 

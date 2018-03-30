@@ -5,6 +5,7 @@ import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.Prefs;
 import ij.gui.NewImage;
 import ij.gui.Roi;
 import ij.plugin.*;
@@ -475,6 +476,21 @@ public class KernelsTest {
 
     @Test
     public void threshold() {
-        System.out.println("Todo: implement test for threshold");
+      ImagePlus thresholded = new Duplicator().run(testImp2);
+      Prefs.blackBackground = false;
+      IJ.setRawThreshold(thresholded, 2, 65535, null);
+      IJ.run(thresholded, "Convert to Mask", "method=Default background=Dark");
+      //IJ.run(thresholded, "Divide...", "value=255");
+
+      ClearCLImage src = clij.converter(testImp2).getClearCLImage();
+      ClearCLImage dst = clij.converter(testImp2).getClearCLImage();
+
+
+      Kernels.threshold(clij, src, dst, 2);
+      Kernels.multiplyScalar(clij, dst, src, 255);
+
+      ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+
+      assertTrue(compareImages(thresholded, thresholdedCL));
     }
 }
