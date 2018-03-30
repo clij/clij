@@ -2,6 +2,7 @@ package clearcl.imagej.demo;
 
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
+import clearcl.imagej.kernels.Kernels;
 import clearcontrol.stack.OffHeapPlanarStack;
 import fastfuse.tasks.GaussianBlurTask;
 import ij.IJ;
@@ -167,21 +168,21 @@ public class BenchmarkingDemo {
         lParameters.put("threshold", new Float(100));
         lParameters.put("src", flop);
         lParameters.put("dst", flip);
-        lCLIJ.execute(BenchmarkingDemo.class, "kernels/thresholding.cl", "applyThreshold", lParameters);
+        lCLIJ.execute(Kernels.class, "thresholding.cl", "applyThreshold", lParameters);
 
         //lCLIJ.converter(flip).getImagePlus().show();
 
         lParameters.clear();
         lParameters.put("src", flip);
         lParameters.put("dst", flop);
-        lCLIJ.execute(BenchmarkingDemo.class, "kernels/binaryProcessing.cl", "erode_4_neighborhood", lParameters);
+        lCLIJ.execute(Kernels.class, "binaryProcessing.cl", "erode_4_neighborhood", lParameters);
 
         //lCLIJ.converter(flop).getImagePlus().show();
 
         lParameters.clear();
         lParameters.put("src", flop);
         lParameters.put("dst", flip);
-        lCLIJ.execute(BenchmarkingDemo.class, "kernels/binaryProcessing.cl", "dilate_4_neighborhood", lParameters);
+        lCLIJ.execute(Kernels.class, "binaryProcessing.cl", "dilate_4_neighborhood", lParameters);
 
         //lCLIJ.converter(flip).getImagePlus().show();
 
@@ -189,7 +190,7 @@ public class BenchmarkingDemo {
         lParameters.put("src", flop);
         lParameters.put("src1", input);
         lParameters.put("dst", flip);
-        lCLIJ.execute(BenchmarkingDemo.class, "kernels/math.cl", "multiplyPixelwise", lParameters);
+        lCLIJ.execute(Kernels.class, "math.cl", "multiplyPixelwise", lParameters);
 
         lCLIJ.converter(flip).getImagePlus().show();
 

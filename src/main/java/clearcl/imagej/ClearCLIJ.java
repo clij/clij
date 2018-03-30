@@ -16,7 +16,6 @@ import clearcl.util.ElapsedTime;
 import clearcontrol.core.variable.Variable;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
-import com.nativelibs4java.opencl.CLImage;
 import coremem.enums.NativeTypeEnum;
 import fastfuse.FastFusionEngine;
 import fastfuse.FastFusionMemoryPool;

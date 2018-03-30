@@ -1,5 +1,5 @@
 
-__kernel void erode_4_neighborhood(__read_only    image3d_t  src,
+__kernel void erode_6_neighborhood_3d(__read_only    image3d_t  src,
                           __write_only    image3d_t  dst
                      )
 {
@@ -32,7 +32,7 @@ __kernel void erode_4_neighborhood(__read_only    image3d_t  src,
   WRITE_IMAGE (dst, pos, value);
 }
 
-__kernel void dilate_4_neighborhood(__read_only    image3d_t  src,
+__kernel void dilate_6_neighborhood_3d(__read_only    image3d_t  src,
                           __write_only    image3d_t  dst
                      )
 {
