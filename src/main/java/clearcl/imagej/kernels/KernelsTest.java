@@ -11,6 +11,7 @@ import ij.plugin.*;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import net.imglib2.realtransform.Scale3D;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -327,6 +328,20 @@ public class KernelsTest {
     @Test
     public void downsample() {
         System.out.println("Todo: implement test for downsample");
+/*
+        testImp1.show();
+        IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 width=512 height=1024 depth=5 interpolation=None process create");
+        ImagePlus downsampled = IJ.getImage();
+
+        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+        Kernels.downsample(clij, src, dst, 0.5f, 0.5f, 0.5f);
+
+        ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(compareImages(downsampled, downsampledCL));
+      */
     }
 
     @Test
@@ -401,6 +416,17 @@ public class KernelsTest {
     @Test
     public void multiplyPixelwise() {
         System.out.println("Todo: implement test for multiplPixelwise");
+
+      ImagePlus multiplied = new ImageCalculator().run("Multiply create stack", testImp1, testImp2);
+      ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+      ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
+      ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+      Kernels.multiplyPixelwise(clij, src, src1, dst);
+
+      ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(compareImages(multiplied, multipliedCL));
     }
 
 
@@ -424,7 +450,20 @@ public class KernelsTest {
       System.out.println("Todo: implement test for multiplyStackWithPlane");
     }
 
-    @Test
+  @Test
+  public void set() {
+    ClearCLImage imageCL = clij.converter(mask).getClearCLImage();
+
+    Kernels.set(clij, imageCL, 2);
+
+    double sum = Kernels.sumPixels(clij, imageCL);
+
+    assertTrue(sum == imageCL.getWidth() * imageCL.getHeight() * imageCL.getDepth() * 2);
+
+  }
+
+
+  @Test
     public void sumPixels() {
         ClearCLImage maskCL = clij.converter(mask).getClearCLImage();
 

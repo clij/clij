@@ -16,6 +16,8 @@ __kernel void multiplyPixelwise(__read_only    image3d_t  src,
 }
 
 
+
+
 __kernel void multiplyStackWithPlanePixelwise(__read_only    image3d_t  src,
                                  __read_only    image2d_t  src1,
                           __write_only    image3d_t  dst
@@ -30,7 +32,7 @@ __kernel void multiplyStackWithPlanePixelwise(__read_only    image3d_t  src,
 
   const DTYPE_OUT value = READ_IMAGE(src, pos3d).x * READ_IMAGE(src1, pos2d).x;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE (dst, pos3d, value);
 }
 
 __kernel void addPixelwise(__read_only    image3d_t  src,

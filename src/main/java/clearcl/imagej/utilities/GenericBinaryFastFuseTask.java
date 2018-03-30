@@ -92,7 +92,40 @@ public class GenericBinaryFastFuseTask extends TaskBase
         return false;
       }
 
-    } else
+    } else if (lSrcImage != null) {
+
+      try
+      {
+        lClearCLKernel =
+            getKernel(mContext, mKernelName,
+                      TaskHelper.getOpenCLDefines(lSrcImage,
+                                                  lSrcImage));
+      }
+      catch (IOException e1)
+      {
+        e1.printStackTrace();
+        return false;
+      }
+
+    }  else if (lDstImage != null) {
+
+      try
+      {
+        lClearCLKernel =
+            getKernel(mContext, mKernelName,
+                      TaskHelper.getOpenCLDefines(lDstImage,
+                                                  lDstImage));
+      }
+      catch (IOException e1)
+      {
+        e1.printStackTrace();
+        return false;
+      }
+
+    }
+
+
+    else
     {
       try
       {

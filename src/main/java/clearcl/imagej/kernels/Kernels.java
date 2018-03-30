@@ -156,7 +156,19 @@ public class Kernels {
     }
 
 
-    public static boolean mask(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage mask, ClearCLImage dst) {
+  public static boolean invert(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage output3d) {
+    return multiplyScalar(clij, input3d, input3d, -1);
+  }
+
+
+  public static boolean invertBinary(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
+    HashMap<String, Object> parameters = new HashMap<>();
+    parameters.put("src", src);
+    parameters.put("dst", dst);
+    return clij.execute(Kernels.class, "binaryProcessing.cl", "invert_3d", parameters);
+  }
+
+  public static boolean mask(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage mask, ClearCLImage dst) {
         HashMap<String, Object> lParameters = new HashMap<>();
         lParameters.put("src", src);
         lParameters.put("mask", mask);
@@ -213,6 +225,15 @@ public class Kernels {
     return clij.execute(Kernels.class, "math.cl", "multiplyStackWithPlanePixelwise", lParameters);
   }
 
+  public static boolean set(ClearCLIJ clij, ClearCLImage clImage, float value) {
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("dst", clImage);
+    lParameters.put("value", value);
+    return clij.execute(Kernels.class, "set.cl", "set_3d", lParameters);
+  }
+
 
   public static double sumPixels(ClearCLIJ clij, ClearCLImage clImage) {
 
@@ -242,18 +263,6 @@ public class Kernels {
         lParameters.put("dst", dst);
         return clij.execute(Kernels.class, "thresholding.cl", "applyThreshold", lParameters);
     }
-
-  public static boolean invert(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage output3d) {
-    return multiplyScalar(clij, input3d, input3d, -1);
-  }
-
-
-  public static boolean invertBinary(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
-    HashMap<String, Object> parameters = new HashMap<>();
-    parameters.put("src", src);
-    parameters.put("dst", dst);
-    return clij.execute(Kernels.class, "binaryProcessing.cl", "invert_3d", parameters);
-  }
 
 
 }
