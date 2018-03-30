@@ -240,6 +240,19 @@ public class KernelsTest {
     }
 
     @Test
+    public void copySlice() {
+      ImagePlus copy = new Duplicator().run(testImp1, 3,3);
+
+      ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+      ClearCLImage dst = clij.createCLImage(new long[]{src.getWidth(), src.getHeight()}, src.getChannelDataType());
+
+      Kernels.copySlice(clij, src, dst, 2);
+      ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(compareImages(copy, copyFromCL));
+    }
+
+    @Test
     public void crop() {
         Roi roi = new Roi(2,2,10,10);
         testImp1.setRoi(roi);
@@ -347,6 +360,11 @@ public class KernelsTest {
         System.out.println("Todo: implement test for mask");
     }
 
+    @Test
+    public void maskStackWithPlane() {
+      System.out.println("Todo: implement test for maskStackWithPlane");
+    }
+
 
     @Test
     public void maxProjection() throws InterruptedException
@@ -399,6 +417,11 @@ public class KernelsTest {
 
       assertTrue(compareImages(added, addedFromCL));
 
+    }
+
+    @Test
+    public void multiplyStackWithPlane() {
+      System.out.println("Todo: implement test for multiplyStackWithPlane");
     }
 
     @Test

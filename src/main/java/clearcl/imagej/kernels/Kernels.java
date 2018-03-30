@@ -83,7 +83,18 @@ public class Kernels {
         return clij.execute(Kernels.class, "duplication.cl", "copy", parameters);
     }
 
-    public static boolean crop(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int startX, int startY, int startZ) {
+
+  public static boolean copySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int planeIndex) {
+    HashMap<String, Object> parameters = new HashMap<>();
+    parameters.put("src", src);
+    parameters.put("dst", dst);
+    parameters.put("slice", planeIndex);
+    return clij.execute(Kernels.class, "duplication.cl", "copySlice", parameters);
+
+  }
+
+
+  public static boolean crop(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int startX, int startY, int startZ) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -154,6 +165,15 @@ public class Kernels {
         return pCLIJ.execute(Kernels.class, "mask.cl", "mask", lParameters);
     }
 
+  public static boolean maskStackWithPlane(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage mask, ClearCLImage dst) {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("mask", mask);
+    lParameters.put("dst", dst);
+
+    return pCLIJ.execute(Kernels.class, "mask.cl", "maskStackWithPlane", lParameters);
+  }
+
 
   public static boolean maxProjection(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage dst_max) {
     HashMap<String, Object> lParameters = new HashMap<>();
@@ -182,7 +202,19 @@ public class Kernels {
       return pCLIJ.execute(Kernels.class, "math.cl", "multiplScalar", lParameters);
     }
 
-    public static double sumPixels(ClearCLIJ clij, ClearCLImage clImage) {
+
+  public static boolean multiplyStackWithPlane(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage input2d, ClearCLImage output3d) {
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("src", input3d);
+    lParameters.put("src1", input2d);
+    lParameters.put("dst", output3d);
+    return clij.execute(Kernels.class, "math.cl", "multiplyStackWithPlanePixelwise", lParameters);
+  }
+
+
+  public static double sumPixels(ClearCLIJ clij, ClearCLImage clImage) {
 
         ClearCLImage clReducedImage = clij.createCLImage(new long[]{clImage.getWidth(), clImage.getHeight()}, clImage.getChannelDataType());
 
@@ -210,16 +242,6 @@ public class Kernels {
         lParameters.put("dst", dst);
         return clij.execute(Kernels.class, "thresholding.cl", "applyThreshold", lParameters);
     }
-
-  public static boolean duplicateSlice(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage output2d, int planeIndex) {
-    // copy a single slice from a stack to a plane CLImage
-    return true;
-  }
-
-  public static boolean multiplyStackWithPlane(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage input2d, ClearCLImage output3d) {
-    // multiply all planes in the stack with the one given 2d plane
-    return true;
-  }
 
   public static boolean invert(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage output3d) {
     return multiplyScalar(clij, input3d, input3d, -1);
