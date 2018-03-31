@@ -127,7 +127,9 @@ public class ImageTypeConverter<T extends RealType<T>>
       {
         mClearCLImage =
             convertOffHeapPlanarStackToClearCLImage(mImageStack);
-      } else if (mBuffer != null) {
+      }
+      else if (mBuffer != null)
+      {
         mClearCLImage = convertCLBufferToCLImage(mBuffer);
       }
     }

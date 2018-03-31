@@ -1,4 +1,4 @@
-__kernel void copy(write_only image3d_t dst, read_only image3d_t src) {
+__kernel void copy(DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src) {
   const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
 
   const int dx = get_global_id(0);
@@ -9,7 +9,7 @@ __kernel void copy(write_only image3d_t dst, read_only image3d_t src) {
   WRITE_IMAGE(dst,(int4)(dx,dy,dz,0),(DTYPE_OUT)out);
 }
 
-__kernel void copySlice(write_only image2d_t dst, read_only image3d_t src, int slice) {
+__kernel void copySlice(DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_3D src, int slice) {
   const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
 
   const int dx = get_global_id(0);
@@ -20,7 +20,7 @@ __kernel void copySlice(write_only image2d_t dst, read_only image3d_t src, int s
 }
 
 
-__kernel void crop(write_only image3d_t dst, read_only image3d_t src, int start_x, int start_y, int start_z) {
+__kernel void crop(DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src, int start_x, int start_y, int start_z) {
   const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
 
   const int dx = get_global_id(0);

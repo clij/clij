@@ -99,17 +99,44 @@ public class Kernels {
     }
 
 
-  public static boolean copySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int planeIndex) {
-    HashMap<String, Object> parameters = new HashMap<>();
-    parameters.put("src", src);
-    parameters.put("dst", dst);
-    parameters.put("slice", planeIndex);
-    return clij.execute(Kernels.class, "duplication.cl", "copySlice", parameters);
-
-  }
+    public static boolean copy(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        return clij.execute(Kernels.class, "duplication.cl", "copy", parameters);
+    }
 
 
-  public static boolean crop(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int startX, int startY, int startZ) {
+    public static boolean copySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int planeIndex) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        parameters.put("slice", planeIndex);
+        return clij.execute(Kernels.class, "duplication.cl", "copySlice", parameters);
+
+    }
+
+
+    public static boolean copySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int planeIndex) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        parameters.put("slice", planeIndex);
+        return clij.execute(Kernels.class, "duplication.cl", "copySlice", parameters);
+
+    }
+
+    public static boolean crop(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int startX, int startY, int startZ) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        parameters.put("start_x", startX);
+        parameters.put("start_y", startY);
+        parameters.put("start_z", startZ);
+        return clij.execute(Kernels.class, "duplication.cl", "crop", parameters);
+    }
+
+    public static boolean crop(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int startX, int startY, int startZ) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);

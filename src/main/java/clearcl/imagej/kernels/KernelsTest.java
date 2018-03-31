@@ -1,6 +1,7 @@
 package clearcl.imagej.kernels;
 
 import clearcl.ClearCL;
+import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import ij.IJ;
@@ -246,17 +247,43 @@ public class KernelsTest {
         assertTrue(compareImages(testImp1, copyFromCL));
     }
 
+
+    @Test
+    public void copyBuffer() {
+        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+
+        Kernels.copy(clij, src, dst);
+        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+        assertTrue(compareImages(testImp1, copyFromCL));
+    }
+
+
     @Test
     public void copySlice() {
-      ImagePlus copy = new Duplicator().run(testImp1, 3,3);
+        ImagePlus copy = new Duplicator().run(testImp1, 3,3);
 
-      ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-      ClearCLImage dst = clij.createCLImage(new long[]{src.getWidth(), src.getHeight()}, src.getChannelDataType());
+        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage dst = clij.createCLImage(new long[]{src.getWidth(), src.getHeight()}, src.getChannelDataType());
 
-      Kernels.copySlice(clij, src, dst, 2);
-      ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        Kernels.copySlice(clij, src, dst, 2);
+        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
-      assertTrue(compareImages(copy, copyFromCL));
+        assertTrue(compareImages(copy, copyFromCL));
+    }
+
+    @Test
+    public void copySliceBuffer() {
+        ImagePlus copy = new Duplicator().run(testImp1, 3,3);
+
+        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer dst = clij.createCLBuffer(new long[]{src.getWidth(), src.getHeight()}, src.getNativeType());
+
+        Kernels.copySlice(clij, src, dst, 2);
+        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+        assertTrue(compareImages(copy, copyFromCL));
     }
 
     @Test
@@ -276,6 +303,21 @@ public class KernelsTest {
     }
 
 
+    @Test
+    public void cropBuffer() {
+        Roi roi = new Roi(2,2,10,10);
+        testImp1.setRoi(roi);
+        ImagePlus crop = new Duplicator().run(testImp1, 3, 12);
+
+
+        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer dst = clij.createCLBuffer(new long[]{10,10, 10}, src.getNativeType());
+
+        Kernels.crop(clij, src, dst, 2, 2,2);
+        ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
+
+        assertTrue(compareImages(crop, cropFromCL));
+    }
 /*
     public static void main(String... args) {
         new ImageJ();
