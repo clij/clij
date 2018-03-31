@@ -231,6 +231,11 @@ public class KernelsTest {
     }
 
     @Test
+    public void convert() {
+        System.out.println("Todo: implement test for convert");
+    }
+
+    @Test
     public void copy() {
         ClearCLImage src = clij.converter(testImp1).getClearCLImage();
         ClearCLImage dst = clij.converter(testImp1).getClearCLImage();

@@ -117,7 +117,7 @@
 		<dependency>
 			<groupId>net.clearvolume</groupId>
 			<artifactId>clearcl</artifactId>
-			<version>0.5.5-RH</version>
+			<version>0.5.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.scijava</groupId>

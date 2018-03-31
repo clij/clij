@@ -1,5 +1,6 @@
 package clearcl.imagej.test;
 
+import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcontrol.stack.OffHeapPlanarStack;
@@ -87,6 +88,26 @@ public class ImageConverterTest
       testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
           lShortImg);
     }
+  }
+
+  @Test
+  public void testBufferConversion() {
+
+
+    mCLIJ = new ClearCLIJ("HD");
+
+    RandomAccessibleInterval<FloatType>
+            lFloatImg =
+            ArrayImgs.floats(new long[] { 5, 6, 7 });
+    fillTestImage(lFloatImg);
+
+    ClearCLIJ lCLIJ = mCLIJ;
+
+    ClearCLBuffer lClearCLBuffer = lCLIJ.converter(lFloatImg).getClearCLBuffer();
+    RandomAccessibleInterval lRAIconvertedTwice = lCLIJ.converter(lClearCLBuffer).getRandomAccessibleInterval();
+
+
+    assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lFloatImg), Views.iterable(lRAIconvertedTwice)));
   }
 
 

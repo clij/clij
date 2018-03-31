@@ -5,10 +5,7 @@ import clearcl.backend.ClearCLBackendBase;
 import clearcl.backend.ClearCLBackendInterface;
 import clearcl.backend.ClearCLBackends;
 import clearcl.backend.javacl.ClearCLBackendJavaCL;
-import clearcl.enums.HostAccessType;
-import clearcl.enums.ImageChannelDataType;
-import clearcl.enums.ImageChannelOrder;
-import clearcl.enums.KernelAccessType;
+import clearcl.enums.*;
 import clearcl.imagej.utilities.CLInfo;
 import clearcl.imagej.utilities.GenericBinaryFastFuseTask;
 import clearcl.imagej.utilities.ImageTypeConverter;
@@ -179,19 +176,23 @@ public class ClearCLIJ
   }
 
   public ImageTypeConverter converter(StackInterface pStack) {
-    return new ImageTypeConverter(mClearCLContext, pStack);
+    return new ImageTypeConverter(this, pStack);
   }
 
   public <T extends RealType<T>> ImageTypeConverter<T> converter(RandomAccessibleInterval<T> pRandomAccessibleInterval) {
-    return new ImageTypeConverter<T>(mClearCLContext, pRandomAccessibleInterval);
+    return new ImageTypeConverter<T>(this, pRandomAccessibleInterval);
   }
 
   public ImageTypeConverter converter(ImagePlus pImagePlus) {
-    return new ImageTypeConverter(mClearCLContext, pImagePlus);
+    return new ImageTypeConverter(this, pImagePlus);
   }
 
   public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLImage pClearCLImage) {
-    return new ImageTypeConverter<T>(mClearCLContext, pClearCLImage);
+    return new ImageTypeConverter<T>(this, pClearCLImage);
+  }
+
+  public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLBuffer pClearCLBuffer) {
+    return new ImageTypeConverter<T>(this, pClearCLBuffer);
   }
 
   public static String clinfo() {
@@ -220,6 +221,17 @@ public class ClearCLIJ
             ImageChannelOrder.R,
             pImageChannelType,
             dimensions);
+  }
+
+  public ClearCLBuffer createCLBuffer(long[] dimensions, NativeTypeEnum pNativeType) {
+    return mClearCLContext.createBuffer(
+            MemAllocMode.Best,
+            HostAccessType.ReadWrite,
+            KernelAccessType.ReadWrite,
+            1L,
+            pNativeType,
+            dimensions
+            );
   }
 
   public void show(ImagePlus input, String title) {

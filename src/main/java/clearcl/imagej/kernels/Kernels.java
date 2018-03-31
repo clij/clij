@@ -1,5 +1,6 @@
 package clearcl.imagej.kernels;
 
+import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import net.imglib2.Cursor;
@@ -73,6 +74,20 @@ public class Kernels {
         lParameters.put("src", src);
         lParameters.put("dst", dst);
         return pCLIJ.execute(Kernels.class, "blur.cl", "gaussian_blur_slicewise_image3d", lParameters);
+    }
+
+    public static boolean convert(ClearCLIJ clij, ClearCLBuffer src, ClearCLImage dst) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("dst", dst);
+        return clij.execute(Kernels.class, "bufferconversion.cl", "convert_buffer_image_3d", lParameters);
+    }
+
+    public static boolean convert(ClearCLIJ clij, ClearCLImage src, ClearCLBuffer dst) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("dst", dst);
+        return clij.execute(Kernels.class, "bufferconversion.cl", "convert_buffer_image_3d", lParameters);
     }
 
 

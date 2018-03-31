@@ -1,5 +1,6 @@
 package clearcl.imagej.utilities;
 
+import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLContext;
 import clearcl.ClearCLImage;
@@ -7,6 +8,8 @@ import clearcl.enums.HostAccessType;
 import clearcl.enums.ImageChannelDataType;
 import clearcl.enums.ImageChannelOrder;
 import clearcl.enums.KernelAccessType;
+import clearcl.imagej.ClearCLIJ;
+import clearcl.imagej.kernels.Kernels;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
 import coremem.ContiguousMemoryInterface;
@@ -33,6 +36,7 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
 import javax.lang.model.type.UnknownTypeException;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UnknownFormatConversionException;
@@ -61,39 +65,52 @@ import java.util.UnknownFormatConversionException;
 public class ImageTypeConverter<T extends RealType<T>>
 {
   private ClearCLContext mContext;
+  private ClearCLIJ mCLIJ;
   private RandomAccessibleInterval<T>
       mRandomAccessibleInterval =
       null;
   private ClearCLImage mClearCLImage = null;
   private StackInterface mImageStack = null;
+  private ClearCLBuffer mBuffer = null;
 
-  public ImageTypeConverter(ClearCLContext pClearCLContext,
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
                             RandomAccessibleInterval<T> pRandomAccessibleInterval) throws
                                                                                    UnknownTypeException
   {
-    mContext = pClearCLContext;
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
     mRandomAccessibleInterval = pRandomAccessibleInterval;
   }
 
-  public ImageTypeConverter(ClearCLContext pClearCLContext,
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
                             ImagePlus pImagePlus)
   {
-    mContext = pClearCLContext;
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
     mRandomAccessibleInterval = ImageJFunctions.wrapReal(pImagePlus);
   }
 
-  public ImageTypeConverter(ClearCLContext pClearCLContext,
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
                             ClearCLImage pImage)
   {
-    mContext = pClearCLContext;
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
     mClearCLImage = pImage;
   }
 
-  public ImageTypeConverter(ClearCLContext pClearCLContext,
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
                             StackInterface pStack)
   {
-    mContext = pClearCLContext;
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
     mImageStack = pStack;
+  }
+
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
+                            ClearCLBuffer pBuffer) {
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
+    mBuffer = pBuffer;
   }
 
   public ClearCLImage getClearCLImage()
@@ -110,10 +127,13 @@ public class ImageTypeConverter<T extends RealType<T>>
       {
         mClearCLImage =
             convertOffHeapPlanarStackToClearCLImage(mImageStack);
+      } else if (mBuffer != null) {
+        mClearCLImage = convertCLBufferToCLImage(mBuffer);
       }
     }
     return mClearCLImage;
   }
+
 
   public StackInterface getOffHeapPlanarStack()
   {
@@ -129,10 +149,13 @@ public class ImageTypeConverter<T extends RealType<T>>
         mImageStack =
             convertRandomAccessibleIntervalToOffHeapPlanarStack(
                 mRandomAccessibleInterval);
+      } else if (mBuffer != null) {
+        mImageStack = convertBufferToOffHeapPlanarStack(mBuffer);
       }
     }
     return mImageStack;
   }
+
 
   public RandomAccessibleInterval<T> getRandomAccessibleInterval()
   {
@@ -149,6 +172,8 @@ public class ImageTypeConverter<T extends RealType<T>>
         mRandomAccessibleInterval =
             convertClearClImageToRandomAccessibleInterval(mContext,
                                                           mClearCLImage);
+      }  else if (mBuffer != null) {
+        mRandomAccessibleInterval = convertBufferToRandomAccessibleInterval(mBuffer);
       }
     }
     return mRandomAccessibleInterval;
@@ -162,6 +187,14 @@ public class ImageTypeConverter<T extends RealType<T>>
     }
     return result;
   }
+
+  public ClearCLBuffer getClearCLBuffer() {
+    ClearCLImage lClImage = getClearCLImage();
+    return convertCLImageToCLBuffer(lClImage);
+  }
+
+
+
 
   public static <T extends RealType<T>> OffHeapPlanarStack convertClearClImageToOffHeapPlanarStack(
       ClearCLImage pClearCLImage)
@@ -423,14 +456,8 @@ public class ImageTypeConverter<T extends RealType<T>>
     return lReturnImg;
   }
 
-  public ClearCLImage convertOffHeapPlanarStackToClearCLImage(
-      StackInterface pImageStack)
-  {
-    long[] dimensions = pImageStack.getDimensions();
-
+  private ImageChannelDataType nativeTypeToImageChannelType(NativeTypeEnum lType) {
     ImageChannelDataType lImageChannelType = null;
-
-    NativeTypeEnum lType = pImageStack.getDataType();
 
     if (lType == NativeTypeEnum.UnsignedByte)
     {
@@ -452,6 +479,17 @@ public class ImageTypeConverter<T extends RealType<T>>
     {
       lImageChannelType = ImageChannelDataType.Float;
     }
+    return lImageChannelType;
+
+  }
+
+  public ClearCLImage convertOffHeapPlanarStackToClearCLImage(
+      StackInterface pImageStack)
+  {
+    long[] dimensions = pImageStack.getDimensions();
+
+    ImageChannelDataType lImageChannelType = nativeTypeToImageChannelType(pImageStack.getDataType());
+
 
     ClearCLImage
         lClearClImage =
@@ -734,4 +772,30 @@ public class ImageTypeConverter<T extends RealType<T>>
 
     return lClearClImage;
   }
+
+  private ClearCLImage convertCLBufferToCLImage(ClearCLBuffer pBuffer) {
+    ImageChannelDataType pType = nativeTypeToImageChannelType(pBuffer.getNativeType());
+
+    ClearCLImage output = mCLIJ.createCLImage(new long[] {pBuffer.getWidth(), pBuffer.getHeight(), pBuffer.getDepth()}, pType);
+    Kernels.convert(mCLIJ, pBuffer, output);
+    return output;
+  }
+
+  private ClearCLBuffer convertCLImageToCLBuffer(ClearCLImage pClImage) {
+    ClearCLBuffer output = mCLIJ.createCLBuffer(new long[] {pClImage.getWidth(), pClImage.getHeight(), pClImage.getDepth()}, pClImage.getNativeType());
+    Kernels.convert(mCLIJ, pClImage, output);
+    return output;
+  }
+
+  private StackInterface convertBufferToOffHeapPlanarStack(ClearCLBuffer pBuffer) {
+    ClearCLImage lCLImage = convertCLBufferToCLImage(pBuffer);
+    return convertClearClImageToOffHeapPlanarStack(lCLImage);
+  }
+
+  private RandomAccessibleInterval<T> convertBufferToRandomAccessibleInterval(ClearCLBuffer pBuffer) {
+    ClearCLImage lCLImage = convertCLBufferToCLImage(pBuffer);
+    return convertClearClImageToRandomAccessibleInterval(mContext, lCLImage);
+  }
+
+
 }
