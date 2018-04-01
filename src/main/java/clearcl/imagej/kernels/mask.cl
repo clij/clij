@@ -27,13 +27,13 @@ __kernel void maskStackWithPlane(__read_only    image3d_t  src,
   const int y = get_global_id(1);
   const int z = get_global_id(2);
 
+  const int4 pos3d = (int4){x,y,z,0};
   const int2 pos2d = (int2){x,y};
 
   DTYPE_OUT value = 0;
   if (READ_IMAGE(mask, pos2d).x != 0) {
-    const int4 pos3d = (int4){x,y,z,0};
     value = READ_IMAGE(src, pos3d).x;
   }
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE (dst, pos3d, value);
 }
