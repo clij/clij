@@ -313,6 +313,8 @@ public class Kernels {
         while (cursor.hasNext()) {
             sum += ((RealType)cursor.next()).getRealFloat();
         }
+
+        clReducedImage.close();
         return sum;
     }
 
