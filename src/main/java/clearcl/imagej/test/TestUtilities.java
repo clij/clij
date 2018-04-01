@@ -1,5 +1,7 @@
 package clearcl.imagej.test;
 
+import ij.ImagePlus;
+import ij.process.ImageProcessor;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.type.numeric.RealType;
@@ -8,7 +10,7 @@ import net.imglib2.type.numeric.RealType;
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * February 2018
  */
-class TestUtilities
+public class TestUtilities
 {
 
   public static <T extends RealType<T>> boolean compareIterableIntervals(IterableInterval<T> lIterableInterval1,
@@ -36,4 +38,45 @@ class TestUtilities
 
     return true;
   }
+
+  public static boolean compareImages(ImagePlus a, ImagePlus b) {
+    if (a.getWidth() != b.getWidth() ||
+            a.getHeight() != b.getHeight() ||
+            a.getNChannels() != b.getNChannels() ||
+            a.getNFrames() != b.getNFrames() ||
+            a.getNSlices() != b.getNSlices()) {
+      System.out.println("sizes different");
+      System.out.println("w " + a.getWidth() + " != " + b.getWidth());
+      System.out.println("h " + a.getHeight() + " != " + b.getHeight());
+      System.out.println("c " + a.getNChannels() + " != " + b.getNChannels());
+      System.out.println("f " + a.getNFrames() + " != " + b.getNFrames());
+      System.out.println("s " + a.getNSlices() + " != " + b.getNSlices());
+      return false;
+    }
+
+    for (int c = 0; c < a.getNChannels(); c++) {
+      a.setC(c + 1);
+      b.setC(c + 1);
+      for (int t = 0; t < a.getNFrames(); t++) {
+        a.setT(t + 1);
+        b.setT(t + 1);
+        for (int z = 0; z < a.getNSlices(); z++) {
+          a.setZ(z + 1);
+          b.setZ(z + 1);
+          ImageProcessor aIP = a.getProcessor();
+          ImageProcessor bIP = b.getProcessor();
+          for (int x = 0; x < a.getWidth(); x++) {
+            for (int y = 0; y < a.getHeight(); y++) {
+              if (aIP.getPixelValue(x, y ) != bIP.getPixelValue(x, y)) {
+                System.out.println("pixels different " + aIP.getPixelValue(x, y ) + " != " + bIP.getPixelValue(x, y));
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return true;
+  }
+
 }

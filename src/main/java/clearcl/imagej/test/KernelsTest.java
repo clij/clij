@@ -1,9 +1,10 @@
-package clearcl.imagej.kernels;
+package clearcl.imagej.test;
 
 import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
+import clearcl.imagej.kernels.Kernels;
 import clearcl.imagej.test.TestUtilities;
 import ij.IJ;
 import ij.ImageJ;
@@ -72,45 +73,6 @@ public class KernelsTest {
         clij = ClearCLIJ.getInstance();
     }
 
-    public static boolean compareImages(ImagePlus a, ImagePlus b) {
-        if (a.getWidth() != b.getWidth() ||
-            a.getHeight() != b.getHeight() ||
-            a.getNChannels() != b.getNChannels() ||
-            a.getNFrames() != b.getNFrames() ||
-            a.getNSlices() != b.getNSlices()) {
-            System.out.println("sizes different");
-            System.out.println("w " + a.getWidth() + " != " + b.getWidth());
-            System.out.println("h " + a.getHeight() + " != " + b.getHeight());
-            System.out.println("c " + a.getNChannels() + " != " + b.getNChannels());
-            System.out.println("f " + a.getNFrames() + " != " + b.getNFrames());
-            System.out.println("s " + a.getNSlices() + " != " + b.getNSlices());
-            return false;
-        }
-
-        for (int c = 0; c < a.getNChannels(); c++) {
-            a.setC(c + 1);
-            b.setC(c + 1);
-            for (int t = 0; t < a.getNFrames(); t++) {
-                a.setT(t + 1);
-                b.setT(t + 1);
-                for (int z = 0; z < a.getNSlices(); z++) {
-                    a.setZ(z + 1);
-                    b.setZ(z + 1);
-                    ImageProcessor aIP = a.getProcessor();
-                    ImageProcessor bIP = b.getProcessor();
-                    for (int x = 0; x < a.getWidth(); x++) {
-                        for (int y = 0; y < a.getHeight(); y++) {
-                            if (aIP.getPixelValue(x, y ) != bIP.getPixelValue(x, y)) {
-                                System.out.println("pixels different " + aIP.getPixelValue(x, y ) + " != " + bIP.getPixelValue(x, y));
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
 
     @Test
     public void addPixelwise() {
@@ -126,7 +88,7 @@ public class KernelsTest {
 
         //sumImp.show();
         //sumImpFromCL.show();
-        assertTrue(compareImages(sumImp, sumImpFromCL));
+        assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
     }
 
     @Test
@@ -140,7 +102,7 @@ public class KernelsTest {
         Kernels.addScalar(clij, src, dst, 1);
         ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(added, addedFromCL));
+        assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
     }
 
@@ -166,7 +128,7 @@ public class KernelsTest {
 
         //sumImp.show();
         //sumImpFromCL.show();
-        assertTrue(compareImages(sumImp, sumImpFromCL));
+        assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
     }
 
     @Test
@@ -201,8 +163,8 @@ public class KernelsTest {
       ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
       ImagePlus argMaxProjectionCL = clij.converter(dst_arg).getImagePlus();
 
-      assertTrue(compareImages(maxProjection, maxProjectionCL));
-      assertTrue(compareImages(argMaxProjection, argMaxProjectionCL));
+      assertTrue(TestUtilities.compareImages(maxProjection, maxProjectionCL));
+      assertTrue(TestUtilities.compareImages(argMaxProjection, argMaxProjectionCL));
     }
 
     @Test
@@ -218,7 +180,7 @@ public class KernelsTest {
         Kernels.blur(clij, src, dst, 6,6,6, 2,2,2);
         ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(gauss, gaussFromCL));
+        assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
     }
 
     @Test
@@ -233,7 +195,7 @@ public class KernelsTest {
         Kernels.blurSlicewise(clij, src, dst, 6,6, 2,2);
         ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(gauss, gaussFromCL));
+        assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
     }
 
     @Test
@@ -249,7 +211,7 @@ public class KernelsTest {
         Kernels.copy(clij, src, dst);
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(testImp1, copyFromCL));
+        assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
     }
 
 
@@ -261,7 +223,7 @@ public class KernelsTest {
         Kernels.copy(clij, src, dst);
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(testImp1, copyFromCL));
+        assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
     }
 
 
@@ -275,7 +237,7 @@ public class KernelsTest {
         Kernels.copySlice(clij, src, dst, 2);
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(copy, copyFromCL));
+        assertTrue(TestUtilities.compareImages(copy, copyFromCL));
     }
 
     @Test
@@ -288,7 +250,7 @@ public class KernelsTest {
         Kernels.copySlice(clij, src, dst, 2);
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(copy, copyFromCL));
+        assertTrue(TestUtilities.compareImages(copy, copyFromCL));
     }
 
     @Test
@@ -304,7 +266,7 @@ public class KernelsTest {
         Kernels.crop(clij, src, dst, 2, 2,2);
         ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(crop, cropFromCL));
+        assertTrue(TestUtilities.compareImages(crop, cropFromCL));
     }
 
 
@@ -321,7 +283,7 @@ public class KernelsTest {
         Kernels.crop(clij, src, dst, 2, 2,2);
         ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
 
-        assertTrue(compareImages(crop, cropFromCL));
+        assertTrue(TestUtilities.compareImages(crop, cropFromCL));
     }
 
     @Test
@@ -350,7 +312,7 @@ public class KernelsTest {
 
         IJ.run(maximaImp, "Divide...", "value=255");
 
-        assertTrue(compareImages(maximaImp, maximaFromCL));
+        assertTrue(TestUtilities.compareImages(maximaImp, maximaFromCL));
     }
 
     @Test
@@ -418,8 +380,8 @@ public class KernelsTest {
         Kernels.flip(clij, flip,flop, true, false, false);
         ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
 
-        assertTrue(compareImages(testImp1, testFlippedTwice));
-        assertFalse(compareImages(testImp1, testFlipped));
+        assertTrue(TestUtilities.compareImages(testImp1, testFlippedTwice));
+        assertFalse(TestUtilities.compareImages(testImp1, testFlipped));
     }
 
 
@@ -437,8 +399,8 @@ public class KernelsTest {
         Kernels.flip(clij, flip,flop, true, false, false);
         ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
 
-        assertTrue(compareImages(testImp1, testFlippedTwice));
-        assertFalse(compareImages(testImp1, testFlipped));
+        assertTrue(TestUtilities.compareImages(testImp1, testFlippedTwice));
+        assertFalse(TestUtilities.compareImages(testImp1, testFlipped));
     }
 
   @Test
@@ -494,7 +456,7 @@ public class KernelsTest {
 
       ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
 
-      assertTrue(compareImages(maxProjection, maxProjectionCL));
+      assertTrue(TestUtilities.compareImages(maxProjection, maxProjectionCL));
 
     }
 
@@ -511,7 +473,7 @@ public class KernelsTest {
 
       ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
 
-      assertTrue(compareImages(multiplied, multipliedCL));
+      assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
     }
 
 
@@ -526,7 +488,7 @@ public class KernelsTest {
       Kernels.multiplyScalar(clij, src, dst, 2);
       ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
 
-      assertTrue(compareImages(added, addedFromCL));
+      assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
     }
 
@@ -575,6 +537,6 @@ public class KernelsTest {
 
       ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
 
-      assertTrue(compareImages(thresholded, thresholdedCL));
+      assertTrue(TestUtilities.compareImages(thresholded, thresholdedCL));
     }
 }
