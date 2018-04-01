@@ -120,6 +120,9 @@ public class DoubleFlipTest
       ImageJFunctions.show(lResultImg, "res " + lDeviceName);
       ImageJFunctions.show(lInputImg, "inp " + lDeviceName);
 
+      lCLImage.close();
+      lSrcImage.close();
+      lDstImage.close();
     }
   }
 }
