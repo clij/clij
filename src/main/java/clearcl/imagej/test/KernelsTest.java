@@ -70,7 +70,9 @@ public class KernelsTest {
         }
 
 
-        clij = ClearCLIJ.getInstance();
+        clij = //ClearCLIJ.getInstance();
+            new ClearCLIJ("Geforce");
+            //new ClearCLIJ("HD");
     }
 
 
@@ -89,6 +91,10 @@ public class KernelsTest {
         //sumImp.show();
         //sumImpFromCL.show();
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
+
+        src.close();
+        src1.close();
+        dst.close();
     }
 
     @Test
@@ -104,6 +110,8 @@ public class KernelsTest {
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
+        src.close();
+        dst.close();
     }
 
     @Test
@@ -129,6 +137,10 @@ public class KernelsTest {
         //sumImp.show();
         //sumImpFromCL.show();
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
+
+        src.close();
+        src1.close();
+        dst.close();
     }
 
     @Test
@@ -165,6 +177,10 @@ public class KernelsTest {
 
       assertTrue(TestUtilities.compareImages(maxProjection, maxProjectionCL));
       assertTrue(TestUtilities.compareImages(argMaxProjection, argMaxProjectionCL));
+
+      src.close();
+      dst.close();
+      dst_arg.close();
     }
 
     @Test
@@ -181,6 +197,9 @@ public class KernelsTest {
         ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
+
+        src.close();
+        dst.close();
     }
 
     @Test
@@ -196,6 +215,9 @@ public class KernelsTest {
         ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
+
+        src.close();
+        dst.close();
     }
 
     @Test
@@ -212,11 +234,18 @@ public class KernelsTest {
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
         assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
+
+        src.close();
+        dst.close();
     }
 
 
     @Test
     public void copyBuffer() {
+      if (!clij.getClearCLContext().getDevice().getName().contains("HD")) {
+        System.out.println("Buffer based processing is currently only supported on HD deviced!");
+        return;
+      }
         ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
         ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
 
@@ -224,6 +253,9 @@ public class KernelsTest {
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
         assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
+
+        src.close();
+        dst.close();
     }
 
 
@@ -238,10 +270,17 @@ public class KernelsTest {
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
         assertTrue(TestUtilities.compareImages(copy, copyFromCL));
+
+        src.close();
+        dst.close();
     }
 
     @Test
     public void copySliceBuffer() {
+      if (!clij.getClearCLContext().getDevice().getName().contains("HD")) {
+        System.out.println("Buffer based processing is currently only supported on HD deviced!");
+        return;
+      }
         ImagePlus copy = new Duplicator().run(testImp1, 3,3);
 
         ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
@@ -251,6 +290,9 @@ public class KernelsTest {
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
         assertTrue(TestUtilities.compareImages(copy, copyFromCL));
+
+        src.close();
+        dst.close();
     }
 
     @Test
@@ -267,11 +309,18 @@ public class KernelsTest {
         ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
 
         assertTrue(TestUtilities.compareImages(crop, cropFromCL));
+
+      src.close();
+      dst.close();
     }
 
 
     @Test
     public void cropBuffer() {
+      if (!clij.getClearCLContext().getDevice().getName().contains("HD")) {
+        System.out.println("Buffer based processing is currently only supported on HD deviced!");
+        return;
+      }
         Roi roi = new Roi(2,2,10,10);
         testImp1.setRoi(roi);
         ImagePlus crop = new Duplicator().run(testImp1, 3, 12);
@@ -284,6 +333,9 @@ public class KernelsTest {
         ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
 
         assertTrue(TestUtilities.compareImages(crop, cropFromCL));
+
+      src.close();
+      dst.close();
     }
 
     @Test
@@ -313,6 +365,9 @@ public class KernelsTest {
         IJ.run(maximaImp, "Divide...", "value=255");
 
         assertTrue(TestUtilities.compareImages(maximaImp, maximaFromCL));
+
+      src.close();
+      dst.close();
     }
 
     @Test
@@ -330,6 +385,9 @@ public class KernelsTest {
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
         assertTrue(sum == 81);
+
+        maskCL.close();
+        maskCLafter.close();
     }
 
     @Test
@@ -361,6 +419,9 @@ public class KernelsTest {
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
         assertTrue(sum == 1);
+
+        maskCL.close();
+        maskCLafter.close();
     }
 
 
@@ -382,11 +443,19 @@ public class KernelsTest {
 
         assertTrue(TestUtilities.compareImages(testImp1, testFlippedTwice));
         assertFalse(TestUtilities.compareImages(testImp1, testFlipped));
+
+        testCL.close();
+        flip.close();
+        flop.close();
     }
 
 
     @Test
     public void flipBuffer() throws InterruptedException {
+      if (!clij.getClearCLContext().getDevice().getName().contains("HD")) {
+        System.out.println("Buffer based processing is currently only supported on HD deviced!");
+        return;
+      }
         ClearCLBuffer testCL = clij.converter(testImp1).getClearCLBuffer();
         ClearCLBuffer flip = clij.converter(testImp1).getClearCLBuffer();
         ClearCLBuffer flop = clij.converter(testImp1).getClearCLBuffer();
@@ -401,6 +470,11 @@ public class KernelsTest {
 
         assertTrue(TestUtilities.compareImages(testImp1, testFlippedTwice));
         assertFalse(TestUtilities.compareImages(testImp1, testFlipped));
+
+
+      testCL.close();
+      flip.close();
+      flop.close();
     }
 
   @Test
@@ -414,6 +488,10 @@ public class KernelsTest {
     double sumCLafter = Kernels.sumPixels(clij, maskCLafter);
 
     assertTrue(sumCLafter == maskCL.getWidth() * maskCL.getHeight() * maskCL.getDepth() - sumCL);
+
+
+    maskCL.close();
+    maskCLafter.close();
   }
 
 
@@ -458,6 +536,8 @@ public class KernelsTest {
 
       assertTrue(TestUtilities.compareImages(maxProjection, maxProjectionCL));
 
+      src.close();
+      dst.close();
     }
 
     @Test
@@ -474,6 +554,10 @@ public class KernelsTest {
       ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
 
       assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
+
+      src.close();
+      src1.close();
+      dst.close();
     }
 
 
@@ -490,6 +574,8 @@ public class KernelsTest {
 
       assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
+      src.close();
+      dst.close();
     }
 
     @Test
@@ -507,6 +593,7 @@ public class KernelsTest {
 
     assertTrue(sum == imageCL.getWidth() * imageCL.getHeight() * imageCL.getDepth() * 2);
 
+    imageCL.close();
   }
 
 
@@ -518,6 +605,7 @@ public class KernelsTest {
 
         assertTrue(sum == 27);
 
+        maskCL.close();
     }
 
     @Test
@@ -538,5 +626,8 @@ public class KernelsTest {
       ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
 
       assertTrue(TestUtilities.compareImages(thresholded, thresholdedCL));
+
+      src.close();
+      dst.close();
     }
 }
