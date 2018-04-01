@@ -197,8 +197,29 @@ public class Kernels {
         return clij.execute(Kernels.class, "binaryProcessing.cl", "erode_6_neighborhood_3d", parameters);
     }
 
+    public static boolean flip(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, boolean flipx, boolean flipy, boolean flipz) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        parameters.put("flipx", flipx?1:0);
+        parameters.put("flipy", flipy?1:0);
+        parameters.put("flipz", flipz?1:0);
+        return clij.execute(Kernels.class, "flip.cl", "flip_3d", parameters);
+    }
 
-  public static boolean invert(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage output3d) {
+
+    public static boolean flip(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, boolean flipx, boolean flipy, boolean flipz) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        parameters.put("flipx", flipx?1:0);
+        parameters.put("flipy", flipy?1:0);
+        parameters.put("flipz", flipz?1:0);
+        return clij.execute(Kernels.class, "flip.cl", "flip_3d", parameters);
+    }
+
+
+    public static boolean invert(ClearCLIJ clij, ClearCLImage input3d, ClearCLImage output3d) {
     return multiplyScalar(clij, input3d, input3d, -1);
   }
 

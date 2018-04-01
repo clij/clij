@@ -2,6 +2,7 @@ package clearcl.imagej.test;
 
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
+import clearcl.imagej.kernels.Kernels;
 import clearcl.imagej.utilities.CLInfo;
 import ij.IJ;
 import ij.ImageJ;
@@ -68,8 +69,13 @@ public class DoubleFlipTest
           lDstImage =
           lCLIJ.converter(lOutputImg).getClearCLImage();
 
+
+
+      Kernels.flip(lCLIJ, lSrcImage,lDstImage, true, false, false);
+
       // flip once
       Map<String, Object> lParameterMap = new HashMap<>();
+      /*
       lParameterMap.put("src", lSrcImage);
       lParameterMap.put("dst", lDstImage);
       lParameterMap.put("flipx", 1);
@@ -78,8 +84,8 @@ public class DoubleFlipTest
 
       lCLIJ.execute(
           "src/main/java/clearcl/imagej/kernels/flip.cl",
-          "flip_ui",
-          lParameterMap);
+          "flip_3d",
+          lParameterMap);*/
 
       // flip second time
       lParameterMap = new HashMap<>();
@@ -90,8 +96,8 @@ public class DoubleFlipTest
       lParameterMap.put("flipz", 0);
 
       lCLIJ.execute(
-          "src/main/java/clearcl/imagej/demo/kernels/flip.cl",
-          "flip_ui",
+          "src/main/java/clearcl/imagej/kernels/flip.cl",
+          "flip_3d",
           lParameterMap);
 
       RandomAccessibleInterval<UnsignedShortType>
@@ -99,6 +105,7 @@ public class DoubleFlipTest
           (RandomAccessibleInterval<UnsignedShortType>) lCLIJ.converter(
               lDstImage).getRandomAccessibleInterval();
 
+      System.out.println("Should be different:");
       assertFalse(TestUtilities.compareIterableIntervals(Views.iterable(
           lIntermediateResultImg), Views.iterable(lInputImg)));
 
@@ -107,11 +114,12 @@ public class DoubleFlipTest
           (RandomAccessibleInterval<UnsignedShortType>) lCLIJ.converter(
               lSrcImage).getRandomAccessibleInterval();
 
+      System.out.println("Should be same:");
       assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
           lResultImg), Views.iterable(lInputImg)));
-      //ImageJFunctions.show(lResultImg, "res " + lDeviceName);
-      //ImageJFunctions.show(lInputImg, "inp " + lDeviceName);
-    }
+      ImageJFunctions.show(lResultImg, "res " + lDeviceName);
+      ImageJFunctions.show(lInputImg, "inp " + lDeviceName);
 
+    }
   }
 }

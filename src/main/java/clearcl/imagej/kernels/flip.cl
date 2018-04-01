@@ -1,8 +1,8 @@
 // Taken / modified from
 //
 
-__kernel void flip_ui  (    __read_only   image3d_t  src,
-                           __write_only   image3d_t  dst,
+__kernel void flip_3d (    DTYPE_IMAGE_IN_3D  src,
+                           DTYPE_IMAGE_OUT_3D  dst,
                            const          int        flipx,
                            const          int        flipy,
                            const          int        flipz
@@ -18,11 +18,11 @@ __kernel void flip_ui  (    __read_only   image3d_t  src,
   const int height = get_global_size(1);
   const int depth = get_global_size(2);
 
-  const int4 pos = (int4){flipx?(width-1-x):x,
+  const int4 pos = (int4)(flipx?(width-1-x):x,
                           flipy?(height-1-y):y,
-                          flipz?(depth-1-z):z,0};
+                          flipz?(depth-1-z):z,0);
 
   const DTYPE_IN value = READ_IMAGE(src, intsampler, pos).x;
 
-  WRITE_IMAGE (dst, (int4){x,y,z,0}, (DTYPE_OUT){value,0,0,0});
+  WRITE_IMAGE (dst, (int4)(x,y,z,0), (DTYPE_OUT)value);
 }

@@ -4,7 +4,9 @@ import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
+import clearcl.imagej.test.TestUtilities;
 import ij.IJ;
+import ij.ImageJ;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.NewImage;
@@ -13,9 +15,12 @@ import ij.plugin.*;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.Scale3D;
+import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
+import org.scijava.test.TestUtils;
 
 import static org.junit.Assert.*;
 
@@ -67,7 +72,7 @@ public class KernelsTest {
         clij = ClearCLIJ.getInstance();
     }
 
-    boolean compareImages(ImagePlus a, ImagePlus b) {
+    public static boolean compareImages(ImagePlus a, ImagePlus b) {
         if (a.getWidth() != b.getWidth() ||
             a.getHeight() != b.getHeight() ||
             a.getNChannels() != b.getNChannels() ||
@@ -318,14 +323,6 @@ public class KernelsTest {
 
         assertTrue(compareImages(crop, cropFromCL));
     }
-/*
-    public static void main(String... args) {
-        new ImageJ();
-        KernelsTest t = new KernelsTest();
-        t.initTest();
-        t.detectMaxima();
-    }
-*/
 
     @Test
     public void detectMaxima() {
@@ -402,6 +399,46 @@ public class KernelsTest {
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
         assertTrue(sum == 1);
+    }
+
+
+
+
+    @Test
+    public void flip() throws InterruptedException {
+        ClearCLImage testCL = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage flip = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage flop = clij.converter(testImp1).getClearCLImage();
+
+
+        Kernels.flip(clij, testCL,flip, true, false, false);
+
+        ImagePlus testFlipped = clij.converter(flip).getImagePlus();
+
+        Kernels.flip(clij, flip,flop, true, false, false);
+        ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
+
+        assertTrue(compareImages(testImp1, testFlippedTwice));
+        assertFalse(compareImages(testImp1, testFlipped));
+    }
+
+
+    @Test
+    public void flipBuffer() throws InterruptedException {
+        ClearCLBuffer testCL = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer flip = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer flop = clij.converter(testImp1).getClearCLBuffer();
+
+
+        Kernels.flip(clij, testCL,flip, true, false, false);
+
+        ImagePlus testFlipped = clij.converter(flip).getImagePlus();
+
+        Kernels.flip(clij, flip,flop, true, false, false);
+        ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
+
+        assertTrue(compareImages(testImp1, testFlippedTwice));
+        assertFalse(compareImages(testImp1, testFlipped));
     }
 
   @Test
