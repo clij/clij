@@ -34,9 +34,9 @@ public class KernelsTest {
 
     @Before
     public void initTest() {
-        testImp1 = NewImage.createImage("", 100, 100, 100,16, NewImage.FILL_BLACK);
-        testImp2 = NewImage.createImage("", 100, 100, 100,16, NewImage.FILL_BLACK);
-        mask = NewImage.createImage("", 100, 100, 100,16, NewImage.FILL_BLACK);
+        testImp1 = NewImage.createImage("", 100, 100, 12,16, NewImage.FILL_BLACK);
+        testImp2 = NewImage.createImage("", 100, 100, 12,16, NewImage.FILL_BLACK);
+        mask = NewImage.createImage("", 100, 100, 12,16, NewImage.FILL_BLACK);
 
         for (int z = 0; z < 5; z++) {
             testImp1.setZ(z + 1);
@@ -242,10 +242,6 @@ public class KernelsTest {
 
     @Test
     public void copyBuffer() {
-      if (!clij.getClearCLContext().getDevice().getName().contains("HD")) {
-        System.out.println("Buffer based processing is currently only supported on HD deviced!");
-        return;
-      }
         ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
         ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
 
@@ -277,10 +273,6 @@ public class KernelsTest {
 
     @Test
     public void copySliceBuffer() {
-      if (!clij.getClearCLContext().getDevice().getName().contains("HD")) {
-        System.out.println("Buffer based processing is currently only supported on HD deviced!");
-        return;
-      }
         ImagePlus copy = new Duplicator().run(testImp1, 3,3);
 
         ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
@@ -317,10 +309,7 @@ public class KernelsTest {
 
     @Test
     public void cropBuffer() {
-      if (!clij.getClearCLContext().getDevice().getName().contains("HD")) {
-        System.out.println("Buffer based processing is currently only supported on HD deviced!");
-        return;
-      }
+
         Roi roi = new Roi(2,2,10,10);
         testImp1.setRoi(roi);
         ImagePlus crop = new Duplicator().run(testImp1, 3, 12);
@@ -452,10 +441,7 @@ public class KernelsTest {
 
     @Test
     public void flipBuffer() throws InterruptedException {
-      if (!clij.getClearCLContext().getDevice().getName().contains("HD")) {
-        System.out.println("Buffer based processing is currently only supported on HD deviced!");
-        return;
-      }
+
         ClearCLBuffer testCL = clij.converter(testImp1).getClearCLBuffer();
         ClearCLBuffer flip = clij.converter(testImp1).getClearCLBuffer();
         ClearCLBuffer flop = clij.converter(testImp1).getClearCLBuffer();
