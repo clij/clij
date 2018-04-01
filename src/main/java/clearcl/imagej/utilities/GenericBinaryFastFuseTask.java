@@ -105,7 +105,7 @@ public class GenericBinaryFastFuseTask extends TaskBase
 
     String lKernelCacheKey = mKernelName;
     for (String key : lOpenCLDefines.keySet()) {
-        lKernelCacheKey = lKernelCacheKey + " " + (key + " = " + lOpenCLDefines.get(key));
+        lKernelCacheKey = lKernelCacheKey + " " + mProgramFilename + " " + (key + " = " + lOpenCLDefines.get(key));
     }
 
     ClearCLKernel lClearCLKernel = null;
