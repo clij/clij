@@ -143,7 +143,14 @@ public class GenericBinaryFastFuseTask extends TaskBase
           lClearCLKernel.setArgument(key, mParameterMap.get(key));
         }
       }
-      runKernel(lClearCLKernel, pWaitToFinish);
+      try
+      {
+        runKernel(lClearCLKernel, pWaitToFinish);
+      } catch (Exception e) {
+        e.printStackTrace();
+
+        System.out.println(lClearCLKernel.getSourceCode());
+      }
     }
 
     return true;
@@ -219,6 +226,8 @@ public class GenericBinaryFastFuseTask extends TaskBase
 
             this.mProgram.addBuildOptionAllMathOpt();
             this.mProgram.buildAndLog();
+            System.out.println("status: " + mProgram.getBuildStatus());
+            System.out.println("LOG: " + this.mProgram.getBuildLog());
             ClearCLKernel lKernel = this.mProgram.createKernel(pKernelName);
             this.mKernelMap.put(pKernelName, lKernel);
             return lKernel;
