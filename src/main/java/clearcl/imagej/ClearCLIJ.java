@@ -243,6 +243,9 @@ public class ClearCLIJ
   public void show(ClearCLImage input, String title) {
     show(converter(input), title);
   }
+  public void show(ClearCLBuffer input, String title) {
+    show(converter(input), title);
+  }
   public void show(StackInterface input, String title) {
     show(converter(input), title);
   }
