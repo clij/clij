@@ -92,8 +92,6 @@ public class ImageConverterTest
 
   @Test
   public void testBufferConversion() {
-
-
     mCLIJ = new ClearCLIJ("HD");
 
     RandomAccessibleInterval<FloatType>
@@ -108,6 +106,8 @@ public class ImageConverterTest
 
 
     assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lFloatImg), Views.iterable(lRAIconvertedTwice)));
+
+    lClearCLBuffer.close();
   }
 
 
@@ -132,6 +132,8 @@ public class ImageConverterTest
         (RandomAccessibleInterval<T>) lCLIJ.converter(lClearCLImage).getRandomAccessibleInterval();
 
     assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconvertedTwice)));
+
+    lClearCLImage.close();
   }
 
   private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStack(RandomAccessibleInterval<T> lRAI) {
@@ -144,6 +146,8 @@ public class ImageConverterTest
         (RandomAccessibleInterval<T>) lCLIJ.converter(lOffHeapPlanarStack).getRandomAccessibleInterval();
 
     assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconvertedTwice)));
+
+    lOffHeapPlanarStack.free();
   }
 
   private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(RandomAccessibleInterval<T> lRAI) {
@@ -164,6 +168,12 @@ public class ImageConverterTest
     RandomAccessibleInterval<T> lRAIconverted = lCLIJ.converter(lOffHeapPlanarStack2).getRandomAccessibleInterval();
 
     assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lRAI), Views.iterable(lRAIconverted)));
+
+    lOffHeapPlanarStack.free();
+    lOffHeapPlanarStack2.free();
+
+    lCLImage.close();
+    lCLImage2.close();
   }
 
   @Test
