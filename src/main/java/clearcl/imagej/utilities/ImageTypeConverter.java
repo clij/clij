@@ -18,6 +18,7 @@ import coremem.offheap.OffHeapMemory;
 import coremem.offheap.OffHeapMemoryAccess;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.plugin.Duplicator;
 import net.imagej.ops.create.img.Imgs;
 import net.imglib2.Cursor;
 import net.imglib2.Dimensions;
@@ -184,6 +185,7 @@ public class ImageTypeConverter<T extends RealType<T>>
   public ImagePlus getImagePlus()
   {
     ImagePlus result = ImageJFunctions.wrap(getRandomAccessibleInterval(), "img");
+    result = new Duplicator().run(result);
     if (result.getNChannels() > 1 && result.getNSlices() == 1) {
       IJ.run(result, "Properties...", "channels=1 slices=" + result.getNChannels() + " frames=1 unit=pixel pixel_width=1.0000 pixel_height=1.0000 voxel_depth=1.0000");
     }
