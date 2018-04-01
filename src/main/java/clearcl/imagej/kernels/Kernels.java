@@ -76,20 +76,29 @@ public class Kernels {
         return pCLIJ.execute(Kernels.class, "blur.cl", "gaussian_blur_slicewise_image3d", lParameters);
     }
 
+    @Deprecated
     public static boolean convert(ClearCLIJ clij, ClearCLBuffer src, ClearCLImage dst) {
-        HashMap<String, Object> lParameters = new HashMap<>();
-        lParameters.put("src", src);
-        lParameters.put("dst", dst);
-        return clij.execute(Kernels.class, "bufferconversion.cl", "convert_buffer_image_3d", lParameters);
+        return copy(clij, src, dst);
     }
 
+    @Deprecated
     public static boolean convert(ClearCLIJ clij, ClearCLImage src, ClearCLBuffer dst) {
-        HashMap<String, Object> lParameters = new HashMap<>();
-        lParameters.put("src", src);
-        lParameters.put("dst", dst);
-        return clij.execute(Kernels.class, "bufferconversion.cl", "convert_buffer_image_3d", lParameters);
+      return copy(clij, src, dst);
     }
 
+  public static boolean copy(ClearCLIJ clij, ClearCLImage src, ClearCLBuffer dst) {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    return clij.execute(Kernels.class, "duplication.cl", "copy", lParameters);
+  }
+
+  public static boolean copy(ClearCLIJ clij, ClearCLBuffer src, ClearCLImage dst) {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    return clij.execute(Kernels.class, "duplication.cl", "copy", lParameters);
+  }
 
     public static boolean copy(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
         HashMap<String, Object> parameters = new HashMap<>();

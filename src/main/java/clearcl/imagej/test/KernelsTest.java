@@ -17,7 +17,10 @@ import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.realtransform.Scale3D;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
@@ -239,16 +242,49 @@ public class KernelsTest {
         dst.close();
     }
 
+  @Test
+  public void copyImageToBuffer() {
+    ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+    ClearCLBuffer dst = clij.createCLBuffer(src.getDimensions(), src.getNativeType());
+
+    Kernels.copy(clij, src, dst);
+    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test
+  public void copyBufferToImage() {
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLImage temp = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(temp.getDimensions(), temp.getChannelDataType());
+
+    Kernels.copy(clij, src, dst);
+    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
+
+    src.close();
+    temp.close();
+    dst.close();
+  }
 
     @Test
     public void copyBuffer() {
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+      ImagePlus imp = new Duplicator().run(testImp1);
+      Img<FloatType> img = ImageJFunctions.convertFloat(testImp1);
+        ClearCLBuffer src = clij.converter(imp /*If you put img here, it works?!?!?!*/).getClearCLBuffer();
+        ClearCLBuffer dst = clij.createCLBuffer(src.getDimensions(), src.getNativeType());
 
         Kernels.copy(clij, src, dst);
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
-
         assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
+
+        RandomAccessibleInterval rai = clij.converter(dst).getRandomAccessibleInterval();
+        assertTrue(TestUtilities.compareIterableIntervals(img, Views.iterable(rai)));
 
         src.close();
         dst.close();
