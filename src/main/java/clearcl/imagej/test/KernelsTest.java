@@ -633,9 +633,30 @@ public class KernelsTest {
 
 
   @Test
-    public void differenceOfGaussian() {
+    public void differenceOfGaussian3d() {
         System.out.println("Todo: implement test for DoG");
+
+        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+        Kernels.differenceOfGaussian(clij, src, dst, 6, 1.1f, 3.3f);
+
+        src.close();
+        dst.close();
     }
+
+  @Test
+  public void differenceOfGaussian2d() {
+    System.out.println("Todo: implement test for DoG");
+
+    ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+    Kernels.differenceOfGaussian(clij, src, dst, 6, 1.1f, 3.3f);
+
+    src.close();
+    dst.close();
+  }
 
     @Test
     public void dilate() {

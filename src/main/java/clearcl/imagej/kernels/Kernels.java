@@ -236,7 +236,11 @@ public class Kernels {
         parameters.put("radius", radius);
         parameters.put("sigma_minuend", sigmaMinuend);
         parameters.put("sigma_subtrahend", sigmaSubtrahend);
-        return clij.execute(Kernels.class, "differenceOfGaussian.cl", "subtract_convolved_images_3d_fast", parameters);
+      if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+        System.out.println("Error: number of dimensions don't match! (copy)");
+        return false;
+      }
+        return clij.execute(Kernels.class, "differenceOfGaussian.cl", "subtract_convolved_images_" + src.getDimension() + "d_fast", parameters);
     }
 
     public static boolean dilate(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
