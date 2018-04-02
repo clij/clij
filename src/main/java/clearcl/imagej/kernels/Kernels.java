@@ -232,7 +232,17 @@ public class Kernels {
         return clij.execute(Kernels.class, "downsampling.cl", "downsample_3d_nearest", parameters);
     }
 
-    public static boolean erode(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
+    public static boolean downsample(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float factorX, float factorY) {
+      HashMap<String, Object> parameters = new HashMap<>();
+      parameters.put("src", src);
+      parameters.put("dst", dst);
+      parameters.put("factor_x", 1.f / factorX);
+      parameters.put("factor_y", 1.f / factorY);
+      return clij.execute(Kernels.class, "downsampling.cl", "downsample_2d_nearest", parameters);
+    }
+
+
+  public static boolean erode(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);

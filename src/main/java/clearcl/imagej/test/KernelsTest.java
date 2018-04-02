@@ -6,10 +6,7 @@ import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
 import clearcl.imagej.test.TestUtilities;
-import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
-import ij.Prefs;
+import ij.*;
 import ij.gui.NewImage;
 import ij.gui.Roi;
 import ij.plugin.*;
@@ -589,8 +586,8 @@ public class KernelsTest {
     }
 
     @Test
-    public void downsample() {
-        System.out.println("Todo: implement test for downsample");
+    public void downsample3d() {
+        System.out.println("Todo: implement test for downsample3d");
 /*
         testImp1.show();
         IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 width=512 height=1024 depth=5 interpolation=None process create");
@@ -605,6 +602,30 @@ public class KernelsTest {
 
       assertTrue(compareImages(downsampled, downsampledCL));
       */
+    }
+  
+    @Test
+    public void downsample2d()
+    {
+      System.out.println("Todo: implement test for downsample2d");
+     /*
+      testImp2D1.show();
+      IJ.run(testImp2D1, "Scale...", "x=0.5 y=0.5 width=50 height=50 interpolation=None");
+
+      Thread.sleep(1000);
+      //new Scaler().run();
+      int[] idlist = WindowManager.getIDList();
+      ImagePlus downsampled = WindowManager.getImage(idlist[idlist.length - 1]);//IJ.getImage();
+
+      ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+      ClearCLImage dst = clij.createCLImage(new long[]{src.getWidth()/2, src.getHeight()/2}, src.getChannelDataType());
+
+      Kernels.downsample(clij, src, dst, 0.5f, 0.5f);
+
+      ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(TestUtilities.compareImages(downsampled, downsampledCL));
+*/
     }
 
     @Test
