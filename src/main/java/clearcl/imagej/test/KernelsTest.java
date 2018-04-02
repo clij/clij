@@ -490,7 +490,7 @@ public class KernelsTest {
     }
 
     @Test
-    public void crop() {
+    public void crop3d() {
         Roi roi = new Roi(2,2,10,10);
         testImp1.setRoi(roi);
         ImagePlus crop = new Duplicator().run(testImp1, 3, 12);
@@ -508,9 +508,28 @@ public class KernelsTest {
       dst.close();
     }
 
+  @Test
+  public void crop2d() {
+    Roi roi = new Roi(2,2,10,10);
+    testImp2D1.setRoi(roi);
+    ImagePlus crop = new Duplicator().run(testImp2D1);
 
-    @Test
-    public void cropBuffer() {
+
+    ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(new long[]{10,10}, src.getChannelDataType());
+
+    Kernels.crop(clij, src, dst, 2, 2);
+    ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(crop, cropFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+
+  @Test
+    public void cropBuffer3d() {
 
         Roi roi = new Roi(2,2,10,10);
         testImp1.setRoi(roi);
@@ -528,6 +547,26 @@ public class KernelsTest {
       src.close();
       dst.close();
     }
+
+  @Test
+  public void cropBuffer2d() {
+
+    Roi roi = new Roi(2,2,10,10);
+    testImp2D1.setRoi(roi);
+    ImagePlus crop = new Duplicator().run(testImp2D1);
+
+
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(new long[]{10,10}, src.getNativeType());
+
+    Kernels.crop(clij, src, dst, 2, 2);
+    ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(crop, cropFromCL));
+
+    src.close();
+    dst.close();
+  }
 
     @Test
     public void detectMaxima3d() {

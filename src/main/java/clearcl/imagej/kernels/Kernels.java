@@ -175,8 +175,18 @@ public class Kernels {
         parameters.put("start_x", startX);
         parameters.put("start_y", startY);
         parameters.put("start_z", startZ);
-        return clij.execute(Kernels.class, "duplication.cl", "crop", parameters);
+        return clij.execute(Kernels.class, "duplication.cl", "crop_3d", parameters);
     }
+
+
+  public static boolean crop(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int startX, int startY) {
+    HashMap<String, Object> parameters = new HashMap<>();
+    parameters.put("src", src);
+    parameters.put("dst", dst);
+    parameters.put("start_x", startX);
+    parameters.put("start_y", startY);
+    return clij.execute(Kernels.class, "duplication.cl", "crop_2d", parameters);
+  }
 
     public static boolean crop(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int startX, int startY, int startZ) {
         HashMap<String, Object> parameters = new HashMap<>();
@@ -185,8 +195,18 @@ public class Kernels {
         parameters.put("start_x", startX);
         parameters.put("start_y", startY);
         parameters.put("start_z", startZ);
-        return clij.execute(Kernels.class, "duplication.cl", "crop", parameters);
+        return clij.execute(Kernels.class, "duplication.cl", "crop_3d", parameters);
     }
+
+
+  public static boolean crop(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int startX, int startY) {
+    HashMap<String, Object> parameters = new HashMap<>();
+    parameters.put("src", src);
+    parameters.put("dst", dst);
+    parameters.put("start_x", startX);
+    parameters.put("start_y", startY);
+    return clij.execute(Kernels.class, "duplication.cl", "crop_2d", parameters);
+  }
 
     public static boolean detectMaxima(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int radius) {
         return detectOptima(clij, src, dst, radius, true);
