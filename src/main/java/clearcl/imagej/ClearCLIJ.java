@@ -274,6 +274,9 @@ public class ClearCLIJ
   {
     mClearCLContext.close();
     mClearCLContext.getDevice().close();
+    if (sInstance == this) {
+      sInstance = null;
+    }
     return true;
   }
 }
