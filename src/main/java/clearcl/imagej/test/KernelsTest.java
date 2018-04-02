@@ -35,7 +35,7 @@ public class KernelsTest {
     ImagePlus testImp2D1;
     ImagePlus testImp2D2;
     ImagePlus mask;
-    ClearCLIJ clij;
+    static ClearCLIJ clij;
 
     @Before
     public void initTest() {
@@ -78,9 +78,12 @@ public class KernelsTest {
         testImp2D1 = new Duplicator().run(testImp1, 1, 1);
         testImp2D2 = new Duplicator().run(testImp1, 1, 1);
 
-        clij = //ClearCLIJ.getInstance();
-            new ClearCLIJ("Geforce");
-            //new ClearCLIJ("HD");
+        if (clij == null)
+        {
+          clij = //ClearCLIJ.getInstance();
+              new ClearCLIJ("Geforce");
+          //new ClearCLIJ("HD");
+        }
     }
 
 

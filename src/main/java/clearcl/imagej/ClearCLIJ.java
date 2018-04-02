@@ -60,15 +60,24 @@ public class ClearCLIJ
             mGenericUnaryFastFuseTask = null;
 
 
-    public static ClearCLIJ getInstance()
+  public static ClearCLIJ getInstance() {
+    return getInstance(null);
+  }
+
+  public static ClearCLIJ getInstance(String pDeviceNameMustContain)
   {
     if (sInstance == null)
     {
-      sInstance = new ClearCLIJ(null);
+      sInstance = new ClearCLIJ(pDeviceNameMustContain);
     }
     return sInstance;
   }
 
+  /**
+   * Deprecated: use getInstance(String) instead
+   * @param pDeviceNameMustContain device name
+   */
+  @Deprecated
   public ClearCLIJ(String pDeviceNameMustContain)
   {
     ClearCLBackendInterface
