@@ -78,7 +78,7 @@ public class KernelsTest {
 
         testImp2D1 = new Duplicator().run(testImp1, 1, 1);
         testImp2D2 = new Duplicator().run(testImp1, 1, 1);
-        mask2d = new Duplicator().run(mask, 1, 1);
+        mask2d = new Duplicator().run(mask, 3, 3);
 
         if (clij == null)
         {
@@ -839,7 +839,7 @@ public class KernelsTest {
   }
 
   @Test
-    public void sumPixels() {
+    public void sumPixels3d() {
         ClearCLImage maskCL = clij.converter(mask).getClearCLImage();
 
         double sum = Kernels.sumPixels(clij, maskCL);
@@ -849,8 +849,20 @@ public class KernelsTest {
         maskCL.close();
     }
 
+
+  @Test
+  public void sumPixels2d() {
+    ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+
+    double sum = Kernels.sumPixels(clij, maskCL);
+
+    assertTrue(sum == 9);
+
+    maskCL.close();
+  }
+
     @Test
-    public void threshold() {
+    public void threshold3d() {
       ImagePlus thresholded = new Duplicator().run(testImp2);
       Prefs.blackBackground = false;
       IJ.setRawThreshold(thresholded, 2, 65535, null);
@@ -871,4 +883,28 @@ public class KernelsTest {
       src.close();
       dst.close();
     }
+
+
+  @Test
+  public void threshold2d() {
+    ImagePlus thresholded = new Duplicator().run(testImp2D2);
+    Prefs.blackBackground = false;
+    IJ.setRawThreshold(thresholded, 2, 65535, null);
+    IJ.run(thresholded, "Convert to Mask", "method=Default background=Dark");
+    //IJ.run(thresholded, "Divide...", "value=255");
+
+    ClearCLImage src = clij.converter(testImp2D2).getClearCLImage();
+    ClearCLImage dst = clij.converter(testImp2D2).getClearCLImage();
+
+
+    Kernels.threshold(clij, src, dst, 2);
+    Kernels.multiplyScalar(clij, dst, src, 255);
+
+    ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(thresholded, thresholdedCL));
+
+    src.close();
+    dst.close();
+  }
 }

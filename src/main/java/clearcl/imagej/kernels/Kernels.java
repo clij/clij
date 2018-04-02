@@ -390,7 +390,14 @@ public class Kernels {
         lParameters.put("threshold", threshold);
         lParameters.put("src", src);
         lParameters.put("dst", dst);
-        return clij.execute(Kernels.class, "thresholding.cl", "applyThreshold", lParameters);
+
+        if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+          System.out.println("Error: number of dimensions don't match! (addScalar)");
+          return false;
+        }
+
+
+      return clij.execute(Kernels.class, "thresholding.cl", "apply_threshold_" + src.getDimension() + "d", lParameters);
     }
 
   private static boolean checkDimensions(long... numberOfDimensions)
