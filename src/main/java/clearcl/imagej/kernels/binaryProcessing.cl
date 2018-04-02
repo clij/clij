@@ -139,3 +139,21 @@ __kernel void invert_3d(__read_only    image3d_t  src,
   WRITE_IMAGE (dst, pos, value);
 }
 
+__kernel void invert_2d(__read_only    image2d_t  src,
+                          __write_only    image2d_t  dst
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+
+  const int2 pos = (int2){x,y};
+
+  DTYPE_OUT value = READ_IMAGE(src, pos).x;
+  if (value != 0) {
+    value = 0;
+  } else {
+    value = 1;
+  }
+
+  WRITE_IMAGE (dst, pos, value);
+}

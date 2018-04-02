@@ -655,7 +655,7 @@ public class KernelsTest {
   }
 
     @Test
-    public void flip() throws InterruptedException {
+    public void flip3d() throws InterruptedException {
         ClearCLImage testCL = clij.converter(testImp1).getClearCLImage();
         ClearCLImage flip = clij.converter(testImp1).getClearCLImage();
         ClearCLImage flop = clij.converter(testImp1).getClearCLImage();
@@ -676,9 +676,30 @@ public class KernelsTest {
         flop.close();
     }
 
+  @Test
+  public void flip2d() {
+    ClearCLImage testCL = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage flip = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage flop = clij.converter(testImp2D1).getClearCLImage();
+
+
+    Kernels.flip(clij, testCL,flip, true, false);
+
+    ImagePlus testFlipped = clij.converter(flip).getImagePlus();
+
+    Kernels.flip(clij, flip,flop, true, false);
+    ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(testImp2D1, testFlippedTwice));
+    assertFalse(TestUtilities.compareImages(testImp2D1, testFlipped));
+
+    testCL.close();
+    flip.close();
+    flop.close();
+  }
 
     @Test
-    public void flipBuffer() throws InterruptedException {
+    public void flipBuffer3d() {
 
         ClearCLBuffer testCL = clij.converter(testImp1).getClearCLBuffer();
         ClearCLBuffer flip = clij.converter(testImp1).getClearCLBuffer();
@@ -701,10 +722,53 @@ public class KernelsTest {
       flop.close();
     }
 
+
   @Test
-  public void invertBinary() {
+  public void flipBuffer2d() {
+
+    ClearCLBuffer testCL = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer flip = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer flop = clij.converter(testImp2D1).getClearCLBuffer();
+
+
+    Kernels.flip(clij, testCL,flip, true, false);
+
+    ImagePlus testFlipped = clij.converter(flip).getImagePlus();
+
+    Kernels.flip(clij, flip,flop, true, false);
+    ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(testImp2D1, testFlippedTwice));
+    assertFalse(TestUtilities.compareImages(testImp2D1, testFlipped));
+
+
+    testCL.close();
+    flip.close();
+    flop.close();
+  }
+
+
+  @Test
+  public void invertBinary3d() {
     ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
     ClearCLImage maskCLafter = clij.converter(mask3d).getClearCLImage();
+
+    Kernels.invertBinary(clij, maskCL, maskCLafter);
+
+    double sumCL = Kernels.sumPixels(clij, maskCL);
+    double sumCLafter = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sumCLafter == maskCL.getWidth() * maskCL.getHeight() * maskCL.getDepth() - sumCL);
+
+
+    maskCL.close();
+    maskCLafter.close();
+  }
+
+  @Test
+  public void invertBinary2d() {
+    ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+    ClearCLImage maskCLafter = clij.converter(mask2d).getClearCLImage();
 
     Kernels.invertBinary(clij, maskCL, maskCLafter);
 
