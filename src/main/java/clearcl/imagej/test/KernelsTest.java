@@ -187,7 +187,7 @@ public class KernelsTest {
     }
 
     @Test
-    public void blur() {
+    public void blur3d() {
 
         ImagePlus gauss = new Duplicator().run(testImp1);
 
@@ -203,6 +203,30 @@ public class KernelsTest {
 
         src.close();
         dst.close();
+    }
+
+    @Test
+    public void blur2d() {
+
+      ImagePlus gauss = new Duplicator().run(testImp1, 1, 1);
+      ImagePlus gaussCopy = new Duplicator().run(testImp1, 1, 1);
+
+
+      IJ.run(gauss, "Gaussian Blur...", "sigma=2");
+
+
+      //GaussianBlur3D.blur(gauss, 2, 2, 2);
+
+      ClearCLImage src = clij.converter(gaussCopy).getClearCLImage();
+      ClearCLImage dst = clij.converter(gaussCopy).getClearCLImage();
+
+      Kernels.blur(clij, src, dst, 6,6, 2,2);
+      ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
+
+      src.close();
+      dst.close();
     }
 
     @Test

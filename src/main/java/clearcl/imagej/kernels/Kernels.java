@@ -50,9 +50,21 @@ public class Kernels {
     return true;
   }
 
+  public static boolean blur(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage dst, int nX, int nY, float sigmaX, float sigmaY){
+
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("Nx", nX);
+    lParameters.put("Ny", nY);
+    lParameters.put("sx", sigmaX);
+    lParameters.put("sy", sigmaY);
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    return pCLIJ.execute(Kernels.class, "blur.cl", "gaussian_blur_image2d", lParameters);
+  }
 
 
   public static boolean blur(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage dst, int nX, int nY, int nZ, float sigmaX, float sigmaY, float sigmaZ){
+
         HashMap<String, Object> lParameters = new HashMap<>();
         lParameters.put("Nx", nX);
         lParameters.put("Ny", nY);

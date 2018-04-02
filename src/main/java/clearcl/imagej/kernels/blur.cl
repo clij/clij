@@ -69,3 +69,34 @@ __kernel void gaussian_blur_slicewise_image3d
   res /= hsum;
   WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
 }
+
+__kernel void gaussian_blur_image2d
+(
+  write_only image2d_t dst, read_only image2d_t src,
+  const int Nx, const int Ny,
+  const float sx, const float sy
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1);
+  const int2 coord = (int2)(i,j);
+
+  // centers
+  const int2   c = (int2)  ( (Nx-1)/2, (Ny-1)/2 );
+  // normalizations
+  const float2 n = (float2)( -2*sx*sx, -2*sy*sy);
+
+  float res = 0, hsum = 0;
+
+  for (int x = -c.x; x <= c.x; x++) {
+    const float wx = (x*x) / n.x;
+    for (int y = -c.y; y <= c.y; y++) {
+      const float wy = (y*y) / n.y;
+      const float h = exp(wx + wy);
+      res += h * (float)READ_IMAGE(src,sampler,coord+(int2)(x,y)).x;
+      hsum += h;
+    }
+  }
+
+  res /= hsum;
+  WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
+}
