@@ -731,9 +731,7 @@ public class KernelsTest {
     }
 
     @Test
-    public void multiplyPixelwise() {
-        System.out.println("Todo: implement test for multiplPixelwise");
-
+    public void multiplyPixelwise3d() {
       ImagePlus multiplied = new ImageCalculator().run("Multiply create stack", testImp1, testImp2);
       ClearCLImage src = clij.converter(testImp1).getClearCLImage();
       ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
@@ -752,12 +750,47 @@ public class KernelsTest {
 
 
     @Test
-    public void multiplyScalar() {
+    public void multiplyPixelwise2d() {
+      ImagePlus multiplied = new ImageCalculator().run("Multiply create", testImp2D1, testImp2D2);
+      ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+      ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
+      ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+      Kernels.multiplyPixelwise(clij, src, src1, dst);
+
+      ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
+
+      src.close();
+      src1.close();
+      dst.close();
+    }
+
+    @Test
+    public void multiplyScalar3d() {
       ImagePlus added = new Duplicator().run(testImp1);
       IJ.run(added, "Multiply...", "value=2 stack");
 
       ClearCLImage src = clij.converter(testImp1).getClearCLImage();
       ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+      Kernels.multiplyScalar(clij, src, dst, 2);
+      ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(TestUtilities.compareImages(added, addedFromCL));
+
+      src.close();
+      dst.close();
+    }
+
+    @Test
+    public void multiplyScalar2d() {
+      ImagePlus added = new Duplicator().run(testImp2D1);
+      IJ.run(added, "Multiply...", "value=2");
+
+      ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+      ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
 
       Kernels.multiplyScalar(clij, src, dst, 2);
       ImagePlus addedFromCL = clij.converter(dst).getImagePlus();

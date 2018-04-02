@@ -303,12 +303,18 @@ public class Kernels {
   }
 
 
-  public static boolean multiplyPixelwise(ClearCLIJ pCLIJ, ClearCLImage pImage, ClearCLImage pImage1, ClearCLImage pOutputImage) {
+  public static boolean multiplyPixelwise(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage src1, ClearCLImage dst) {
         HashMap<String, Object> lParameters = new HashMap<>();
-        lParameters.put("src", pImage);
-        lParameters.put("src1", pImage1);
-        lParameters.put("dst", pOutputImage);
-        return pCLIJ.execute(Kernels.class, "math.cl", "multiplyPixelwise", lParameters);
+        lParameters.put("src", src);
+        lParameters.put("src1", src1);
+        lParameters.put("dst", dst);
+
+    if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
+      System.out.println("Error: number of dimensions don't match! (addScalar)");
+      return false;
+    }
+
+    return pCLIJ.execute(Kernels.class, "math.cl", "multiplyPixelwise_" + src.getDimension() + "d", lParameters);
     }
 
     public static boolean multiplyScalar(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage dst, float scalar) {
@@ -316,7 +322,12 @@ public class Kernels {
       lParameters.put("src", src);
       lParameters.put("scalar", scalar);
       lParameters.put("dst", dst);
-      return pCLIJ.execute(Kernels.class, "math.cl", "multiplyScalar", lParameters);
+
+      if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+        System.out.println("Error: number of dimensions don't match! (addScalar)");
+        return false;
+      }
+      return pCLIJ.execute(Kernels.class, "math.cl", "multiplyScalar_" + src.getDimension() + "d", lParameters);
     }
 
 
