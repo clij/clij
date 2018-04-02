@@ -1,5 +1,5 @@
 
-__kernel void mask(__read_only    image3d_t  src,
+__kernel void mask_3d(__read_only    image3d_t  src,
                                  __read_only    image3d_t  mask,
                           __write_only    image3d_t  dst
                      )
@@ -17,6 +17,26 @@ __kernel void mask(__read_only    image3d_t  src,
 
   WRITE_IMAGE (dst, pos, value);
 }
+
+
+__kernel void mask_2d(__read_only    image2d_t  src,
+                                 __read_only    image2d_t  mask,
+                          __write_only    image2d_t  dst
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+
+  const int2 pos = (int2){x,y};
+
+  DTYPE_OUT value = 0;
+  if (READ_IMAGE(mask, pos).x != 0) {
+    value = READ_IMAGE(src, pos).x;
+  }
+
+  WRITE_IMAGE (dst, pos, value);
+}
+
 
 __kernel void maskStackWithPlane(__read_only    image3d_t  src,
                                  __read_only    image2d_t  mask,

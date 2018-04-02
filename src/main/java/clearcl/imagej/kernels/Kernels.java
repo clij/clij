@@ -348,7 +348,11 @@ public class Kernels {
         lParameters.put("mask", mask);
         lParameters.put("dst", dst);
 
-        return pCLIJ.execute(Kernels.class, "mask.cl", "mask", lParameters);
+        if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+          System.out.println("Error: number of dimensions don't match! (mask)");
+          return false;
+        }
+        return pCLIJ.execute(Kernels.class, "mask.cl", "mask_" + src.getDimension() + "d", lParameters);
     }
 
   public static boolean maskStackWithPlane(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage mask, ClearCLImage dst) {

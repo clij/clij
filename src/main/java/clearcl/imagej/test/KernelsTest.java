@@ -874,10 +874,32 @@ public class KernelsTest {
     maskCLafter.close();
   }
 
+  @Test
+  public void mask3d() {
+    System.out.println("Todo: implement test for mask3d");
+
+    ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage mask = clij.converter(mask3d).getClearCLImage();
+    ClearCLImage dst = clij.converter(mask3d).getClearCLImage();
+
+    Kernels.mask(clij, src, mask, dst);
+
+    mask.close();
+    dst.close();
+  }
 
   @Test
-    public void mask() {
-        System.out.println("Todo: implement test for mask3d");
+    public void mask2d() {
+        System.out.println("Todo: implement test for mask2d");
+
+        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage mask = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage dst = clij.converter(mask2d).getClearCLImage();
+
+        Kernels.mask(clij, src, mask, dst);
+
+        mask.close();
+        dst.close();
     }
 
     @Test
