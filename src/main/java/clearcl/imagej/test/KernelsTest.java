@@ -85,7 +85,7 @@ public class KernelsTest {
 
 
     @Test
-    public void addPixelwise() {
+    public void addPixelwise3d() {
         ImageCalculator ic = new ImageCalculator();
         ImagePlus sumImp = ic.run("Add create stack", testImp1, testImp2);
 
@@ -105,25 +105,62 @@ public class KernelsTest {
         dst.close();
     }
 
+  @Test
+  public void addPixelwise2d() {
+    ImageCalculator ic = new ImageCalculator();
+    ImagePlus sumImp = ic.run("Add create", testImp2D1, testImp2D2);
+
+    ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
+    ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+    Kernels.addPixelwise(clij, src, src1, dst);
+    ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+
+    //sumImp.show();
+    //sumImpFromCL.show();
+    assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+  @Test
+  public void addScalar3d() {
+    ImagePlus added = new Duplicator().run(testImp1);
+    IJ.run(added, "Add...", "value=1 stack");
+
+    ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+    Kernels.addScalar(clij, src, dst, 1);
+    ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(added, addedFromCL));
+
+    src.close();
+    dst.close();
+  }
+  @Test
+  public void addScalar2d() {
+    ImagePlus added = new Duplicator().run(testImp2D1);
+    IJ.run(added, "Add...", "value=1");
+
+    ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+    Kernels.addScalar(clij, src, dst, 1);
+    ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(added, addedFromCL));
+
+    src.close();
+    dst.close();
+  }
+
     @Test
-    public void addScalar() {
-        ImagePlus added = new Duplicator().run(testImp1);
-        IJ.run(added, "Add...", "value=1 stack");
-
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
-
-        Kernels.addScalar(clij, src, dst, 1);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
-
-        assertTrue(TestUtilities.compareImages(added, addedFromCL));
-
-        src.close();
-        dst.close();
-    }
-
-    @Test
-    public void addWeightedPixelwise() {
+    public void addWeightedPixelwise3d() {
         float factor1 = 3f;
         float factor2 = 2;
 
@@ -151,7 +188,36 @@ public class KernelsTest {
         dst.close();
     }
 
-    @Test
+  @Test
+  public void addWeightedPixelwise2d() {
+    float factor1 = 3f;
+    float factor2 = 2;
+
+    ImagePlus testImp1copy = new Duplicator().run(testImp2D1);
+    ImagePlus testImp2copy = new Duplicator().run(testImp2D2);
+    IJ.run(testImp1copy, "Multiply...", "value=" + factor1 + " ");
+    IJ.run(testImp2copy, "Multiply...", "value=" + factor2 + " ");
+
+    ImageCalculator ic = new ImageCalculator();
+    ImagePlus sumImp = ic.run("Add create ", testImp1copy, testImp2copy);
+
+    ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
+    ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+    Kernels.addWeightedPixelwise(clij, src, src1, dst, factor1, factor2);
+    ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+
+    //sumImp.show();
+    //sumImpFromCL.show();
+    assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+  @Test
     public void argMaxProjection() {
       ImagePlus maxProjection = NewImage.createShortImage("", testImp1.getWidth(), testImp2.getHeight(), 1, NewImage.FILL_BLACK);
       ImageProcessor ipMax = maxProjection.getProcessor();

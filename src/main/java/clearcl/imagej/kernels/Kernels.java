@@ -17,7 +17,12 @@ public class Kernels {
         lParameters.put("src", src);
         lParameters.put("src1", src1);
         lParameters.put("dst", dst);
-        return pCLIJ.execute(Kernels.class, "math.cl", "addPixelwise", lParameters);
+
+        if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
+          System.out.println("Error: number of dimensions don't match! (addPixelwise)");
+          return false;
+        }
+        return pCLIJ.execute(Kernels.class, "math.cl", "addPixelwise_" + src.getDimension() + "d", lParameters);
     }
 
     public static boolean addScalar(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage dst, float scalar) {
@@ -25,7 +30,13 @@ public class Kernels {
         lParameters.put("src", src);
         lParameters.put("scalar", scalar);
         lParameters.put("dst", dst);
-        return pCLIJ.execute(Kernels.class, "math.cl", "addScalar", lParameters);
+
+        if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+          System.out.println("Error: number of dimensions don't match! (addScalar)");
+          return false;
+        }
+
+        return pCLIJ.execute(Kernels.class, "math.cl", "addScalar_" + src.getDimension() + "d", lParameters);
     }
 
     public static boolean addWeightedPixelwise(ClearCLIJ pCLIJ, ClearCLImage src, ClearCLImage src1, ClearCLImage dst, float factor, float factor1) {
@@ -35,7 +46,13 @@ public class Kernels {
         lParameters.put("factor", factor);
         lParameters.put("factor1", factor1);
         lParameters.put("dst", dst);
-        return pCLIJ.execute(Kernels.class, "math.cl", "addWeightedPixelwise", lParameters);
+
+        if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
+          System.out.println("Error: number of dimensions don't match! (addScalar)");
+          return false;
+        }
+
+        return pCLIJ.execute(Kernels.class, "math.cl", "addWeightedPixelwise_" + src.getDimension() + "d", lParameters);
     }
 
 
@@ -107,23 +124,16 @@ public class Kernels {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
     lParameters.put("dst", dst);
-    if (srcNumberOfDimensions == 3 && dstNumberOfDimensions == 3)
-    {
-      return clij.execute(Kernels.class,
-                          "duplication.cl",
-                          "copy_3d",
-                          lParameters);
-    } else if (srcNumberOfDimensions == 2 && dstNumberOfDimensions == 2)
-    {
-      return clij.execute(Kernels.class,
-                          "duplication.cl",
-                          "copy_2d",
-                          lParameters);
-    } else {
-      System.out.println("Error not copy kernel found for given dimensions (" + srcNumberOfDimensions + "," + dstNumberOfDimensions + ")");
+    if (!checkDimensions(srcNumberOfDimensions, dstNumberOfDimensions)) {
+      System.out.println("Error: number of dimensions don't match! (copy)");
       return false;
     }
+      return clij.execute(Kernels.class,
+                          "duplication.cl",
+                          "copy_" + srcNumberOfDimensions + "d",
+                          lParameters);
   }
+
 
   public static boolean copy(ClearCLIJ clij, ClearCLBuffer src, ClearCLImage dst) {
     return copyInternal(clij, src, dst, src.getDimension(), dst.getDimension());
@@ -360,6 +370,16 @@ public class Kernels {
         lParameters.put("dst", dst);
         return clij.execute(Kernels.class, "thresholding.cl", "applyThreshold", lParameters);
     }
+
+  private static boolean checkDimensions(long... numberOfDimensions)
+  {
+    for (int i = 0; i < numberOfDimensions.length - 1 ; i++) {
+      if (!(numberOfDimensions[i] == numberOfDimensions[i + 1])) {
+        return false;
+      }
+    }
+    return true;
+  }
 
 
 }
