@@ -219,7 +219,11 @@ public class Kernels {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
-        return clij.execute(Kernels.class, "binaryProcessing.cl", "dilate_6_neighborhood_3d", parameters);
+        if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+          System.out.println("Error: number of dimensions don't match! (copy)");
+          return false;
+        }
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "dilate_diamond_neighborhood_" + src.getDimension() + "d", parameters);
     }
 
     public static boolean downsample(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float factorX, float factorY, float factorZ) {
@@ -246,8 +250,13 @@ public class Kernels {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
-        return clij.execute(Kernels.class, "binaryProcessing.cl", "erode_6_neighborhood_3d", parameters);
-    }
+        if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+          System.out.println("Error: number of dimensions don't match! (copy)");
+          return false;
+        }
+
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "erode_diamond_neighborhood_" + src.getDimension() + "d", parameters);
+  }
 
     public static boolean flip(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, boolean flipx, boolean flipy, boolean flipz) {
         HashMap<String, Object> parameters = new HashMap<>();

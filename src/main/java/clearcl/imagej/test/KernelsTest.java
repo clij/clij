@@ -1,11 +1,9 @@
 package clearcl.imagej.test;
 
-import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
-import clearcl.imagej.test.TestUtilities;
 import ij.*;
 import ij.gui.NewImage;
 import ij.gui.Roi;
@@ -16,12 +14,10 @@ import ij.process.ImageProcessor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.realtransform.Scale3D;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
-import org.scijava.test.TestUtils;
 
 import static org.junit.Assert.*;
 
@@ -31,7 +27,7 @@ public class KernelsTest {
     ImagePlus testImp2;
     ImagePlus testImp2D1;
     ImagePlus testImp2D2;
-    ImagePlus mask;
+    ImagePlus mask3d;
     ImagePlus mask2d;
     static ClearCLIJ clij;
 
@@ -39,7 +35,7 @@ public class KernelsTest {
     public void initTest() {
         testImp1 = NewImage.createImage("", 100, 100, 12,16, NewImage.FILL_BLACK);
         testImp2 = NewImage.createImage("", 100, 100, 12,16, NewImage.FILL_BLACK);
-        mask = NewImage.createImage("", 100, 100, 12,16, NewImage.FILL_BLACK);
+      mask3d = NewImage.createImage("", 100, 100, 12, 16, NewImage.FILL_BLACK);
 
         for (int z = 0; z < 5; z++) {
             testImp1.setZ(z + 1);
@@ -55,8 +51,8 @@ public class KernelsTest {
             ip2.set(5, 7, 2);
 
             if (z < 3) {
-                mask.setZ(z + 3);
-                ImageProcessor ip3 = mask.getProcessor();
+                mask3d.setZ(z + 3);
+                ImageProcessor ip3 = mask3d.getProcessor();
                 ip3.set(2, 2, 1);
                 ip3.set(2, 3, 1);
                 ip3.set(2, 4, 1);
@@ -75,7 +71,7 @@ public class KernelsTest {
 
         testImp2D1 = new Duplicator().run(testImp1, 1, 1);
         testImp2D2 = new Duplicator().run(testImp1, 1, 1);
-        mask2d = new Duplicator().run(mask, 3, 3);
+        mask2d = new Duplicator().run(mask3d, 3, 3);
 
         if (clij == null)
         {
@@ -572,8 +568,8 @@ public class KernelsTest {
 
     @Test
     public void dilate() {
-        ClearCLImage maskCL = clij.converter(mask).getClearCLImage();
-        ClearCLImage maskCLafter = clij.converter(mask).getClearCLImage();
+        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage maskCLafter = clij.converter(mask3d).getClearCLImage();
 
         Kernels.dilate(clij, maskCL,maskCLafter);
 
@@ -603,7 +599,7 @@ public class KernelsTest {
       assertTrue(compareImages(downsampled, downsampledCL));
       */
     }
-  
+
     @Test
     public void downsample2d()
     {
@@ -629,9 +625,9 @@ public class KernelsTest {
     }
 
     @Test
-    public void erode() {
-        ClearCLImage maskCL = clij.converter(mask).getClearCLImage();
-        ClearCLImage maskCLafter = clij.converter(mask).getClearCLImage();
+    public void erode3d() {
+        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage maskCLafter = clij.converter(mask3d).getClearCLImage();
 
         Kernels.erode(clij, maskCL,maskCLafter);
 
@@ -643,8 +639,20 @@ public class KernelsTest {
         maskCLafter.close();
     }
 
+  @Test
+  public void erode2d() {
+    ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+    ClearCLImage maskCLafter = clij.converter(mask2d).getClearCLImage();
 
+    Kernels.erode(clij, maskCL,maskCLafter);
 
+    double sum = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sum == 1);
+
+    maskCL.close();
+    maskCLafter.close();
+  }
 
     @Test
     public void flip() throws InterruptedException {
@@ -695,8 +703,8 @@ public class KernelsTest {
 
   @Test
   public void invertBinary() {
-    ClearCLImage maskCL = clij.converter(mask).getClearCLImage();
-    ClearCLImage maskCLafter = clij.converter(mask).getClearCLImage();
+    ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+    ClearCLImage maskCLafter = clij.converter(mask3d).getClearCLImage();
 
     Kernels.invertBinary(clij, maskCL, maskCLafter);
 
@@ -713,7 +721,7 @@ public class KernelsTest {
 
   @Test
     public void mask() {
-        System.out.println("Todo: implement test for mask");
+        System.out.println("Todo: implement test for mask3d");
     }
 
     @Test
@@ -834,7 +842,7 @@ public class KernelsTest {
 
   @Test
   public void set3d() {
-    ClearCLImage imageCL = clij.converter(mask).getClearCLImage();
+    ClearCLImage imageCL = clij.converter(mask3d).getClearCLImage();
 
     Kernels.set(clij, imageCL, 2);
 
@@ -861,7 +869,7 @@ public class KernelsTest {
 
   @Test
     public void sumPixels3d() {
-        ClearCLImage maskCL = clij.converter(mask).getClearCLImage();
+        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
 
         double sum = Kernels.sumPixels(clij, maskCL);
 
