@@ -32,6 +32,8 @@ public class KernelsTest {
 
     ImagePlus testImp1;
     ImagePlus testImp2;
+    ImagePlus testImp2D1;
+    ImagePlus testImp2D2;
     ImagePlus mask;
     ClearCLIJ clij;
 
@@ -72,6 +74,9 @@ public class KernelsTest {
 
         }
 
+
+        testImp2D1 = new Duplicator().run(testImp1, 1, 1);
+        testImp2D2 = new Duplicator().run(testImp1, 1, 1);
 
         clij = //ClearCLIJ.getInstance();
             new ClearCLIJ("Geforce");
@@ -208,8 +213,8 @@ public class KernelsTest {
     @Test
     public void blur2d() {
 
-      ImagePlus gauss = new Duplicator().run(testImp1, 1, 1);
-      ImagePlus gaussCopy = new Duplicator().run(testImp1, 1, 1);
+      ImagePlus gauss = new Duplicator().run(testImp2D1);
+      ImagePlus gaussCopy = new Duplicator().run(testImp2D1);
 
 
       IJ.run(gauss, "Gaussian Blur...", "sigma=2");
@@ -248,14 +253,53 @@ public class KernelsTest {
     }
 
     @Test
-    public void convert() {
-        System.out.println("Todo: implement test for convert");
+    public void convertImageToBuffer3d() {
+      ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+      ClearCLBuffer dst = clij.createCLBuffer(src.getDimensions(), src.getNativeType());
+
+      Kernels.copy(clij, src, dst);
+      ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
+
+      src.close();
+      dst.close();
     }
 
+  @Test
+  public void convertImageToBuffer2d() {
+    ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLBuffer dst = clij.createCLBuffer(src.getDimensions(), src.getNativeType());
+
+    Kernels.copy(clij, src, dst);
+    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test
+  public void convertBufferToImage3d() {
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+    Kernels.set(clij, dst, 0);
+
+    Kernels.copy(clij, src, dst);
+    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
+
+    src.close();
+    dst.close();
+  }
+
     @Test
-    public void copy() {
+    public void copy3d() {
         ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage dst = clij.createCLImage(src.getDimensions(), src.getChannelDataType());;
 
         Kernels.copy(clij, src, dst);
         ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
@@ -265,6 +309,21 @@ public class KernelsTest {
         src.close();
         dst.close();
     }
+
+    @Test
+  public void copy2d() {
+    ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src.getDimensions(), src.getChannelDataType());
+
+    Kernels.copy(clij, src, dst);
+    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
+
+    src.close();
+    dst.close();
+  }
+
 
   @Test
   public void copyImageToBuffer() {
@@ -297,7 +356,7 @@ public class KernelsTest {
   }
 
     @Test
-    public void copyBuffer() {
+    public void copyBuffer3d() {
       ImagePlus imp = new Duplicator().run(testImp1);
       Img<FloatType> img = ImageJFunctions.convertFloat(testImp1);
         ClearCLBuffer src = clij.converter(imp /*If you put img here, it works?!?!?!*/).getClearCLBuffer();
@@ -313,6 +372,25 @@ public class KernelsTest {
         src.close();
         dst.close();
     }
+
+
+  @Test
+  public void copyBuffer2d() {
+    ImagePlus imp = new Duplicator().run(testImp2D1);
+    Img<FloatType> img = ImageJFunctions.convertFloat(testImp2D1);
+    ClearCLBuffer src = clij.converter(imp /*If you put img here, it works?!?!?!*/).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src.getDimensions(), src.getNativeType());
+
+    Kernels.copy(clij, src, dst);
+    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+    assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
+
+    RandomAccessibleInterval rai = clij.converter(dst).getRandomAccessibleInterval();
+    assertTrue(TestUtilities.compareIterableIntervals(img, Views.iterable(rai)));
+
+    src.close();
+    dst.close();
+  }
 
 
     @Test

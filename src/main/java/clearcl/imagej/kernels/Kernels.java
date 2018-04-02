@@ -98,33 +98,44 @@ public class Kernels {
       return copy(clij, src, dst);
     }
 
+
   public static boolean copy(ClearCLIJ clij, ClearCLImage src, ClearCLBuffer dst) {
+    return copyInternal(clij, src, dst, src.getDimension(), dst.getDimension());
+  }
+
+  private static boolean copyInternal(ClearCLIJ clij, Object src, Object dst, long srcNumberOfDimensions, long dstNumberOfDimensions) {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
     lParameters.put("dst", dst);
-    return clij.execute(Kernels.class, "duplication.cl", "copy", lParameters);
+    if (srcNumberOfDimensions == 3 && dstNumberOfDimensions == 3)
+    {
+      return clij.execute(Kernels.class,
+                          "duplication.cl",
+                          "copy_3d",
+                          lParameters);
+    } else if (srcNumberOfDimensions == 2 && dstNumberOfDimensions == 2)
+    {
+      return clij.execute(Kernels.class,
+                          "duplication.cl",
+                          "copy_2d",
+                          lParameters);
+    } else {
+      System.out.println("Error not copy kernel found for given dimensions (" + srcNumberOfDimensions + "," + dstNumberOfDimensions + ")");
+      return false;
+    }
   }
 
   public static boolean copy(ClearCLIJ clij, ClearCLBuffer src, ClearCLImage dst) {
-    HashMap<String, Object> lParameters = new HashMap<>();
-    lParameters.put("src", src);
-    lParameters.put("dst", dst);
-    return clij.execute(Kernels.class, "duplication.cl", "copy", lParameters);
+    return copyInternal(clij, src, dst, src.getDimension(), dst.getDimension());
   }
 
     public static boolean copy(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("src", src);
-        parameters.put("dst", dst);
-        return clij.execute(Kernels.class, "duplication.cl", "copy", parameters);
+      return copyInternal(clij, src, dst, src.getDimension(), dst.getDimension());
     }
 
 
     public static boolean copy(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst) {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("src", src);
-        parameters.put("dst", dst);
-        return clij.execute(Kernels.class, "duplication.cl", "copy", parameters);
+      return copyInternal(clij, src, dst, src.getDimension(), dst.getDimension());
     }
 
 

@@ -780,13 +780,13 @@ public class ImageTypeConverter<T extends RealType<T>>
   private ClearCLImage convertCLBufferToCLImage(ClearCLBuffer pBuffer) {
     ImageChannelDataType pType = nativeTypeToImageChannelType(pBuffer.getNativeType());
 
-    ClearCLImage output = mCLIJ.createCLImage(new long[] {pBuffer.getWidth(), pBuffer.getHeight(), pBuffer.getDepth()}, pType);
+    ClearCLImage output = mCLIJ.createCLImage(pBuffer.getDimensions(), pType);
     Kernels.convert(mCLIJ, pBuffer, output);
     return output;
   }
 
   private ClearCLBuffer convertCLImageToCLBuffer(ClearCLImage pClImage) {
-    ClearCLBuffer output = mCLIJ.createCLBuffer(new long[] {pClImage.getWidth(), pClImage.getHeight(), pClImage.getDepth()}, pClImage.getNativeType());
+    ClearCLBuffer output = mCLIJ.createCLBuffer(pClImage.getDimensions(), pClImage.getNativeType());
     Kernels.convert(mCLIJ, pClImage, output);
     return output;
   }
