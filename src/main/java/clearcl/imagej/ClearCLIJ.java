@@ -261,9 +261,10 @@ public class ClearCLIJ
     imp.show();
   }
 
-
-
-
-
-
+  public boolean close()
+  {
+    mClearCLContext.close();
+    mClearCLContext.getDevice().close();
+    return true;
+  }
 }
