@@ -3,11 +3,9 @@ package clearcl.imagej.test;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
-import clearcl.imagej.utilities.CLInfo;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
-import ij.gui.NewImage;
 import ij.plugin.Duplicator;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -28,14 +26,14 @@ import static org.junit.Assert.assertFalse;
  */
 public class DoubleFlipTest
 {
-  public static void main(String ... args) throws IOException
+  public static void main(String... args) throws IOException
   {
     new ImageJ();
     new DoubleFlipTest().testFlipImageTwiceOnAllDevices();
   }
 
   @Test public void testFlipImageTwiceOnAllDevices() throws
-                                                      IOException
+                                                     IOException
   {
     for (String lDeviceName : ClearCLIJ.getAvailableDeviceNames())
     {
@@ -44,15 +42,21 @@ public class DoubleFlipTest
       System.out.println("Testing " + lDeviceName);
 
       ImagePlus
-          lInputImagePlus = IJ.openImage("src/main/resources/flybrain.tif");
+          lInputImagePlus =
+          IJ.openImage("src/main/resources/flybrain.tif");
 
-      ClearCLImage lCLImage = lCLIJ.converter(lInputImagePlus).getClearCLImage();
+      ClearCLImage
+          lCLImage =
+          lCLIJ.converter(lInputImagePlus).getClearCLImage();
 
-      RandomAccessibleInterval lInputImagePlus2 = lCLIJ.converter(lCLImage).getRandomAccessibleInterval();
+      RandomAccessibleInterval
+          lInputImagePlus2 =
+          lCLIJ.converter(lCLImage).getRandomAccessibleInterval();
 
-      assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(lInputImagePlus2),
-                                                        ImageJFunctions.<UnsignedShortType>wrap(lInputImagePlus)));
-
+      assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
+          lInputImagePlus2),
+                                                        ImageJFunctions.<UnsignedShortType>wrap(
+                                                            lInputImagePlus)));
 
       RandomAccessibleInterval<UnsignedShortType>
           lInputImg =
@@ -69,36 +73,20 @@ public class DoubleFlipTest
           lDstImage =
           lCLIJ.converter(lOutputImg).getClearCLImage();
 
-
-
-      Kernels.flip(lCLIJ, lSrcImage,lDstImage, true, false, false);
-
       // flip once
-      Map<String, Object> lParameterMap = new HashMap<>();
-      /*
-      lParameterMap.put("src", lSrcImage);
-      lParameterMap.put("dst", lDstImage);
-      lParameterMap.put("flipx", 1);
-      lParameterMap.put("flipy", 0);
-      lParameterMap.put("flipz", 0);
-
-      lCLIJ.execute(
-          "src/main/java/clearcl/imagej/kernels/flip.cl",
-          "flip_3d",
-          lParameterMap);*/
+      Kernels.flip(lCLIJ, lSrcImage, lDstImage, true, false, false);
 
       // flip second time
-      lParameterMap = new HashMap<>();
+      Map<String, Object> lParameterMap = new HashMap<>();
       lParameterMap.put("src", lDstImage);
       lParameterMap.put("dst", lSrcImage);
       lParameterMap.put("flipx", 1);
       lParameterMap.put("flipy", 0);
       lParameterMap.put("flipz", 0);
 
-      lCLIJ.execute(
-          "src/main/java/clearcl/imagej/kernels/flip.cl",
-          "flip_3d",
-          lParameterMap);
+      lCLIJ.execute("src/main/java/clearcl/imagej/kernels/flip.cl",
+                    "flip_3d",
+                    lParameterMap);
 
       RandomAccessibleInterval<UnsignedShortType>
           lIntermediateResultImg =

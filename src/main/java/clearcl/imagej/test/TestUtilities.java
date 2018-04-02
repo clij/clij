@@ -13,17 +13,23 @@ import net.imglib2.type.numeric.RealType;
 public class TestUtilities
 {
 
-  public static <T extends RealType<T>> boolean compareIterableIntervals(IterableInterval<T> lIterableInterval1,
-                                                                         IterableInterval<T> lIterableInterval2)
+  public static <T extends RealType<T>> boolean compareIterableIntervals(
+      IterableInterval<T> lIterableInterval1,
+      IterableInterval<T> lIterableInterval2)
   {
     double lSum = 0;
     Cursor<T> lCursor1 = lIterableInterval1.cursor();
     Cursor<T> lCursor2 = lIterableInterval2.cursor();
 
-    while (lCursor1.hasNext() && lCursor2.hasNext()) {
-      if (lCursor1.next().getRealFloat() != lCursor2.next().getRealFloat()) {
-        System.out.println("lCursor1 " + lCursor1.get().getRealFloat());
-        System.out.println("lCursor2 " + lCursor2.get().getRealFloat());
+    while (lCursor1.hasNext() && lCursor2.hasNext())
+    {
+      if (lCursor1.next().getRealFloat() != lCursor2.next()
+                                                    .getRealFloat())
+      {
+        System.out.println("lCursor1 " + lCursor1.get()
+                                                 .getRealFloat());
+        System.out.println("lCursor2 " + lCursor2.get()
+                                                 .getRealFloat());
         System.out.println("Value different ");
         return false;
       }
@@ -32,43 +38,67 @@ public class TestUtilities
     System.out.println("sum " + lSum);
 
     // check if one image is longer than the other
-    if (lCursor1.hasNext() || lCursor2.hasNext()) {
+    if (lCursor1.hasNext() || lCursor2.hasNext())
+    {
       return false;
     }
 
     return true;
   }
 
-  public static boolean compareImages(ImagePlus a, ImagePlus b) {
-    if (a.getWidth() != b.getWidth() ||
-            a.getHeight() != b.getHeight() ||
-            a.getNChannels() != b.getNChannels() ||
-            a.getNFrames() != b.getNFrames() ||
-            a.getNSlices() != b.getNSlices()) {
+  public static boolean compareImages(ImagePlus a, ImagePlus b)
+  {
+    if (a.getWidth() != b.getWidth()
+        || a.getHeight() != b.getHeight()
+        || a.getNChannels() != b.getNChannels()
+        || a.getNFrames() != b.getNFrames()
+        || a.getNSlices() != b.getNSlices())
+    {
       System.out.println("sizes different");
       System.out.println("w " + a.getWidth() + " != " + b.getWidth());
-      System.out.println("h " + a.getHeight() + " != " + b.getHeight());
-      System.out.println("c " + a.getNChannels() + " != " + b.getNChannels());
-      System.out.println("f " + a.getNFrames() + " != " + b.getNFrames());
-      System.out.println("s " + a.getNSlices() + " != " + b.getNSlices());
+      System.out.println("h "
+                         + a.getHeight()
+                         + " != "
+                         + b.getHeight());
+      System.out.println("c "
+                         + a.getNChannels()
+                         + " != "
+                         + b.getNChannels());
+      System.out.println("f "
+                         + a.getNFrames()
+                         + " != "
+                         + b.getNFrames());
+      System.out.println("s "
+                         + a.getNSlices()
+                         + " != "
+                         + b.getNSlices());
       return false;
     }
 
-    for (int c = 0; c < a.getNChannels(); c++) {
+    for (int c = 0; c < a.getNChannels(); c++)
+    {
       a.setC(c + 1);
       b.setC(c + 1);
-      for (int t = 0; t < a.getNFrames(); t++) {
+      for (int t = 0; t < a.getNFrames(); t++)
+      {
         a.setT(t + 1);
         b.setT(t + 1);
-        for (int z = 0; z < a.getNSlices(); z++) {
+        for (int z = 0; z < a.getNSlices(); z++)
+        {
           a.setZ(z + 1);
           b.setZ(z + 1);
           ImageProcessor aIP = a.getProcessor();
           ImageProcessor bIP = b.getProcessor();
-          for (int x = 0; x < a.getWidth(); x++) {
-            for (int y = 0; y < a.getHeight(); y++) {
-              if (aIP.getPixelValue(x, y ) != bIP.getPixelValue(x, y)) {
-                System.out.println("pixels different " + aIP.getPixelValue(x, y ) + " != " + bIP.getPixelValue(x, y));
+          for (int x = 0; x < a.getWidth(); x++)
+          {
+            for (int y = 0; y < a.getHeight(); y++)
+            {
+              if (aIP.getPixelValue(x, y) != bIP.getPixelValue(x, y))
+              {
+                System.out.println("pixels different "
+                                   + aIP.getPixelValue(x, y)
+                                   + " != "
+                                   + bIP.getPixelValue(x, y));
                 return false;
               }
             }
