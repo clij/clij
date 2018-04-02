@@ -104,8 +104,8 @@ public class KernelsTest
     if (clij == null)
     {
       clij = //ClearCLIJ.getInstance();
-          new ClearCLIJ("Geforce");
-      //new ClearCLIJ("HD");
+          //new ClearCLIJ("Geforce");
+      new ClearCLIJ("HD");
     }
   }
 
@@ -392,7 +392,7 @@ public class KernelsTest
     dst.close();
   }
 
-  @Test public void convertImageToBuffer3d()
+  @Test public void copyImageToBuffer3d()
   {
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
     ClearCLBuffer
@@ -408,7 +408,7 @@ public class KernelsTest
     dst.close();
   }
 
-  @Test public void convertImageToBuffer2d()
+  @Test public void copyImageToBuffer2d()
   {
     ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
     ClearCLBuffer
@@ -424,7 +424,7 @@ public class KernelsTest
     dst.close();
   }
 
-  @Test public void convertBufferToImage3d()
+  @Test public void copyBufferToImage3d()
   {
     ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
     ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
@@ -435,6 +435,22 @@ public class KernelsTest
     ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
 
     assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void copyBufferToImage2d()
+  {
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+    Kernels.set(clij, dst, 0);
+
+    Kernels.copy(clij, src, dst);
+    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
 
     src.close();
     dst.close();
@@ -472,41 +488,6 @@ public class KernelsTest
     assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
 
     src.close();
-    dst.close();
-  }
-
-  @Test public void copyImageToBuffer()
-  {
-    ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-    ClearCLBuffer
-        dst =
-        clij.createCLBuffer(src.getDimensions(), src.getNativeType());
-
-    Kernels.copy(clij, src, dst);
-    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
-
-    assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
-
-    src.close();
-    dst.close();
-  }
-
-  @Test public void copyBufferToImage()
-  {
-    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-    ClearCLImage temp = clij.converter(testImp1).getClearCLImage();
-    ClearCLImage
-        dst =
-        clij.createCLImage(temp.getDimensions(),
-                           temp.getChannelDataType());
-
-    Kernels.copy(clij, src, dst);
-    ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
-
-    assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
-
-    src.close();
-    temp.close();
     dst.close();
   }
 
@@ -816,18 +797,35 @@ public class KernelsTest
     dst.close();
   }
 
-  @Test public void dilate()
+  @Test public void dilate3d()
   {
     ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
     ClearCLImage
-        maskCLafter =
-        clij.converter(mask3d).getClearCLImage();
+            maskCLafter =
+            clij.converter(mask3d).getClearCLImage();
 
     Kernels.dilate(clij, maskCL, maskCLafter);
 
     double sum = Kernels.sumPixels(clij, maskCLafter);
 
     assertTrue(sum == 81);
+
+    maskCL.close();
+    maskCLafter.close();
+  }
+
+  @Test public void dilate2d()
+  {
+    ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+    ClearCLImage
+            maskCLafter =
+            clij.converter(mask2d).getClearCLImage();
+
+    Kernels.dilate(clij, maskCL, maskCLafter);
+
+    double sum = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sum == 21);
 
     maskCL.close();
     maskCLafter.close();
