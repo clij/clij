@@ -35,6 +35,7 @@ public class KernelsTest {
     ImagePlus testImp2D1;
     ImagePlus testImp2D2;
     ImagePlus mask;
+    ImagePlus mask2d;
     static ClearCLIJ clij;
 
     @Before
@@ -77,6 +78,7 @@ public class KernelsTest {
 
         testImp2D1 = new Duplicator().run(testImp1, 1, 1);
         testImp2D2 = new Duplicator().run(testImp1, 1, 1);
+        mask2d = new Duplicator().run(mask, 1, 1);
 
         if (clij == null)
         {
@@ -810,7 +812,7 @@ public class KernelsTest {
     }
 
   @Test
-  public void set() {
+  public void set3d() {
     ClearCLImage imageCL = clij.converter(mask).getClearCLImage();
 
     Kernels.set(clij, imageCL, 2);
@@ -822,6 +824,19 @@ public class KernelsTest {
     imageCL.close();
   }
 
+
+  @Test
+  public void set2d() {
+    ClearCLImage imageCL = clij.converter(mask2d).getClearCLImage();
+
+    Kernels.set(clij, imageCL, 2);
+
+    double sum = Kernels.sumPixels(clij, imageCL);
+
+    assertTrue(sum == imageCL.getWidth() * imageCL.getHeight() * 2);
+
+    imageCL.close();
+  }
 
   @Test
     public void sumPixels() {

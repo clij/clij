@@ -347,18 +347,29 @@ public class Kernels {
     lParameters.clear();
     lParameters.put("dst", clImage);
     lParameters.put("value", value);
-    return clij.execute(Kernels.class, "set.cl", "set_3d", lParameters);
+
+    return clij.execute(Kernels.class, "set.cl", "set_" + clImage.getDimension() + "d", lParameters);
   }
 
 
   public static double sumPixels(ClearCLIJ clij, ClearCLImage clImage) {
-
-        ClearCLImage clReducedImage = clij.createCLImage(new long[]{clImage.getWidth(), clImage.getHeight()}, clImage.getChannelDataType());
+    ClearCLImage
+        clReducedImage = clImage;
+      if (clImage.getDimension() == 3)
+      {
+            clReducedImage =
+            clij.createCLImage(new long[] { clImage.getWidth(),
+                                            clImage.getHeight() },
+                               clImage.getChannelDataType());
 
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", clImage);
         parameters.put("dst", clReducedImage);
-        clij.execute(Kernels.class, "projections.cl", "sum_project_3d_2d", parameters);
+        clij.execute(Kernels.class,
+                     "projections.cl",
+                     "sum_project_3d_2d",
+                     parameters);
+      }
 
         RandomAccessibleInterval rai = clij.converter(clReducedImage).getRandomAccessibleInterval();
         Cursor cursor = Views.iterable(rai).cursor();

@@ -9,3 +9,14 @@ __kernel void set_3d(__write_only    image3d_t  dst,
 
   WRITE_IMAGE (dst, (int4)(x,y,z,0), (DTYPE_OUT)value);
 }
+
+
+__kernel void set_2d(__write_only    image2d_t  dst,
+                  float value
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+
+  WRITE_IMAGE (dst, (int2)(x,y), (DTYPE_OUT)value);
+}
