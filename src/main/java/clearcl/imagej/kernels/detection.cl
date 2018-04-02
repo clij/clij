@@ -43,3 +43,47 @@ __kernel void detect_local_optima_3d(
         WRITE_IMAGE(dst, pos, (DTYPE_OUT){0, 0, 0, 0});
     }
 }
+
+
+__kernel void detect_local_optima_2d(
+        __read_only image2d_t src,
+        __write_only image2d_t dst,
+        __private int radius,
+        __private int detect_maxima
+)
+{
+    const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
+
+    int2 pos = {get_global_id(0), get_global_id(1)};
+    float localMin = READ_IMAGE(src, sampler, pos).x + 1;
+    float localMax = localMin - 2;
+    int2 localMinPos = pos;
+    int2 localMaxPos = pos;
+
+    for(int x = -radius; x < radius + 1; x++)
+    {
+        for(int y = -radius; y < radius + 1; y++)
+        {
+            const int2 localPos = pos + (int2){ x, y};
+
+            float value = READ_IMAGE(src, sampler, localPos).x;
+
+            if (value < localMin) {
+                localMin = value;
+                localMinPos = localPos;
+            }
+            if (value > localMax) {
+                localMax = value;
+                localMaxPos = localPos;
+            }
+
+        }
+    }
+
+    if ((detect_maxima == 1 && pos.x == localMaxPos.x && pos.y == localMaxPos.y) ||
+        (pos.x == localMinPos.x && pos.y == localMinPos.y)) {
+        WRITE_IMAGE(dst, pos, (DTYPE_OUT)1);
+    } else {
+        WRITE_IMAGE(dst, pos, (DTYPE_OUT)0);
+    }
+}

@@ -202,7 +202,11 @@ public class Kernels {
         parameters.put("dst", dst);
         parameters.put("radius", radius);
         parameters.put("detect_maxima", detectMaxima?1:0);
-        return clij.execute(Kernels.class, "detection.cl", "detect_local_optima_3d", parameters);
+      if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+        System.out.println("Error: number of dimensions don't match! (detectOptima)");
+        return false;
+      }
+      return clij.execute(Kernels.class, "detection.cl", "detect_local_optima_" + src.getDimension() + "d", parameters);
     }
 
     public static boolean differenceOfGaussian(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int radius, float sigmaMinuend, float sigmaSubtrahend) {

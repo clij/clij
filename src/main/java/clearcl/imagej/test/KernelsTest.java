@@ -530,7 +530,7 @@ public class KernelsTest {
     }
 
     @Test
-    public void detectMaxima() {
+    public void detectMaxima3d() {
 
         ImagePlus spotsImage = NewImage.createImage("", 100, 100, 3,16, NewImage.FILL_BLACK);
 
@@ -561,7 +561,39 @@ public class KernelsTest {
       dst.close();
     }
 
-    @Test
+  @Test
+  public void detectMaxima2d() {
+    ImagePlus spotsImage = NewImage.createImage("", 100, 100, 1,16, NewImage.FILL_BLACK);
+
+    spotsImage.setZ(1);
+    ImageProcessor ip1 = spotsImage.getProcessor();
+    ip1.set(50, 50, 10);
+    ip1.set(60, 60, 10);
+    ip1.set(70, 70, 10);
+
+    spotsImage.show();
+    //IJ.run(spotsImage, "Find Maxima...", "noise=2 output=[Single Points]");
+
+    ByteProcessor byteProcessor = new MaximumFinder().findMaxima(spotsImage.getProcessor(), 2, MaximumFinder.SINGLE_POINTS, true);
+    ImagePlus maximaImp = new ImagePlus("A", byteProcessor);
+
+    ClearCLImage src = clij.converter(spotsImage).getClearCLImage();
+    ClearCLImage dst = clij.converter(spotsImage).getClearCLImage();
+
+    Kernels.detectOptima(clij, src, dst, 1, true);
+    ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
+//    maximaFromCL = new Duplicator().run(maximaFromCL, 2, 2);
+
+    IJ.run(maximaImp, "Divide...", "value=255");
+
+    assertTrue(TestUtilities.compareImages(maximaImp, maximaFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+
+  @Test
     public void differenceOfGaussian() {
         System.out.println("Todo: implement test for DoG");
     }
