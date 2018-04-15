@@ -670,6 +670,31 @@ public class Kernels
     return true;
   }
 
+
+  public static boolean maxProjection(ClearCLIJ pCLIJ,
+                                      ClearCLImage src,
+                                      ClearCLImage dst_max,
+                                      int projectedDimensionX,
+                                      int projectedDimensionY,
+                                      int projectedDimension)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst_max", dst_max);
+    lParameters.put("projection_x", projectedDimensionX);
+    lParameters.put("projection_y", projectedDimensionY);
+    lParameters.put("projection_dim", projectedDimension);
+
+    pCLIJ.execute(Kernels.class,
+                  "projections.cl",
+                  "max_project_dim_select_3d_2d",
+                  lParameters);
+
+    return true;
+  }
+
+
+
   public static boolean multiplyPixelwise(ClearCLIJ pCLIJ,
                                           ClearCLImage src,
                                           ClearCLImage src1,
