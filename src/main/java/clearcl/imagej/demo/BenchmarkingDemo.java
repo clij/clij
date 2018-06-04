@@ -3,8 +3,6 @@ package clearcl.imagej.demo;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
-import clearcontrol.stack.OffHeapPlanarStack;
-import fastfuse.tasks.GaussianBlurTask;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -143,54 +141,27 @@ public class BenchmarkingDemo {
     }
 
     private static void demoClearCLIJ() throws IOException {
-        HashMap<String, Object> lParameters = new HashMap<>();
-
         ClearCLImage input = lCLIJ.converter(img).getClearCLImage();
         ClearCLImage flip = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
         ClearCLImage flop = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
 
-        lParameters.clear();
-        lParameters.put("Nx", new Integer((int)(sigma * 3)));
-        lParameters.put("Ny", new Integer((int)(sigma * 3)));
-        lParameters.put("Nz", new Integer((int)(sigma * 3)));
-        lParameters.put("sx", new Float(sigma));
-        lParameters.put("sy", new Float(sigma));
-        lParameters.put("sz", new Float(sigma));
-
-        lParameters.put("src", input);
-        lParameters.put("dst", flop);
-
-        lCLIJ.execute(GaussianBlurTask.class, "kernels/blur.cl", "gaussian_blur_image3d", lParameters);
+        Kernels.blur(lCLIJ, input, flop, (int)(sigma * 3), (int)(sigma * 3), (int)(sigma * 3), (float)sigma, (float)sigma, (float)sigma);
 
         //lCLIJ.converter(flop).getImagePlus().show();
 
-        lParameters.clear();
-        lParameters.put("threshold", new Float(100));
-        lParameters.put("src", flop);
-        lParameters.put("dst", flip);
-        lCLIJ.execute(Kernels.class, "thresholding.cl", "applyThreshold", lParameters);
+        Kernels.threshold(lCLIJ, flop, flip, 100.0f);
 
         //lCLIJ.converter(flip).getImagePlus().show();
 
-        lParameters.clear();
-        lParameters.put("src", flip);
-        lParameters.put("dst", flop);
-        lCLIJ.execute(Kernels.class, "binaryProcessing.cl", "erode_4_neighborhood", lParameters);
+        Kernels.erode(lCLIJ, flip, flop);
 
         //lCLIJ.converter(flop).getImagePlus().show();
 
-        lParameters.clear();
-        lParameters.put("src", flop);
-        lParameters.put("dst", flip);
-        lCLIJ.execute(Kernels.class, "binaryProcessing.cl", "dilate_4_neighborhood", lParameters);
+        Kernels.dilate(lCLIJ, flop, flip);
 
         //lCLIJ.converter(flip).getImagePlus().show();
 
-        lParameters.clear();
-        lParameters.put("src", flop);
-        lParameters.put("src1", input);
-        lParameters.put("dst", flip);
-        lCLIJ.execute(Kernels.class, "math.cl", "multiplyPixelwise", lParameters);
+        Kernels.multiplyPixelwise(lCLIJ, flop, input, flip);
 
         lCLIJ.converter(flip).getImagePlus().show();
 
