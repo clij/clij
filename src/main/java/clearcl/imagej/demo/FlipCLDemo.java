@@ -2,7 +2,6 @@ package clearcl.imagej.demo;
 
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
-import fastfuse.tasks.DownsampleXYbyHalfTask;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;

@@ -1,26 +1,19 @@
 package clearcl.imagej;
 
 import clearcl.*;
-import clearcl.backend.ClearCLBackendBase;
 import clearcl.backend.ClearCLBackendInterface;
 import clearcl.backend.ClearCLBackends;
-import clearcl.backend.javacl.ClearCLBackendJavaCL;
 import clearcl.enums.*;
 import clearcl.imagej.utilities.CLInfo;
-import clearcl.imagej.utilities.GenericBinaryFastFuseTask;
+import clearcl.imagej.utilities.CLKernelExecutor;
 import clearcl.imagej.utilities.ImageTypeConverter;
 import clearcl.util.ElapsedTime;
-import clearcontrol.core.variable.Variable;
-import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
 import coremem.enums.NativeTypeEnum;
-import fastfuse.FastFusionEngine;
-import fastfuse.FastFusionMemoryPool;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.numeric.RealType;
 
 import java.io.IOException;
@@ -55,9 +48,8 @@ public class ClearCLIJ
   private ClearCL mClearCL;
   private static ClearCLIJ sInstance = null;
 
-  private FastFusionEngine mFastFusionEngine;
-  private GenericBinaryFastFuseTask
-            mGenericUnaryFastFuseTask = null;
+  private CLKernelExecutor
+          mCLKernelExecutor = null;
 
 
   public static ClearCLIJ getInstance() {
@@ -100,10 +92,6 @@ public class ClearCLIJ
 
 
     mClearCLContext = mClearCLDevice.createContext();
-
-    mFastFusionEngine = new FastFusionEngine(mClearCLContext);
-
-    FastFusionMemoryPool.getInstance(mClearCLContext);
   }
 
   public boolean execute(String pProgramFilename,
@@ -127,32 +115,32 @@ public class ClearCLIJ
                          long[] pGlobalsizes,
                          Map<String, Object> pParameterMap)
   {
-    final Variable<Boolean> result = new Variable<Boolean>("", true);
+    final boolean[] result = new boolean[1];
 
     ElapsedTime.measure("kernel + build " + pKernelname, () -> {
-        if (mGenericUnaryFastFuseTask == null) {
+        if (mCLKernelExecutor == null) {
             try {
-                mGenericUnaryFastFuseTask = new GenericBinaryFastFuseTask(mFastFusionEngine,
+                mCLKernelExecutor = new CLKernelExecutor(mClearCLContext,
                         pAnchorClass,
                         pProgramFilename,
                         pKernelname,
                         pGlobalsizes);
             } catch (IOException e) {
                 e.printStackTrace();
-                result.set(false);
+                result[0] = false;
                 return;
             }
         } else {
-            mGenericUnaryFastFuseTask.setProgramFilename(pProgramFilename);
-            mGenericUnaryFastFuseTask.setKernelName(pKernelname);
-            mGenericUnaryFastFuseTask.setAnchorClass(pAnchorClass);
-            mGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
-            mGenericUnaryFastFuseTask.setGlobalSizes(pGlobalsizes);
+            mCLKernelExecutor.setProgramFilename(pProgramFilename);
+            mCLKernelExecutor.setKernelName(pKernelname);
+            mCLKernelExecutor.setAnchorClass(pAnchorClass);
+            mCLKernelExecutor.setParameterMap(pParameterMap);
+            mCLKernelExecutor.setGlobalSizes(pGlobalsizes);
         }
-        mGenericUnaryFastFuseTask.setParameterMap(pParameterMap);
-        result.set(mGenericUnaryFastFuseTask.enqueue(null, true));
+        mCLKernelExecutor.setParameterMap(pParameterMap);
+        result[0] = mCLKernelExecutor.enqueue(true);
     });
-    return result.get();
+    return result[0];
   }
 
   public void dispose()

@@ -106,13 +106,8 @@
 		</dependency>
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
-			<artifactId>fastfuse</artifactId>
-			<version>0.6.1-RH</version>
-		</dependency>
-		<dependency>
-			<groupId>net.clearcontrol</groupId>
 			<artifactId>clearcontrol</artifactId>
-			<version>0.14.2-RH</version>
+			<version>0.16.2</version>
 		</dependency>
 		<dependency>
 			<groupId>net.clearvolume</groupId>

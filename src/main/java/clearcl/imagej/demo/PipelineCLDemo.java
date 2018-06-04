@@ -2,7 +2,7 @@ package clearcl.imagej.demo;
 
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
-import fastfuse.tasks.DownsampleXYbyHalfTask;
+import clearcl.imagej.kernels.Kernels;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -59,9 +59,12 @@ public class PipelineCLDemo
     Map<String, Object> lParameterMap = new HashMap<>();
     lParameterMap.put("src", lClearCLImage1);
     lParameterMap.put("dst", lClearCLImage2);
+    lParameterMap.put("factor_x", 0.5f);
+    lParameterMap.put("factor_y", 0.5f);
+    lParameterMap.put("factor_z", 1.f);
 
-    lCLIJ.execute(DownsampleXYbyHalfTask.class,
-                  "kernels/downsampling.cl",
+    lCLIJ.execute(Kernels.class,
+                  "downsampling.cl",
                   "downsample_xy_by_half_nearest",
                   lParameterMap);
 
@@ -88,9 +91,9 @@ public class PipelineCLDemo
     lBlurParameterMap.put("src", lClearCLImage2);
     lBlurParameterMap.put("dst", lClearCLImage1);
 
-    lCLIJ.execute(DownsampleXYbyHalfTask.class,
-                                    "kernels/blur.cl",
-                                    "gaussian_blur_image3d",
+    lCLIJ.execute(Kernels.class,
+            "blur.cl",
+        "gaussian_blur_image3d",
                   lParameterMap);
 
     // Convert and show final result

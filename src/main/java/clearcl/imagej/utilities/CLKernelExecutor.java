@@ -3,21 +3,15 @@ package clearcl.imagej.utilities;
 import clearcl.*;
 import clearcl.enums.ImageChannelDataType;
 import coremem.enums.NativeTypeEnum;
-import fastfuse.FastFusionEngine;
-import fastfuse.FastFusionEngineInterface;
-import fastfuse.tasks.TaskBase;
-
-import fastfuse.tasks.TaskHelper;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This generic task class is wrapped around all given .cl files. It
- * uses some functionality from FastFuse, to make .cl file handling
+ * This executor can call OpenCL files. It
+ * uses some functionality adapted from FastFuse, to make .cl file handling
  * easier. For example, it ensures that the right
  * image_read/image_write methods are called depending on the image
  * type.
@@ -25,8 +19,11 @@ import java.util.Map;
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * February 2018
  */
-public class GenericBinaryFastFuseTask extends TaskBase
+public class CLKernelExecutor
 {
+  private Class<?> mClass;
+  private ClearCLProgram mProgram;
+
   ClearCLContext mContext;
 
   Class mAnchorClass;
@@ -34,21 +31,22 @@ public class GenericBinaryFastFuseTask extends TaskBase
   String mKernelName;
   Map<String, Object> mParameterMap;
   long[] mGlobalSizes;
-  private ClearCLProgram mProgram;
+
+  private String mSourceFile;
 
   private HashMap<String, ClearCLKernel> mKernelMap = new HashMap();
 
-  public GenericBinaryFastFuseTask(FastFusionEngine pFastFusionEngine,
-                                   Class pAnchorClass,
-                                   String pProgramFilename,
-                                   String pKernelName,
-                                   long[] pGlobalSizes) throws
+  public CLKernelExecutor(ClearCLContext pContext,
+                          Class pAnchorClass,
+                          String pProgramFilename,
+                          String pKernelName,
+                          long[] pGlobalSizes) throws
                                                            IOException {
     super();
     mProgramFilename = pProgramFilename;
     mAnchorClass = pAnchorClass;
     mKernelName = pKernelName;
-    mContext = pFastFusionEngine.getContext();
+    mContext = pContext;
     mGlobalSizes = pGlobalSizes;
   }
 
@@ -62,9 +60,7 @@ public class GenericBinaryFastFuseTask extends TaskBase
     mParameterMap = pParameterMap;
   }
 
-  @Override public boolean enqueue(FastFusionEngineInterface pFastFusionEngine,
-                                   boolean pWaitToFinish) {
-    setupProgram(mAnchorClass, mProgramFilename);
+  public boolean enqueue(boolean pWaitToFinish) {
 
     ClearCLImage lSrcImage = null;
     ClearCLImage lDstImage = null;
@@ -145,7 +141,7 @@ public class GenericBinaryFastFuseTask extends TaskBase
       }
       try
       {
-        runKernel(lClearCLKernel, pWaitToFinish);
+        lClearCLKernel.run(pWaitToFinish);
       } catch (Exception e) {
         e.printStackTrace();
 
@@ -233,6 +229,4 @@ public class GenericBinaryFastFuseTask extends TaskBase
             return lKernel;
         }
     }
-
-
 }
