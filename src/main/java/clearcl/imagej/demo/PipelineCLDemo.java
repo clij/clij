@@ -65,7 +65,7 @@ public class PipelineCLDemo
 
     lCLIJ.execute(Kernels.class,
                   "downsampling.cl",
-                  "downsample_xy_by_half_nearest",
+                  "downsample_3d_nearest",
                   lParameterMap);
 
 
@@ -94,7 +94,7 @@ public class PipelineCLDemo
     lCLIJ.execute(Kernels.class,
             "blur.cl",
         "gaussian_blur_image3d",
-                  lParameterMap);
+                  lBlurParameterMap);
 
     // Convert and show final result
     RandomAccessibleInterval

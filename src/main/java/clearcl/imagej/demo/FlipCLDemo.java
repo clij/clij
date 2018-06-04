@@ -58,8 +58,8 @@ public class FlipCLDemo
       lParameterMap.put("flipy", 0);
       lParameterMap.put("flipz", 0);
 
-      lCLIJ.execute("src/main/java/clearcl/imagej/demo/kernels/flip.cl",
-                    "flip_ui",
+      lCLIJ.execute("src/main/java/clearcl/imagej/kernels/flip.cl",
+                    "flip_3d",
                     lParameterMap);
 
       RandomAccessibleInterval
