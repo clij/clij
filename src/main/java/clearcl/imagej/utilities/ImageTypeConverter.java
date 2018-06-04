@@ -787,7 +787,7 @@ public class ImageTypeConverter<T extends RealType<T>>
 
   private ClearCLBuffer convertCLImageToCLBuffer(ClearCLImage pClImage) {
     ClearCLBuffer output = mCLIJ.createCLBuffer(pClImage.getDimensions(), pClImage.getNativeType());
-    Kernels.convert(mCLIJ, pClImage, output);
+    Kernels.copy(mCLIJ, pClImage, output);
     return output;
   }
 
