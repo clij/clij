@@ -1291,6 +1291,11 @@ public class KernelsTest
     imageCL.close();
   }
 
+  @Test public void splitStack() {
+    System.out.println("Todo: implement test for splitStack");
+
+  }
+
   @Test public void sumPixels3d()
   {
     ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
@@ -1311,6 +1316,10 @@ public class KernelsTest
     assertTrue(sum == 9);
 
     maskCL.close();
+  }
+
+  @Test public void tenengradFusion() {
+      System.out.println("Todo: implement test for Tenengrad fusion");
   }
 
   @Test public void threshold3d()

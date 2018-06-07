@@ -777,6 +777,33 @@ public class Kernels
                         lParameters);
   }
 
+  public static boolean splitStack(ClearCLIJ clij, ClearCLImage clImageIn, ClearCLImage... clImagesOut) {
+    if (clImagesOut.length > 5) {
+      System.out.println("Error: splitStack does not support more than 5 stacks.");
+      return false;
+    }
+    if (clImagesOut.length == 1) {
+      return copy(clij, clImageIn, clImagesOut[0]);
+    }
+    if (clImagesOut.length == 0) {
+      System.out.println("Error: splitstack didn't get any output images.");
+      return false;
+    }
+
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("src", clImageIn);
+    for (int i = 0; i < clImagesOut.length; i++) {
+      lParameters.put("dst" + i, clImagesOut[i]);
+    }
+
+    return clij.execute(Kernels.class,
+            "stacksplitting.cl",
+            "split_" + clImagesOut.length + "_stacks",
+            lParameters);
+  }
+
   public static double sumPixels(ClearCLIJ clij, ClearCLImage clImage)
   {
     ClearCLImage clReducedImage = clImage;
@@ -808,6 +835,34 @@ public class Kernels
 
     clReducedImage.close();
     return sum;
+  }
+
+  public static boolean tenengradFusion(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage... clImagesIn) {
+    if (clImagesIn.length > 5) {
+      System.out.println("Error: tenengradFusion does not support more than 5 stacks.");
+      return false;
+    }
+    if (clImagesIn.length == 1) {
+      return copy(clij, clImagesIn[0], clImageOut);
+    }
+    if (clImagesIn.length == 0) {
+      System.out.println("Error: tenengradFusion didn't get any output images.");
+      return false;
+    }
+
+
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("dst", clImageOut);
+    for (int i = 0; i < clImagesIn.length; i++) {
+      lParameters.put("src" + i, clImagesIn[i]);
+    }
+
+    return clij.execute(Kernels.class,
+            "tenengradFusion.cl",
+            String.format("tenengrad_fusion_%d_images", clImagesIn.length),
+            lParameters);
   }
 
   public static boolean threshold(ClearCLIJ clij,
