@@ -23,11 +23,11 @@ public class TenengradDemo {
         new ImageJ();
 
         String folder = "C:/structure/data/Stack50PlanesDeltaZ2/";
-        String inputFile = "Image 21.tif";
+        String inputFile = "Image 21_crop.tif";
 
         // ------------------------------------------------------------------------
         // Maximum projection using ImageJ stuff
-        {
+        /*{
             ImagePlus imp = IJ.openImage(folder + inputFile);
             IJ.run(imp,"Stack to Hyperstack...", "order=xyczt(default) channels=1 slices=5 frames=" + (imp.getNChannels() * imp.getNSlices() * imp.getNFrames() / 5) + " display=Color");
 
@@ -38,8 +38,8 @@ public class TenengradDemo {
             IJ.run(imp, "Z Project...", "projection=[Max Intensity] all");
             IJ.saveAsTiff(IJ.getImage(), folder + "maximum_projection.tif");
 
-            IJ.run("Close All");
-        }
+            //IJ.run("Close All");
+        }*/
 
         // ------------------------------------------------------------------------
         // Tenengrad fusion on GPU
@@ -75,7 +75,11 @@ public class TenengradDemo {
 
             // tenengrad fusion
             ClearCLImage result = dst4; // re-using memory; result should not be closed later on
-            Kernels.tenengradFusion(clij, result, dst0, dst1, dst2, dst3);
+
+            float[] sigmas = new float[]
+                    { 15, 15, 5 };
+
+            Kernels.tenengradFusion(clij, result, sigmas, dst0, dst1, dst2, dst3);
             clij.show(result, "result");
             IJ.saveAsTiff(IJ.getImage(), folder + "tenengrad_fusion.tif");
 

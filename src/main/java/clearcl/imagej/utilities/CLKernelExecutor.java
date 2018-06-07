@@ -85,6 +85,21 @@ public class CLKernelExecutor
       }
     }
 
+    if (lDstImage == null && lDstBuffer == null) {
+      if (lSrcImage != null) {
+        lDstImage = lSrcImage;
+      } else if (lSrcBuffer != null) {
+        lDstBuffer = lSrcBuffer;
+      }
+    } else if (lSrcImage == null && lSrcBuffer == null) {
+      if (lDstImage != null) {
+        lSrcImage = lDstImage;
+      } else if (lDstBuffer != null) {
+        lSrcBuffer = lDstBuffer;
+      }
+    }
+
+
     Map<String, Object> lOpenCLDefines  = new HashMap();
     if (lSrcImage != null) {
       getOpenCLDefines(lOpenCLDefines, lSrcImage.getChannelDataType(), true);

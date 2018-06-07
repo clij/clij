@@ -353,6 +353,11 @@ public class KernelsTest
     dst.close();
   }
 
+  @Test
+  public void blur3dSeparable() {
+      System.out.println("Todo: test for blur3dSeparable");
+  }
+
   @Test public void blur2d()
   {
     // do operation with ImageJ

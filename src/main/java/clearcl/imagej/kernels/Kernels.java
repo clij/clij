@@ -165,6 +165,58 @@ public class Kernels
                          lParameters);
   }
 
+  private static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float... blurSigma) {
+    int[] n = new int[blurSigma.length];
+
+    for (int d = 0; d < n.length; d++) {
+      n[d] = Math.max(1, (int) Math.round(2 * 3.5 * blurSigma[d]));
+      if (n[d] % 2 != 1) {
+        n[d] = n[d] + 1;
+      }
+    }
+
+    ClearCLImage temp = clij.createCLImage(dst);
+
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("N", n[0]);
+    lParameters.put("s", blurSigma[0]);
+    lParameters.put("dim", 0);
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    clij.execute(Kernels.class,
+            "blur.cl",
+            "gaussian_blur_sep_image3d",
+            lParameters);
+
+    lParameters.clear();
+    lParameters.put("N", n[1]);
+    lParameters.put("s", blurSigma[1]);
+    lParameters.put("dim", 1);
+    lParameters.put("src", dst);
+    lParameters.put("dst", temp);
+    clij.execute(Kernels.class,
+            "blur.cl",
+            "gaussian_blur_sep_image3d",
+            lParameters);
+
+    lParameters.clear();
+    lParameters.put("N", n[2]);
+    lParameters.put("s", blurSigma[2]);
+    lParameters.put("dim", 2);
+    lParameters.put("src", temp);
+    lParameters.put("dst", dst);
+    clij.execute(Kernels.class,
+            "blur.cl",
+            "gaussian_blur_sep_image3d",
+            lParameters);
+
+    temp.close();
+    return true;
+  }
+
+
   public static boolean blurSlicewise(ClearCLIJ pCLIJ,
                                       ClearCLImage src,
                                       ClearCLImage dst,
@@ -837,7 +889,7 @@ public class Kernels
     return sum;
   }
 
-  public static boolean tenengradFusion(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage... clImagesIn) {
+  public static boolean tenengradFusion(ClearCLIJ clij, ClearCLImage clImageOut, float[] blurSigmas, ClearCLImage... clImagesIn) {
     if (clImagesIn.length > 5) {
       System.out.println("Error: tenengradFusion does not support more than 5 stacks.");
       return false;
@@ -850,19 +902,40 @@ public class Kernels
       return false;
     }
 
+    HashMap<String, Object> lFusionParameters = new HashMap<>();
 
-    HashMap<String, Object> lParameters = new HashMap<>();
+    ClearCLImage temporaryImage = clij.createCLImage(clImagesIn[0]);
 
-    lParameters.clear();
-    lParameters.put("dst", clImageOut);
+    ClearCLImage[] temporaryImages = new ClearCLImage[clImagesIn.length];
     for (int i = 0; i < clImagesIn.length; i++) {
-      lParameters.put("src" + i, clImagesIn[i]);
+      HashMap<String, Object> lParameters = new HashMap<>();
+      temporaryImages[i] = clij.createCLImage(clImagesIn[i]);
+      lParameters.put("src", clImagesIn[i]);
+      lParameters.put("dst", temporaryImage);
+
+      clij.execute(Kernels.class,
+              "tenengradFusion.cl",
+              "tenengrad_weight_unnormalized",
+              lParameters);
+
+      blurSeparable(clij, temporaryImage, temporaryImages[i], blurSigmas[0], blurSigmas[1], blurSigmas[2]);
+
+
+      lFusionParameters.put("src" + i, temporaryImages);
     }
 
-    return clij.execute(Kernels.class,
+    lFusionParameters.put("dst", clImageOut);
+
+    boolean success = clij.execute(Kernels.class,
             "tenengradFusion.cl",
-            String.format("tenengrad_fusion_%d_images", clImagesIn.length),
-            lParameters);
+            String.format("tenengrad_fusion_with_provided_weights_%d_images", clImagesIn.length),
+            lFusionParameters);
+
+    temporaryImage.close();
+    for (int i = 0; i < temporaryImages.length; i++) {
+      temporaryImages[i].close();
+    }
+    return success;
   }
 
   public static boolean threshold(ClearCLIJ clij,
@@ -903,3 +976,4 @@ public class Kernels
   }
 
 }
+

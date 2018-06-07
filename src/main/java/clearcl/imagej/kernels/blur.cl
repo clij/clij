@@ -6,7 +6,7 @@ __constant sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_T
 
 __kernel void gaussian_blur_image3d
 (
-  write_only image3d_t dst, read_only image3d_t src,
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
   const int Nx, const int Ny, const int Nz,
   const float sx, const float sy, const float sz
 )
@@ -41,7 +41,7 @@ __kernel void gaussian_blur_image3d
 
 __kernel void gaussian_blur_slicewise_image3d
 (
-  write_only image3d_t dst, read_only image3d_t src,
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
   const int Nx, const int Ny,
   const float sx, const float sy
 )
@@ -72,7 +72,7 @@ __kernel void gaussian_blur_slicewise_image3d
 
 __kernel void gaussian_blur_image2d
 (
-  write_only image2d_t dst, read_only image2d_t src,
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
   const int Nx, const int Ny,
   const float sx, const float sy
 )
@@ -100,3 +100,30 @@ __kernel void gaussian_blur_image2d
   res /= hsum;
   WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
 }
+
+__kernel void gaussian_blur_sep_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int dim, const int N, const float s
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+  const int4 dir   = (int4)(dim==0,dim==1,dim==2,0);
+
+  // center
+  const int   c = (N-1)/2;
+  // normalization
+  const float n = -2*s*s;
+
+  float res = 0, hsum = 0;
+  for (int v = -c; v <= c; v++) {
+    const float h = exp((v*v)/n);
+    res += h * (float)READ_IMAGE(src,sampler,coord+v*dir).x;
+    hsum += h;
+  }
+  res /= hsum;
+  WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
+}
+
+
