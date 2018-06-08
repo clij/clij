@@ -113,7 +113,7 @@ __kernel void tenengrad_fusion_with_provided_weights_4_images(
   const float  v1 = (float)READ_IMAGE(src1,sampler,coord).x;
   const float  v2 = (float)READ_IMAGE(src2,sampler,coord).x;
   const float  v3 = (float)READ_IMAGE(src3,sampler,coord).x;
-  const float res = w0 * v0 + w1*v1 + w2*v2 + w3*v3;
+  const float res = w0 * v0 + w1 * v1 + w2 * v2 + w3 * v3;
 
   WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
 }

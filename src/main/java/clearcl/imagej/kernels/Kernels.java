@@ -901,6 +901,9 @@ public class Kernels
       System.out.println("Error: tenengradFusion didn't get any output images.");
       return false;
     }
+    if (!clImagesIn[0].isFloat()) {
+      System.out.println("Warning: tenengradFusion may only work on float images!");
+    }
 
     HashMap<String, Object> lFusionParameters = new HashMap<>();
 
@@ -918,13 +921,18 @@ public class Kernels
               "tenengrad_weight_unnormalized",
               lParameters);
 
+      //clij.show(temporaryImage, "temp before gauss");
+
       blurSeparable(clij, temporaryImage, temporaryImages[i], blurSigmas[0], blurSigmas[1], blurSigmas[2]);
 
+      //clij.show(temporaryImages[i], "temp after gauss");
 
-      lFusionParameters.put("src" + i, temporaryImages);
+      lFusionParameters.put("src" + i, clImagesIn[i]);
+      lFusionParameters.put("weight" + i, temporaryImages[i]);
     }
 
     lFusionParameters.put("dst", clImageOut);
+    lFusionParameters.put("factor", (int) (clImagesIn[0].getWidth() / temporaryImages[0].getWidth()));
 
     boolean success = clij.execute(Kernels.class,
             "tenengradFusion.cl",
@@ -933,8 +941,13 @@ public class Kernels
 
     temporaryImage.close();
     for (int i = 0; i < temporaryImages.length; i++) {
+      clij.show(temporaryImages[i], "temp " + i);
       temporaryImages[i].close();
     }
+    //clij.show(clImageOut, "tenengrad out ");
+
+    System.out.println("clij " + clImagesIn.length);
+
     return success;
   }
 
