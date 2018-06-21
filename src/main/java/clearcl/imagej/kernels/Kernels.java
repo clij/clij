@@ -20,6 +20,27 @@ import java.util.HashMap;
  */
 public class Kernels
 {
+  public static boolean absolute(ClearCLIJ pCLIJ,
+                                  ClearCLImage src,
+                                  ClearCLImage dst)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+
+    if (!checkDimensions(src.getDimension(), dst.getDimension()))
+    {
+      System.out.println(
+              "Error: number of dimensions don't match! (addScalar)");
+      return false;
+    }
+
+    return pCLIJ.execute(Kernels.class,
+            "math.cl",
+            "absolute_" + src.getDimension() + "d",
+            lParameters);
+  }
+
 
   public static boolean addPixelwise(ClearCLIJ pCLIJ,
                                      ClearCLImage src,
@@ -165,7 +186,7 @@ public class Kernels
                          lParameters);
   }
 
-  private static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float... blurSigma) {
+  public static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float... blurSigma) {
     int[] n = new int[blurSigma.length];
 
     for (int d = 0; d < n.length; d++) {
@@ -173,7 +194,9 @@ public class Kernels
       if (n[d] % 2 != 1) {
         n[d] = n[d] + 1;
       }
+      System.out.println("n[" + d + "] = " + n[d]);
     }
+
 
     ClearCLImage temp = clij.createCLImage(dst);
 
@@ -667,6 +690,32 @@ public class Kernels
                         "invert_" + src.getDimension() + "d",
                         parameters);
   }
+
+  public static boolean localThreshold(ClearCLIJ clij,
+                                  ClearCLImage src,
+                                  ClearCLImage dst,
+                                  ClearCLImage threshold)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("local_threshold", threshold);
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+
+    if (!checkDimensions(src.getDimension(), dst.getDimension()))
+    {
+      System.out.println(
+              "Error: number of dimensions don't match! (addScalar)");
+      return false;
+    }
+
+    return clij.execute(Kernels.class,
+            "thresholding.cl",
+            "apply_local_threshold_" + src.getDimension() + "d",
+            lParameters);
+  }
+
 
   public static boolean mask(ClearCLIJ pCLIJ,
                              ClearCLImage src,

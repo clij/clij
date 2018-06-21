@@ -4,6 +4,7 @@ import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
+import clearcl.util.ElapsedTime;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -23,6 +24,7 @@ import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -107,6 +109,29 @@ public class KernelsTest
           //new ClearCLIJ("Geforce");
       new ClearCLIJ("HD");
     }
+  }
+
+  @Test public void absolute3d() {
+    ImagePlus negativeImp =
+            NewImage.createImage("",
+                    2,
+                    2,
+                    2,
+                    32,
+                    NewImage.FILL_BLACK);
+
+    ImageProcessor ip1 = negativeImp.getProcessor();
+    ip1.setf(0, 1, -1.0f);
+
+    ClearCLImage input = clij.converter(negativeImp).getClearCLImage();
+
+    assertEquals(-1, Kernels.sumPixels(clij, input), 0.0001);
+
+    ClearCLImage abs = clij.createCLImage(input);
+    Kernels.absolute(clij, input, abs);
+    assertEquals(1, Kernels.sumPixels(clij, abs),  0.0001);
+
+
   }
 
   @Test public void addPixelwise3d()
@@ -1060,6 +1085,44 @@ public class KernelsTest
 
     maskCL.close();
     maskCLafter.close();
+  }
+
+  @Test public void localThreshold3D() {
+    ClearCLImage input = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage output1 = clij.createCLImage(input);
+    ClearCLImage output2 = clij.createCLImage(input);
+    ClearCLImage temp = clij.createCLImage(input);
+    ClearCLImage blurred = clij.createCLImage(input);
+
+    Kernels.blurSeparable(clij, input, blurred, new float[]{2, 2, 2});
+
+    // usual way: blur, subtract, threshold
+    ElapsedTime.measureForceOutput("traditional thresholding", () -> {
+      Kernels.addWeightedPixelwise(clij, input, blurred, temp, 1f, -1f);
+      Kernels.threshold(clij, temp, output1, 0);
+    });
+
+    // short cut: blur, local threshold
+    ElapsedTime.measureForceOutput("local threshold", () -> {
+      Kernels.localThreshold(clij, input, output2, blurred);
+    });
+
+    System.out.println("O1: " + Kernels.sumPixels(clij, output1));
+    System.out.println("O2: " + Kernels.sumPixels(clij, output2));
+
+    assertTrue(Kernels.sumPixels(clij, output1) > 0);
+    assertTrue(Kernels.sumPixels(clij, output1) == Kernels.sumPixels(clij, output2));
+
+    Kernels.addWeightedPixelwise(clij, output1, output2, temp, 1, -1);
+
+    assertTrue(Kernels.sumPixels(clij, temp) == 0);
+
+    input.close();
+    output1.close();
+    output2.close();
+    temp.close();
+    blurred.close();
+
   }
 
   @Test public void mask3d()
