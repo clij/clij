@@ -1,6 +1,5 @@
 package clearcl.imagej.utilities;
 
-import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLContext;
 import clearcl.ClearCLImage;
@@ -37,9 +36,6 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
 import javax.lang.model.type.UnknownTypeException;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UnknownFormatConversionException;
 
 /**
@@ -121,7 +117,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       if (mRandomAccessibleInterval != null)
       {
         mClearCLImage =
-            convertRanomdAccessibleIntervalToClearCLImage(
+            convertRandomAccessibleIntervalToClearCLImage(
                 mRandomAccessibleInterval);
       }
       else if (mImageStack != null)
@@ -670,12 +666,72 @@ public class ImageTypeConverter<T extends RealType<T>>
     return img;
   }
 
-  public <T extends RealType<T>> ClearCLImage convertRanomdAccessibleIntervalToClearCLImage(
+  public static <T extends RealType<T>> void copyRandomAccessibleIntervalToClearCLImage(RandomAccessibleInterval<T> pRandomAccessibleInterval, ClearCLImage lClearClImage) {
+
+
+    T
+            lPixel =
+            Views.iterable(pRandomAccessibleInterval).firstElement();
+
+    long[]
+            dimensions =
+            new long[pRandomAccessibleInterval.numDimensions()];
+    pRandomAccessibleInterval.dimensions(dimensions);
+
+    long sumDimensions = 1;
+    for (int i = 0; i < dimensions.length; i++)
+    {
+      sumDimensions *= dimensions[i];
+    }
+
+    int count = 0;
+    Cursor<T>
+            cursor =
+            Views.iterable(pRandomAccessibleInterval).cursor();
+
+    if (lPixel instanceof UnsignedByteType
+            || lPixel instanceof ByteType)
+    {
+
+      byte[] inputArray = new byte[(int) sumDimensions];
+      while (cursor.hasNext())
+      {
+        inputArray[count] = (byte) cursor.next().getRealFloat();
+        count++;
+      }
+      lClearClImage.readFrom(inputArray, true);
+    }
+    else if (lPixel instanceof UnsignedShortType
+            || lPixel instanceof ShortType)
+    {
+
+      short[] inputArray = new short[(int) sumDimensions];
+      while (cursor.hasNext())
+      {
+        inputArray[count] = (short) cursor.next().getRealFloat();
+        count++;
+      }
+      lClearClImage.readFrom(inputArray, true);
+    }
+    else if (lPixel instanceof FloatType)
+    {
+      float[] inputArray = new float[(int) sumDimensions];
+      while (cursor.hasNext())
+      {
+        inputArray[count] = cursor.next().getRealFloat();
+        count++;
+      }
+      lClearClImage.readFrom(inputArray, true);
+    }
+
+  }
+
+  public <T extends RealType<T>> ClearCLImage convertRandomAccessibleIntervalToClearCLImage(
       RandomAccessibleInterval<T> pRandomAccessibleInterval)
   {
     long[]
-        dimensions =
-        new long[pRandomAccessibleInterval.numDimensions()];
+            dimensions =
+            new long[pRandomAccessibleInterval.numDimensions()];
     pRandomAccessibleInterval.dimensions(dimensions);
 
     ImageChannelDataType lImageChannelType = null;
@@ -728,51 +784,7 @@ public class ImageTypeConverter<T extends RealType<T>>
                              lImageChannelType,
                              dimensions);
 
-    long sumDimensions = 1;
-    for (int i = 0; i < dimensions.length; i++)
-    {
-      sumDimensions *= dimensions[i];
-    }
-
-    int count = 0;
-    Cursor<T>
-        cursor =
-        Views.iterable(pRandomAccessibleInterval).cursor();
-
-    if (lPixel instanceof UnsignedByteType
-        || lPixel instanceof ByteType)
-    {
-
-      byte[] inputArray = new byte[(int) sumDimensions];
-      while (cursor.hasNext())
-      {
-        inputArray[count] = (byte) cursor.next().getRealFloat();
-        count++;
-      }
-      lClearClImage.readFrom(inputArray, true);
-    }
-    else if (lPixel instanceof UnsignedShortType
-             || lPixel instanceof ShortType)
-    {
-
-      short[] inputArray = new short[(int) sumDimensions];
-      while (cursor.hasNext())
-      {
-        inputArray[count] = (short) cursor.next().getRealFloat();
-        count++;
-      }
-      lClearClImage.readFrom(inputArray, true);
-    }
-    else if (lPixel instanceof FloatType)
-    {
-      float[] inputArray = new float[(int) sumDimensions];
-      while (cursor.hasNext())
-      {
-        inputArray[count] = cursor.next().getRealFloat();
-        count++;
-      }
-      lClearClImage.readFrom(inputArray, true);
-    }
+    copyRandomAccessibleIntervalToClearCLImage(pRandomAccessibleInterval, lClearClImage);
 
     return lClearClImage;
   }
