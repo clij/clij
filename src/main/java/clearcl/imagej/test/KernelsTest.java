@@ -359,6 +359,18 @@ public class KernelsTest
     dst_arg.close();
   }
 
+  @Test public void binaryAnd() {
+    System.out.println("Todo: program test for binaryAnd");
+  }
+
+  @Test public void binaryNot() {
+    System.out.println("Todo: program test for binaryNot");
+  }
+
+  @Test public void binaryOr() {
+    System.out.println("Todo: program test for binaryOr");
+  }
+
   @Test public void blur3d()
   {
     // do operation with ImageJ
@@ -1172,6 +1184,10 @@ public class KernelsTest
     mask.close();
     dst.close();
 
+  }
+
+  @Test public void maxPixelWise3d() {
+    System.out.println("Todo: implement test for maxPixelwise3d");
   }
 
   @Test public void maxProjection() throws InterruptedException

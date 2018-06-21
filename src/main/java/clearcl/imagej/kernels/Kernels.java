@@ -138,6 +138,60 @@ public class Kernels
     return true;
   }
 
+  public static boolean binaryAnd(ClearCLIJ pCLIJ,
+                                         ClearCLImage src1,
+                                         ClearCLImage src2,
+                                         ClearCLImage dst)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src1", src1);
+    lParameters.put("src2", src2);
+    lParameters.put("dst", dst);
+
+    pCLIJ.execute(Kernels.class,
+            "binaryProcessing.cl",
+            "binary_and_" + src1.getDimension() + "d",
+            lParameters);
+
+    return true;
+  }
+
+  public static boolean binaryNot(ClearCLIJ pCLIJ,
+                                  ClearCLImage src1,
+                                  ClearCLImage dst)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src1", src1);
+    lParameters.put("dst", dst);
+
+    pCLIJ.execute(Kernels.class,
+            "binaryProcessing.cl",
+            "binary_not_" + src1.getDimension() + "d",
+            lParameters);
+
+    return true;
+  }
+
+  public static boolean binaryOr(ClearCLIJ pCLIJ,
+                                  ClearCLImage src1,
+                                  ClearCLImage src2,
+                                  ClearCLImage dst)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src1", src1);
+    lParameters.put("src2", src2);
+    lParameters.put("dst", dst);
+
+    pCLIJ.execute(Kernels.class,
+            "binaryProcessing.cl",
+            "binary_or_" + src1.getDimension() + "d",
+            lParameters);
+
+    return true;
+  }
+
+
+
   public static boolean blur(ClearCLIJ pCLIJ,
                              ClearCLImage src,
                              ClearCLImage dst,
@@ -754,6 +808,31 @@ public class Kernels
                          "maskStackWithPlane",
                          lParameters);
   }
+
+  public static boolean maxPixelwise(ClearCLIJ pCLIJ,
+                                     ClearCLImage src,
+                                     ClearCLImage src1,
+                                     ClearCLImage dst)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("src1", src1);
+    lParameters.put("dst", dst);
+
+    if (!checkDimensions(src.getDimension(),
+            src1.getDimension(),
+            dst.getDimension()))
+    {
+      System.out.println(
+              "Error: number of dimensions don't match! (addPixelwise)");
+      return false;
+    }
+    return pCLIJ.execute(Kernels.class,
+            "math.cl",
+            "maxPixelwise_" + src.getDimension() + "d",
+            lParameters);
+  }
+
 
   public static boolean maxProjection(ClearCLIJ pCLIJ,
                                       ClearCLImage src,
