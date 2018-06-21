@@ -689,8 +689,8 @@ public class ImageTypeConverter<T extends RealType<T>>
             cursor =
             Views.iterable(pRandomAccessibleInterval).cursor();
 
-    if (lPixel instanceof UnsignedByteType
-            || lPixel instanceof ByteType)
+    if (lClearClImage.getChannelDataType() == ImageChannelDataType.SignedInt8 ||
+            lClearClImage.getChannelDataType() == ImageChannelDataType.UnsignedInt8     )
     {
 
       byte[] inputArray = new byte[(int) sumDimensions];
@@ -701,8 +701,8 @@ public class ImageTypeConverter<T extends RealType<T>>
       }
       lClearClImage.readFrom(inputArray, true);
     }
-    else if (lPixel instanceof UnsignedShortType
-            || lPixel instanceof ShortType)
+    else if (lClearClImage.getChannelDataType() == ImageChannelDataType.SignedInt16 ||
+            lClearClImage.getChannelDataType() == ImageChannelDataType.UnsignedInt16     )
     {
 
       short[] inputArray = new short[(int) sumDimensions];
@@ -713,7 +713,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       }
       lClearClImage.readFrom(inputArray, true);
     }
-    else if (lPixel instanceof FloatType)
+    else if (lClearClImage.getChannelDataType() == ImageChannelDataType.Float  )
     {
       float[] inputArray = new float[(int) sumDimensions];
       while (cursor.hasNext())
