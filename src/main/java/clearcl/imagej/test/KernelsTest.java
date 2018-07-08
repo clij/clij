@@ -1492,8 +1492,14 @@ public class KernelsTest
   }
 
   @Test public void splitStack() {
-    System.out.println("Todo: implement test for splitStack");
+    ClearCLImage clearCLImage = clij.converter(testFlyBrain3D).getClearCLImage();
+    ClearCLImage split1 = clij.createCLImage(new long[]{clearCLImage.getWidth(), clearCLImage.getHeight(), clearCLImage.getDepth() / 2}, clearCLImage.getChannelDataType());
+    ClearCLImage split2 = clij.createCLImage(new long[]{clearCLImage.getWidth(), clearCLImage.getHeight(), clearCLImage.getDepth() / 2}, clearCLImage.getChannelDataType());
 
+    Kernels.splitStack(clij, clearCLImage, split1, split2);
+
+    assertTrue(Kernels.sumPixels(clij, split1) > 0);
+    assertTrue(Kernels.sumPixels(clij, split2) > 0);
   }
 
   @Test public void sumPixels3d()
