@@ -1,3 +1,61 @@
+__kernel void binary_or_2d(DTYPE_IMAGE_IN_2D  src1,
+                           DTYPE_IMAGE_IN_2D  src2,
+                           DTYPE_IMAGE_OUT_2D  dst
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+
+  const int2 pos = (int2){x,y};
+
+  DTYPE_OUT value1 = READ_IMAGE(src1, pos).x;
+  DTYPE_OUT value2 = READ_IMAGE(src2, pos).x;
+  if ( value1 > 0 || value2 > 0 ) {
+    value1 = 1;
+  } else {
+    value1 = 0;
+  }
+  WRITE_IMAGE (dst, pos, value1);
+}
+
+__kernel void binary_and_2d(DTYPE_IMAGE_IN_2D  src1,
+                           DTYPE_IMAGE_IN_2D  src2,
+                           DTYPE_IMAGE_OUT_2D  dst
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+
+  const int2 pos = (int2){x,y};
+
+  DTYPE_OUT value1 = READ_IMAGE(src1, pos).x;
+  DTYPE_OUT value2 = READ_IMAGE(src2, pos).x;
+  if ( value1 > 0 && value2 > 0 ) {
+    value1 = 1;
+  } else {
+    value1 = 0;
+  }
+  WRITE_IMAGE (dst, pos, value1);
+}
+
+__kernel void binary_not_2d(DTYPE_IMAGE_IN_2D  src1,
+                           DTYPE_IMAGE_OUT_2D  dst
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+
+  const int2 pos = (int2){x,y};
+
+  DTYPE_OUT value1 = READ_IMAGE(src1, pos).x;
+  if ( value1 > 0) {
+    value1 = 0;
+  } else {
+    value1 = 1;
+  }
+  WRITE_IMAGE (dst, pos, value1);
+}
+
 __kernel void binary_or_3d(DTYPE_IMAGE_IN_3D  src1,
                            DTYPE_IMAGE_IN_3D  src2,
                            DTYPE_IMAGE_OUT_3D  dst

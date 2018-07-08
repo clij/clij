@@ -1,5 +1,6 @@
 package clearcl.imagej.test;
 
+import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
@@ -24,6 +25,8 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.awt.image.Kernel;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -360,14 +363,63 @@ public class KernelsTest
     dst_arg.close();
   }
 
-  @Test public void binaryAnd() {
+  @Test public void binaryAnd2d() {
+    ClearCLImage clearCLImage = clij.converter(mask2d).getClearCLImage();
+    ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+    ClearCLImage clearCLImageAnd  = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
 
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+    Kernels.binaryAnd(clij, clearCLImage, clearCLImageNot, clearCLImageAnd);
 
+    long numberOfPixelsAnd = (long)Kernels.sumPixels(clij, clearCLImageAnd);
 
-    System.out.println("Todo: program test for binaryAnd");
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixelsAnd, 0);
+    assertEquals(clearCLImage.getWidth() * clearCLImage.getHeight() * clearCLImage.getDepth(), numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+    clearCLImageAnd.close();
   }
 
-  @Test public void binaryNot() throws InterruptedException {
+  @Test public void binaryAnd3d() {
+    ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
+    ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+    ClearCLImage clearCLImageAnd  = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+    Kernels.binaryAnd(clij, clearCLImage, clearCLImageNot, clearCLImageAnd);
+
+    long numberOfPixelsAnd = (long)Kernels.sumPixels(clij, clearCLImageAnd);
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixelsAnd, 0);
+    assertEquals(clearCLImage.getWidth() * clearCLImage.getHeight() * clearCLImage.getDepth(), numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+    clearCLImageAnd.close();
+  }
+
+  @Test public void binaryNot2d() throws InterruptedException {
+    ClearCLImage clearCLImage = clij.converter(mask2d).getClearCLImage();
+    ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+
+    long numberOfPixels = clearCLImage.getWidth() * clearCLImage.getHeight() * clearCLImage.getDepth();
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+  }
+
+  @Test public void binaryNot3d() throws InterruptedException {
     ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
     ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
 
@@ -379,12 +431,46 @@ public class KernelsTest
     long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
 
     assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
-
-    System.out.println("Todo: program test for binaryNot");
+    clearCLImage.close();
+    clearCLImageNot.close();
   }
 
-  @Test public void binaryOr() {
-    System.out.println("Todo: program test for binaryOr");
+  @Test public void binaryOr2d() {
+    ClearCLImage clearCLImage = clij.converter(mask2d).getClearCLImage();
+    ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+    ClearCLImage clearCLImageOr  = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+    Kernels.binaryOr(clij, clearCLImage, clearCLImageNot, clearCLImageOr);
+
+    long numberOfPixels = (long)Kernels.sumPixels(clij, clearCLImageOr);
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+    clearCLImageOr.close();
+  }
+
+  @Test public void binaryOr3d() {
+    ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
+    ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+    ClearCLImage clearCLImageOr  = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+    Kernels.binaryOr(clij, clearCLImage, clearCLImageNot, clearCLImageOr);
+
+    long numberOfPixels = (long)Kernels.sumPixels(clij, clearCLImageOr);
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+    clearCLImageOr.close();
   }
 
   @Test public void blur3d()
