@@ -5,15 +5,13 @@ import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
 import clearcl.util.ElapsedTime;
-import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
-import ij.Prefs;
+import ij.*;
 import ij.gui.NewImage;
 import ij.gui.Roi;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
 import ij.plugin.ImageCalculator;
+import ij.plugin.Scaler;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
@@ -24,6 +22,8 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -992,41 +992,38 @@ public class KernelsTest
     maskCLafter.close();
   }
 
-  @Test public void downsample3d()
-  {
+  @Test public void downsample3d() throws InterruptedException {
     // do operation with ImageJ
-    System.out.println("Todo: implement test for downsample3d");
-/*
-        testImp1.show();
-        IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 width=512 height=1024 depth=5 interpolation=None process create");
-        ImagePlus downsampled = IJ.getImage();
-*/
+    new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
+    testImp1.show();
+    IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 width=512 height=1024 depth=5 interpolation=None process create");
+    ImagePlus downsampled = IJ.getImage();
+
+
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-    ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage dst =
+            clij.createCLImage(new long[] { src.getWidth() / 2,
+                            src.getHeight() / 2,
+                            (long)(src.getDepth() - 0.5) / 2},
+                    src.getChannelDataType());
+
 
     Kernels.downsample(clij, src, dst, 0.5f, 0.5f, 0.5f);
-/*
-        ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
 
-      assertTrue(compareImages(downsampled, downsampledCL));
-      */
+    ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
+
   }
 
-  @Test public void downsample2d()
-  {
+  @Test public void downsample2d() throws InterruptedException {
     // do operation with ImageJ
-    System.out.println("Todo: implement test for downsample2d");
-     /*
-      testImp2D1.show();
-      IJ.run(testImp2D1, "Scale...", "x=0.5 y=0.5 width=50 height=50 interpolation=None");
-
-      Thread.sleep(1000);
-      //new Scaler().run();
-      int[] idlist = WindowManager.getIDList();
-      ImagePlus downsampled = WindowManager.getImage(idlist[idlist.length - 1]);//IJ.getImage();
-*/
+    new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
+    testImp2D1.show();
+    IJ.run(testImp2D1, "Scale...", "x=0.5 y=0.5 width=50 height=50 interpolation=None create");
+    ImagePlus downsampled = IJ.getImage();
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
@@ -1037,11 +1034,11 @@ public class KernelsTest
                            src.getChannelDataType());
 
     Kernels.downsample(clij, src, dst, 0.5f, 0.5f);
-/*
-      ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
 
-      assertTrue(TestUtilities.compareImages(downsampled, downsampledCL));
-*/
+    ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
+
   }
 
   @Test public void erode3d()
