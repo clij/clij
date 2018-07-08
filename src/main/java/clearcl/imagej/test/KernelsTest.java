@@ -6,6 +6,7 @@ import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
 import clearcl.util.ElapsedTime;
 import ij.IJ;
+import ij.ImageJ;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.NewImage;
@@ -360,10 +361,25 @@ public class KernelsTest
   }
 
   @Test public void binaryAnd() {
+
+
+
     System.out.println("Todo: program test for binaryAnd");
   }
 
-  @Test public void binaryNot() {
+  @Test public void binaryNot() throws InterruptedException {
+    ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
+    ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+
+    long numberOfPixels = clearCLImage.getWidth() * clearCLImage.getHeight() * clearCLImage.getDepth();
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
+
     System.out.println("Todo: program test for binaryNot");
   }
 

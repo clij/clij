@@ -237,8 +237,8 @@ public class CLKernelExecutor
 
             this.mProgram.addBuildOptionAllMathOpt();
             this.mProgram.buildAndLog();
-            System.out.println("status: " + mProgram.getBuildStatus());
-            System.out.println("LOG: " + this.mProgram.getBuildLog());
+            //System.out.println("status: " + mProgram.getBuildStatus());
+            //System.out.println("LOG: " + this.mProgram.getBuildLog());
             ClearCLKernel lKernel = this.mProgram.createKernel(pKernelName);
             this.mKernelMap.put(pKernelName, lKernel);
             return lKernel;
