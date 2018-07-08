@@ -1,6 +1,5 @@
 package clearcl.imagej.test;
 
-import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
@@ -26,8 +25,6 @@ import net.imglib2.view.Views;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.image.Kernel;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -41,6 +38,8 @@ import static org.junit.Assert.assertTrue;
 public class KernelsTest
 {
 
+  ImagePlus testFlyBrain3D;
+  ImagePlus testFlyBrain2D;
   ImagePlus testImp1;
   ImagePlus testImp2;
   ImagePlus testImp2D1;
@@ -51,6 +50,10 @@ public class KernelsTest
 
   @Before public void initTest()
   {
+    testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+    testFlyBrain2D = new Duplicator().run(testFlyBrain3D, 1, 1);
+
+
     testImp1 =
         NewImage.createImage("",
                              100,
@@ -493,25 +496,39 @@ public class KernelsTest
   }
 
   @Test
-  public void blur3dSeparable() {
-      System.out.println("Todo: test for blur3dSeparable");
+  public void blur3dSeparable() throws InterruptedException {
+    ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
+    ClearCLImage dstBlur = clij.converter(testFlyBrain3D).getClearCLImage();
+    ClearCLImage dstBlurSeparable = clij.converter(testFlyBrain3D).getClearCLImage();
+
+    Kernels.blur(clij, src, dstBlur, 15, 15, 15, 2, 2, 2);
+    Kernels.blurSeparable(clij, src, dstBlurSeparable, 2, 2, 2);
+
+    ImagePlus gaussBlur = clij.converter(dstBlur).getImagePlus();
+    ImagePlus gaussBlurSeparable = clij.converter(dstBlurSeparable).getImagePlus();
+
+    src.close();
+    dstBlur.close();
+    dstBlurSeparable.close();
+
+    assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlur, 2.0));
   }
 
   @Test public void blur2d()
   {
     // do operation with ImageJ
-    ImagePlus gauss = new Duplicator().run(testImp2D1);
-    ImagePlus gaussCopy = new Duplicator().run(testImp2D1);
+    ImagePlus gauss = new Duplicator().run(testFlyBrain2D);
+    ImagePlus gaussCopy = new Duplicator().run(testFlyBrain2D);
     IJ.run(gauss, "Gaussian Blur...", "sigma=2");
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(gaussCopy).getClearCLImage();
     ClearCLImage dst = clij.converter(gaussCopy).getClearCLImage();
 
-    Kernels.blur(clij, src, dst, 6, 6, 2, 2);
+    Kernels.blur(clij, src, dst, 15, 15, 2, 2);
     ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
 
-    assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
+    assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
 
     src.close();
     dst.close();
@@ -520,17 +537,17 @@ public class KernelsTest
   @Test public void blurSlicewise()
   {
     // do operation with ImageJ
-    ImagePlus gauss = new Duplicator().run(testImp1);
+    ImagePlus gauss = new Duplicator().run(testFlyBrain3D);
     IJ.run(gauss, "Gaussian Blur...", "sigma=2 stack");
 
     // do operation with ClearCL
-    ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-    ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
+    ClearCLImage dst = clij.converter(testFlyBrain3D).getClearCLImage();
 
-    Kernels.blurSlicewise(clij, src, dst, 6, 6, 2, 2);
+    Kernels.blurSlicewise(clij, src, dst, 15, 15, 2, 2);
     ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
 
-    assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
+    assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
 
     src.close();
     dst.close();

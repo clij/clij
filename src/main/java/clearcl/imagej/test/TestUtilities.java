@@ -46,7 +46,11 @@ public class TestUtilities
     return true;
   }
 
-  public static boolean compareImages(ImagePlus a, ImagePlus b)
+  public static boolean compareImages(ImagePlus a, ImagePlus b) {
+    return compareImages(a, b, 0);
+  }
+
+  public static boolean compareImages(ImagePlus a, ImagePlus b, double tolerance)
   {
     if (a.getWidth() != b.getWidth()
         || a.getHeight() != b.getHeight()
@@ -93,12 +97,13 @@ public class TestUtilities
           {
             for (int y = 0; y < a.getHeight(); y++)
             {
-              if (aIP.getPixelValue(x, y) != bIP.getPixelValue(x, y))
+              if (Math.abs(aIP.getPixelValue(x, y) - bIP.getPixelValue(x, y)) > tolerance)
               {
                 System.out.println("pixels different "
-                                   + aIP.getPixelValue(x, y)
-                                   + " != "
-                                   + bIP.getPixelValue(x, y));
+                                   + "| " + aIP.getPixelValue(x, y)
+                                   + " - "
+                                   + bIP.getPixelValue(x, y)
+                                   + " | > " + tolerance);
                 return false;
               }
             }
