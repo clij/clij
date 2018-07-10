@@ -213,48 +213,45 @@ public class ImageTypeConverter<T extends RealType<T>>
   }
 
   public static <T extends RealType<T>> OffHeapPlanarStack convertRandomAccessibleIntervalToOffHeapPlanarStack(
-      RandomAccessibleInterval<T> pRandomAccessibleInterval)
-  {
+      RandomAccessibleInterval<T> pRandomAccessibleInterval) {
     long[]
-        lDimensions =
-        new long[pRandomAccessibleInterval.numDimensions()];
+            lDimensions =
+            new long[pRandomAccessibleInterval.numDimensions()];
     pRandomAccessibleInterval.dimensions(lDimensions);
 
     T
-        pPixel =
-        Views.iterable(pRandomAccessibleInterval).firstElement();
+            pPixel =
+            Views.iterable(pRandomAccessibleInterval).firstElement();
     NativeTypeEnum lType = null;
-    if (pPixel instanceof UnsignedShortType)
-    {
+    if (pPixel instanceof UnsignedShortType) {
       lType = NativeTypeEnum.UnsignedShort;
-    }
-    else if (pPixel instanceof ShortType)
-    {
+    } else if (pPixel instanceof ShortType) {
       lType = NativeTypeEnum.Short;
-    }
-    else if (pPixel instanceof UnsignedByteType)
-    {
+    } else if (pPixel instanceof UnsignedByteType) {
       lType = NativeTypeEnum.UnsignedByte;
-    }
-    else if (pPixel instanceof ByteType)
-    {
+    } else if (pPixel instanceof ByteType) {
       lType = NativeTypeEnum.Byte;
-    }
-    else if (pPixel instanceof FloatType)
-    {
+    } else if (pPixel instanceof FloatType) {
       lType = NativeTypeEnum.Float;
-    }
-    else
-    {
+    } else {
       throw new UnknownFormatConversionException("Unknown type: "
-                                                 + pPixel.getClass()
-                                                         .getCanonicalName());
+              + pPixel.getClass()
+              .getCanonicalName());
     }
 
     OffHeapPlanarStack
-        lStack =
-        new OffHeapPlanarStack(true, 0, lType, 1, lDimensions);
+            lStack =
+            new OffHeapPlanarStack(true, 0, lType, 1, lDimensions);
+    copyRandomAccessibleIntervalToOffHeapPlanarStack(pRandomAccessibleInterval, lStack);
+    return lStack;
+  }
 
+
+
+  public static <T extends RealType<T>> void copyRandomAccessibleIntervalToOffHeapPlanarStack(
+          RandomAccessibleInterval<T> pRandomAccessibleInterval, StackInterface pStack)
+  {
+    NativeTypeEnum lType = pStack.getDataType();
     Cursor<T>
         cursor =
         Views.iterable(pRandomAccessibleInterval).cursor();
@@ -266,7 +263,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       while (cursor.hasNext())
       {
         T element = cursor.next();
-        lStack.getContiguousMemory()
+        pStack.getContiguousMemory()
               .setShort(lOffSet, (short) element.getRealDouble());
         lOffSet += lElementSize;
       }
@@ -276,7 +273,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       while (cursor.hasNext())
       {
         T element = cursor.next();
-        lStack.getContiguousMemory()
+        pStack.getContiguousMemory()
                 .setShort(lOffSet, (short)element.getRealDouble());
         lOffSet += lElementSize;
       }
@@ -287,7 +284,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       while (cursor.hasNext())
       {
         T element = cursor.next();
-        lStack.getContiguousMemory()
+        pStack.getContiguousMemory()
               .setByte(lOffSet, (byte) element.getRealDouble());
         lOffSet += lElementSize;
       }
@@ -297,7 +294,7 @@ public class ImageTypeConverter<T extends RealType<T>>
       while (cursor.hasNext())
       {
         T element = cursor.next();
-        lStack.getContiguousMemory()
+        pStack.getContiguousMemory()
               .setFloat(lOffSet, (float) element.getRealDouble());
         lOffSet += lElementSize;
       }
@@ -309,8 +306,6 @@ public class ImageTypeConverter<T extends RealType<T>>
                                                      .getClass()
                                                      .getCanonicalName());
     }
-
-    return lStack;
   }
 
   public static <T extends RealType<T>> RandomAccessibleInterval<T> convertOffHeapPlanarStackToRandomAccessibleInterval(
