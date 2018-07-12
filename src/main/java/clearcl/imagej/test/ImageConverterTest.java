@@ -2,8 +2,12 @@ package clearcl.imagej.test;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import clearcl.enums.ImageChannelDataType;
 import clearcl.imagej.ClearCLIJ;
+import clearcl.util.ElapsedTime;
+import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
+import coremem.enums.NativeTypeEnum;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
@@ -14,6 +18,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -256,6 +261,26 @@ public class ImageConverterTest
     testBackAndForthConversionViaCLImage(lRAI);
 
     testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
+  }
+
+  @Ignore // might not work in CI because of memory limitatons
+  @Test
+  public void testLargeImageConversionTest() {
+      mCLIJ = ClearCLIJ.getInstance();
+
+      long[] size = new long[]{2048, 2048, 512};
+      NativeTypeEnum type = NativeTypeEnum.UnsignedShort;
+
+      ElapsedTime.measureForceOutput("", () -> {
+          StackInterface stack = new OffHeapPlanarStack(true, 0, type, 1, size);
+          System.out.println("whd: " + stack.getWidth() + "/" + stack.getHeight() + "/" + stack.getDepth());
+          RandomAccessibleInterval<UnsignedShortType> img = mCLIJ.converter(stack).getRandomAccessibleInterval();
+          System.out.println("Type of result: " + img.getClass());
+      });
+
+
+
+
   }
 
 }

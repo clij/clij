@@ -26,16 +26,17 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.img.basictypeaccess.array.*;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.ByteType;
-import net.imglib2.type.numeric.integer.ShortType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.type.numeric.integer.*;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
 import javax.lang.model.type.UnknownTypeException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UnknownFormatConversionException;
 
 /**
@@ -160,11 +161,14 @@ public class ImageTypeConverter<T extends RealType<T>>
   {
     if (mRandomAccessibleInterval == null)
     {
-      if (mImageStack != null)
-      {
-        mRandomAccessibleInterval =
-            convertOffHeapPlanarStackToRandomAccessibleInterval(
-                mImageStack);
+      if (mImageStack != null) {
+          if (mImageStack.getBytesPerVoxel() * mImageStack.getWidth() * mImageStack.getHeight() * mImageStack.getDepth() > 1073741824L /* 2 ^ 30 */) {
+              mRandomAccessibleInterval = convertOffHeapPlanarStackToPlanarImg(mImageStack);
+          } else {
+              mRandomAccessibleInterval =
+                      convertOffHeapPlanarStackToRandomAccessibleInterval(
+                              mImageStack);
+          }
       }
       else if (mClearCLImage != null)
       {
@@ -306,6 +310,238 @@ public class ImageTypeConverter<T extends RealType<T>>
                                                      .getClass()
                                                      .getCanonicalName());
     }
+  }
+
+  public static <T extends RealType<T>> RandomAccessibleInterval<T> convertOffHeapPlanarStackToPlanarImg(
+          StackInterface pImageStack)
+  {
+    Img<T> lReturnImg = null;
+
+    int numDimensions = pImageStack.getNumberOfDimensions();
+    if (pImageStack.getNumberOfChannels() > 1)
+    {
+      // Channels are an additional dimension in imglib2 world
+      numDimensions++;
+    }
+
+    long[] dimensions = new long[numDimensions];
+    dimensions[0] = pImageStack.getWidth();
+    dimensions[1] = pImageStack.getHeight();
+    if (dimensions.length > 2)
+    {
+      dimensions[2] = pImageStack.getDepth();
+    }
+    if (dimensions.length > 3)
+    {
+      dimensions[3] = pImageStack.getNumberOfChannels();
+    }
+
+    if (pImageStack.getDataType() == NativeTypeEnum.Float
+            || pImageStack.getDataType() == NativeTypeEnum.HalfFloat)
+    {
+      final List<FloatArray> planes = new ArrayList<>();
+
+      for (int i = 0; i < pImageStack.getDepth(); i++) {
+        final ContiguousMemoryInterface
+                contiguousMemory =
+                pImageStack.getContiguousMemory(i);
+        float[]
+                pixelArray =
+                new float[(int) (contiguousMemory.getSizeInBytes()
+                        / pImageStack.getBytesPerVoxel())
+                        % Integer.MAX_VALUE];
+        contiguousMemory.copyTo(pixelArray);
+        planes.add( new FloatArray( pixelArray ) );
+      }
+
+      final FloatType type = new FloatType();
+      PlanarImg<FloatType, FloatArray > img = new PlanarImg<>( planes, pImageStack.getDimensions(), type.getEntitiesPerPixel() );
+      img.setLinkedType( type.getNativeTypeFactory().createLinkedType( img ) );
+
+      lReturnImg = (Img<T>) img;
+    }
+    else if (pImageStack.getDataType()
+            == NativeTypeEnum.UnsignedShort)
+    {
+        final List<ShortArray> planes = new ArrayList<>();
+
+        for (int i = 0; i < pImageStack.getDepth(); i++) {
+            final ContiguousMemoryInterface
+                    contiguousMemory =
+                    pImageStack.getContiguousMemory(i);
+            short[]
+                    pixelArray =
+                    new short[(int) (contiguousMemory.getSizeInBytes()
+                            / pImageStack.getBytesPerVoxel())
+                            % Integer.MAX_VALUE];
+            contiguousMemory.copyTo(pixelArray);
+            planes.add( new ShortArray( pixelArray ) );
+        }
+
+        final UnsignedShortType type = new UnsignedShortType();
+        PlanarImg<UnsignedShortType, ShortArray > img = new PlanarImg<>( planes, pImageStack.getDimensions(), type.getEntitiesPerPixel() );
+        img.setLinkedType( type.getNativeTypeFactory().createLinkedType( img ) );
+
+        lReturnImg = (Img<T>) img;
+    }
+    else if (pImageStack.getDataType() == NativeTypeEnum.Short)
+    {
+
+        final List<ShortArray> planes = new ArrayList<>();
+
+        for (int i = 0; i < pImageStack.getDepth(); i++) {
+            final ContiguousMemoryInterface
+                    contiguousMemory =
+                    pImageStack.getContiguousMemory(i);
+            short[]
+                    pixelArray =
+                    new short[(int) (contiguousMemory.getSizeInBytes()
+                            / pImageStack.getBytesPerVoxel())
+                            % Integer.MAX_VALUE];
+            contiguousMemory.copyTo(pixelArray);
+            planes.add( new ShortArray( pixelArray ) );
+        }
+
+        final ShortType type = new ShortType();
+        PlanarImg<ShortType, ShortArray > img = new PlanarImg<>( planes, pImageStack.getDimensions(), type.getEntitiesPerPixel() );
+        img.setLinkedType( type.getNativeTypeFactory().createLinkedType( img ) );
+
+        lReturnImg = (Img<T>) img;
+    }
+
+    else if (pImageStack.getDataType() == NativeTypeEnum.Byte)
+    {
+        final List<ByteArray> planes = new ArrayList<>();
+
+        for (int i = 0; i < pImageStack.getDepth(); i++) {
+            final ContiguousMemoryInterface
+                    contiguousMemory =
+                    pImageStack.getContiguousMemory(i);
+            byte[]
+                    pixelArray =
+                    new byte[(int) (contiguousMemory.getSizeInBytes()
+                            / pImageStack.getBytesPerVoxel())
+                            % Integer.MAX_VALUE];
+            contiguousMemory.copyTo(pixelArray);
+            planes.add( new ByteArray( pixelArray ) );
+        }
+
+        final ByteType type = new ByteType();
+        PlanarImg<ByteType, ByteArray > img = new PlanarImg<>( planes, pImageStack.getDimensions(), type.getEntitiesPerPixel() );
+        img.setLinkedType( type.getNativeTypeFactory().createLinkedType( img ) );
+
+        lReturnImg = (Img<T>) img;
+    }
+    else if (pImageStack.getDataType() == NativeTypeEnum.UnsignedByte)
+    {
+        final List<ByteArray> planes = new ArrayList<>();
+
+        for (int i = 0; i < pImageStack.getDepth(); i++) {
+            final ContiguousMemoryInterface
+                    contiguousMemory =
+                    pImageStack.getContiguousMemory(i);
+            byte[]
+                    pixelArray =
+                    new byte[(int) (contiguousMemory.getSizeInBytes()
+                            / pImageStack.getBytesPerVoxel())
+                            % Integer.MAX_VALUE];
+            contiguousMemory.copyTo(pixelArray);
+            planes.add( new ByteArray( pixelArray ) );
+        }
+
+        final UnsignedByteType type = new UnsignedByteType();
+        PlanarImg<UnsignedByteType, ByteArray > img = new PlanarImg<>( planes, pImageStack.getDimensions(), type.getEntitiesPerPixel() );
+        img.setLinkedType( type.getNativeTypeFactory().createLinkedType( img ) );
+
+        lReturnImg = (Img<T>) img;
+    }
+    else if (pImageStack.getDataType() == NativeTypeEnum.UnsignedInt)
+    {
+        final List<IntArray> planes = new ArrayList<>();
+
+        for (int i = 0; i < pImageStack.getDepth(); i++) {
+            final ContiguousMemoryInterface
+                    contiguousMemory =
+                    pImageStack.getContiguousMemory(i);
+            int[]
+                    pixelArray =
+                    new int[(int) (contiguousMemory.getSizeInBytes()
+                            / pImageStack.getBytesPerVoxel())
+                            % Integer.MAX_VALUE];
+            contiguousMemory.copyTo(pixelArray);
+            planes.add( new IntArray( pixelArray ) );
+        }
+
+        final UnsignedIntType type = new UnsignedIntType();
+        PlanarImg<UnsignedIntType, IntArray > img = new PlanarImg<>( planes, pImageStack.getDimensions(), type.getEntitiesPerPixel() );
+        img.setLinkedType( type.getNativeTypeFactory().createLinkedType( img ) );
+
+        lReturnImg = (Img<T>) img;
+    }
+    else if (pImageStack.getDataType() == NativeTypeEnum.Int)
+    {
+        final List<IntArray> planes = new ArrayList<>();
+
+        for (int i = 0; i < pImageStack.getDepth(); i++) {
+            final ContiguousMemoryInterface
+                    contiguousMemory =
+                    pImageStack.getContiguousMemory(i);
+            int[]
+                    pixelArray =
+                    new int[(int) (contiguousMemory.getSizeInBytes()
+                            / pImageStack.getBytesPerVoxel())
+                            % Integer.MAX_VALUE];
+            contiguousMemory.copyTo(pixelArray);
+            planes.add( new IntArray( pixelArray ) );
+        }
+
+        final IntType type = new IntType();
+        PlanarImg<IntType, IntArray > img = new PlanarImg<>( planes, pImageStack.getDimensions(), type.getEntitiesPerPixel() );
+        img.setLinkedType( type.getNativeTypeFactory().createLinkedType( img ) );
+
+        lReturnImg = (Img<T>) img;
+    }
+    else if (pImageStack.getDataType() == NativeTypeEnum.Long
+            || pImageStack.getDataType()
+            == NativeTypeEnum.UnsignedLong)
+    {
+        final List<LongArray> planes = new ArrayList<>();
+
+        for (int i = 0; i < pImageStack.getDepth(); i++) {
+            final ContiguousMemoryInterface
+                    contiguousMemory =
+                    pImageStack.getContiguousMemory(i);
+            long[]
+                    pixelArray =
+                    new long[(int) (contiguousMemory.getSizeInBytes()
+                            / pImageStack.getBytesPerVoxel())
+                            % Integer.MAX_VALUE];
+            contiguousMemory.copyTo(pixelArray);
+            planes.add( new LongArray( pixelArray ) );
+        }
+
+        final LongType type = new LongType();
+        PlanarImg<LongType, LongArray > img = new PlanarImg<>( planes, pImageStack.getDimensions(), type.getEntitiesPerPixel() );
+        img.setLinkedType( type.getNativeTypeFactory().createLinkedType( img ) );
+
+        lReturnImg = (Img<T>) img;
+    }
+    else
+    {
+      throw new UnknownFormatConversionException("Unknown type: "
+              + pImageStack.getDataType());
+    }
+
+    lReturnImg.cursor().reset();
+
+    // in ImageJ, the dimension order must be X, Y, C, Z
+    if (dimensions.length == 4)
+    {
+      return Views.permute(lReturnImg, 2, 3);
+    }
+
+    return lReturnImg;
+
   }
 
   public static <T extends RealType<T>> RandomAccessibleInterval<T> convertOffHeapPlanarStackToRandomAccessibleInterval(
