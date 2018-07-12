@@ -258,4 +258,13 @@ public class ImageConverterTest
     testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
   }
 
+  @Test
+  public void convertHugeStackToImg() {
+    mCLIJ = new ClearCLIJ("CPU");
+
+    
+
+
+  }
+
 }
