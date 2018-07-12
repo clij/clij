@@ -163,7 +163,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     {
       if (mImageStack != null) {
           if (mImageStack.getBytesPerVoxel() * mImageStack.getWidth() * mImageStack.getHeight() * mImageStack.getDepth() > 1073741824L /* 2 ^ 30 */) {
-              return convertOffHeapPlanarStackToPlanarImg(mImageStack);
+              mRandomAccessibleInterval = convertOffHeapPlanarStackToPlanarImg(mImageStack);
           } else {
               mRandomAccessibleInterval =
                       convertOffHeapPlanarStackToRandomAccessibleInterval(
