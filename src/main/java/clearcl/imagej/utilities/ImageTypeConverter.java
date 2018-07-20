@@ -191,9 +191,18 @@ public class ImageTypeConverter<T extends RealType<T>>
     return mClearCLImage;
   }
 
+    /**
+     * Deprecated: use getStack instead.
+     * @return
+     */
+  @Deprecated
   public StackInterface getOffHeapPlanarStack()
   {
+    return getStack();
+  }
 
+
+  public StackInterface getStack() {
     if (mImageStack == null)
     {
       if (mClearCLImage != null)
