@@ -111,6 +111,63 @@ public class ImageTypeConverter<T extends RealType<T>>
     mBuffer = pBuffer;
   }
 
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
+                            byte[][][] array) {
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
+    mImageStack = new OffHeapPlanarStack(true, 0, NativeTypeEnum.Byte, 1, new long[]{array[0][0].length, array[0].length, array.length});
+    ArrayToStackConverters.copyArrayToStack(array, mImageStack);
+  }
+
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
+                              short[][][] array) {
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
+    mImageStack = new OffHeapPlanarStack(true, 0, NativeTypeEnum.Short, 1, new long[]{array[0][0].length, array[0].length, array.length});
+    ArrayToStackConverters.copyArrayToStack(array, mImageStack);
+  }
+
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
+                              char[][][] array) {
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
+    mImageStack = new OffHeapPlanarStack(true, 0, NativeTypeEnum.UnsignedShort, 1, new long[]{array[0][0].length, array[0].length, array.length});
+    ArrayToStackConverters.copyArrayToStack(array, mImageStack);
+  }
+
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
+                              int[][][] array) {
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
+    mImageStack = new OffHeapPlanarStack(true, 0, NativeTypeEnum.Int, 1, new long[]{array[0][0].length, array[0].length, array.length});
+    ArrayToStackConverters.copyArrayToStack(array, mImageStack);
+  }
+
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
+                              long[][][] array) {
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
+    mImageStack = new OffHeapPlanarStack(true, 0, NativeTypeEnum.Long, 1, new long[]{array[0][0].length, array[0].length, array.length});
+    ArrayToStackConverters.copyArrayToStack(array, mImageStack);
+  }
+
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
+                              float[][][] array) {
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
+    mImageStack = new OffHeapPlanarStack(true, 0, NativeTypeEnum.Float, 1, new long[]{array[0][0].length, array[0].length, array.length});
+    ArrayToStackConverters.copyArrayToStack(array, mImageStack);
+  }
+
+  public ImageTypeConverter(ClearCLIJ pCLIJ,
+                              double[][][] array) {
+    mContext = pCLIJ.getClearCLContext();
+    mCLIJ = pCLIJ;
+    mImageStack = new OffHeapPlanarStack(true, 0, NativeTypeEnum.Double, 1, new long[]{array[0][0].length, array[0].length, array.length});
+    ArrayToStackConverters.copyArrayToStack(array, mImageStack);
+  }
+
+
   public ClearCLImage getClearCLImage()
   {
     if (mClearCLImage == null)
@@ -134,9 +191,9 @@ public class ImageTypeConverter<T extends RealType<T>>
     return mClearCLImage;
   }
 
-
   public StackInterface getOffHeapPlanarStack()
   {
+
     if (mImageStack == null)
     {
       if (mClearCLImage != null)
@@ -1042,6 +1099,59 @@ public class ImageTypeConverter<T extends RealType<T>>
   private RandomAccessibleInterval<T> convertBufferToRandomAccessibleInterval(ClearCLBuffer pBuffer) {
     ClearCLImage lCLImage = convertCLBufferToCLImage(pBuffer);
     return convertClearClImageToRandomAccessibleInterval(mContext, lCLImage);
+  }
+
+  public byte[][][] getByte3DArray() {
+    StackInterface stack = getOffHeapPlanarStack();
+    byte[][][] array = new byte[(int)stack.getDepth()][(int)stack.getHeight()][(int)stack.getWidth()];
+    StackToArrayConverters.copyStackToArray(stack, array);
+    return array;
+  }
+
+  public short[][][] getShort3DArray() {
+    StackInterface stack = getOffHeapPlanarStack();
+    short[][][] array = new short[(int)stack.getDepth()][(int)stack.getHeight()][(int)stack.getWidth()];
+    StackToArrayConverters.copyStackToArray(stack, array);
+    return array;
+  }
+
+  public char[][][] getChar3DArray() {
+    return getUnsignedShort3DArray();
+  }
+
+  public char[][][] getUnsignedShort3DArray() {
+    StackInterface stack = getOffHeapPlanarStack();
+    char[][][] array = new char[(int)stack.getDepth()][(int)stack.getHeight()][(int)stack.getWidth()];
+    StackToArrayConverters.copyStackToArray(stack, array);
+    return array;
+  }
+
+  public int[][][] getInt3DArray() {
+    StackInterface stack = getOffHeapPlanarStack();
+    int[][][] array = new int[(int)stack.getDepth()][(int)stack.getHeight()][(int)stack.getWidth()];
+    StackToArrayConverters.copyStackToArray(stack, array);
+    return array;
+  }
+
+  public long[][][] getLong3DArray() {
+    StackInterface stack = getOffHeapPlanarStack();
+    long[][][] array = new long[(int)stack.getDepth()][(int)stack.getHeight()][(int)stack.getWidth()];
+    StackToArrayConverters.copyStackToArray(stack, array);
+    return array;
+  }
+
+  public float[][][] getFloat3DArray() {
+    StackInterface stack = getOffHeapPlanarStack();
+    float[][][] array = new float[(int)stack.getDepth()][(int)stack.getHeight()][(int)stack.getWidth()];
+    StackToArrayConverters.copyStackToArray(stack, array);
+    return array;
+  }
+
+  public double[][][] getDouble3DArray() {
+      StackInterface stack = getOffHeapPlanarStack();
+      double[][][] array = new double[(int)stack.getDepth()][(int)stack.getHeight()][(int)stack.getWidth()];
+      StackToArrayConverters.copyStackToArray(stack, array);
+      return array;
   }
 
 

@@ -192,6 +192,34 @@ public class ClearCLIJ
     return new ImageTypeConverter<T>(this, pClearCLBuffer);
   }
 
+  public <T extends RealType<T>> ImageTypeConverter<T> converter(byte[][][] array) {
+    return new ImageTypeConverter<T>(this, array);
+  }
+
+  public <T extends RealType<T>> ImageTypeConverter<T> converter(char[][][] array) {
+    return new ImageTypeConverter<T>(this, array);
+  }
+
+  public <T extends RealType<T>> ImageTypeConverter<T> converter(short[][][] array) {
+    return new ImageTypeConverter<T>(this, array);
+  }
+
+  public <T extends RealType<T>> ImageTypeConverter<T> converter(int[][][] array) {
+    return new ImageTypeConverter<T>(this, array);
+  }
+
+  public <T extends RealType<T>> ImageTypeConverter<T> converter(long[][][] array) {
+    return new ImageTypeConverter<T>(this, array);
+  }
+
+  public <T extends RealType<T>> ImageTypeConverter<T> converter(float[][][] array) {
+    return new ImageTypeConverter<T>(this, array);
+  }
+
+  public <T extends RealType<T>> ImageTypeConverter<T> converter(double[][][] array) {
+    return new ImageTypeConverter<T>(this, array);
+  }
+
   public static String clinfo() {
     return CLInfo.clinfo();
   }

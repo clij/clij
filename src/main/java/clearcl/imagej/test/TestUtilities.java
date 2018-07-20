@@ -114,4 +114,34 @@ public class TestUtilities
     return true;
   }
 
+  public static boolean compareArrays(int[][][] a, int[][][] b) {
+    if (a.length != b.length) {
+      System.out.println("Array sizes differ");
+      return false;
+    }
+    for (int x = 0; x < a.length; x++) {
+      if (a[x].length != b[x].length) {
+        System.out.println("Array[" + x + "] sizes differ");
+        return false;
+      }
+      for (int y = 0; y < a[0].length; y++) {
+        if (a[x][y].length != b[x][y].length) {
+          System.out.println("Array[" + x + "][" + y + "] sizes differ");
+          return false;
+        }
+        for (int z = 0; z < a[0][0].length; z++) {
+          if(a[x][y][z] != b[x][y][z]) {
+            System.out.println("Pixels[" + x + "][" + y + "][" + z + "] differ: " +
+                    a[x][y][z] +
+                    " != " +
+                    b[x][y][z]
+            );
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
 }
