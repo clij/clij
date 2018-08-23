@@ -1069,7 +1069,7 @@ public class Kernels
 
     temporaryImage.close();
     for (int i = 0; i < temporaryImages.length; i++) {
-      clij.show(temporaryImages[i], "temp " + i);
+      //clij.show(temporaryImages[i], "temp " + i);
       temporaryImages[i].close();
     }
     //clij.show(clImageOut, "tenengrad out ");
