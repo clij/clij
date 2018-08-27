@@ -4,6 +4,8 @@ import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
 import clearcl.imagej.ClearCLIJ;
+import clearcl.imagej.kernels.Kernels;
+import clearcl.imagej.utilities.ImageTypeConverter;
 import clearcl.util.ElapsedTime;
 import clearcontrol.stack.OffHeapPlanarStack;
 import clearcontrol.stack.StackInterface;
@@ -277,10 +279,37 @@ public class ImageConverterTest
           RandomAccessibleInterval<UnsignedShortType> img = mCLIJ.converter(stack).getRandomAccessibleInterval();
           System.out.println("Type of result: " + img.getClass());
       });
-
-
-
-
   }
+
+    @Test
+    public void testConversionUnsignedShortStackToFloatCLImage() {
+        mCLIJ = ClearCLIJ.getInstance();
+
+        RandomAccessibleInterval<UnsignedShortType>
+            rai =
+            ArrayImgs.unsignedShorts(new long[] { 3, 3 });
+
+        RandomAccess<UnsignedShortType> ra = rai.randomAccess();
+        ra.setPosition(new int[] {1,1});
+        ra.get().set(4);
+
+        StackInterface stack = mCLIJ.converter(rai).getStack();
+
+        // test starts here
+
+        RandomAccessibleInterval<UnsignedShortType> rai2 = mCLIJ.converter(stack).getRandomAccessibleInterval();
+
+        ClearCLImage clImage = mCLIJ.createCLImage(stack.getDimensions(), ImageChannelDataType.Float);
+        ImageTypeConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);
+
+        ClearCLImage clImage2 = mCLIJ.createCLImage(stack.getDimensions(), ImageChannelDataType.UnsignedInt16);
+
+        Kernels.copy(mCLIJ, clImage, clImage2);
+
+        RandomAccessibleInterval<UnsignedShortType> rai3 = (RandomAccessibleInterval<UnsignedShortType>) mCLIJ.converter(clImage2).getRandomAccessibleInterval();
+
+        assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(rai2), Views.iterable(rai3)));
+
+    }
 
 }
