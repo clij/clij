@@ -944,14 +944,14 @@ public class Kernels
   public static boolean power(ClearCLIJ clij,
                               ClearCLImage src,
                               ClearCLImage dst,
-                              float power) {
+                              float exponent) {
 
       HashMap<String, Object> lParameters = new HashMap<>();
 
       lParameters.clear();
       lParameters.put("src", src);
       lParameters.put("dst", dst);
-      lParameters.put("power", power);
+      lParameters.put("exponent", exponent);
 
       return clij.execute(Kernels.class,
               "math.cl",
@@ -1038,6 +1038,10 @@ public class Kernels
   }
 
   public static boolean tenengradFusion(ClearCLIJ clij, ClearCLImage clImageOut, float[] blurSigmas, ClearCLImage... clImagesIn) {
+    return tenengradFusion(clij, clImageOut, blurSigmas, 1.0f, clImagesIn);
+  }
+
+  public static boolean tenengradFusion(ClearCLIJ clij, ClearCLImage clImageOut, float[] blurSigmas, float exponent, ClearCLImage... clImagesIn) {
     if (clImagesIn.length > 12) {
       System.out.println("Error: tenengradFusion does not support more than 5 stacks.");
       return false;
@@ -1056,6 +1060,10 @@ public class Kernels
     HashMap<String, Object> lFusionParameters = new HashMap<>();
 
     ClearCLImage temporaryImage = clij.createCLImage(clImagesIn[0]);
+    ClearCLImage temporaryImage2 = null;
+    if (Math.abs(exponent - 1.0f) > 0.0001) {
+      temporaryImage2 = clij.createCLImage(clImagesIn[0]);
+    }
 
     ClearCLImage[] temporaryImages = new ClearCLImage[clImagesIn.length];
     for (int i = 0; i < clImagesIn.length; i++) {
@@ -1069,11 +1077,12 @@ public class Kernels
               "tenengrad_weight_unnormalized",
               lParameters);
 
-      //clij.show(temporaryImage, "temp before gauss");
-
-      blurSeparable(clij, temporaryImage, temporaryImages[i], blurSigmas[0], blurSigmas[1], blurSigmas[2]);
-
-      //clij.show(temporaryImages[i], "temp after gauss");
+      if (temporaryImage2 != null) {
+        power(clij, temporaryImage, temporaryImage2, exponent);
+        blurSeparable(clij, temporaryImage2, temporaryImages[i], blurSigmas[0], blurSigmas[1], blurSigmas[2]);
+      } else {
+        blurSeparable(clij, temporaryImage, temporaryImages[i], blurSigmas[0], blurSigmas[1], blurSigmas[2]);
+      }
 
       lFusionParameters.put("src" + i, clImagesIn[i]);
       lFusionParameters.put("weight" + i, temporaryImages[i]);
