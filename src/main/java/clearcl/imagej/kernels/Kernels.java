@@ -958,7 +958,7 @@ public class Kernels
   }
 
   public static boolean splitStack(ClearCLIJ clij, ClearCLImage clImageIn, ClearCLImage... clImagesOut) {
-    if (clImagesOut.length > 5) {
+    if (clImagesOut.length > 12) {
       System.out.println("Error: splitStack does not support more than 5 stacks.");
       return false;
     }
