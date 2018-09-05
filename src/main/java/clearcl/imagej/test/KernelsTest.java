@@ -1461,6 +1461,31 @@ public class KernelsTest
 
   }
 
+  @Test public void power() {
+
+    // do operation with ImageJ
+    ImagePlus
+            squared =
+            new ImageCalculator().run("Multiply create",
+                    testImp2D1,
+                    testImp2D1);
+
+    // do operation with ClearCL
+    ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+    Kernels.power(clij, src, dst, 2.0f);
+
+    ImagePlus squaredCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(squared, squaredCL));
+
+    src.close();
+    dst.close();
+
+
+  }
+
   @Test public void set3d()
   {
     ClearCLImage imageCL = clij.converter(mask3d).getClearCLImage();

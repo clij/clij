@@ -253,3 +253,38 @@ __kernel void maxPixelwise_2d(DTYPE_IMAGE_IN_2D  src,
 }
 
 
+
+__kernel void power_2d(DTYPE_IMAGE_IN_2D  src,
+                              DTYPE_IMAGE_OUT_2D  dst,
+                              float power
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+
+  const int2 pos = (int2){x,y};
+
+  const DTYPE_OUT value = pow(READ_IMAGE(src, pos).x, power);
+
+  WRITE_IMAGE (dst, pos, value);
+}
+
+
+__kernel void power_3d(DTYPE_IMAGE_IN_3D src,
+                              DTYPE_IMAGE_OUT_3D dst,
+                              float power
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+  const int z = get_global_id(2);
+
+  const int4 pos = (int4){x,y,z,0};
+
+  const DTYPE_OUT value = pow(READ_IMAGE(src, pos).x, power);
+
+  WRITE_IMAGE (dst, pos, value);
+}
+
+
+

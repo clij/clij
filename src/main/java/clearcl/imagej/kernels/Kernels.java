@@ -941,6 +941,26 @@ public class Kernels
                         lParameters);
   }
 
+  public static boolean power(ClearCLIJ clij,
+                              ClearCLImage src,
+                              ClearCLImage dst,
+                              float power) {
+
+      HashMap<String, Object> lParameters = new HashMap<>();
+
+      lParameters.clear();
+      lParameters.put("src", src);
+      lParameters.put("dst", dst);
+      lParameters.put("power", power);
+
+      return clij.execute(Kernels.class,
+              "math.cl",
+              "power_" + src.getDimension() + "d",
+              lParameters);
+
+
+  }
+
   public static boolean set(ClearCLIJ clij,
                             ClearCLImage clImage,
                             float value)
