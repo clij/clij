@@ -1038,7 +1038,7 @@ public class Kernels
   }
 
   public static boolean tenengradFusion(ClearCLIJ clij, ClearCLImage clImageOut, float[] blurSigmas, ClearCLImage... clImagesIn) {
-    if (clImagesIn.length > 5) {
+    if (clImagesIn.length > 12) {
       System.out.println("Error: tenengradFusion does not support more than 5 stacks.");
       return false;
     }
