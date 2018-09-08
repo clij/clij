@@ -1549,6 +1549,10 @@ public class KernelsTest
     maskCL.close();
   }
 
+  @Test public void tenengradWeights() {
+    System.out.println("Todo: implement test for Tenengrad weights");
+  }
+
   @Test public void tenengradFusion() {
       System.out.println("Todo: implement test for Tenengrad fusion");
   }

@@ -1037,6 +1037,17 @@ public class Kernels
     return sum;
   }
 
+  public static boolean tenengradWeightsSliceWise(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage clImageIn) {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", clImageIn);
+    lParameters.put("dst", clImageOut);
+
+    return clij.execute(Kernels.class,
+            "tenengradFusion.cl",
+            "tenengrad_weight_unnormalized_slice_wise",
+            lParameters);
+  }
+
   public static boolean tenengradFusion(ClearCLIJ clij, ClearCLImage clImageOut, float[] blurSigmas, ClearCLImage... clImagesIn) {
     return tenengradFusion(clij, clImageOut, blurSigmas, 1.0f, clImagesIn);
   }

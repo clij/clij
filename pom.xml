@@ -14,7 +14,7 @@
 
 	<groupId>net.clearcontrol</groupId>
 	<artifactId>clearclij</artifactId>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 
 	<name>ClearCLIJ</name>
 	<description>ClearCLIJ</description>
