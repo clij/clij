@@ -1112,6 +1112,10 @@ public class Kernels
       //clij.show(temporaryImages[i], "temp " + i);
       temporaryImages[i].close();
     }
+
+    if (temporaryImage2 != null) {
+      temporaryImage2.close();
+    }
     //clij.show(clImageOut, "tenengrad out ");
 
     System.out.println("clij " + clImagesIn.length);
