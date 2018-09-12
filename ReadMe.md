@@ -59,8 +59,9 @@ instead of `float` or `int4` in order to make the OpenCL code type agnostic.
 ## Supported / tested platforms
 There is a rudimentary list of tests implemented in the clearcl.imagej.test package mainly testing conversion of types between CPU, GPU and JVM. Furthermore, there is one test applying an OpenCL kernel to images of type UnsignedShort. Following OpenCL devices were tested successfully:
 
-* GeForce 940MX (OpenCL 2.0, Win 10 64 bit, Apr 2018)
-* GeForce GTX 960M (OpenCL 1.2, Win 10 64 bit, Feb 2018)
+* AMD Radeon RX Vega 3 (OpenCL 2.0, Win 10 64 bit, Sept 2018)
+* Nvidia GeForce 940MX (OpenCL 2.0, Win 10 64 bit, Apr 2018)
+* NVidia GeForce GTX 960M (OpenCL 1.2, Win 10 64 bit, Feb 2018)
 * Intel(R) HD Graphics 620 (OpenCL 2.0, Fedora 27, Apr 2018)
 * Intel(R) HD Graphics 620 (OpenCL 1.2, Win 10 64bit, Apr 2018)
 * Intel(R) HD Graphics 530 (OpenCL 2.0, Win 10 64 bit, Feb 2018)
@@ -73,6 +74,7 @@ There is a rudimentary list of tests implemented in the clearcl.imagej.test pack
 
 Tests failed on these devices:
 
+* AMD Ryzen 3 (OpenCL 1.2, Win 10 64 bit, Sept 2018)
 * AMD A10-8700P Radeon R6, 10 Compute Cores 4C+6G (OpenCL 1.2, Win 10 64 bit, Feb 2018)
 * Intel(R) Core(TM) i7-4980HQ CPU @ 2.80GHz (OpenCL 1.2, macOS 10.12.6, Feb 2018)
 * Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz (OpenCL 1.2, Win 10 64 bit, Mar 2018)
