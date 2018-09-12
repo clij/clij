@@ -216,7 +216,8 @@ public class CLKernelExecutor
     }
 
     protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName, String pKernelCacheKey, Map<String, Object> pDefines) throws IOException {
-        if (this.mKernelMap.get(pKernelCacheKey) != null) {
+      this.mKernelMap.clear(); // temporary workaround to check if this map causes CL_OUT_OF_RESOURCES
+      if (this.mKernelMap.get(pKernelCacheKey) != null) {
             return (ClearCLKernel)this.mKernelMap.get(pKernelCacheKey);
         } else {
             this.mProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
