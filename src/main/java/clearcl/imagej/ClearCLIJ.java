@@ -238,16 +238,23 @@ public class ClearCLIJ
   }
 
   public ClearCLImage createCLImage(ClearCLImage pInputImage) {
-    return mClearCLContext.createImage(pInputImage);
+    ClearCLImage image = mClearCLContext.createImage(pInputImage);
+    System.out.println("Alloc: " + image.getWidth() + "/" + image.getHeight() + "/" + image.getDepth() + " " + image);
+
+    return image;
   }
 
   public ClearCLImage createCLImage(long[] dimensions, ImageChannelDataType pImageChannelType) {
 
-    return mClearCLContext.createImage(HostAccessType.ReadWrite,
+    ClearCLImage image = mClearCLContext.createImage(HostAccessType.ReadWrite,
             KernelAccessType.ReadWrite,
             ImageChannelOrder.R,
             pImageChannelType,
             dimensions);
+
+    System.out.println("Alloc: " + image.getWidth() + "/" + image.getHeight() + "/" + image.getDepth() + " " + image);
+
+    return image;
   }
 
   public ClearCLBuffer createCLBuffer(long[] dimensions, NativeTypeEnum pNativeType) {
@@ -296,5 +303,10 @@ public class ClearCLIJ
       sInstance = null;
     }
     return true;
+  }
+
+  public void release(ClearCLImage image) {
+    System.out.println("Release: " + image.getWidth() + "/" + image.getHeight() + "/" + image.getDepth() + " " + image);
+    image.close();
   }
 }

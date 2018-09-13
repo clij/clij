@@ -796,6 +796,9 @@ public class ImageTypeConverter<T extends RealType<T>>
                              lImageChannelType,
                              dimensions);
 
+    System.out.println("Alloc: " + lClearClImage.getWidth() + "/" + lClearClImage.getHeight() + "/" + lClearClImage.getDepth() + " " + lClearClImage);
+
+
     lClearClImage.readFrom(pImageStack.getContiguousMemory(), true);
     return lClearClImage;
   }
@@ -1080,6 +1083,10 @@ public class ImageTypeConverter<T extends RealType<T>>
                              ImageChannelOrder.R,
                              lImageChannelType,
                              dimensions);
+
+    System.out.println("Alloc: " + lClearClImage.getWidth() + "/" + lClearClImage.getHeight() + "/" + lClearClImage.getDepth() + " " + lClearClImage);
+
+
 
     copyRandomAccessibleIntervalToClearCLImage(pRandomAccessibleInterval, lClearClImage);
 

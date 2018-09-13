@@ -154,14 +154,14 @@ public class CLKernelExecutor
           lClearCLKernel.setArgument(key, mParameterMap.get(key));
         }
       }
-      try
-      {
+      //try
+      //{
         lClearCLKernel.run(pWaitToFinish);
-      } catch (Exception e) {
-        e.printStackTrace();
-
-        System.out.println(lClearCLKernel.getSourceCode());
-      }
+      //} catch (Exception e) {
+      //  e.printStackTrace();
+      //
+      //  System.out.println(lClearCLKernel.getSourceCode());
+      //}
     }
 
     return true;
@@ -237,7 +237,8 @@ public class CLKernelExecutor
 
             this.mProgram.addBuildOptionAllMathOpt();
             this.mProgram.buildAndLog();
-            System.out.println("status: " + mProgram.getBuildStatus());
+        System.out.println("program: " + mProgramFilename);
+        System.out.println("status: " + mProgram.getBuildStatus());
             System.out.println("LOG: " + this.mProgram.getBuildLog());
             ClearCLKernel lKernel = this.mProgram.createKernel(pKernelName);
             this.mKernelMap.put(pKernelName, lKernel);

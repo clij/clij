@@ -289,7 +289,8 @@ public class Kernels
             "gaussian_blur_sep_image3d",
             lParameters);
 
-    temp.close();
+    clij.release(temp);
+    //temp.close();
     return true;
   }
 
@@ -1033,7 +1034,9 @@ public class Kernels
       sum += ((RealType) cursor.next()).getRealFloat();
     }
 
-    clReducedImage.close();
+
+    clij.release(clReducedImage);
+    //clReducedImage.close();
     return sum;
   }
 
@@ -1098,6 +1101,12 @@ public class Kernels
       lFusionParameters.put("src" + i, clImagesIn[i]);
       lFusionParameters.put("weight" + i, temporaryImages[i]);
     }
+    clij.release(temporaryImage);
+    //temporaryImage.close();
+    if (temporaryImage2 != null) {
+      clij.release(temporaryImage2);
+      //temporaryImage2.close();
+    }
 
     lFusionParameters.put("dst", clImageOut);
     lFusionParameters.put("factor", (int) (clImagesIn[0].getWidth() / temporaryImages[0].getWidth()));
@@ -1107,15 +1116,13 @@ public class Kernels
             String.format("tenengrad_fusion_with_provided_weights_%d_images", clImagesIn.length),
             lFusionParameters);
 
-    temporaryImage.close();
     for (int i = 0; i < temporaryImages.length; i++) {
       //clij.show(temporaryImages[i], "temp " + i);
-      temporaryImages[i].close();
+
+      clij.release(temporaryImages[i]);
+      //temporaryImages[i].close();
     }
 
-    if (temporaryImage2 != null) {
-      temporaryImage2.close();
-    }
     //clij.show(clImageOut, "tenengrad out ");
 
     System.out.println("clij " + clImagesIn.length);
