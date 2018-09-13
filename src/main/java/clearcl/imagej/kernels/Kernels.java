@@ -2,12 +2,15 @@ package clearcl.imagej.kernels;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import clearcl.ClearCLKernel;
+import clearcl.ClearCLProgram;
 import clearcl.imagej.ClearCLIJ;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 
@@ -942,6 +945,28 @@ public class Kernels
                         lParameters);
   }
 
+  public static boolean nothing(ClearCLIJ clij,
+                                ClearCLImage src,
+                                ClearCLImage dst) {
+    try
+    {
+      ClearCLProgram program = clij.getClearCLContext().createProgram(Kernels.class, "nothing.cl");
+      program.build();
+      ClearCLKernel kernel = program.getKernel("nothing");
+      kernel.setArgument("src", src);
+      kernel.setArgument("dst", dst);
+      kernel.setGlobalSizes(dst.getDimensions());
+      kernel.run(true);
+      kernel.close();
+      program.close();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
   public static boolean power(ClearCLIJ clij,
                               ClearCLImage src,
                               ClearCLImage dst,

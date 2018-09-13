@@ -123,6 +123,7 @@ public class CLKernelExecutor
 
     try {
 
+      System.out.println("make kernel");
       if (lOpenCLDefines != null) {
         lClearCLKernel =
                 getKernel(mContext, mKernelName, lKernelCacheKey,
@@ -156,6 +157,7 @@ public class CLKernelExecutor
       }
       //try
       //{
+        System.out.println("Run kernel");
         lClearCLKernel.run(pWaitToFinish);
       //} catch (Exception e) {
       //  e.printStackTrace();
@@ -219,6 +221,7 @@ public class CLKernelExecutor
       if (this.mKernelMap.get(pKernelCacheKey) != null) {
             return (ClearCLKernel)this.mKernelMap.get(pKernelCacheKey);
         } else {
+            System.out.println("Program was: "+ mProgram);
             this.mProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
             if (pDefines != null) {
                 Iterator var4 = pDefines.entrySet().iterator();
@@ -246,9 +249,13 @@ public class CLKernelExecutor
         }
     }
 
+    static int count = 0;
+
   // temporary workaround to check if this map causes CL_OUT_OF_RESOURCES
   public void cleanup()
   {
+    count++;
+    System.out.println("destroy kernels " + mKernelMap.keySet().size() + "   " + count);
     for (String key : mKernelMap.keySet())
     {
       mKernelMap.get(key).close();
