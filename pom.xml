@@ -107,7 +107,7 @@
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
 			<artifactId>clearcontrol</artifactId>
-			<version>0.16.2</version>
+			<version>0.16.8</version>
 		</dependency>
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
