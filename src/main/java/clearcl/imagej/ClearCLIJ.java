@@ -139,6 +139,8 @@ public class ClearCLIJ
         }
         mCLKernelExecutor.setParameterMap(pParameterMap);
         result[0] = mCLKernelExecutor.enqueue(true);
+        mCLKernelExecutor.cleanup();
+        mCLKernelExecutor = null;
     });
     return result[0];
   }

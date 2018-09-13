@@ -1043,7 +1043,7 @@ public class Kernels
     lParameters.put("dst", clImageOut);
 
     return clij.execute(Kernels.class,
-            "tenengradFusion.cl",
+            "tenengradWeights.cl",
             "tenengrad_weight_unnormalized_slice_wise",
             lParameters);
   }
@@ -1084,7 +1084,7 @@ public class Kernels
       lParameters.put("dst", temporaryImage);
 
       clij.execute(Kernels.class,
-              "tenengradFusion.cl",
+              "tenengradWeights.cl",
               "tenengrad_weight_unnormalized",
               lParameters);
 

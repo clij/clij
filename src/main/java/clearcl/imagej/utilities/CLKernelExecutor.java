@@ -216,7 +216,6 @@ public class CLKernelExecutor
     }
 
     protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName, String pKernelCacheKey, Map<String, Object> pDefines) throws IOException {
-      this.mKernelMap.clear(); // temporary workaround to check if this map causes CL_OUT_OF_RESOURCES
       if (this.mKernelMap.get(pKernelCacheKey) != null) {
             return (ClearCLKernel)this.mKernelMap.get(pKernelCacheKey);
         } else {
@@ -238,11 +237,26 @@ public class CLKernelExecutor
 
             this.mProgram.addBuildOptionAllMathOpt();
             this.mProgram.buildAndLog();
-            //System.out.println("status: " + mProgram.getBuildStatus());
-            //System.out.println("LOG: " + this.mProgram.getBuildLog());
+            System.out.println("status: " + mProgram.getBuildStatus());
+            System.out.println("LOG: " + this.mProgram.getBuildLog());
             ClearCLKernel lKernel = this.mProgram.createKernel(pKernelName);
             this.mKernelMap.put(pKernelName, lKernel);
             return lKernel;
         }
     }
+
+  // temporary workaround to check if this map causes CL_OUT_OF_RESOURCES
+  public void cleanup()
+  {
+    for (String key : mKernelMap.keySet())
+    {
+      mKernelMap.get(key).close();
+    }
+    this.mKernelMap.clear();
+    if (mProgram != null)
+    {
+      mProgram.close();
+      mProgram = null;
+    }
+  }
 }
