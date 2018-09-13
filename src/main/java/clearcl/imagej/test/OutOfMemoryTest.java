@@ -90,43 +90,43 @@ public class OutOfMemoryTest
     int size = 25;
     ClearCLIJ clij = ClearCLIJ.getInstance();
 
-    ClearCLImage image1 = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
-    ClearCLImage image5 = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
-    ClearCLImage image7 = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
+    ClearCLImage inputA = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
+    ClearCLImage intpuB = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
+    ClearCLImage output = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
 
     for (int i = 0; i < 100; i++)
     {
       System.out.println(i);
-      ClearCLImage image3 = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
+      ClearCLImage intermediateResultA = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
 
-      ClearCLImage image2 = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
-      Kernels.nothing(clij, image1, image2);
-      Kernels.nothing(clij, image2, image1);
-      Kernels.nothing(clij, image1, image3);
-      clij.release(image2);
+      ClearCLImage tempA = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
+      Kernels.nothing(clij, inputA, tempA);
+      Kernels.nothing(clij, tempA, inputA);
+      Kernels.nothing(clij, inputA, intermediateResultA);
+      clij.release(tempA);
 
-      ClearCLImage image6 = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
+      ClearCLImage intermediateResultB = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
 
-      ClearCLImage image4 = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
-      Kernels.nothing(clij, image5, image4);
-      Kernels.nothing(clij, image4, image5);
-      Kernels.nothing(clij, image5, image6);
-      clij.release(image4);
+      ClearCLImage tempB = clij.createCLImage(new long[] { 1024, 1024, size }, ImageChannelDataType.Float);
+      Kernels.nothing(clij, intpuB, tempB);
+      Kernels.nothing(clij, tempB, intpuB);
+      Kernels.nothing(clij, intpuB, intermediateResultB);
+      clij.release(tempB);
 
-      Kernels.nothing(clij, image1, image3);
-      Kernels.nothing(clij, image5, image6);
+      Kernels.nothing(clij, inputA, intermediateResultA);
+      Kernels.nothing(clij, intpuB, intermediateResultB);
 
-      Kernels.nothing(clij, image3, image7);
-      Kernels.nothing(clij, image6, image7);
-      clij.release(image2);
-      clij.release(image6);
+      Kernels.nothing(clij, intermediateResultA, output);
+      Kernels.nothing(clij, intermediateResultB, output);
+      clij.release(tempA);
+      clij.release(intermediateResultB);
 
       //Kernels.tenengradFusion(clij, image1, new float[] { 15, 15, 5 }, image2, image3);
     }
 
-    clij.release(image1);
-    clij.release(image5);
-    clij.release(image7);
+    clij.release(inputA);
+    clij.release(intpuB);
+    clij.release(output);
   }
 
 
