@@ -118,7 +118,7 @@ public class OutOfMemoryTest
 
       Kernels.nothing(clij, intermediateResultA, output);
       Kernels.nothing(clij, intermediateResultB, output);
-      clij.release(tempA);
+      clij.release(intermediateResultA);
       clij.release(intermediateResultB);
 
       //Kernels.tenengradFusion(clij, image1, new float[] { 15, 15, 5 }, image2, image3);

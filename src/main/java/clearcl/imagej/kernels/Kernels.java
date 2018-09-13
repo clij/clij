@@ -1105,9 +1105,13 @@ public class Kernels
     }
 
     ClearCLImage[] temporaryImages = new ClearCLImage[clImagesIn.length];
+    for (int i = 0; i < clImagesIn.length; i++)
+    {
+      temporaryImages[i] = clij.createCLImage(clImagesIn[i]);
+    }
+
     for (int i = 0; i < clImagesIn.length; i++) {
       HashMap<String, Object> lParameters = new HashMap<>();
-      temporaryImages[i] = clij.createCLImage(clImagesIn[i]);
       lParameters.put("src", clImagesIn[i]);
       lParameters.put("dst", temporaryImage);
 
@@ -1126,12 +1130,6 @@ public class Kernels
       lFusionParameters.put("src" + i, clImagesIn[i]);
       lFusionParameters.put("weight" + i, temporaryImages[i]);
     }
-    clij.release(temporaryImage);
-    //temporaryImage.close();
-    if (temporaryImage2 != null) {
-      clij.release(temporaryImage2);
-      //temporaryImage2.close();
-    }
 
     lFusionParameters.put("dst", clImageOut);
     lFusionParameters.put("factor", (int) (clImagesIn[0].getWidth() / temporaryImages[0].getWidth()));
@@ -1147,6 +1145,14 @@ public class Kernels
       clij.release(temporaryImages[i]);
       //temporaryImages[i].close();
     }
+
+    //temporaryImage.close();
+    if (temporaryImage2 != null) {
+      clij.release(temporaryImage2);
+      //temporaryImage2.close();
+    }
+
+    clij.release(temporaryImage);
 
     //clij.show(clImageOut, "tenengrad out ");
 

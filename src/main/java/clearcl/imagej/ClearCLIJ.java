@@ -306,7 +306,7 @@ public class ClearCLIJ
   }
 
   public void release(ClearCLImage image) {
-    System.out.println("Release: " + image.getWidth() + "/" + image.getHeight() + "/" + image.getDepth() + " " + image);
+    System.out.println("Release: " + image.getPeerPointer() + " " + image.getWidth() + "/" + image.getHeight() + "/" + image.getDepth() + " " + image);
     image.close();
   }
 }
