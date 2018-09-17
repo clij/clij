@@ -210,36 +210,36 @@ public class CLKernelExecutor
   protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName, Map<String, Object> pDefines) throws IOException {
 
     String lProgramCacheKey = mAnchorClass.getCanonicalName() + " " + mProgramFilename + " " + mKernelName;
-    //for (String key : pDefines.keySet()) {
-    //    lProgramCacheKey = lProgramCacheKey + " " + mProgramFilename + " " + (key + " = " + pDefines.get(key));
-    //}
-
-    //System.out.println("Cache key:" + lProgramCacheKey);
-    //ClearCLProgram clProgram = this.mProgramCacheMap.get(lProgramCacheKey);
-    //if (clProgram == null) {
-    ClearCLProgram clProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
-    if (pDefines != null) {
-      Iterator var4 = pDefines.entrySet().iterator();
-
-      while(var4.hasNext()) {
-        Map.Entry<String, Object> entry = (Map.Entry)var4.next();
-        if (entry.getValue() instanceof String) {
-          clProgram.addDefine((String)entry.getKey(), (String)entry.getValue());
-        } else if (entry.getValue() instanceof Number) {
-          clProgram.addDefine((String)entry.getKey(), (Number)entry.getValue());
-        } else if (entry.getValue() == null) {
-          clProgram.addDefine((String)entry.getKey());
-        }
-      }
+    for (String key : pDefines.keySet()) {
+        lProgramCacheKey = lProgramCacheKey + " " + mProgramFilename + " " + (key + " = " + pDefines.get(key));
     }
 
-    clProgram.addBuildOptionAllMathOpt();
-    clProgram.buildAndLog();
-    //System.out.println("status: " + mProgram.getBuildStatus());
-    //System.out.println("LOG: " + this.mProgram.getBuildLog());
+    System.out.println("Cache key:" + lProgramCacheKey);
+    ClearCLProgram clProgram = this.mProgramCacheMap.get(lProgramCacheKey);
+    if (clProgram == null) {
+      clProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
+      if (pDefines != null) {
+        Iterator var4 = pDefines.entrySet().iterator();
 
-    //mProgramCacheMap.put(lProgramCacheKey, clProgram);
-    //}
+        while(var4.hasNext()) {
+          Map.Entry<String, Object> entry = (Map.Entry)var4.next();
+          if (entry.getValue() instanceof String) {
+            clProgram.addDefine((String)entry.getKey(), (String)entry.getValue());
+          } else if (entry.getValue() instanceof Number) {
+            clProgram.addDefine((String)entry.getKey(), (Number)entry.getValue());
+          } else if (entry.getValue() == null) {
+            clProgram.addDefine((String)entry.getKey());
+          }
+        }
+      }
+
+      clProgram.addBuildOptionAllMathOpt();
+      clProgram.buildAndLog();
+      //System.out.println("status: " + mProgram.getBuildStatus());
+      //System.out.println("LOG: " + this.mProgram.getBuildLog());
+
+      mProgramCacheMap.put(lProgramCacheKey, clProgram);
+    }
     ClearCLKernel lKernel = clProgram.createKernel(pKernelName);
     return lKernel;
   }
