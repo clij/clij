@@ -14,7 +14,7 @@
 
 	<groupId>net.clearcontrol</groupId>
 	<artifactId>clearclij</artifactId>
-	<version>0.3.11</version>
+	<version>0.3.12</version>
 
 	<name>ClearCLIJ</name>
 	<description>ClearCLIJ</description>
@@ -110,9 +110,9 @@
 			<version>0.16.8</version>
 		</dependency>
 		<dependency>
-			<groupId>net.clearcontrol</groupId>
+			<groupId>net.clearvolume</groupId>
 			<artifactId>clearcl</artifactId>
-			<version>0.6.2</version>
+			<version>0.5.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.scijava</groupId>
