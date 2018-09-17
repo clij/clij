@@ -63,7 +63,7 @@ There is a rudimentary list of tests implemented in the clearcl.imagej.test pack
 * Nvidia GeForce 940MX (OpenCL 2.0, Win 10 64 bit, Apr 2018)
 * NVidia GeForce GTX 960M (OpenCL 1.2, Win 10 64 bit, Feb 2018)
 * Intel(R) HD Graphics 620 (OpenCL 2.0, Fedora 27, Apr 2018)
-* Intel(R) HD Graphics 620 (OpenCL 1.2, Win 10 64bit, Apr 2018)
+* Intel(R) HD Graphics 620 (OpenCL 1.2, Win 10 64bit, Sept 2018)
 * Intel(R) HD Graphics 530 (OpenCL 2.0, Win 10 64 bit, Feb 2018)
 * Intel(R) HD Graphics 515 (OpenCL 2.0, Win 10 64 bit, Feb 2018)
 * Intel(R) HD Graphics 405 (OpenCL 1.2, Win 10 64 bit, Feb 2018)
