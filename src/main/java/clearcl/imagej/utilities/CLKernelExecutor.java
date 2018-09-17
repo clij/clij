@@ -21,9 +21,6 @@ import java.util.Map;
  */
 public class CLKernelExecutor
 {
-  private Class<?> mClass;
-  private ClearCLProgram mProgram;
-
   ClearCLContext mContext;
 
   Class mAnchorClass;
@@ -34,14 +31,14 @@ public class CLKernelExecutor
 
   private String mSourceFile;
 
-  private HashMap<String, ClearCLKernel> mKernelMap = new HashMap();
+  private HashMap<String, ClearCLProgram> mProgramCacheMap = new HashMap();
 
   public CLKernelExecutor(ClearCLContext pContext,
                           Class pAnchorClass,
                           String pProgramFilename,
                           String pKernelName,
                           long[] pGlobalSizes) throws
-                                                           IOException {
+          IOException {
     super();
     mProgramFilename = pProgramFilename;
     mAnchorClass = pAnchorClass;
@@ -114,10 +111,6 @@ public class CLKernelExecutor
       getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), false);
     }
 
-    String lKernelCacheKey = mKernelName;
-    for (String key : lOpenCLDefines.keySet()) {
-        lKernelCacheKey = lKernelCacheKey + " " + mProgramFilename + " " + (key + " = " + lOpenCLDefines.get(key));
-    }
 
     ClearCLKernel lClearCLKernel = null;
 
@@ -125,12 +118,10 @@ public class CLKernelExecutor
 
       if (lOpenCLDefines != null) {
         lClearCLKernel =
-                getKernel(mContext, mKernelName, lKernelCacheKey,
-                        lOpenCLDefines);
+                getKernel(mContext, mKernelName, lOpenCLDefines);
       } else {
         lClearCLKernel =
-                getKernel(mContext, mKernelName,
-                        lKernelCacheKey);
+                getKernel(mContext, mKernelName);
       }
 
     } catch (IOException e1) {
@@ -141,11 +132,11 @@ public class CLKernelExecutor
     if (lClearCLKernel != null)
     {
       if (mGlobalSizes != null) {
-          lClearCLKernel.setGlobalSizes(mGlobalSizes);
+        lClearCLKernel.setGlobalSizes(mGlobalSizes);
       } else if (lDstImage != null){
-          lClearCLKernel.setGlobalSizes(lDstImage.getDimensions());
+        lClearCLKernel.setGlobalSizes(lDstImage.getDimensions());
       } else if (lDstBuffer != null){
-          lClearCLKernel.setGlobalSizes(lDstBuffer.getDimensions());
+        lClearCLKernel.setGlobalSizes(lDstBuffer.getDimensions());
       }
       if (mParameterMap != null)
       {
@@ -162,6 +153,7 @@ public class CLKernelExecutor
 
         System.out.println(lClearCLKernel.getSourceCode());
       }
+      lClearCLKernel.close();
     }
 
     return true;
@@ -180,7 +172,7 @@ public class CLKernelExecutor
   }
 
   public void setGlobalSizes(long[] pGlobalSizes) {
-      mGlobalSizes = pGlobalSizes;
+    mGlobalSizes = pGlobalSizes;
   }
 
   public static void getOpenCLDefines(Map<String, Object> lDefines, ImageChannelDataType pDType, boolean pInput) {
@@ -211,38 +203,44 @@ public class CLKernelExecutor
     }
   }
 
-    protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName, String pKernelCacheKey) throws IOException {
-        return this.getKernel(pContext, pKernelName, pKernelCacheKey, (Map)null);
-    }
+  protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName) throws IOException {
+    return this.getKernel(pContext, pKernelName, (Map)null);
+  }
 
-    protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName, String pKernelCacheKey, Map<String, Object> pDefines) throws IOException {
-      this.mKernelMap.clear(); // temporary workaround to check if this map causes CL_OUT_OF_RESOURCES
-      if (this.mKernelMap.get(pKernelCacheKey) != null) {
-            return (ClearCLKernel)this.mKernelMap.get(pKernelCacheKey);
-        } else {
-            this.mProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
-            if (pDefines != null) {
-                Iterator var4 = pDefines.entrySet().iterator();
+  protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName, Map<String, Object> pDefines) throws IOException {
 
-                while(var4.hasNext()) {
-                    Map.Entry<String, Object> entry = (Map.Entry)var4.next();
-                    if (entry.getValue() instanceof String) {
-                        this.mProgram.addDefine((String)entry.getKey(), (String)entry.getValue());
-                    } else if (entry.getValue() instanceof Number) {
-                        this.mProgram.addDefine((String)entry.getKey(), (Number)entry.getValue());
-                    } else if (entry.getValue() == null) {
-                        this.mProgram.addDefine((String)entry.getKey());
-                    }
-                }
-            }
+    String lProgramCacheKey = mAnchorClass.getCanonicalName() + " " + mProgramFilename + " " + mKernelName;
+    //for (String key : pDefines.keySet()) {
+    //    lProgramCacheKey = lProgramCacheKey + " " + mProgramFilename + " " + (key + " = " + pDefines.get(key));
+    //}
 
-            this.mProgram.addBuildOptionAllMathOpt();
-            this.mProgram.buildAndLog();
-            //System.out.println("status: " + mProgram.getBuildStatus());
-            //System.out.println("LOG: " + this.mProgram.getBuildLog());
-            ClearCLKernel lKernel = this.mProgram.createKernel(pKernelName);
-            this.mKernelMap.put(pKernelName, lKernel);
-            return lKernel;
+    //System.out.println("Cache key:" + lProgramCacheKey);
+    //ClearCLProgram clProgram = this.mProgramCacheMap.get(lProgramCacheKey);
+    //if (clProgram == null) {
+    ClearCLProgram clProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
+    if (pDefines != null) {
+      Iterator var4 = pDefines.entrySet().iterator();
+
+      while(var4.hasNext()) {
+        Map.Entry<String, Object> entry = (Map.Entry)var4.next();
+        if (entry.getValue() instanceof String) {
+          clProgram.addDefine((String)entry.getKey(), (String)entry.getValue());
+        } else if (entry.getValue() instanceof Number) {
+          clProgram.addDefine((String)entry.getKey(), (Number)entry.getValue());
+        } else if (entry.getValue() == null) {
+          clProgram.addDefine((String)entry.getKey());
         }
+      }
     }
+
+    clProgram.addBuildOptionAllMathOpt();
+    clProgram.buildAndLog();
+    //System.out.println("status: " + mProgram.getBuildStatus());
+    //System.out.println("LOG: " + this.mProgram.getBuildLog());
+
+    //mProgramCacheMap.put(lProgramCacheKey, clProgram);
+    //}
+    ClearCLKernel lKernel = clProgram.createKernel(pKernelName);
+    return lKernel;
+  }
 }
