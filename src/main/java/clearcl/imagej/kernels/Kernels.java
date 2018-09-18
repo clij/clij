@@ -507,12 +507,29 @@ public class Kernels
     return detectOptima(clij, src, dst, radius, true);
   }
 
+
+  public static boolean detectMaximaSliceBySlice(ClearCLIJ clij,
+                                     ClearCLImage src,
+                                     ClearCLImage dst,
+                                     int radius)
+  {
+    return detectOptimaSliceBySlice(clij, src, dst, radius, true);
+  }
+
   public static boolean detectMinima(ClearCLIJ clij,
                                      ClearCLImage src,
                                      ClearCLImage dst,
                                      int radius)
   {
     return detectOptima(clij, src, dst, radius, false);
+  }
+
+  public static boolean detectMinimaSliceBySlice(ClearCLIJ clij,
+                                                 ClearCLImage src,
+                                                 ClearCLImage dst,
+                                                 int radius)
+  {
+    return detectOptimaSliceBySlice(clij, src, dst, radius, false);
   }
 
   public static boolean detectOptima(ClearCLIJ clij,
@@ -540,6 +557,31 @@ public class Kernels
                         parameters);
   }
 
+  public static boolean detectOptimaSliceBySlice(ClearCLIJ clij,
+                                     ClearCLImage src,
+                                     ClearCLImage dst,
+                                     int radius,
+                                     boolean detectMaxima)
+  {
+    HashMap<String, Object> parameters = new HashMap<>();
+    parameters.put("src", src);
+    parameters.put("dst", dst);
+    parameters.put("radius", radius);
+    parameters.put("detect_maxima", detectMaxima ? 1 : 0);
+    if (!checkDimensions(src.getDimension(), dst.getDimension()))
+    {
+      System.out.println(
+              "Error: number of dimensions don't match! (detectOptima)");
+      return false;
+    }
+    return clij.execute(Kernels.class,
+            "detection.cl",
+            "detect_local_optima_"
+                    + src.getDimension()
+                    + "d_slice_by_slice",
+            parameters);
+  }
+
   public static boolean differenceOfGaussian(ClearCLIJ clij,
                                              ClearCLImage src,
                                              ClearCLImage dst,
@@ -565,6 +607,33 @@ public class Kernels
                         + src.getDimension()
                         + "d_fast",
                         parameters);
+  }
+
+  public static boolean differenceOfGaussianSliceBySlice(ClearCLIJ clij,
+                                             ClearCLImage src,
+                                             ClearCLImage dst,
+                                             int radius,
+                                             float sigmaMinuend,
+                                             float sigmaSubtrahend)
+  {
+    HashMap<String, Object> parameters = new HashMap<>();
+    parameters.put("src", src);
+    parameters.put("dst", dst);
+    parameters.put("radius", radius);
+    parameters.put("sigma_minuend", sigmaMinuend);
+    parameters.put("sigma_subtrahend", sigmaSubtrahend);
+    if (!checkDimensions(src.getDimension(), dst.getDimension()))
+    {
+      System.out.println(
+              "Error: number of dimensions don't match! (copy)");
+      return false;
+    }
+    return clij.execute(Kernels.class,
+            "differenceOfGaussian.cl",
+            "subtract_convolved_images_"
+                    + src.getDimension()
+                    + "d_slice_by_slice",
+            parameters);
   }
 
   public static boolean dilate(ClearCLIJ clij,

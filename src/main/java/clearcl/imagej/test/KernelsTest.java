@@ -943,7 +943,23 @@ public class KernelsTest
     dst.close();
   }
 
-  @Test public void differenceOfGaussian2d()
+    @Test public void differenceOfGaussian3dSliceBySlice()
+    {
+        // do operation with ImageJ
+        System.out.println("Todo: implement test for DoG slice by slice");
+
+        // do operation with ClearCL
+        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+        Kernels.differenceOfGaussianSliceBySlice(clij, src, dst, 6, 1.1f, 3.3f);
+
+        src.close();
+        dst.close();
+    }
+
+
+    @Test public void differenceOfGaussian2d()
   {
     // do operation with ImageJ
     System.out.println("Todo: implement test for DoG");
