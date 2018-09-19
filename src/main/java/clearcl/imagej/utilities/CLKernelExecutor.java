@@ -209,9 +209,9 @@ public class CLKernelExecutor
 
   protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName, Map<String, Object> pDefines) throws IOException {
 
-    String lProgramCacheKey = mAnchorClass.getCanonicalName() + " " + mProgramFilename + " " + mKernelName;
+    String lProgramCacheKey = mAnchorClass.getCanonicalName() + " " + mProgramFilename;
     for (String key : pDefines.keySet()) {
-        lProgramCacheKey = lProgramCacheKey + " " + mProgramFilename + " " + (key + " = " + pDefines.get(key));
+        lProgramCacheKey = lProgramCacheKey + " " + (key + " = " + pDefines.get(key));
     }
 
     System.out.println("Cache key:" + lProgramCacheKey);
