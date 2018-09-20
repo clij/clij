@@ -11,7 +11,6 @@ import ij.gui.Roi;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
 import ij.plugin.ImageCalculator;
-import ij.plugin.Scaler;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
@@ -23,8 +22,6 @@ import net.imglib2.view.Views;
 import org.apache.commons.math3.stat.descriptive.summary.Sum;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -535,7 +532,7 @@ public class KernelsTest
     dst.close();
   }
 
-  @Test public void blurSlicewise()
+  @Test public void blurSliceBySlice()
   {
     // do operation with ImageJ
     ImagePlus gauss = new Duplicator().run(testFlyBrain3D);
@@ -545,7 +542,7 @@ public class KernelsTest
     ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
     ClearCLImage dst = clij.converter(testFlyBrain3D).getClearCLImage();
 
-    Kernels.blurSlicewise(clij, src, dst, 15, 15, 2, 2);
+    Kernels.blurSliceBySlice(clij, src, dst, 15, 15, 2, 2);
     ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
 
     assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
@@ -1595,11 +1592,11 @@ public class KernelsTest
     assertTrue(Kernels.sumPixels(clij, split2) > 0);
   }
 
-  @Test public void sumPixelsSliceWise() {
+  @Test public void sumPixelsSliceBySlice() {
     ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
 
     double sum = Kernels.sumPixels(clij, maskCL);
-    double[] sumSliceWise = Kernels.sumPixelsSliceWise(clij, maskCL);
+    double[] sumSliceWise = Kernels.sumPixelsSliceBySlice(clij, maskCL);
 
     assertTrue(sum == new Sum().evaluate(sumSliceWise));
 

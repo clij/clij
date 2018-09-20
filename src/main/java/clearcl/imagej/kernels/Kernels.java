@@ -293,8 +293,35 @@ public class Kernels
     return true;
   }
 
+    public static boolean blurSliceBySlice(ClearCLIJ pCLIJ,
+                                        ClearCLImage src,
+                                        ClearCLImage dst,
+                                        int nX,
+                                        int nY,
+                                        float sigmaX,
+                                        float sigmaY) {
+        return blurSlicewise( pCLIJ,
+            src,
+            dst,
+            nX,
+            nY,
+            sigmaX,
+            sigmaY);
+    }
 
-  public static boolean blurSlicewise(ClearCLIJ pCLIJ,
+    /**
+     * Deprecated: Will be replaced by blurSliceBySlice()
+     * @param pCLIJ
+     * @param src
+     * @param dst
+     * @param nX
+     * @param nY
+     * @param sigmaX
+     * @param sigmaY
+     * @return
+     */
+    @Deprecated
+    public static boolean blurSlicewise(ClearCLIJ pCLIJ,
                                       ClearCLImage src,
                                       ClearCLImage dst,
                                       int nX,
@@ -1135,7 +1162,8 @@ public class Kernels
     return sum;
   }
 
-  public static double[] sumPixelsSliceWise(ClearCLIJ clij, ClearCLImage input) {
+
+  public static double[] sumPixelsSliceBySlice(ClearCLIJ clij, ClearCLImage input) {
       if (input.getDimension() == 2) {
           return new double[]{sumPixels(clij, input)};
       }
@@ -1152,6 +1180,18 @@ public class Kernels
       return result;
   }
 
+  public static boolean tenengradWeightsSliceBySlice(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage clImageIn) {
+      return tenengradWeightsSliceWise(clij, clImageOut, clImageIn);
+  }
+
+    /**
+     * Deprecated: Will be replaced by tenengradWeightsSliceBySlice
+     * @param clij
+     * @param clImageOut
+     * @param clImageIn
+     * @return
+     */
+  @Deprecated
   public static boolean tenengradWeightsSliceWise(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage clImageIn) {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", clImageIn);
