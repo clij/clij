@@ -1129,8 +1129,11 @@ public class Kernels
       sum += ((RealType) cursor.next()).getRealFloat();
     }
 
-    clReducedImage.close();
+    if (clImage != clReducedImage) {
+      clReducedImage.close();
+    }
     return sum;
+
   }
 
   public static boolean tenengradWeightsSliceWise(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage clImageIn) {
