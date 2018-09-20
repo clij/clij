@@ -20,6 +20,7 @@ import net.imglib2.img.Img;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
+import org.apache.commons.math3.stat.descriptive.summary.Sum;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -1592,6 +1593,17 @@ public class KernelsTest
 
     assertTrue(Kernels.sumPixels(clij, split1) > 0);
     assertTrue(Kernels.sumPixels(clij, split2) > 0);
+  }
+
+  @Test public void sumPixelsSliceWise() {
+    ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+
+    double sum = Kernels.sumPixels(clij, maskCL);
+    double[] sumSliceWise = Kernels.sumPixelsSliceWise(clij, maskCL);
+
+    assertTrue(sum == new Sum().evaluate(sumSliceWise));
+
+    maskCL.close();
   }
 
   @Test public void sumPixels3d()

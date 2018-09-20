@@ -1133,7 +1133,23 @@ public class Kernels
       clReducedImage.close();
     }
     return sum;
+  }
 
+  public static double[] sumPixelsSliceWise(ClearCLIJ clij, ClearCLImage input) {
+      if (input.getDimension() == 2) {
+          return new double[]{sumPixels(clij, input)};
+      }
+
+      int numberOfImages = (int)input.getDepth();
+      double[] result = new double[numberOfImages];
+
+      ClearCLImage slice = clij.createCLImage(new long[]{input.getWidth(), input.getHeight()}, input.getChannelDataType());
+      for (int z = 0; z < numberOfImages; z++) {
+          copySlice(clij, input, slice, z);
+          result[z] = sumPixels(clij, slice);
+      }
+      slice.close();
+      return result;
   }
 
   public static boolean tenengradWeightsSliceWise(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage clImageIn) {
