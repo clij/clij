@@ -1508,6 +1508,24 @@ public class KernelsTest
     dst.close();
   }
 
+  @Test public void multiplySliceBySliceWithScalars() {
+
+      ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+      ClearCLImage multipliedBy2 = clij.createCLImage(maskCL);
+
+      float[] factors = new float[(int)maskCL.getDepth()];
+      for (int i = 0; i < factors.length; i++) {
+        factors[i] = 2;
+      }
+      Kernels.multiplySliceBySliceWithScalars(clij, maskCL, multipliedBy2, factors);
+
+      assertEquals(Kernels.sumPixels(clij, maskCL) * 2, Kernels.sumPixels(clij, multipliedBy2), 0.001);
+
+      multipliedBy2.close();
+      maskCL.close();
+
+  }
+
   @Test public void multiplyStackWithPlane()
   {
     // do operation with ImageJ

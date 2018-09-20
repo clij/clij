@@ -3,11 +3,15 @@ package clearcl.imagej.kernels;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.imagej.ClearCLIJ;
+import coremem.enums.NativeTypeEnum;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
+import java.nio.Buffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 
@@ -1045,6 +1049,30 @@ public class Kernels
                          "math.cl",
                          "multiplyScalar_" + src.getDimension() + "d",
                          lParameters);
+  }
+
+  public static boolean multiplySliceBySliceWithScalars(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float[] scalars) {
+    if (dst.getDimensions()[2] != scalars.length) {
+        System.out.println("Wrong number of scalars in array.");
+        return false;
+    }
+
+    FloatBuffer buffer = FloatBuffer.allocate(scalars.length);
+    buffer.put(scalars);
+
+    ClearCLBuffer clBuffer = clij.createCLBuffer(new long[]{scalars.length}, NativeTypeEnum.Float);
+    clBuffer.readFrom(buffer, true);
+    buffer.clear();
+
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("src", src);
+    map.put("scalars", clBuffer);
+    map.put("dst", dst);
+    boolean result = clij.execute(Kernels.class, "math.cl", "multiplySliceBySliceWithScalars", map);
+
+    clBuffer.close();
+
+    return result;
   }
 
   public static boolean multiplyStackWithPlane(ClearCLIJ clij,

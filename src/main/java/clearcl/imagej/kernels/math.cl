@@ -61,8 +61,6 @@ __kernel void dividePixelwise_2d(__read_only    image2d_t  src,
   WRITE_IMAGE (dst, pos, value);
 }
 
-
-
 __kernel void multiplyStackWithPlanePixelwise(__read_only    image3d_t  src,
                                  __read_only    image2d_t  src1,
                           __write_only    image3d_t  dst
@@ -79,6 +77,23 @@ __kernel void multiplyStackWithPlanePixelwise(__read_only    image3d_t  src,
 
   WRITE_IMAGE (dst, pos3d, value);
 }
+
+__kernel void multiplySliceBySliceWithScalars(__read_only    image3d_t  src,
+                                 __constant    float*  scalars,
+                          __write_only    image3d_t  dst
+                     )
+{
+  const int x = get_global_id(0);
+  const int y = get_global_id(1);
+  const int z = get_global_id(2);
+
+  const int4 pos3d = (int4){x,y,z,0};
+
+  const DTYPE_OUT value = READ_IMAGE(src, pos3d).x * scalars[z];
+
+  WRITE_IMAGE (dst, pos3d, value);
+}
+
 
 __kernel void addPixelwise_3d(__read_only    image3d_t  src,
                                  __read_only    image3d_t  src1,
