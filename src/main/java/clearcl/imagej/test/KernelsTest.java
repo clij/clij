@@ -1008,7 +1008,58 @@ public class KernelsTest
     maskCLafter.close();
   }
 
-  @Test public void downsample3d() throws InterruptedException {
+    @Test public void dividePixelwise3d()
+    {
+        // do operation with ImageJ
+        ImagePlus
+                divided =
+                new ImageCalculator().run("Divide create stack",
+                        testImp1,
+                        testImp2);
+
+        // do operation with ClearCL
+        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
+        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+        Kernels.dividePixelwise(clij, src, src1, dst);
+
+        ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+
+        assertTrue(TestUtilities.compareImages(divided, dividedCL));
+
+        src.close();
+        src1.close();
+        dst.close();
+    }
+
+    @Test public void dividePixelwise2d()
+    {
+        // do operation with ImageJ
+        ImagePlus
+                divided =
+                new ImageCalculator().run("Divide create",
+                        testImp2D1,
+                        testImp2D2);
+
+        // do operation with ClearCL
+        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
+        ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+        Kernels.dividePixelwise(clij, src, src1, dst);
+
+        ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+
+        assertTrue(TestUtilities.compareImages(divided, dividedCL));
+
+        src.close();
+        src1.close();
+        dst.close();
+    }
+
+
+    @Test public void downsample3d() throws InterruptedException {
     // do operation with ImageJ
     new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
     testImp1.show();

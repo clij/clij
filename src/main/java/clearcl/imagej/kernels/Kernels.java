@@ -657,6 +657,33 @@ public class Kernels
                         parameters);
   }
 
+  public static boolean dividePixelwise(ClearCLIJ pCLIJ,
+                                          ClearCLImage src,
+                                          ClearCLImage src1,
+                                          ClearCLImage dst)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("src1", src1);
+    lParameters.put("dst", dst);
+
+    if (!checkDimensions(src.getDimension(),
+            src1.getDimension(),
+            dst.getDimension()))
+    {
+      System.out.println(
+              "Error: number of dimensions don't match! (addScalar)");
+      return false;
+    }
+
+    return pCLIJ.execute(Kernels.class,
+            "math.cl",
+            "dividePixelwise_"
+                    + src.getDimension()
+                    + "d",
+            lParameters);
+  }
+
   public static boolean downsample(ClearCLIJ clij,
                                    ClearCLImage src,
                                    ClearCLImage dst,
