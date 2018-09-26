@@ -718,6 +718,9 @@ public class KernelsTest
 
     assertTrue(TestUtilities.compareImages(copy, copyFromCL));
 
+    // also test if putSliceInStack works
+    Kernels.copySlice(clij, dst, src, 2);
+
     src.close();
     dst.close();
   }
