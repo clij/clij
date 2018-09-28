@@ -6,15 +6,15 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.scijava</groupId>
-		<artifactId>pom-scijava</artifactId>
-		<version>23.1.1</version>
+		<groupId>net.clearcontrol</groupId>
+		<artifactId>ClearParentPom</artifactId>
+		<version>0.6.2</version>
 		<relativePath />
 	</parent>
 
 	<groupId>net.clearcontrol</groupId>
 	<artifactId>clearclij</artifactId>
-	<version>0.3.19</version>
+	<version>0.3.20</version>
 
 	<name>ClearCLIJ</name>
 	<description>ClearCLIJ</description>
@@ -82,37 +82,18 @@
 		<imagej.app.directory>C:/Programs/XWingFiji.app/</imagej.app.directory>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
-		</repository>
-
-		<repository>
-			<id>sqy</id>
-			<url>http://dl.bintray.com/sqeazy/maven</url>
-		</repository>
-		<repository>
-			<id>hslh</id>
-			<url>http://dl.bintray.com/haesleinhuepf/snapshots</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<dependency>
-			<groupId>net.coremem</groupId>
+			<groupId>net.clearcontrol</groupId>
 			<artifactId>coremem</artifactId>
-			<version>0.4.4</version>
 		</dependency>
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
 			<artifactId>clearcontrol</artifactId>
-			<version>0.16.8</version>
 		</dependency>
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
 			<artifactId>clearcl</artifactId>
-			<version>0.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.scijava</groupId>
@@ -142,32 +123,5 @@
 	</dependencies>
 
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.cl</include>
-                </includes>
-            </resource>
-            <!--<resource>-->
-            <!--<directory>src/main/java/resources</directory>-->
-            <!--<includes>-->
-            <!--<include>**/*.*</include>-->
-            <!--</includes>-->
-            <!--</resource>-->
-        </resources>
-    </build>
-
-
-	<distributionManagement>
-
-		<repository>
-			<id>bintray-haesleinhuepf-snapshots</id>
-			<name>bintray-snapshots</name>
-			<url>https://api.bintray.com/maven/haesleinhuepf/snapshots/clearclij/;publish=1</url>
-		</repository>
-
-	</distributionManagement>
 
 </project>
