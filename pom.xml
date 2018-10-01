@@ -8,13 +8,13 @@
 	<parent>
 		<groupId>net.clearcontrol</groupId>
 		<artifactId>ClearParentPom</artifactId>
-		<version>0.6.2</version>
+		<version>0.6.17</version>
 		<relativePath />
 	</parent>
 
 	<groupId>net.clearcontrol</groupId>
 	<artifactId>clearclij</artifactId>
-	<version>0.3.20</version>
+	<version>0.3.24</version>
 
 	<name>ClearCLIJ</name>
 	<description>ClearCLIJ</description>
@@ -122,6 +122,16 @@
 		</dependency>
 	</dependencies>
 
+
+	<distributionManagement>
+
+		<repository>
+			<id>bintray-haesleinhuepf-snapshots</id>
+			<name>bintray-snapshots</name>
+			<url>https://api.bintray.com/maven/haesleinhuepf/snapshots/clearclij/;publish=1</url>
+		</repository>
+
+	</distributionManagement>
 
 
 </project>
