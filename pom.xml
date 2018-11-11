@@ -122,6 +122,12 @@
 		</dependency>
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>hslh</id>
+			<url>http://dl.bintray.com/haesleinhuepf/snapshots</url>
+		</repository>
+	</repositories>
 
 	<distributionManagement>
 
