@@ -1026,6 +1026,26 @@ public class Kernels
                                ClearCLImage src,
                                ClearCLImage dst,
                                int kernelSizeX,
+                               int kernelSizeY) {
+    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "mean_image2d", lParameters);
+  }
+
+  public static boolean mean(ClearCLIJ clij,
+                               ClearCLImage src,
+                               ClearCLImage dst,
+                               int kernelSizeX,
                                int kernelSizeY,
                                int kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
@@ -1063,6 +1083,27 @@ public class Kernels
               "filtering.cl",
               "mean_slicewise_image3d", lParameters);
   }
+
+  public static boolean median(ClearCLIJ clij,
+                               ClearCLImage src,
+                               ClearCLImage dst,
+                               int kernelSizeX,
+                               int kernelSizeY) {
+    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "median_image2d", lParameters);
+  }
+
 
   public static boolean median(ClearCLIJ clij,
                                            ClearCLImage src,

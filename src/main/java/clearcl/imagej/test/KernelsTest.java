@@ -1451,6 +1451,30 @@ public class KernelsTest
     dst.close();
   }
 
+    @Test public void mean2d() {
+
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Mean...", "radius=1");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.mean(clij, inputCL, outputCl, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
 
     @Test public void mean3d() {
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
@@ -1506,6 +1530,32 @@ public class KernelsTest
       //new WaitForUserDialog("wait").show();
       assertTrue(TestUtilities.compareImages(reference, result, 0.001));
   }
+
+    @Test public void median2d() {
+
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Median...", "radius=1");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.median(clij, inputCL, outputCl, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
 
     @Test public void median3d() {
 
