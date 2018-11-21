@@ -1383,6 +1383,21 @@ public class Kernels
 
   }
 
+  public static boolean resliceBottom(ClearCLIJ clij,
+                                    ClearCLImage src,
+                                    ClearCLImage dst){
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+
+    return clij.execute(Kernels.class,
+            "reslicing.cl",
+            "reslice_bottom_3d",
+            lParameters);
+  }
+
   public static boolean resliceLeft(ClearCLIJ clij,
                                     ClearCLImage src,
                                     ClearCLImage dst){
@@ -1412,6 +1427,23 @@ public class Kernels
             "reslice_right_3d",
             lParameters);
   }
+
+
+  public static boolean resliceTop(ClearCLIJ clij,
+                                      ClearCLImage src,
+                                      ClearCLImage dst){
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+
+    return clij.execute(Kernels.class,
+            "reslicing.cl",
+            "reslice_top_3d",
+            lParameters);
+  }
+
 
   public static boolean set(ClearCLIJ clij,
                             ClearCLImage clImage,
