@@ -69,3 +69,22 @@ __kernel void mean_slicewise_image3d
   WRITE_IMAGE(dst, coord, res);
 }
 
+
+__kernel void median_slicewise_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int Nx, const int Ny
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+
+  int array_size = Nx * Ny;
+  DTYPE_OUT array[MAX_ARRAY_SIZE];
+
+  copySliceNeighborhoodToArray(src, array, coord, Nx, Ny);
+
+  DTYPE_OUT res = median(array, array_size);
+  WRITE_IMAGE(dst, coord, res);
+}
+

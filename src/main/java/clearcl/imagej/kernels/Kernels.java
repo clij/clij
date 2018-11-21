@@ -1042,6 +1042,25 @@ public class Kernels
               "mean_slicewise_image3d", lParameters);
   }
 
+  public static boolean medianSliceBySlice(ClearCLIJ clij,
+                                         ClearCLImage src,
+                                         ClearCLImage dst,
+                                         int kernelSizeX,
+                                         int kernelSizeY) {
+    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "median_slicewise_image3d", lParameters);
+  }
 
   public static boolean multiplyPixelwise(ClearCLIJ pCLIJ,
                                           ClearCLImage src,
