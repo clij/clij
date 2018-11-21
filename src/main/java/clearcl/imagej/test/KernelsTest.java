@@ -9,6 +9,7 @@ import clearcl.util.ElapsedTime;
 import ij.*;
 import ij.gui.NewImage;
 import ij.gui.Roi;
+import ij.gui.WaitForUserDialog;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
 import ij.plugin.ImageCalculator;
@@ -1448,6 +1449,31 @@ public class KernelsTest
 
     src.close();
     dst.close();
+  }
+
+  @Test public void meanSliceBySlice() {
+
+      ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+      IJ.run(testImage, "32-bit", "");
+
+      // do operation with ImageJ
+      ImagePlus reference = new Duplicator().run(testImage);
+      IJ.run(reference, "Mean...", "radius=1 stack");
+
+      // do operation with ClearCLIJ
+      ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+      ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+      Kernels.meanSliceBySlice(clij, inputCL, outputCl, 3, 3);
+
+      ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+      //new ImageJ();
+      //clij.show(inputCL, "inp");
+      //clij.show(reference, "ref");
+      //clij.show(result, "res");
+      //new WaitForUserDialog("wait").show();
+      assertTrue(TestUtilities.compareImages(reference, result, 0.001));
   }
 
   @Test public void multiplyPixelwise3d()

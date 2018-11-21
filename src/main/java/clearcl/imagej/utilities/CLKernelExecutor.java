@@ -29,6 +29,8 @@ public class CLKernelExecutor
   Map<String, Object> mParameterMap;
   long[] mGlobalSizes;
 
+  public static int MAX_ARRAY_SIZE = 125;
+
   private String mSourceFile;
 
   private HashMap<String, ClearCLProgram> mProgramCacheMap = new HashMap();
@@ -98,6 +100,7 @@ public class CLKernelExecutor
 
 
     Map<String, Object> lOpenCLDefines  = new HashMap();
+    lOpenCLDefines.put("MAX_ARRAY_SIZE", MAX_ARRAY_SIZE);
     if (lSrcImage != null) {
       getOpenCLDefines(lOpenCLDefines, lSrcImage.getChannelDataType(), true);
     }
