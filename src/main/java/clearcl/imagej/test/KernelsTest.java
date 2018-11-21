@@ -1451,6 +1451,37 @@ public class KernelsTest
     dst.close();
   }
 
+
+    @Test public void mean3d() {
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Mean 3D...", "x=1 y=1 z=1");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.mean(clij, inputCL, outputCl, 3, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        // ignore edges and first and last slice
+        reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+        result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+        reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+        result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
   @Test public void meanSliceBySlice() {
 
       ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
@@ -1475,6 +1506,38 @@ public class KernelsTest
       //new WaitForUserDialog("wait").show();
       assertTrue(TestUtilities.compareImages(reference, result, 0.001));
   }
+
+    @Test public void median3d() {
+
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Median 3D...", "x=1 y=1 z=1");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.median(clij, inputCL, outputCl, 3, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        // ignore edges and first and last slice
+        reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+        result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+        reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+        result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
 
     @Test public void medianSliceBySlice() {
 
