@@ -1956,6 +1956,35 @@ public class KernelsTest
 
   }
 
+    @Test public void resliceRight() throws InterruptedException {
+
+        testFlyBrain3D.setRoi(0,0, 256,128);
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+        testImage.show();
+
+        // do operation with ImageJ
+        new ImageJ();
+        IJ.run(testImage, "Reslice [/]...", "output=1.0 start=Right avoid");
+        Thread.sleep(500);
+        ImagePlus reference = IJ.getImage();
+
+        // do operation with OpenCL
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCL = clij.createCLImage(new long[] {inputCL.getHeight(), inputCL.getDepth(), inputCL.getWidth()}, inputCL.getChannelDataType());
+
+        Kernels.resliceRight(clij, inputCL, outputCL);
+
+        ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+
+        assertTrue(TestUtilities.compareImages(reference, result));
+
+
+    }
+
   @Test public void set3d()
   {
     ClearCLImage imageCL = clij.converter(mask3d).getClearCLImage();
