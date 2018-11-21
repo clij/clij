@@ -2,6 +2,7 @@ package clearcl.imagej.test;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import clearcl.enums.ImageChannelDataType;
 import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
 import clearcl.util.ElapsedTime;
@@ -16,7 +17,9 @@ import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
+import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 import org.apache.commons.math3.stat.descriptive.summary.Sum;
@@ -1107,6 +1110,30 @@ public class KernelsTest
 
     assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
 
+  }
+
+  @Test public void downsampleSliceBySliceMedian() {
+      Img<ByteType> testImgBig = ArrayImgs.bytes(new byte[]{
+              1, 2, 4, 4,
+              2, 3, 4, 4,
+              0, 1, 0, 0,
+              1, 2, 0, 0
+      }, new long[]{4,4,1});
+
+      Img<ByteType> testImgSmall = ArrayImgs.bytes(new byte[]{
+              2, 4,
+              1, 0
+      }, new long[]{2,2,1});
+
+      ClearCLImage inputCL = clij.converter(testImgBig).getClearCLImage();
+      ClearCLImage outputCL = clij.createCLImage(new long[]{2,2,1}, ImageChannelDataType.SignedInt8);
+
+      Kernels.downsampleSliceBySliceHalfMedian(clij, inputCL, outputCL);
+
+      ImagePlus result = clij.converter(outputCL).getImagePlus();
+      ImagePlus reference = clij.converter(testImgSmall).getImagePlus();
+
+      assertTrue(TestUtilities.compareImages(result, reference));
   }
 
   @Test public void erode3d()

@@ -759,6 +759,17 @@ public class Kernels
                         parameters);
   }
 
+  public static boolean downsampleSliceBySliceHalfMedian(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
+
+    HashMap<String, Object> parameters = new HashMap<>();
+    parameters.put("src", src);
+    parameters.put("dst", dst);
+    return clij.execute(Kernels.class,
+            "downsampling.cl",
+            "downsample_xy_by_half_median",
+            parameters);
+  }
+
   public static boolean erode(ClearCLIJ clij,
                               ClearCLImage src,
                               ClearCLImage dst)
