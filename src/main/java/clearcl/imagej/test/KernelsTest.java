@@ -1398,6 +1398,86 @@ public class KernelsTest
 
   }
 
+    @Test public void maximum2d() {
+
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Maximum...", "radius=1");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.maximum(clij, inputCL, outputCl, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
+    @Test public void maximum3d() {
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Maximum 3D...", "x=1 y=1 z=1");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.maximum(clij, inputCL, outputCl, 3, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        // ignore edges and first and last slice
+        reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+        result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+        reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+        result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
+    @Test public void maximumSliceBySlice() {
+
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Maximum...", "radius=1 stack");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.maximumSliceBySlice(clij, inputCL, outputCl, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
   @Test public void maxPixelWise3d() {
     System.out.println("Todo: implement test for maxPixelwise3d");
   }
@@ -1603,6 +1683,86 @@ public class KernelsTest
         ClearCLImage outputCl = clij.createCLImage(inputCL);
 
         Kernels.medianSliceBySlice(clij, inputCL, outputCl, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
+    @Test public void minimum2d() {
+
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Minimum...", "radius=1");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.minimum(clij, inputCL, outputCl, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
+    @Test public void minimum3d() {
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Minimum 3D...", "x=1 y=1 z=1");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.minimum(clij, inputCL, outputCl, 3, 3, 3);
+
+        ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+        // ignore edges and first and last slice
+        reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+        result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+        reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+        result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+        //new ImageJ();
+        //clij.show(inputCL, "inp");
+        //clij.show(reference, "ref");
+        //clij.show(result, "res");
+        //new WaitForUserDialog("wait").show();
+        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
+    @Test public void minimumSliceBySlice() {
+
+        ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+        IJ.run(testImage, "32-bit", "");
+
+        // do operation with ImageJ
+        ImagePlus reference = new Duplicator().run(testImage);
+        IJ.run(reference, "Minimum...", "radius=1 stack");
+
+        // do operation with ClearCLIJ
+        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+        Kernels.minimumSliceBySlice(clij, inputCL, outputCl, 3, 3);
 
         ImagePlus result = clij.converter(outputCl).getImagePlus();
 

@@ -958,6 +958,69 @@ public class Kernels
                          lParameters);
   }
 
+  public static boolean maximum(ClearCLIJ clij,
+                                ClearCLImage src,
+                                ClearCLImage dst,
+                                int kernelSizeX,
+                                int kernelSizeY) {
+    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "maximum_image2d", lParameters);
+  }
+
+  public static boolean maximum(ClearCLIJ clij,
+                                ClearCLImage src,
+                                ClearCLImage dst,
+                                int kernelSizeX,
+                                int kernelSizeY,
+                                int kernelSizeZ) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+    lParameters.put("Nz", kernelSizeZ);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "maximum_image3d", lParameters);
+  }
+
+  public static boolean maximumSliceBySlice(ClearCLIJ clij,
+                                            ClearCLImage src,
+                                            ClearCLImage dst,
+                                            int kernelSizeX,
+                                            int kernelSizeY) {
+    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "maximum_slicewise_image3d", lParameters);
+  }
+
+
   public static boolean maxPixelwise(ClearCLIJ pCLIJ,
                                      ClearCLImage src,
                                      ClearCLImage src1,
@@ -1146,6 +1209,68 @@ public class Kernels
     return clij.execute(Kernels.class,
             "filtering.cl",
             "median_slicewise_image3d", lParameters);
+  }
+
+  public static boolean minimum(ClearCLIJ clij,
+                             ClearCLImage src,
+                             ClearCLImage dst,
+                             int kernelSizeX,
+                             int kernelSizeY) {
+    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "minimum_image2d", lParameters);
+  }
+
+  public static boolean minimum(ClearCLIJ clij,
+                             ClearCLImage src,
+                             ClearCLImage dst,
+                             int kernelSizeX,
+                             int kernelSizeY,
+                             int kernelSizeZ) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+    lParameters.put("Nz", kernelSizeZ);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "minimum_image3d", lParameters);
+  }
+
+  public static boolean minimumSliceBySlice(ClearCLIJ clij,
+                                         ClearCLImage src,
+                                         ClearCLImage dst,
+                                         int kernelSizeX,
+                                         int kernelSizeY) {
+    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+      System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
+      return false;
+    }
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+    lParameters.put("Nx", kernelSizeX);
+    lParameters.put("Ny", kernelSizeY);
+
+    return clij.execute(Kernels.class,
+            "filtering.cl",
+            "minimum_slicewise_image3d", lParameters);
   }
 
   public static boolean multiplyPixelwise(ClearCLIJ pCLIJ,

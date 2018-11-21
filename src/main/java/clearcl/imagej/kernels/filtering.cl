@@ -95,6 +95,28 @@ inline DTYPE_OUT median(DTYPE_OUT array[], int array_size)
 }
 
 
+inline DTYPE_OUT minimum(DTYPE_OUT array[], int array_size)
+{
+    DTYPE_OUT minimum = array[0];
+    for(int i = 1; i < array_size; i++) {
+        if (minimum > array[i]) {
+            minimum = array[i];
+        }
+    }
+    return minimum;
+}
+
+inline DTYPE_OUT maximum(DTYPE_OUT array[], int array_size)
+{
+    DTYPE_OUT maximum = array[0];
+    for(int i = 1; i < array_size; i++) {
+        if (maximum < array[i]) {
+            maximum = array[i];
+        }
+    }
+    return maximum;
+}
+
 __kernel void mean_slicewise_image3d
 (
   DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
@@ -205,3 +227,112 @@ __kernel void median_slicewise_image3d
   WRITE_IMAGE(dst, coord, res);
 }
 
+__kernel void minimum_slicewise_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int Nx, const int Ny
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+
+  int array_size = Nx * Ny;
+  DTYPE_OUT array[MAX_ARRAY_SIZE];
+
+  copySliceNeighborhoodToArray(src, array, coord, Nx, Ny);
+
+  DTYPE_OUT res = minimum(array, array_size);
+  WRITE_IMAGE(dst, coord, res);
+}
+
+
+__kernel void minimum_image2d
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int Nx, const int Ny
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1);
+  const int2 coord = (int2)(i,j);
+
+  int array_size = Nx * Ny;
+  DTYPE_OUT array[MAX_ARRAY_SIZE];
+
+  copyNeighborhoodToArray(src, array, coord, Nx, Ny);
+
+  DTYPE_OUT res = minimum(array, array_size);
+  WRITE_IMAGE(dst, coord, res);
+}
+
+__kernel void minimum_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int Nx, const int Ny, const int Nz
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+
+  int array_size = Nx * Ny * Nz;
+  DTYPE_OUT array[MAX_ARRAY_SIZE];
+
+  array_size = copyVolumeNeighborhoodToArray(src, array, coord, Nx, Ny, Nz);
+
+  DTYPE_OUT res = minimum(array, array_size);
+  WRITE_IMAGE(dst, coord, res);
+}
+
+__kernel void maximum_slicewise_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int Nx, const int Ny
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+
+  int array_size = Nx * Ny;
+  DTYPE_OUT array[MAX_ARRAY_SIZE];
+
+  copySliceNeighborhoodToArray(src, array, coord, Nx, Ny);
+
+  DTYPE_OUT res = maximum(array, array_size);
+  WRITE_IMAGE(dst, coord, res);
+}
+
+
+__kernel void maximum_image2d
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int Nx, const int Ny
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1);
+  const int2 coord = (int2)(i,j);
+
+  int array_size = Nx * Ny;
+  DTYPE_OUT array[MAX_ARRAY_SIZE];
+
+  copyNeighborhoodToArray(src, array, coord, Nx, Ny);
+
+  DTYPE_OUT res = maximum(array, array_size);
+  WRITE_IMAGE(dst, coord, res);
+}
+
+__kernel void maximum_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int Nx, const int Ny, const int Nz
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+
+  int array_size = Nx * Ny * Nz;
+  DTYPE_OUT array[MAX_ARRAY_SIZE];
+
+  array_size = copyVolumeNeighborhoodToArray(src, array, coord, Nx, Ny, Nz);
+
+  DTYPE_OUT res = maximum(array, array_size);
+  WRITE_IMAGE(dst, coord, res);
+}
