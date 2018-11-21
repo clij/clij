@@ -214,7 +214,7 @@ public class CLKernelExecutor
         lProgramCacheKey = lProgramCacheKey + " " + (key + " = " + pDefines.get(key));
     }
 
-    System.out.println("Cache key:" + lProgramCacheKey);
+    //System.out.println("Cache key:" + lProgramCacheKey);
     ClearCLProgram clProgram = this.mProgramCacheMap.get(lProgramCacheKey);
     if (clProgram == null) {
       clProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});

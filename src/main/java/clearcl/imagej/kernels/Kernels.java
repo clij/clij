@@ -252,7 +252,7 @@ public class Kernels
       if (n[d] % 2 != 1) {
         n[d] = n[d] + 1;
       }
-      System.out.println("n[" + d + "] = " + n[d]);
+      //System.out.println("n[" + d + "] = " + n[d]);
     }
 
 
