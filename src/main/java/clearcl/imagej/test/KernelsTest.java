@@ -1,5 +1,6 @@
 package clearcl.imagej.test;
 
+import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
@@ -26,6 +27,8 @@ import net.imglib2.view.Views;
 import org.apache.commons.math3.stat.descriptive.summary.Sum;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.awt.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -1920,6 +1923,35 @@ public class KernelsTest
 
     src.close();
     dst.close();
+
+
+  }
+
+  @Test public void resliceLeft() throws InterruptedException {
+
+      testFlyBrain3D.setRoi(0,0, 256,128);
+      ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+      testImage.show();
+
+      // do operation with ImageJ
+      new ImageJ();
+      IJ.run(testImage, "Reslice [/]...", "output=1.0 start=Left avoid");
+      Thread.sleep(500);
+      ImagePlus reference = IJ.getImage();
+
+      // do operation with OpenCL
+      ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+      ClearCLImage outputCL = clij.createCLImage(new long[] {inputCL.getHeight(), inputCL.getDepth(), inputCL.getWidth()}, inputCL.getChannelDataType());
+
+      Kernels.resliceLeft(clij, inputCL, outputCL);
+
+      ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+      //clij.show(reference, "ref");
+      //clij.show(result, "res");
+      //new WaitForUserDialog("wait").show();
+
+      assertTrue(TestUtilities.compareImages(reference, result));
 
 
   }

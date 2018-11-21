@@ -1383,6 +1383,21 @@ public class Kernels
 
   }
 
+  public static boolean resliceLeft(ClearCLIJ clij,
+                                    ClearCLImage src,
+                                    ClearCLImage dst){
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+
+    return clij.execute(Kernels.class,
+            "reslicing.cl",
+            "reslice_left_3d",
+            lParameters);
+  }
+
   public static boolean set(ClearCLIJ clij,
                             ClearCLImage clImage,
                             float value)
