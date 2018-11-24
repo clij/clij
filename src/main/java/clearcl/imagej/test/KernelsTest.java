@@ -1803,6 +1803,33 @@ public class KernelsTest
     dst.close();
   }
 
+  @Test public void multiplyPixelwise3dathousandtimes() {
+    // do operation with ImageJ
+    ImagePlus
+            multiplied =
+            new ImageCalculator().run("Multiply create stack",
+                    testImp1,
+                    testImp2);
+
+    for (int i = 0; i < 1000; i++) {
+      // do operation with ClearCL
+      ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+      ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
+      ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+      Kernels.multiplyPixelwise(clij, src, src1, dst);
+
+      ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
+
+      src.close();
+      src1.close();
+      dst.close();
+    }
+  }
+
+
   @Test public void multiplyPixelwise2d()
   {
     // do operation with ImageJ

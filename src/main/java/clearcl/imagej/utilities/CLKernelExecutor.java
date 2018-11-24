@@ -148,6 +148,8 @@ public class CLKernelExecutor
           lClearCLKernel.setArgument(key, mParameterMap.get(key));
         }
       }
+      System.out.println("Exec " + mProgramCacheMap.size());
+
       try
       {
         lClearCLKernel.run(pWaitToFinish);
@@ -156,6 +158,8 @@ public class CLKernelExecutor
 
         System.out.println(lClearCLKernel.getSourceCode());
       }
+
+      System.out.println("Ret");
       lClearCLKernel.close();
     }
 
