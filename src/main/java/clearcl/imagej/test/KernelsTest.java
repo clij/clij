@@ -26,6 +26,7 @@ import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 import org.apache.commons.math3.stat.descriptive.summary.Sum;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
@@ -117,9 +118,9 @@ public class KernelsTest
 
     if (clij == null)
     {
-      clij = //ClearCLIJ.getInstance();
+      clij = ClearCLIJ.getInstance();
           //new ClearCLIJ("Geforce");
-      new ClearCLIJ("HD");
+      //new ClearCLIJ("HD");
     }
   }
 
@@ -142,8 +143,27 @@ public class KernelsTest
     ClearCLImage abs = clij.createCLImage(input);
     Kernels.absolute(clij, input, abs);
     assertEquals(1, Kernels.sumPixels(clij, abs),  0.0001);
+  }
 
+  @Test public void absolute3d_Buffer() {
+    ImagePlus negativeImp =
+            NewImage.createImage("",
+                    2,
+                    2,
+                    2,
+                    32,
+                    NewImage.FILL_BLACK);
 
+    ImageProcessor ip1 = negativeImp.getProcessor();
+    ip1.setf(0, 1, -1.0f);
+
+    ClearCLBuffer input = clij.converter(negativeImp).getClearCLBuffer();
+
+    assertEquals(-1, Kernels.sumPixels(clij, input), 0.0001);
+
+    ClearCLBuffer abs = clij.createCLBuffer(input);
+    Kernels.absolute(clij, input, abs);
+    assertEquals(1, Kernels.sumPixels(clij, abs),  0.0001);
   }
 
   @Test public void addPixelwise3d()
@@ -156,6 +176,28 @@ public class KernelsTest
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
     ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
     ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+    Kernels.addPixelwise(clij, src, src1, dst);
+    ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+
+  @Test public void addPixelwise3d_Buffers()
+  {
+    // do operation with ImageJ
+    ImageCalculator ic = new ImageCalculator();
+    ImagePlus sumImp = ic.run("Add create stack", testImp1, testImp2);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
 
     Kernels.addPixelwise(clij, src, src1, dst);
     ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
@@ -188,6 +230,27 @@ public class KernelsTest
     dst.close();
   }
 
+  @Test public void addPixelwise2d_Buffer()
+  {
+    // do operation with ImageJ
+    ImageCalculator ic = new ImageCalculator();
+    ImagePlus sumImp = ic.run("Add create", testImp2D1, testImp2D2);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer src1 = clij.converter(testImp2D2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp2D1).getClearCLBuffer();
+
+    Kernels.addPixelwise(clij, src, src1, dst);
+    ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
   @Test public void addScalar3d()
   {
     // do operation with ImageJ
@@ -197,6 +260,26 @@ public class KernelsTest
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
     ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+
+    Kernels.addScalar(clij, src, dst, 1);
+    ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(added, addedFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+
+  @Test public void addScalar3d_Buffer()
+  {
+    // do operation with ImageJ
+    ImagePlus added = new Duplicator().run(testImp1);
+    IJ.run(added, "Add...", "value=1 stack");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
 
     Kernels.addScalar(clij, src, dst, 1);
     ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
@@ -226,6 +309,25 @@ public class KernelsTest
     dst.close();
   }
 
+  @Test public void addScalar2d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus added = new Duplicator().run(testImp2D1);
+    IJ.run(added, "Add...", "value=1");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp2D1).getClearCLBuffer();
+
+    Kernels.addScalar(clij, src, dst, 1);
+    ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(added, addedFromCL));
+
+    src.close();
+    dst.close();
+  }
+
   @Test public void addWeightedPixelwise3d()
   {
     float factor1 = 3f;
@@ -235,16 +337,16 @@ public class KernelsTest
     ImagePlus testImp1copy = new Duplicator().run(testImp1);
     ImagePlus testImp2copy = new Duplicator().run(testImp2);
     IJ.run(testImp1copy,
-           "Multiply...",
-           "value=" + factor1 + " stack");
+            "Multiply...",
+            "value=" + factor1 + " stack");
     IJ.run(testImp2copy,
-           "Multiply...",
-           "value=" + factor2 + " stack");
+            "Multiply...",
+            "value=" + factor2 + " stack");
 
     ImageCalculator ic = new ImageCalculator();
     ImagePlus
-        sumImp =
-        ic.run("Add create stack", testImp1copy, testImp2copy);
+            sumImp =
+            ic.run("Add create stack", testImp1copy, testImp2copy);
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
@@ -252,11 +354,51 @@ public class KernelsTest
     ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
 
     Kernels.addWeightedPixelwise(clij,
-                                 src,
-                                 src1,
-                                 dst,
-                                 factor1,
-                                 factor2);
+            src,
+            src1,
+            dst,
+            factor1,
+            factor2);
+    ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+  @Test public void addWeightedPixelwise3d_Buffers()
+  {
+    float factor1 = 3f;
+    float factor2 = 2;
+
+    // do operation with ImageJ
+    ImagePlus testImp1copy = new Duplicator().run(testImp1);
+    ImagePlus testImp2copy = new Duplicator().run(testImp2);
+    IJ.run(testImp1copy,
+            "Multiply...",
+            "value=" + factor1 + " stack");
+    IJ.run(testImp2copy,
+            "Multiply...",
+            "value=" + factor2 + " stack");
+
+    ImageCalculator ic = new ImageCalculator();
+    ImagePlus
+            sumImp =
+            ic.run("Add create stack", testImp1copy, testImp2copy);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+
+    Kernels.addWeightedPixelwise(clij,
+            src,
+            src1,
+            dst,
+            factor1,
+            factor2);
     ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
 
     assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
@@ -293,6 +435,42 @@ public class KernelsTest
                                  dst,
                                  factor1,
                                  factor2);
+    ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+  @Test public void addWeightedPixelwise2d_Buffers()
+  {
+    float factor1 = 3f;
+    float factor2 = 2;
+
+    // do operation with ImageJ
+    ImagePlus testImp1copy = new Duplicator().run(testImp2D1);
+    ImagePlus testImp2copy = new Duplicator().run(testImp2D2);
+    IJ.run(testImp1copy, "Multiply...", "value=" + factor1 + " ");
+    IJ.run(testImp2copy, "Multiply...", "value=" + factor2 + " ");
+
+    ImageCalculator ic = new ImageCalculator();
+    ImagePlus
+            sumImp =
+            ic.run("Add create ", testImp1copy, testImp2copy);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer src1 = clij.converter(testImp2D2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp2D1).getClearCLBuffer();
+
+    Kernels.addWeightedPixelwise(clij,
+            src,
+            src1,
+            dst,
+            factor1,
+            factor2);
     ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
 
     assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
@@ -371,10 +549,99 @@ public class KernelsTest
     dst_arg.close();
   }
 
+  @Test public void argMaxProjection_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus
+            maxProjection =
+            NewImage.createShortImage("",
+                    testImp1.getWidth(),
+                    testImp2.getHeight(),
+                    1,
+                    NewImage.FILL_BLACK);
+    ImageProcessor ipMax = maxProjection.getProcessor();
+    ImagePlus
+            argMaxProjection =
+            NewImage.createShortImage("",
+                    testImp1.getWidth(),
+                    testImp2.getHeight(),
+                    1,
+                    NewImage.FILL_BLACK);
+    ImageProcessor ipArgMax = maxProjection.getProcessor();
+
+    ImagePlus testImp1copy = new Duplicator().run(testImp1);
+    for (int z = 0; z < testImp1copy.getNSlices(); z++)
+    {
+      testImp1copy.setZ(z + 1);
+      ImageProcessor ip = testImp1copy.getProcessor();
+      for (int x = 0; x < testImp1copy.getWidth(); x++)
+      {
+        for (int y = 0; y < testImp1copy.getHeight(); y++)
+        {
+          float value = ip.getf(x, y);
+          if (value > ipMax.getf(x, y))
+          {
+            ipMax.setf(x, y, value);
+            ipArgMax.setf(x, y, z);
+          }
+        }
+      }
+    }
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer
+            dst =
+            clij.createCLBuffer(new long[] { src.getWidth(),
+                            src.getHeight() },
+                    src.getNativeType());
+    ClearCLBuffer
+            dst_arg =
+            clij.createCLBuffer(new long[] { src.getWidth(),
+                            src.getHeight() },
+                    src.getNativeType());
+
+    Kernels.argMaxProjection(clij, src, dst, dst_arg);
+
+    ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
+    ImagePlus
+            argMaxProjectionCL =
+            clij.converter(dst_arg).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(maxProjection,
+            maxProjectionCL));
+    assertTrue(TestUtilities.compareImages(argMaxProjection,
+            argMaxProjectionCL));
+
+    src.close();
+    dst.close();
+    dst_arg.close();
+  }
+
   @Test public void binaryAnd2d() {
     ClearCLImage clearCLImage = clij.converter(mask2d).getClearCLImage();
     ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
     ClearCLImage clearCLImageAnd  = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+    Kernels.binaryAnd(clij, clearCLImage, clearCLImageNot, clearCLImageAnd);
+
+    long numberOfPixelsAnd = (long)Kernels.sumPixels(clij, clearCLImageAnd);
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixelsAnd, 0);
+    assertEquals(clearCLImage.getWidth() * clearCLImage.getHeight() * clearCLImage.getDepth(), numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+    clearCLImageAnd.close();
+  }
+
+  @Test public void binaryAnd2d_Buffers() {
+    ClearCLBuffer clearCLImage = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
+    ClearCLBuffer clearCLImageAnd  = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
     Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
     Kernels.binaryAnd(clij, clearCLImage, clearCLImageNot, clearCLImageAnd);
@@ -411,6 +678,27 @@ public class KernelsTest
     clearCLImageAnd.close();
   }
 
+
+  @Test public void binaryAnd3d_Buffers() {
+    ClearCLBuffer clearCLImage = clij.converter(mask3d).getClearCLBuffer();
+    ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
+    ClearCLBuffer clearCLImageAnd  = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+    Kernels.binaryAnd(clij, clearCLImage, clearCLImageNot, clearCLImageAnd);
+
+    long numberOfPixelsAnd = (long)Kernels.sumPixels(clij, clearCLImageAnd);
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixelsAnd, 0);
+    assertEquals(clearCLImage.getWidth() * clearCLImage.getHeight() * clearCLImage.getDepth(), numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+    clearCLImageAnd.close();
+  }
+
   @Test public void binaryNot2d() throws InterruptedException {
     ClearCLImage clearCLImage = clij.converter(mask2d).getClearCLImage();
     ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
@@ -427,9 +715,42 @@ public class KernelsTest
     clearCLImageNot.close();
   }
 
+  @Test public void binaryNot2d_Buffers() throws InterruptedException {
+    ClearCLBuffer clearCLImage = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+
+    long numberOfPixels = clearCLImage.getWidth() * clearCLImage.getHeight() * clearCLImage.getDepth();
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+  }
+
   @Test public void binaryNot3d() throws InterruptedException {
     ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
     ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+
+    long numberOfPixels = clearCLImage.getWidth() * clearCLImage.getHeight() * clearCLImage.getDepth();
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+  }
+
+
+  @Test public void binaryNot3d_Buffers() throws InterruptedException {
+    ClearCLBuffer clearCLImage = clij.converter(mask3d).getClearCLBuffer();
+    ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
     Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
 
@@ -462,10 +783,48 @@ public class KernelsTest
     clearCLImageOr.close();
   }
 
+  @Test public void binaryOr2d_Buffer() {
+    ClearCLBuffer clearCLImage = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
+    ClearCLBuffer clearCLImageOr  = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+    Kernels.binaryOr(clij, clearCLImage, clearCLImageNot, clearCLImageOr);
+
+    long numberOfPixels = (long)Kernels.sumPixels(clij, clearCLImageOr);
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+    clearCLImageOr.close();
+  }
+
   @Test public void binaryOr3d() {
     ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
     ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
     ClearCLImage clearCLImageOr  = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
+
+    Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
+    Kernels.binaryOr(clij, clearCLImage, clearCLImageNot, clearCLImageOr);
+
+    long numberOfPixels = (long)Kernels.sumPixels(clij, clearCLImageOr);
+
+    long numberOfPositivePixels = (long)Kernels.sumPixels(clij, clearCLImage);
+    long numberOfNegativePixels = (long)Kernels.sumPixels(clij, clearCLImageNot);
+
+    assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
+    clearCLImage.close();
+    clearCLImageNot.close();
+    clearCLImageOr.close();
+  }
+
+  @Test public void binaryOr3d_Buffers() {
+    ClearCLBuffer clearCLImage = clij.converter(mask3d).getClearCLBuffer();
+    ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
+    ClearCLBuffer clearCLImageOr  = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
     Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
     Kernels.binaryOr(clij, clearCLImage, clearCLImageNot, clearCLImageOr);
@@ -1777,6 +2136,30 @@ public class KernelsTest
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
 
+  @Test public void minimumSliceBySlice_Buffer() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Minimum...", "radius=1 stack");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.minimumSliceBySlice(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
 
     @Test public void multiplyPixelwise3d()
   {
@@ -1803,6 +2186,7 @@ public class KernelsTest
     dst.close();
   }
 
+  @Ignore
   @Test public void multiplyPixelwise3dathousandtimes() {
     // do operation with ImageJ
     ImagePlus
@@ -1829,6 +2213,31 @@ public class KernelsTest
     }
   }
 
+  @Test public void multiplyPixelwise3d_Buffers() {
+    // do operation with ImageJ
+    ImagePlus
+            multiplied =
+            new ImageCalculator().run("Multiply create stack",
+                    testImp1,
+                    testImp2);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+
+    Kernels.multiplyPixelwise(clij, src, src1, dst);
+
+    ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+  @Ignore
   @Test public void multiplyPixelwise3d_Buffers_athousandtimes() {
     // do operation with ImageJ
     ImagePlus
@@ -1869,6 +2278,31 @@ public class KernelsTest
     ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
     ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
     ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+
+    Kernels.multiplyPixelwise(clij, src, src1, dst);
+
+    ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+  @Test public void multiplyPixelwise2d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus
+            multiplied =
+            new ImageCalculator().run("Multiply create",
+                    testImp2D1,
+                    testImp2D2);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer src1 = clij.converter(testImp2D2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp2D1).getClearCLBuffer();
 
     Kernels.multiplyPixelwise(clij, src, src1, dst);
 

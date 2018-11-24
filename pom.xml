@@ -8,13 +8,13 @@
 	<parent>
 		<groupId>net.clearcontrol</groupId>
 		<artifactId>ClearParentPom</artifactId>
-		<version>0.6.27</version>
+		<version>0.6.28</version>
 		<relativePath />
 	</parent>
 
 	<groupId>net.clearcontrol</groupId>
 	<artifactId>clearclij</artifactId>
-	<version>0.3.26</version>
+	<version>0.3.27</version>
 
 	<name>ClearCLIJ</name>
 	<description>ClearCLIJ</description>

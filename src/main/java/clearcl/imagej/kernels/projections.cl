@@ -1,13 +1,13 @@
 __kernel void sum_project_3d_2d(
-    write_only image2d_t dst,
-    read_only image3d_t src
+    DTYPE_IMAGE_OUT_2D dst,
+    DTYPE_IMAGE_IN_3D src
 ) {
   const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
 
   const int x = get_global_id(0);
   const int y = get_global_id(1);
   DTYPE_IN sum = 0;
-  for(int z = 0; z < get_image_depth(src); z++)
+  for(int z = 0; z < GET_IMAGE_IN_DEPTH(src); z++)
   {
     sum = sum + READ_IMAGE(src,sampler,(int4)(x,y,z,0)).x;
   }
@@ -16,9 +16,9 @@ __kernel void sum_project_3d_2d(
 
 
 __kernel void arg_max_project_3d_2d(
-    write_only image2d_t dst_max,
-    write_only image2d_t dst_arg,
-    read_only image3d_t src
+    DTYPE_IMAGE_OUT_2D dst_max,
+    DTYPE_IMAGE_OUT_2D dst_arg,
+    DTYPE_IMAGE_IN_3D src
 ) {
   const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
 
@@ -26,7 +26,7 @@ __kernel void arg_max_project_3d_2d(
   const int y = get_global_id(1);
   DTYPE_IN max = 0;
   int max_pos = 0;
-  for(int z = 0; z < get_image_depth(src); z++)
+  for(int z = 0; z < GET_IMAGE_IN_DEPTH(src); z++)
   {
     DTYPE_IN value = READ_IMAGE(src,sampler,(int4)(x,y,z,0)).x;
     if (value > max || z == 0) {
@@ -39,15 +39,15 @@ __kernel void arg_max_project_3d_2d(
 }
 
 __kernel void max_project_3d_2d(
-    write_only image2d_t dst_max,
-    read_only image3d_t src
+    DTYPE_IMAGE_OUT_2D dst_max,
+    DTYPE_IMAGE_IN_3D src
 ) {
   const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
 
   const int x = get_global_id(0);
   const int y = get_global_id(1);
   DTYPE_IN max = 0;
-  for(int z = 0; z < get_image_depth(src); z++)
+  for(int z = 0; z < GET_IMAGE_IN_DEPTH(src); z++)
   {
     DTYPE_IN value = READ_IMAGE(src,sampler,(int4)(x,y,z,0)).x;
     if (value > max || z == 0) {
@@ -58,8 +58,8 @@ __kernel void max_project_3d_2d(
 }
 
 __kernel void max_project_dim_select_3d_2d(
-    write_only image2d_t dst_max,
-    read_only image3d_t src,
+    DTYPE_IMAGE_OUT_2D dst_max,
+    DTYPE_IMAGE_IN_3D src,
     int projection_x,
     int projection_y,
     int projection_dim
@@ -87,11 +87,11 @@ __kernel void max_project_dim_select_3d_2d(
 
   int max_d = 0;
   if (projection_dim == 0) {
-    max_d = get_image_width(src);
+    max_d = GET_IMAGE_IN_WIDTH(src);
   } else if (projection_dim == 1) {
-    max_d = get_image_height(src);
+    max_d = GET_IMAGE_IN_HEIGHT(src);
   } else {
-    max_d = get_image_depth(src);
+    max_d = GET_IMAGE_IN_DEPTH(src);
   }
 
   DTYPE_IN max = 0;
