@@ -1300,6 +1300,34 @@ public class Kernels
                          lParameters);
   }
 
+  public static boolean multiplyPixelwise(ClearCLIJ pCLIJ,
+                                          ClearCLBuffer src,
+                                          ClearCLBuffer src1,
+                                          ClearCLBuffer dst)
+  {
+    HashMap<String, Object> lParameters = new HashMap<>();
+    lParameters.put("src", src);
+    lParameters.put("src1", src1);
+    lParameters.put("dst", dst);
+
+    if (!checkDimensions(src.getDimension(),
+            src1.getDimension(),
+            dst.getDimension()))
+    {
+      System.out.println(
+              "Error: number of dimensions don't match! (addScalar)");
+      return false;
+    }
+
+    return pCLIJ.execute(Kernels.class,
+            "math.cl",
+            "multiplyPixelwise_"
+                    + src.getDimension()
+                    + "d",
+            lParameters);
+  }
+
+
   public static boolean multiplyScalar(ClearCLIJ pCLIJ,
                                        ClearCLImage src,
                                        ClearCLImage dst,

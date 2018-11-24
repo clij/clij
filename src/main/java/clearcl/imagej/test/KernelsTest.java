@@ -1829,6 +1829,32 @@ public class KernelsTest
     }
   }
 
+  @Test public void multiplyPixelwise3d_Buffers_athousandtimes() {
+    // do operation with ImageJ
+    ImagePlus
+            multiplied =
+            new ImageCalculator().run("Multiply create stack",
+                    testImp1,
+                    testImp2);
+
+    for (int i = 0; i < 1000; i++) {
+      // do operation with ClearCL
+      ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+      ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
+      ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+
+      Kernels.multiplyPixelwise(clij, src, src1, dst);
+
+      ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+
+      assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
+
+      src.close();
+      src1.close();
+      dst.close();
+    }
+  }
+
 
   @Test public void multiplyPixelwise2d()
   {
