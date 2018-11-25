@@ -3,6 +3,8 @@ package clearcl.imagej;
 import clearcl.*;
 import clearcl.backend.ClearCLBackendInterface;
 import clearcl.backend.ClearCLBackends;
+import clearcl.backend.javacl.ClearCLBackendJavaCL;
+import clearcl.backend.jocl.ClearCLBackendJOCL;
 import clearcl.enums.*;
 import clearcl.imagej.utilities.CLInfo;
 import clearcl.imagej.utilities.CLKernelExecutor;
@@ -73,8 +75,7 @@ public class ClearCLIJ
   public ClearCLIJ(String pDeviceNameMustContain)
   {
     ClearCLBackendInterface
-        lClearCLBackend = ClearCLBackends.getBestBackend();
-        //new ClearCLBackendJavaCL();
+            lClearCLBackend = new ClearCLBackendJOCL();
 
     mClearCL = new ClearCL(lClearCLBackend);
     if (pDeviceNameMustContain == null)
@@ -248,6 +249,10 @@ public class ClearCLIJ
             dimensions);
   }
 
+  public ClearCLBuffer createCLBuffer(ClearCLBuffer inputCL) {
+    return createCLBuffer(inputCL.getDimensions(), inputCL.getNativeType());
+  }
+
   public ClearCLBuffer createCLBuffer(long[] dimensions, NativeTypeEnum pNativeType) {
     return mClearCLContext.createBuffer(
             MemAllocMode.Best,
@@ -295,4 +300,6 @@ public class ClearCLIJ
     }
     return true;
   }
+
+
 }

@@ -108,10 +108,10 @@ public class CLKernelExecutor
       getOpenCLDefines(lOpenCLDefines, lDstImage.getChannelDataType(), false);
     }
     if (lSrcBuffer != null) {
-      getOpenCLDefines(lOpenCLDefines, lSrcBuffer.getNativeType(), lSrcBuffer.getWidth(), lSrcBuffer.getHeight(), true);
+      getOpenCLDefines(lOpenCLDefines, lSrcBuffer.getNativeType(), lSrcBuffer.getWidth(), lSrcBuffer.getHeight(), lSrcBuffer.getDepth(), true);
     }
     if (lDstBuffer != null) {
-      getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), false);
+      getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), lDstBuffer.getDepth(), false);
     }
 
 
@@ -148,6 +148,8 @@ public class CLKernelExecutor
           lClearCLKernel.setArgument(key, mParameterMap.get(key));
         }
       }
+      System.out.println("Exec " + mProgramCacheMap.size());
+
       try
       {
         lClearCLKernel.run(pWaitToFinish);
@@ -156,6 +158,8 @@ public class CLKernelExecutor
 
         System.out.println(lClearCLKernel.getSourceCode());
       }
+
+      System.out.println("Ret");
       lClearCLKernel.close();
     }
 
@@ -184,25 +188,37 @@ public class CLKernelExecutor
       lDefines.put("DTYPE_IMAGE_IN_2D", "__read_only image2d_t");
       lDefines.put("DTYPE_IN", pDType.isInteger() ? "ushort" : "float");
       lDefines.put("READ_IMAGE", pDType.isInteger() ? "read_imageui" : "read_imagef");
+      lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_image_width(a)");
+      lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_image_height(a)");
+      lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_image_depth(a)");
     } else {
       lDefines.put("DTYPE_IMAGE_OUT_3D", "__write_only image3d_t");
       lDefines.put("DTYPE_IMAGE_OUT_2D", "__write_only image2d_t");
       lDefines.put("DTYPE_OUT", pDType.isInteger() ? "ushort" : "float");
       lDefines.put("WRITE_IMAGE", pDType.isInteger() ? "write_imageui" : "write_imagef");
+      lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_image_width(a)");
+      lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_image_height(a)");
+      lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_image_depth(a)");
     }
   }
 
-  public static void getOpenCLDefines(Map<String, Object> lDefines, NativeTypeEnum pDType, long width, long height, boolean pInput) {
+  public static void getOpenCLDefines(Map<String, Object> lDefines, NativeTypeEnum pDType, long width, long height, long depth, boolean pInput) {
     if (pInput) {
       lDefines.put("DTYPE_IMAGE_IN_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_IN_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IN", pDType != NativeTypeEnum.Float ? "ushort" : "float");
       lDefines.put("READ_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "read_bufferui(" + width + "," + height + ",a,b,c)" : "read_bufferf(" + width + "," + height + ",a,b,c)");
+      lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer_width(" + width + ",a)");
+      lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer_height(" + height + ",a)");
+      lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer_depth(" + depth + ",a)");
     } else {
       lDefines.put("DTYPE_IMAGE_OUT_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_OUT_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_OUT", pDType != NativeTypeEnum.Float ? "ushort" : "float");
       lDefines.put("WRITE_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "write_bufferui(" + width + "," + height + ",a,b,c)" : "write_bufferf(" + width + "," + height + ",a,b,c)");
+      lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer_width(" + width + ",a)");
+      lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer_height(" + height + ",a)");
+      lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer_depth(" + depth + ",a)");
     }
   }
 

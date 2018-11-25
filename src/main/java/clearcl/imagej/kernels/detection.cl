@@ -1,7 +1,7 @@
 
 __kernel void detect_local_optima_3d(
-        __read_only image3d_t src,
-        __write_only image3d_t dst,
+        DTYPE_IMAGE_IN_3D src,
+        DTYPE_IMAGE_OUT_3D dst,
         __private int radius,
         __private int detect_maxima
 )
@@ -38,16 +38,16 @@ __kernel void detect_local_optima_3d(
 
     if ((detect_maxima == 1 && pos.x == localMaxPos.x && pos.y == localMaxPos.y && pos.z == localMaxPos.z) ||
         (pos.x == localMinPos.x && pos.y == localMinPos.y && pos.z == localMinPos.z)) {
-        WRITE_IMAGE(dst, pos, (DTYPE_OUT){1, 0, 0, 0});
+        WRITE_IMAGE(dst, pos, ((DTYPE_OUT){1, 0, 0, 0}));
     } else {
-        WRITE_IMAGE(dst, pos, (DTYPE_OUT){0, 0, 0, 0});
+        WRITE_IMAGE(dst, pos, ((DTYPE_OUT){0, 0, 0, 0}));
     }
 }
 
 
 __kernel void detect_local_optima_3d_slice_by_slice(
-        __read_only image3d_t src,
-        __write_only image3d_t dst,
+        DTYPE_IMAGE_IN_3D src,
+        DTYPE_IMAGE_OUT_3D dst,
         __private int radius,
         __private int detect_maxima
 )
@@ -82,15 +82,15 @@ __kernel void detect_local_optima_3d_slice_by_slice(
 
     if ((detect_maxima == 1 && pos.x == localMaxPos.x && pos.y == localMaxPos.y) ||
         (pos.x == localMinPos.x && pos.y == localMinPos.y)) {
-        WRITE_IMAGE(dst, pos, (DTYPE_OUT){1, 0, 0, 0});
+        WRITE_IMAGE(dst, pos, ((DTYPE_OUT){1, 0, 0, 0}));
     } else {
-        WRITE_IMAGE(dst, pos, (DTYPE_OUT){0, 0, 0, 0});
+        WRITE_IMAGE(dst, pos, ((DTYPE_OUT){0, 0, 0, 0}));
     }
 }
 
 __kernel void detect_local_optima_2d(
-        __read_only image2d_t src,
-        __write_only image2d_t dst,
+        DTYPE_IMAGE_IN_2D src,
+        DTYPE_IMAGE_OUT_2D dst,
         __private int radius,
         __private int detect_maxima
 )
@@ -125,8 +125,8 @@ __kernel void detect_local_optima_2d(
 
     if ((detect_maxima == 1 && pos.x == localMaxPos.x && pos.y == localMaxPos.y) ||
         (pos.x == localMinPos.x && pos.y == localMinPos.y)) {
-        WRITE_IMAGE(dst, pos, (DTYPE_OUT)1);
+        WRITE_IMAGE(dst, pos, ((DTYPE_OUT)1));
     } else {
-        WRITE_IMAGE(dst, pos, (DTYPE_OUT)0);
+        WRITE_IMAGE(dst, pos, ((DTYPE_OUT)0));
     }
 }
