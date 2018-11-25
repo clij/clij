@@ -144,7 +144,9 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
             System.out.println("Invoke method: " + name);
             for (int i = 0; i < parsedArguments.length; i++) {
-                System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
+                if (parsedArguments[i] != null) {
+                    System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
+                }
             }
 
             try {
@@ -202,6 +204,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
     }
 
     private void releaseBuffer(String arg) {
+        System.out.println("Releasing " + arg);
         ClearCLBuffer buffer = bufferMap.get(arg);
         buffer.close();
         bufferMap.remove(arg);

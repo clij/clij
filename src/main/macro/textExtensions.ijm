@@ -1,29 +1,35 @@
-run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
-
-run("Blobs (25K)");
-makeRectangle(24, 46, 51, 50);
-run("Duplicate...", "title=A");
-
+// Get test data
+open("C:/structure/data/fly_florence_400.tif");
+run("32-bit");
 input = getTitle();
-
-run("Duplicate...", "title=B");
+run("Duplicate...", "title=Temp duplicate");
+temp = getTitle();
+run("Duplicate...", "title=Temp2 duplicate");
+temp2 = getTitle();
+run("Duplicate...", "title=Result");
 output = getTitle();
 
-//Ext.CLIJ_help("");
+// Init GPU
+run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
+Ext.CLIJ_clear();
 
-IJ.log("Hello world 0");
-
-//Ext.CLIJ_help("mean");
-
+// push images to GPU
 Ext.CLIJ_push(input);
+Ext.CLIJ_push(temp);
+Ext.CLIJ_push(temp2);
 Ext.CLIJ_push(output);
+// cleanup ImageJ
+run("Close All");
 
-IJ.log("Hello world 1");
-Ext.CLIJ_mean(input, output, 3, 3, 1);
+// Blur in GPU
+Ext.CLIJ_blur(input, temp, 20, 20, 1, 10, 10, 1);
 
+// subtraction from original
+Ext.CLIJ_multiplyScalar(temp, temp2, -1);
+Ext.CLIJ_addPixelwise(input, temp2, temp);
 
-IJ.log("Hello world 2");
+// maximum projection
+Ext.CLIJ_maxProjection(temp, output, 0, 1, 2);
+
+// Get results back
 Ext.CLIJ_pull(output);
-
-
-IJ.log("Hello world 3");
