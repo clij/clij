@@ -32,7 +32,7 @@ from clearcl.imagej import ClearCLIJ;
 clij = ClearCLIJ.getInstance();
 ```
 
-Afterwards, you can convert `ImagePlus` objects to ClearCL objects:
+Afterwards, you can convert `ImagePlus` objects to ClearCL objects wich makes them accessible on the OpenCL device:
 
 ```python
 imageInput = clij.converter(imp).getClearCLImage();
