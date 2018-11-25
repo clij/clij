@@ -79,7 +79,7 @@
 		<package-name>net.clearcontrol</package-name>
 		<license.licenseName>bsd_3</license.licenseName>
 		<license.copyrightOwners>Robert Haase, MPI CBG</license.copyrightOwners>
-		<imagej.app.directory>C:/Programs/XWingFiji.app/</imagej.app.directory>
+		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
 	</properties>
 
 	<dependencies>
