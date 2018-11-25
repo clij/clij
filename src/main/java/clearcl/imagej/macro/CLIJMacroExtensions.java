@@ -89,79 +89,92 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
     @Override
     public String handleExtension(String name, Object[] args) {
         System.out.println("Handle Ext " + name);
-        if (name.equals(TO_CLIJ)) {
-            toCLIJ((String)args[0]);
-            return null;
-        } else if (name.equals(FROM_CLIJ)) {
-            fromCLIJ((String)args[0]);
-            return null;
-        } else if (name.equals(RELEASE_BUFFER)) {
-            releaseBuffer((String)args[0]);
-            return null;
-        } else if (name.equals(CLEAR_CLIJ)) {
-            clearCLIJ();
-            return null;
-        } else if (name.equals(HELP)) {
-            help(args);
-            return null;
-        }
-
-        System.out.println("methods " + methodMap.size());
-        Method method = methodMap.get(name + (args.length + 1)).method;
-        if (method == null) {
-            System.out.println("Method not found: " + name);
-            return "Error: Method not found!";
-        }
-
-        System.out.println("Check method: " + name);
-        Object[] parsedArguments = new Object[args.length + 1];
-        parsedArguments[0] = clij;
-        for (int i = 0; i < args.length; i++) {
-            System.out.println("Parsing args: " + args[i]);
-            if (!isNumeric((String)(args[i]))) {
-                parsedArguments[i + 1] = bufferMap.get(args[i]);
-            } else {
-                Class type = method.getParameters()[i + 1].getType();
-                if (type == Double.class) {
-                    parsedArguments[i + 1] = Double.parseDouble((String) args[i]);
-                } else if (type == Float.class) {
-                    parsedArguments[i + 1] = Float.parseFloat((String) args[i]);
-                } else if (type == Integer.class || "" + type == "int" ) {
-                    parsedArguments[i + 1] = Integer.parseInt((String) args[i]);
-                } else {
-                    System.out.println("Unknown type: " + type);
-                }
-            }
-        }
-
-
-        System.out.println("Invoke method: " + name);
-        for (int i = 0; i < parsedArguments.length; i++) {
-            System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
-        }
-
         try {
-            method.invoke(null, parsedArguments);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return "ERROR IAE1";
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return "ERROR IAE2";
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-            return "ERROR ITE";
+            if (name.equals(TO_CLIJ)) {
+                toCLIJ((String) args[0]);
+                return null;
+            } else if (name.equals(FROM_CLIJ)) {
+                fromCLIJ((String) args[0]);
+                return null;
+            } else if (name.equals(RELEASE_BUFFER)) {
+                releaseBuffer((String) args[0]);
+                return null;
+            } else if (name.equals(CLEAR_CLIJ)) {
+                clearCLIJ();
+                return null;
+            } else if (name.equals(HELP)) {
+                help(args);
+                return null;
+            }
+
+            System.out.println("methods " + methodMap.size());
+            Method method = methodMap.get(name + (args.length + 1)).method;
+            if (method == null) {
+                System.out.println("Method not found: " + name);
+                return "Error: Method not found!";
+            }
+
+            System.out.println("Check method: " + name);
+            Object[] parsedArguments = new Object[args.length + 1];
+            parsedArguments[0] = clij;
+            for (int i = 0; i < args.length; i++) {
+                System.out.println("Parsing args: " + args[i] + " " + args[i].getClass());
+                if (args[i] instanceof Double) {
+                    System.out.println("numeric");
+                    Class type = method.getParameters()[i + 1].getType();
+                    System.out.println("type " + type);
+                    if (type == Double.class) {
+                        parsedArguments[i + 1] = args[i];
+                    } else if (type == Float.class) {
+                        parsedArguments[i + 1] = ((Double) args[i]).floatValue();
+                    } else if (type == Integer.class) {
+                        parsedArguments[i + 1] = ((Double) args[i]).intValue();
+                    } else if (type == Boolean.class) {
+                        parsedArguments[i + 1] = ((Double) args[i]) > 0;
+                    } else {
+                        System.out.println("Unknown type: " + type);
+                    }
+                } else {
+                    System.out.println("not numeric");
+                    parsedArguments[i + 1] = bufferMap.get(args[i]);
+                }
+                System.out.println("Parsed args: " + parsedArguments[i + 1]);
+            }
+
+
+            System.out.println("Invoke method: " + name);
+            for (int i = 0; i < parsedArguments.length; i++) {
+                System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
+            }
+
+            try {
+                method.invoke(null, parsedArguments);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                return "ERROR IAE1";
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                return "ERROR IAE2";
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+                return "ERROR ITE";
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "ERROR E";
+            }
+
+            System.out.println("Success");
         } catch (Exception e) {
             e.printStackTrace();
-            return "ERROR E";
         }
-
-        System.out.println("Success");
         return null;
     }
 
-    private boolean isNumeric(String text) {
-        return NumberUtils.isNumber(text);
+    private boolean isNumeric(Object text) {
+        if (text instanceof Double) {
+            return true;
+        }
+        return NumberUtils.isNumber((String)text);
     }
 
     private void help(Object[] args) {
@@ -310,9 +323,9 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         Object[] arguments = new Object[] {
             "flybrain.tif",
                 "out",
-                "3",
-                "3",
-                "1"
+                new Double(3),
+                new Double(3),
+                new Double(1)
         };
         ext.handleExtension("CLIJ_mean", arguments);
     }
