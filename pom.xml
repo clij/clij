@@ -8,13 +8,13 @@
 	<parent>
 		<groupId>net.clearcontrol</groupId>
 		<artifactId>ClearParentPom</artifactId>
-		<version>0.6.28</version>
+		<version>0.6.30</version>
 		<relativePath />
 	</parent>
 
 	<groupId>net.clearcontrol</groupId>
 	<artifactId>clearclij</artifactId>
-	<version>0.3.27</version>
+	<version>0.3.28</version>
 
 	<name>ClearCLIJ</name>
 	<description>ClearCLIJ</description>
@@ -79,7 +79,7 @@
 		<package-name>net.clearcontrol</package-name>
 		<license.licenseName>bsd_3</license.licenseName>
 		<license.copyrightOwners>Robert Haase, MPI CBG</license.copyrightOwners>
-		<imagej.app.directory>C:/Programs/XWingFiji.app/</imagej.app.directory>
+		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
 	</properties>
 
 	<dependencies>

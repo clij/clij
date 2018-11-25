@@ -121,7 +121,7 @@ public class Kernels
   public static boolean addScalar(ClearCLIJ pCLIJ,
                                   ClearCLImage src,
                                   ClearCLImage dst,
-                                  float scalar)
+                                  Float scalar)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
@@ -145,7 +145,7 @@ public class Kernels
   public static boolean addScalar(ClearCLIJ pCLIJ,
                                   ClearCLBuffer src,
                                   ClearCLBuffer dst,
-                                  float scalar)
+                                  Float scalar)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
@@ -169,8 +169,8 @@ public class Kernels
                                              ClearCLImage src,
                                              ClearCLImage src1,
                                              ClearCLImage dst,
-                                             float factor,
-                                             float factor1)
+                                             Float factor,
+                                             Float factor1)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
@@ -200,8 +200,8 @@ public class Kernels
                                              ClearCLBuffer src,
                                              ClearCLBuffer src1,
                                              ClearCLBuffer dst,
-                                             float factor,
-                                             float factor1)
+                                             Float factor,
+                                             Float factor1)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
@@ -372,10 +372,10 @@ public class Kernels
   public static boolean blur(ClearCLIJ pCLIJ,
                              ClearCLImage src,
                              ClearCLImage dst,
-                             int nX,
-                             int nY,
-                             float sigmaX,
-                             float sigmaY)
+                             Integer nX,
+                             Integer nY,
+                             Float sigmaX,
+                             Float sigmaY)
   {
 
     HashMap<String, Object> lParameters = new HashMap<>();
@@ -394,10 +394,10 @@ public class Kernels
   public static boolean blur(ClearCLIJ pCLIJ,
                              ClearCLBuffer src,
                              ClearCLBuffer dst,
-                             int nX,
-                             int nY,
-                             float sigmaX,
-                             float sigmaY)
+                             Integer nX,
+                             Integer nY,
+                             Float sigmaX,
+                             Float sigmaY)
   {
 
     HashMap<String, Object> lParameters = new HashMap<>();
@@ -416,12 +416,12 @@ public class Kernels
   public static boolean blur(ClearCLIJ pCLIJ,
                              ClearCLImage src,
                              ClearCLImage dst,
-                             int nX,
-                             int nY,
-                             int nZ,
-                             float sigmaX,
-                             float sigmaY,
-                             float sigmaZ)
+                             Integer nX,
+                             Integer nY,
+                             Integer nZ,
+                             Float sigmaX,
+                             Float sigmaY,
+                             Float sigmaZ)
   {
 
     HashMap<String, Object> lParameters = new HashMap<>();
@@ -442,12 +442,12 @@ public class Kernels
   public static boolean blur(ClearCLIJ pCLIJ,
                              ClearCLBuffer src,
                              ClearCLBuffer dst,
-                             int nX,
-                             int nY,
-                             int nZ,
-                             float sigmaX,
-                             float sigmaY,
-                             float sigmaZ)
+                             Integer nX,
+                             Integer nY,
+                             Integer nZ,
+                             Float sigmaX,
+                             Float sigmaY,
+                             Float sigmaZ)
   {
 
     HashMap<String, Object> lParameters = new HashMap<>();
@@ -542,10 +542,10 @@ public class Kernels
   public static boolean blurSliceBySlice(ClearCLIJ pCLIJ,
                                          ClearCLImage src,
                                          ClearCLImage dst,
-                                         int nX,
-                                         int nY,
-                                         float sigmaX,
-                                         float sigmaY) {
+                                         Integer nX,
+                                         Integer nY,
+                                         Float sigmaX,
+                                         Float sigmaY) {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("Nx", nX);
     lParameters.put("Ny", nY);
@@ -594,10 +594,10 @@ public class Kernels
     public static boolean blurSlicewise(ClearCLIJ pCLIJ,
                                       ClearCLImage src,
                                       ClearCLImage dst,
-                                      int nX,
-                                      int nY,
-                                      float sigmaX,
-                                      float sigmaY)
+                                      Integer nX,
+                                      Integer nY,
+                                      Float sigmaX,
+                                      Float sigmaY)
   {
     return blurSliceBySlice( pCLIJ,
             src,
@@ -691,7 +691,7 @@ public class Kernels
   public static boolean copySlice(ClearCLIJ clij,
                                   ClearCLImage src,
                                   ClearCLImage dst,
-                                  int planeIndex)
+                                  Integer planeIndex)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -715,7 +715,7 @@ public class Kernels
   public static boolean copySlice(ClearCLIJ clij,
                                   ClearCLBuffer src,
                                   ClearCLBuffer dst,
-                                  int planeIndex)
+                                  Integer planeIndex)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -731,9 +731,9 @@ public class Kernels
   public static boolean crop(ClearCLIJ clij,
                              ClearCLImage src,
                              ClearCLImage dst,
-                             int startX,
-                             int startY,
-                             int startZ)
+                             Integer startX,
+                             Integer startY,
+                             Integer startZ)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -751,8 +751,8 @@ public class Kernels
   public static boolean crop(ClearCLIJ clij,
                              ClearCLImage src,
                              ClearCLImage dst,
-                             int startX,
-                             int startY)
+                             Integer startX,
+                             Integer startY)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -768,9 +768,9 @@ public class Kernels
   public static boolean crop(ClearCLIJ clij,
                              ClearCLBuffer src,
                              ClearCLBuffer dst,
-                             int startX,
-                             int startY,
-                             int startZ)
+                             Integer startX,
+                             Integer startY,
+                             Integer startZ)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -787,8 +787,8 @@ public class Kernels
   public static boolean crop(ClearCLIJ clij,
                              ClearCLBuffer src,
                              ClearCLBuffer dst,
-                             int startX,
-                             int startY)
+                             Integer startX,
+                             Integer startY)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -804,7 +804,7 @@ public class Kernels
   public static boolean detectMaxima(ClearCLIJ clij,
                                      ClearCLImage src,
                                      ClearCLImage dst,
-                                     int radius)
+                                     Integer radius)
   {
     return detectOptima(clij, src, dst, radius, true);
   }
@@ -812,7 +812,7 @@ public class Kernels
   public static boolean detectMaxima(ClearCLIJ clij,
                                      ClearCLBuffer src,
                                      ClearCLBuffer dst,
-                                     int radius)
+                                     Integer radius)
   {
     return detectOptima(clij, src, dst, radius, true);
   }
@@ -820,7 +820,7 @@ public class Kernels
   public static boolean detectMaximaSliceBySlice(ClearCLIJ clij,
                                      ClearCLImage src,
                                      ClearCLImage dst,
-                                     int radius)
+                                                 Integer radius)
   {
     return detectOptimaSliceBySlice(clij, src, dst, radius, true);
   }
@@ -828,7 +828,7 @@ public class Kernels
   public static boolean detectMaximaSliceBySlice(ClearCLIJ clij,
                                                  ClearCLBuffer src,
                                                  ClearCLBuffer dst,
-                                                 int radius)
+                                                 Integer radius)
   {
     return detectOptimaSliceBySlice(clij, src, dst, radius, true);
   }
@@ -836,7 +836,7 @@ public class Kernels
   public static boolean detectMinima(ClearCLIJ clij,
                                      ClearCLImage src,
                                      ClearCLImage dst,
-                                     int radius)
+                                     Integer radius)
   {
     return detectOptima(clij, src, dst, radius, false);
   }
@@ -844,7 +844,7 @@ public class Kernels
   public static boolean detectMinima(ClearCLIJ clij,
                                      ClearCLBuffer src,
                                      ClearCLBuffer dst,
-                                     int radius)
+                                     Integer radius)
   {
     return detectOptima(clij, src, dst, radius, false);
   }
@@ -852,7 +852,7 @@ public class Kernels
   public static boolean detectMinimaSliceBySlice(ClearCLIJ clij,
                                                  ClearCLImage src,
                                                  ClearCLImage dst,
-                                                 int radius)
+                                                 Integer radius)
   {
     return detectOptimaSliceBySlice(clij, src, dst, radius, false);
   }
@@ -860,7 +860,7 @@ public class Kernels
   public static boolean detectMinimaSliceBySlice(ClearCLIJ clij,
                                                  ClearCLBuffer src,
                                                  ClearCLBuffer dst,
-                                                 int radius)
+                                                 Integer radius)
   {
     return detectOptimaSliceBySlice(clij, src, dst, radius, false);
   }
@@ -868,8 +868,8 @@ public class Kernels
   public static boolean detectOptima(ClearCLIJ clij,
                                      ClearCLImage src,
                                      ClearCLImage dst,
-                                     int radius,
-                                     boolean detectMaxima)
+                                     Integer radius,
+                                     Boolean detectMaxima)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -893,8 +893,8 @@ public class Kernels
   public static boolean detectOptima(ClearCLIJ clij,
                                      ClearCLBuffer src,
                                      ClearCLBuffer dst,
-                                     int radius,
-                                     boolean detectMaxima)
+                                     Integer radius,
+                                     Boolean detectMaxima)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -918,8 +918,8 @@ public class Kernels
   public static boolean detectOptimaSliceBySlice(ClearCLIJ clij,
                                                  ClearCLImage src,
                                                  ClearCLImage dst,
-                                                 int radius,
-                                                 boolean detectMaxima)
+                                                 Integer radius,
+                                                 Boolean detectMaxima)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -943,8 +943,8 @@ public class Kernels
   public static boolean detectOptimaSliceBySlice(ClearCLIJ clij,
                                                  ClearCLBuffer src,
                                                  ClearCLBuffer dst,
-                                                 int radius,
-                                                 boolean detectMaxima)
+                                                 Integer radius,
+                                                 Boolean detectMaxima)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -968,9 +968,9 @@ public class Kernels
   public static boolean differenceOfGaussian(ClearCLIJ clij,
                                              ClearCLImage src,
                                              ClearCLImage dst,
-                                             int radius,
-                                             float sigmaMinuend,
-                                             float sigmaSubtrahend)
+                                             Integer radius,
+                                             Float sigmaMinuend,
+                                             Float sigmaSubtrahend)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -995,9 +995,9 @@ public class Kernels
   public static boolean differenceOfGaussianSliceBySlice(ClearCLIJ clij,
                                              ClearCLImage src,
                                              ClearCLImage dst,
-                                             int radius,
-                                             float sigmaMinuend,
-                                             float sigmaSubtrahend)
+                                             Integer radius,
+                                             Float sigmaMinuend,
+                                             Float sigmaSubtrahend)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1118,9 +1118,9 @@ public class Kernels
   public static boolean downsample(ClearCLIJ clij,
                                    ClearCLImage src,
                                    ClearCLImage dst,
-                                   float factorX,
-                                   float factorY,
-                                   float factorZ)
+                                   Float factorX,
+                                   Float factorY,
+                                   Float factorZ)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1137,9 +1137,9 @@ public class Kernels
   public static boolean downsample(ClearCLIJ clij,
                                    ClearCLBuffer src,
                                    ClearCLBuffer dst,
-                                   float factorX,
-                                   float factorY,
-                                   float factorZ)
+                                   Float factorX,
+                                   Float factorY,
+                                   Float factorZ)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1156,8 +1156,8 @@ public class Kernels
   public static boolean downsample(ClearCLIJ clij,
                                    ClearCLImage src,
                                    ClearCLImage dst,
-                                   float factorX,
-                                   float factorY)
+                                   Float factorX,
+                                   Float factorY)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1173,8 +1173,8 @@ public class Kernels
   public static boolean downsample(ClearCLIJ clij,
                                    ClearCLBuffer src,
                                    ClearCLBuffer dst,
-                                   float factorX,
-                                   float factorY)
+                                   Float factorX,
+                                   Float factorY)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1256,9 +1256,9 @@ public class Kernels
   public static boolean flip(ClearCLIJ clij,
                              ClearCLImage src,
                              ClearCLImage dst,
-                             boolean flipx,
-                             boolean flipy,
-                             boolean flipz)
+                             Boolean flipx,
+                             Boolean flipy,
+                             Boolean flipz)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1275,8 +1275,8 @@ public class Kernels
   public static boolean flip(ClearCLIJ clij,
                              ClearCLImage src,
                              ClearCLImage dst,
-                             boolean flipx,
-                             boolean flipy)
+                             Boolean flipx,
+                             Boolean flipy)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1292,9 +1292,9 @@ public class Kernels
   public static boolean flip(ClearCLIJ clij,
                              ClearCLBuffer src,
                              ClearCLBuffer dst,
-                             boolean flipx,
-                             boolean flipy,
-                             boolean flipz)
+                             Boolean flipx,
+                             Boolean flipy,
+                             Boolean flipz)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1311,8 +1311,8 @@ public class Kernels
   public static boolean flip(ClearCLIJ clij,
                              ClearCLBuffer src,
                              ClearCLBuffer dst,
-                             boolean flipx,
-                             boolean flipy)
+                             Boolean flipx,
+                             Boolean flipy)
   {
     HashMap<String, Object> parameters = new HashMap<>();
     parameters.put("src", src);
@@ -1329,7 +1329,7 @@ public class Kernels
                                ClearCLImage input3d,
                                ClearCLImage output3d)
   {
-    return multiplyScalar(clij, input3d, output3d, -1);
+    return multiplyScalar(clij, input3d, output3d, -1f);
   }
 
   public static boolean invertBinary(ClearCLIJ clij,
@@ -1477,8 +1477,8 @@ public class Kernels
   public static boolean maximum(ClearCLIJ clij,
                                 ClearCLImage src,
                                 ClearCLImage dst,
-                                int kernelSizeX,
-                                int kernelSizeY) {
+                                Integer kernelSizeX,
+                                Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1497,8 +1497,8 @@ public class Kernels
   public static boolean maximum(ClearCLIJ clij,
                                 ClearCLBuffer src,
                                 ClearCLBuffer dst,
-                                int kernelSizeX,
-                                int kernelSizeY) {
+                                Integer kernelSizeX,
+                                Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1517,9 +1517,9 @@ public class Kernels
   public static boolean maximum(ClearCLIJ clij,
                                 ClearCLImage src,
                                 ClearCLImage dst,
-                                int kernelSizeX,
-                                int kernelSizeY,
-                                int kernelSizeZ) {
+                                Integer kernelSizeX,
+                                Integer kernelSizeY,
+                                Integer kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1539,9 +1539,9 @@ public class Kernels
   public static boolean maximum(ClearCLIJ clij,
                                 ClearCLBuffer src,
                                 ClearCLBuffer dst,
-                                int kernelSizeX,
-                                int kernelSizeY,
-                                int kernelSizeZ) {
+                                Integer kernelSizeX,
+                                Integer kernelSizeY,
+                                Integer kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1561,8 +1561,8 @@ public class Kernels
   public static boolean maximumSliceBySlice(ClearCLIJ clij,
                                             ClearCLImage src,
                                             ClearCLImage dst,
-                                            int kernelSizeX,
-                                            int kernelSizeY) {
+                                            Integer kernelSizeX,
+                                            Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1581,8 +1581,8 @@ public class Kernels
   public static boolean maximumSliceBySlice(ClearCLIJ clij,
                                             ClearCLBuffer src,
                                             ClearCLBuffer dst,
-                                            int kernelSizeX,
-                                            int kernelSizeY) {
+                                            Integer kernelSizeX,
+                                            Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1683,9 +1683,9 @@ public class Kernels
   public static boolean maxProjection(ClearCLIJ pCLIJ,
                                       ClearCLImage src,
                                       ClearCLImage dst_max,
-                                      int projectedDimensionX,
-                                      int projectedDimensionY,
-                                      int projectedDimension)
+                                      Integer projectedDimensionX,
+                                      Integer projectedDimensionY,
+                                      Integer projectedDimension)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
@@ -1706,9 +1706,9 @@ public class Kernels
   public static boolean maxProjection(ClearCLIJ pCLIJ,
                                       ClearCLBuffer src,
                                       ClearCLBuffer dst_max,
-                                      int projectedDimensionX,
-                                      int projectedDimensionY,
-                                      int projectedDimension)
+                                      Integer projectedDimensionX,
+                                      Integer projectedDimensionY,
+                                      Integer projectedDimension)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
@@ -1728,8 +1728,8 @@ public class Kernels
   public static boolean mean(ClearCLIJ clij,
                                ClearCLImage src,
                                ClearCLImage dst,
-                               int kernelSizeX,
-                               int kernelSizeY) {
+                               Integer kernelSizeX,
+                               Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1748,8 +1748,8 @@ public class Kernels
   public static boolean mean(ClearCLIJ clij,
                              ClearCLBuffer src,
                              ClearCLBuffer dst,
-                             int kernelSizeX,
-                             int kernelSizeY) {
+                             Integer kernelSizeX,
+                             Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1768,9 +1768,9 @@ public class Kernels
   public static boolean mean(ClearCLIJ clij,
                                ClearCLImage src,
                                ClearCLImage dst,
-                               int kernelSizeX,
-                               int kernelSizeY,
-                               int kernelSizeZ) {
+                               Integer kernelSizeX,
+                               Integer kernelSizeY,
+                               Integer kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1790,9 +1790,9 @@ public class Kernels
   public static boolean mean(ClearCLIJ clij,
                              ClearCLBuffer src,
                              ClearCLBuffer dst,
-                             int kernelSizeX,
-                             int kernelSizeY,
-                             int kernelSizeZ) {
+                             Integer kernelSizeX,
+                             Integer kernelSizeY,
+                             Integer kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1812,8 +1812,8 @@ public class Kernels
   public static boolean meanSliceBySlice(ClearCLIJ clij,
                                          ClearCLImage src,
                                          ClearCLImage dst,
-                                         int kernelSizeX,
-                                         int kernelSizeY) {
+                                         Integer kernelSizeX,
+                                         Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1832,8 +1832,8 @@ public class Kernels
   public static boolean meanSliceBySlice(ClearCLIJ clij,
                                          ClearCLBuffer src,
                                          ClearCLBuffer dst,
-                                         int kernelSizeX,
-                                         int kernelSizeY) {
+                                         Integer kernelSizeX,
+                                         Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1852,8 +1852,8 @@ public class Kernels
   public static boolean median(ClearCLIJ clij,
                                ClearCLImage src,
                                ClearCLImage dst,
-                               int kernelSizeX,
-                               int kernelSizeY) {
+                               Integer kernelSizeX,
+                               Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1872,8 +1872,8 @@ public class Kernels
   public static boolean median(ClearCLIJ clij,
                                ClearCLBuffer src,
                                ClearCLBuffer dst,
-                               int kernelSizeX,
-                               int kernelSizeY) {
+                               Integer kernelSizeX,
+                               Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1892,9 +1892,9 @@ public class Kernels
   public static boolean median(ClearCLIJ clij,
                                            ClearCLImage src,
                                            ClearCLImage dst,
-                                           int kernelSizeX,
-                                           int kernelSizeY,
-                                           int kernelSizeZ) {
+                               Integer kernelSizeX,
+                               Integer kernelSizeY,
+                               Integer kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1914,9 +1914,9 @@ public class Kernels
   public static boolean median(ClearCLIJ clij,
                                ClearCLBuffer src,
                                ClearCLBuffer dst,
-                               int kernelSizeX,
-                               int kernelSizeY,
-                               int kernelSizeZ) {
+                               Integer kernelSizeX,
+                               Integer kernelSizeY,
+                               Integer kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1936,8 +1936,8 @@ public class Kernels
   public static boolean medianSliceBySlice(ClearCLIJ clij,
                                            ClearCLImage src,
                                            ClearCLImage dst,
-                                           int kernelSizeX,
-                                           int kernelSizeY) {
+                                           Integer kernelSizeX,
+                                           Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1956,8 +1956,8 @@ public class Kernels
   public static boolean medianSliceBySlice(ClearCLIJ clij,
                                            ClearCLBuffer src,
                                            ClearCLBuffer dst,
-                                           int kernelSizeX,
-                                           int kernelSizeY) {
+                                           Integer kernelSizeX,
+                                           Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1976,8 +1976,8 @@ public class Kernels
   public static boolean minimum(ClearCLIJ clij,
                                 ClearCLImage src,
                                 ClearCLImage dst,
-                                int kernelSizeX,
-                                int kernelSizeY) {
+                                Integer kernelSizeX,
+                                Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -1996,8 +1996,8 @@ public class Kernels
   public static boolean minimum(ClearCLIJ clij,
                                 ClearCLBuffer src,
                                 ClearCLBuffer dst,
-                                int kernelSizeX,
-                                int kernelSizeY) {
+                                Integer kernelSizeX,
+                                Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -2016,9 +2016,9 @@ public class Kernels
   public static boolean minimum(ClearCLIJ clij,
                              ClearCLImage src,
                              ClearCLImage dst,
-                             int kernelSizeX,
-                             int kernelSizeY,
-                             int kernelSizeZ) {
+                                Integer kernelSizeX,
+                                Integer kernelSizeY,
+                                Integer kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -2038,9 +2038,9 @@ public class Kernels
   public static boolean minimum(ClearCLIJ clij,
                                 ClearCLBuffer src,
                                 ClearCLBuffer dst,
-                                int kernelSizeX,
-                                int kernelSizeY,
-                                int kernelSizeZ) {
+                                Integer kernelSizeX,
+                                Integer kernelSizeY,
+                                Integer kernelSizeZ) {
     if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -2060,8 +2060,8 @@ public class Kernels
   public static boolean minimumSliceBySlice(ClearCLIJ clij,
                                          ClearCLImage src,
                                          ClearCLImage dst,
-                                         int kernelSizeX,
-                                         int kernelSizeY) {
+                                            Integer kernelSizeX,
+                                            Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -2080,8 +2080,8 @@ public class Kernels
   public static boolean minimumSliceBySlice(ClearCLIJ clij,
                                             ClearCLBuffer src,
                                             ClearCLBuffer dst,
-                                            int kernelSizeX,
-                                            int kernelSizeY) {
+                                            Integer kernelSizeX,
+                                            Integer kernelSizeY) {
     if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
@@ -2155,7 +2155,7 @@ public class Kernels
   public static boolean multiplyScalar(ClearCLIJ pCLIJ,
                                        ClearCLImage src,
                                        ClearCLImage dst,
-                                       float scalar)
+                                       Float scalar)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
@@ -2177,7 +2177,7 @@ public class Kernels
   public static boolean multiplyScalar(ClearCLIJ pCLIJ,
                                        ClearCLBuffer src,
                                        ClearCLBuffer dst,
-                                       float scalar)
+                                       Float scalar)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
     lParameters.put("src", src);
@@ -2281,7 +2281,7 @@ public class Kernels
   public static boolean power(ClearCLIJ clij,
                               ClearCLImage src,
                               ClearCLImage dst,
-                              float exponent) {
+                              Float exponent) {
 
       HashMap<String, Object> lParameters = new HashMap<>();
 
@@ -2301,7 +2301,7 @@ public class Kernels
   public static boolean power(ClearCLIJ clij,
                               ClearCLBuffer src,
                               ClearCLBuffer dst,
-                              float exponent) {
+                              Float exponent) {
 
     HashMap<String, Object> lParameters = new HashMap<>();
 
@@ -2441,7 +2441,7 @@ public class Kernels
 
   public static boolean set(ClearCLIJ clij,
                             ClearCLImage clImage,
-                            float value)
+                            Float value)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
 
@@ -2457,7 +2457,7 @@ public class Kernels
 
   public static boolean set(ClearCLIJ clij,
                             ClearCLBuffer clImage,
-                            float value)
+                            Float value)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
 
@@ -2730,7 +2730,7 @@ public class Kernels
   public static boolean threshold(ClearCLIJ clij,
                                   ClearCLImage src,
                                   ClearCLImage dst,
-                                  float threshold)
+                                  Float threshold)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
 
@@ -2755,7 +2755,7 @@ public class Kernels
   public static boolean threshold(ClearCLIJ clij,
                                   ClearCLBuffer src,
                                   ClearCLBuffer dst,
-                                  float threshold)
+                                  Float threshold)
   {
     HashMap<String, Object> lParameters = new HashMap<>();
 

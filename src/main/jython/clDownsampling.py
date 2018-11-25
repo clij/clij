@@ -10,18 +10,18 @@ from net.imglib2.view import Views;
 from ij import IJ;
 
 # take the current image which is open in ImageJ
-lImagePlus = IJ.getImage()
+lImagePlus = IJ.openImage("http://imagej.nih.gov/ij/images/t1-head.zip");
 
 # initialize ClearCL context and convenience layer
-lCLIJ = ClearCLIJ.getInstance();
+clij = ClearCLIJ.getInstance();
 
 # convert imglib2 image to CL images (ready for the GPU)
-lInputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
-lOutputCLImage = lCLIJ.createCLImage([lInputCLImage.getWidth()/2, lInputCLImage.getHeight()/2, lInputCLImage.getDepth()/2], lInputCLImage.getChannelDataType());
+inputCLImage = clij.converter(lImagePlus).getClearCLImage();
+outputCLImage = clij.createCLImage([inputCLImage.getWidth() / 2, inputCLImage.getHeight() / 2, inputCLImage.getDepth() / 2], inputCLImage.getChannelDataType());
 
 # downsample the image stack using ClearCL / OpenCL
-lCLIJ.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
+clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":inputCLImage, "dst":outputCLImage});
 
 # convert the result back to imglib2 and show it
-lResultImg = lCLIJ.converter(lOutputCLImage).getRandomAccessibleInterval();
-ImageJFunctions.show(lResultImg);
+resultRAI = clij.converter(outputCLImage).getRandomAccessibleInterval();
+ImageJFunctions.show(resultRAI);
