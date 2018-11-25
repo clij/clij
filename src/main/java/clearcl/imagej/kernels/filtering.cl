@@ -12,7 +12,7 @@ inline void copyNeighborhoodToArray(DTYPE_IMAGE_IN_2D src, DTYPE_OUT array[],
 
     for (int x = -c.x; x <= c.x; x++) {
         for (int y = -c.y; y <= c.y; y++) {
-            array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+(int2)(x,y)).x;
+            array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+((int2){x,y})).x;
             count++;
         }
     }
@@ -29,7 +29,7 @@ inline void copySliceNeighborhoodToArray(DTYPE_IMAGE_IN_3D src, DTYPE_OUT array[
 
     for (int x = -c.x; x <= c.x; x++) {
         for (int y = -c.y; y <= c.y; y++) {
-            array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+(int4)(x,y,0,0)).x;
+            array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+((int4){x,y,0,0})).x;
             count++;
         }
     }
@@ -55,7 +55,7 @@ inline int copyVolumeNeighborhoodToArray(DTYPE_IMAGE_IN_3D src, DTYPE_OUT array[
             for (int z = -c.z; z <= c.z; z++) {
                 float zSquared = z * z;
                 if (xSquared / aSquared + ySquared / bSquared + zSquared / cSquared <= 1.0) {
-                    array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+(int4)(x,y,z,0)).x;
+                    array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+((int4){x,y,z,0})).x;
                     count++;
                 }
             }

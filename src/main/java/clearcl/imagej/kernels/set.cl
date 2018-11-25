@@ -1,5 +1,5 @@
 
-__kernel void set_3d(__write_only    image3d_t  dst,
+__kernel void set_3d(DTYPE_IMAGE_OUT_3D  dst,
                   float value
                      )
 {
@@ -11,7 +11,7 @@ __kernel void set_3d(__write_only    image3d_t  dst,
 }
 
 
-__kernel void set_2d(__write_only    image2d_t  dst,
+__kernel void set_2d(DTYPE_IMAGE_OUT_2D  dst,
                   float value
                      )
 {

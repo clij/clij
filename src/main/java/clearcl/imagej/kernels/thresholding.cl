@@ -1,3 +1,4 @@
+__constant sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
 
 __kernel void apply_threshold_3d(DTYPE_IMAGE_IN_3D  src,
                                  const    float      threshold,
@@ -10,7 +11,7 @@ __kernel void apply_threshold_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const float inputValue = READ_IMAGE(src, pos).x;
+  DTYPE_IN inputValue = READ_IMAGE(src, sampler, pos).x;
   DTYPE_OUT value = 1.0;
   if (inputValue < threshold) {
     value = 0.0;
@@ -29,7 +30,7 @@ __kernel void apply_threshold_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const float inputValue = READ_IMAGE(src, pos).x;
+  DTYPE_IN inputValue = READ_IMAGE(src, sampler, pos).x;
   DTYPE_OUT value = 1.0;
   if (inputValue < threshold) {
     value = 0.0;
@@ -50,8 +51,8 @@ __kernel void apply_local_threshold_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const float inputValue = READ_IMAGE(src, pos).x;
-  const float threshold = READ_IMAGE(local_threshold, pos).x;
+  DTYPE_IN inputValue = READ_IMAGE(src, sampler, pos).x;
+  DTYPE_IN threshold = READ_IMAGE(local_threshold, sampler, pos).x;
 
   DTYPE_OUT value = 1.0;
   if (inputValue < threshold) {
@@ -71,8 +72,8 @@ __kernel void apply_local_threshold_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const float inputValue = READ_IMAGE(src, pos).x;
-  const float threshold = READ_IMAGE(local_threshold, pos).x;
+  DTYPE_IN inputValue = READ_IMAGE(src, sampler, pos).x;
+  DTYPE_IN threshold = READ_IMAGE(local_threshold, sampler, pos).x;
   DTYPE_OUT value = 1.0;
   if (inputValue < threshold) {
     value = 0.0;

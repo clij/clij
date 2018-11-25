@@ -7,6 +7,7 @@ import clearcl.enums.ImageChannelDataType;
 import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
 import clearcl.util.ElapsedTime;
+import coremem.enums.NativeTypeEnum;
 import ij.*;
 import ij.gui.NewImage;
 import ij.gui.Roi;
@@ -848,7 +849,26 @@ public class KernelsTest
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-    ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
+
+    Kernels.blur(clij, src, dst, 6, 6, 6, 2, 2, 2);
+    ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void blur3d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus gauss = new Duplicator().run(testImp1);
+    GaussianBlur3D.blur(gauss, 2, 2, 2);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
 
     Kernels.blur(clij, src, dst, 6, 6, 6, 2, 2, 2);
     ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
@@ -862,21 +882,56 @@ public class KernelsTest
   @Test
   public void blur3dSeparable() throws InterruptedException {
     ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
-    ClearCLImage dstBlur = clij.converter(testFlyBrain3D).getClearCLImage();
-    ClearCLImage dstBlurSeparable = clij.converter(testFlyBrain3D).getClearCLImage();
+    ClearCLImage dstBlur = clij.createCLImage(src);
+    ClearCLImage dstBlurSeparable = clij.createCLImage(src);
 
     Kernels.blur(clij, src, dstBlur, 15, 15, 15, 2, 2, 2);
     Kernels.blurSeparable(clij, src, dstBlurSeparable, 2, 2, 2);
 
+    //ClearCLBuffer srcB = clij.converter(testFlyBrain3D).getClearCLBuffer();
+    //ClearCLBuffer dstBlurSeparableB = clij.createCLBuffer(srcB);
+    //Kernels.blurSeparable(clij, srcB, dstBlurSeparableB, 2, 2, 2);
+
     ImagePlus gaussBlur = clij.converter(dstBlur).getImagePlus();
     ImagePlus gaussBlurSeparable = clij.converter(dstBlurSeparable).getImagePlus();
+    //ImagePlus gaussBlurSeparableB = clij.converter(dstBlurSeparableB).getImagePlus();
 
     src.close();
     dstBlur.close();
     dstBlurSeparable.close();
+    //srcB.close();
+    //dstBlurSeparableB.close();
 
     assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlur, 2.0));
+    //assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlurSeparableB, 2.0));
   }
+
+//  @Test
+//  public void blur3dSeparable_Buffer() throws InterruptedException {
+//    ClearCLBuffer src = clij.converter(testFlyBrain3D).getClearCLBuffer();
+//    ClearCLBuffer dstBlur = clij.createCLBuffer(src);
+//    ClearCLBuffer dstBlurSeparable = clij.createCLBuffer(src);
+//
+//    Kernels.blur(clij, src, dstBlur, 15, 15, 15, 2, 2, 2);
+//    Kernels.blurSeparable(clij, src, dstBlurSeparable, 2, 2, 2);
+//
+//    //ClearCLBuffer srcB = clij.converter(testFlyBrain3D).getClearCLBuffer();
+//    //ClearCLBuffer dstBlurSeparableB = clij.createCLBuffer(srcB);
+//    //Kernels.blurSeparable(clij, srcB, dstBlurSeparableB, 2, 2, 2);
+//
+//    ImagePlus gaussBlur = clij.converter(dstBlur).getImagePlus();
+//    ImagePlus gaussBlurSeparable = clij.converter(dstBlurSeparable).getImagePlus();
+//    //ImagePlus gaussBlurSeparableB = clij.converter(dstBlurSeparableB).getImagePlus();
+//
+//    src.close();
+//    dstBlur.close();
+//    dstBlurSeparable.close();
+//    //srcB.close();
+//    //dstBlurSeparableB.close();
+//
+//    assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlur, 2.0));
+//    //assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlurSeparableB, 2.0));
+//  }
 
   @Test public void blur2d()
   {
@@ -887,7 +942,27 @@ public class KernelsTest
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(gaussCopy).getClearCLImage();
-    ClearCLImage dst = clij.converter(gaussCopy).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
+
+    Kernels.blur(clij, src, dst, 15, 15, 2, 2);
+    ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void blur2d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus gauss = new Duplicator().run(testFlyBrain2D);
+    ImagePlus gaussCopy = new Duplicator().run(testFlyBrain2D);
+    IJ.run(gauss, "Gaussian Blur...", "sigma=2");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(gaussCopy).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
 
     Kernels.blur(clij, src, dst, 15, 15, 2, 2);
     ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
@@ -906,7 +981,7 @@ public class KernelsTest
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
-    ClearCLImage dst = clij.converter(testFlyBrain3D).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
 
     Kernels.blurSliceBySlice(clij, src, dst, 15, 15, 2, 2);
     ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
@@ -916,6 +991,25 @@ public class KernelsTest
     src.close();
     dst.close();
   }
+
+//  @Test public void blurSliceBySlice_Buffers()
+//  {
+//    // do operation with ImageJ
+//    ImagePlus gauss = new Duplicator().run(testFlyBrain3D);
+//    IJ.run(gauss, "Gaussian Blur...", "sigma=2 stack");
+//
+//    // do operation with ClearCL
+//    ClearCLBuffer src = clij.converter(testFlyBrain3D).getClearCLBuffer();
+//    ClearCLBuffer dst = clij.createCLBuffer(src);
+//
+//    Kernels.blurSliceBySlice(clij, src, dst, 15, 15, 2, 2);
+//    ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+//
+//    assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
+//
+//    src.close();
+//    dst.close();
+//  }
 
   @Test public void copyImageToBuffer3d()
   {
@@ -1123,9 +1217,9 @@ public class KernelsTest
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
     ClearCLImage
-        dst =
-        clij.createCLImage(new long[] { 10, 10, 10 },
-                           src.getChannelDataType());
+            dst =
+            clij.createCLImage(new long[] { 10, 10, 10 },
+                    src.getChannelDataType());
 
     Kernels.crop(clij, src, dst, 2, 2, 2);
     ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
@@ -1236,7 +1330,52 @@ public class KernelsTest
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(spotsImage).getClearCLImage();
-    ClearCLImage dst = clij.converter(spotsImage).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
+
+    Kernels.detectOptima(clij, src, dst, 1, true);
+    ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
+    maximaFromCL = new Duplicator().run(maximaFromCL, 2, 2);
+
+    IJ.run(maximaImp, "Divide...", "value=255");
+
+    assertTrue(TestUtilities.compareImages(maximaImp, maximaFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void detectMaxima3d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus
+            spotsImage =
+            NewImage.createImage("",
+                    100,
+                    100,
+                    3,
+                    16,
+                    NewImage.FILL_BLACK);
+
+    spotsImage.setZ(2);
+    ImageProcessor ip1 = spotsImage.getProcessor();
+    ip1.set(50, 50, 10);
+    ip1.set(60, 60, 10);
+    ip1.set(70, 70, 10);
+
+    spotsImage.show();
+    //IJ.run(spotsImage, "Find Maxima...", "noise=2 output=[Single Points]");
+
+    ByteProcessor
+            byteProcessor =
+            new MaximumFinder().findMaxima(spotsImage.getProcessor(),
+                    2,
+                    MaximumFinder.SINGLE_POINTS,
+                    true);
+    ImagePlus maximaImp = new ImagePlus("A", byteProcessor);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(spotsImage).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
 
     Kernels.detectOptima(clij, src, dst, 1, true);
     ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
@@ -1281,7 +1420,52 @@ public class KernelsTest
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(spotsImage).getClearCLImage();
-    ClearCLImage dst = clij.converter(spotsImage).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
+
+    Kernels.detectOptima(clij, src, dst, 1, true);
+    ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
+    //    maximaFromCL = new Duplicator().run(maximaFromCL, 2, 2);
+
+    IJ.run(maximaImp, "Divide...", "value=255");
+
+    assertTrue(TestUtilities.compareImages(maximaImp, maximaFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void detectMaxima2d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus
+            spotsImage =
+            NewImage.createImage("",
+                    100,
+                    100,
+                    1,
+                    16,
+                    NewImage.FILL_BLACK);
+
+    spotsImage.setZ(1);
+    ImageProcessor ip1 = spotsImage.getProcessor();
+    ip1.set(50, 50, 10);
+    ip1.set(60, 60, 10);
+    ip1.set(70, 70, 10);
+
+    spotsImage.show();
+    //IJ.run(spotsImage, "Find Maxima...", "noise=2 output=[Single Points]");
+
+    ByteProcessor
+            byteProcessor =
+            new MaximumFinder().findMaxima(spotsImage.getProcessor(),
+                    2,
+                    MaximumFinder.SINGLE_POINTS,
+                    true);
+    ImagePlus maximaImp = new ImagePlus("A", byteProcessor);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(spotsImage).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
 
     Kernels.detectOptima(clij, src, dst, 1, true);
     ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
@@ -1346,7 +1530,24 @@ public class KernelsTest
     ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
     ClearCLImage
             maskCLafter =
-            clij.converter(mask3d).getClearCLImage();
+            clij.createCLImage(maskCL);
+
+    Kernels.dilate(clij, maskCL, maskCLafter);
+
+    double sum = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sum == 81);
+
+    maskCL.close();
+    maskCLafter.close();
+  }
+
+  @Test public void dilate3d_Buffers()
+  {
+    ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+    ClearCLBuffer
+            maskCLafter =
+            clij.createCLBuffer(maskCL);
 
     Kernels.dilate(clij, maskCL, maskCLafter);
 
@@ -1362,8 +1563,7 @@ public class KernelsTest
   {
     ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
     ClearCLImage
-            maskCLafter =
-            clij.converter(mask2d).getClearCLImage();
+            maskCLafter = clij.createCLImage(maskCL);
 
     Kernels.dilate(clij, maskCL, maskCLafter);
 
@@ -1375,32 +1575,74 @@ public class KernelsTest
     maskCLafter.close();
   }
 
-    @Test public void dividePixelwise3d()
-    {
-        // do operation with ImageJ
-        ImagePlus
-                divided =
-                new ImageCalculator().run("Divide create stack",
-                        testImp1,
-                        testImp2);
+  @Test public void dilate2d_Buffers()
+  {
+    ClearCLBuffer maskCL = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer
+            maskCLafter = clij.createCLBuffer(maskCL);
 
-        // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+    Kernels.dilate(clij, maskCL, maskCLafter);
 
-        Kernels.dividePixelwise(clij, src, src1, dst);
+    double sum = Kernels.sumPixels(clij, maskCLafter);
 
-        ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+    assertTrue(sum == 21);
 
-        assertTrue(TestUtilities.compareImages(divided, dividedCL));
+    maskCL.close();
+    maskCLafter.close();
+  }
 
-        src.close();
-        src1.close();
-        dst.close();
-    }
+  @Test public void dividePixelwise3d()
+  {
+    // do operation with ImageJ
+    ImagePlus
+            divided =
+            new ImageCalculator().run("Divide create stack",
+                    testImp1,
+                    testImp2);
 
-    @Test public void dividePixelwise2d()
+    // do operation with ClearCL
+    ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
+
+    Kernels.dividePixelwise(clij, src, src1, dst);
+
+    ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(divided, dividedCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+
+  @Test public void dividePixelwise3d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus
+            divided =
+            new ImageCalculator().run("Divide create stack",
+                    testImp1,
+                    testImp2);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
+
+    Kernels.dividePixelwise(clij, src, src1, dst);
+
+    ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(divided, dividedCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+  @Test public void dividePixelwise2d()
     {
         // do operation with ImageJ
         ImagePlus
@@ -1412,7 +1654,7 @@ public class KernelsTest
         // do operation with ClearCL
         ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
         ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.dividePixelwise(clij, src, src1, dst);
 
@@ -1425,8 +1667,33 @@ public class KernelsTest
         dst.close();
     }
 
+  @Test public void dividePixelwise2d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus
+            divided =
+            new ImageCalculator().run("Divide create",
+                    testImp2D1,
+                    testImp2D2);
 
-    @Test public void downsample3d() throws InterruptedException {
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer src1 = clij.converter(testImp2D2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
+
+    Kernels.dividePixelwise(clij, src, src1, dst);
+
+    ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(divided, dividedCL));
+
+    src.close();
+    src1.close();
+    dst.close();
+  }
+
+
+  @Test public void downsample3d() throws InterruptedException {
     // do operation with ImageJ
     new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
     testImp1.show();
@@ -1449,7 +1716,31 @@ public class KernelsTest
     ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
 
     assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
+  }
 
+  @Test public void downsample3d_Buffers() throws InterruptedException {
+    // do operation with ImageJ
+    new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
+    testImp1.show();
+    IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 width=512 height=1024 depth=5 interpolation=None process create");
+    ImagePlus downsampled = IJ.getImage();
+
+
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer dst =
+            clij.createCLBuffer(new long[] { src.getWidth() / 2,
+                            src.getHeight() / 2,
+                            (long)(src.getDepth() - 0.5) / 2},
+                    src.getNativeType());
+
+
+    Kernels.downsample(clij, src, dst, 0.5f, 0.5f, 0.5f);
+
+    ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
   }
 
   @Test public void downsample2d() throws InterruptedException {
@@ -1475,36 +1766,99 @@ public class KernelsTest
 
   }
 
+
+  @Test public void downsample2d_Buffers() throws InterruptedException {
+    // do operation with ImageJ
+    new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
+    testImp2D1.show();
+    IJ.run(testImp2D1, "Scale...", "x=0.5 y=0.5 width=50 height=50 interpolation=None create");
+    ImagePlus downsampled = IJ.getImage();
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer
+            dst =
+            clij.createCLBuffer(new long[] { src.getWidth() / 2,
+                            src.getHeight() / 2 },
+                    src.getNativeType());
+
+    Kernels.downsample(clij, src, dst, 0.5f, 0.5f);
+
+    ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
+
+  }
+
   @Test public void downsampleSliceBySliceMedian() {
-      Img<ByteType> testImgBig = ArrayImgs.bytes(new byte[]{
-              1, 2, 4, 4,
-              2, 3, 4, 4,
-              0, 1, 0, 0,
-              1, 2, 0, 0
-      }, new long[]{4,4,1});
+    Img<ByteType> testImgBig = ArrayImgs.bytes(new byte[]{
+            1, 2, 4, 4,
+            2, 3, 4, 4,
+            0, 1, 0, 0,
+            1, 2, 0, 0
+    }, new long[]{4,4,1});
 
-      Img<ByteType> testImgSmall = ArrayImgs.bytes(new byte[]{
-              2, 4,
-              1, 0
-      }, new long[]{2,2,1});
+    Img<ByteType> testImgSmall = ArrayImgs.bytes(new byte[]{
+            2, 4,
+            1, 0
+    }, new long[]{2,2,1});
 
-      ClearCLImage inputCL = clij.converter(testImgBig).getClearCLImage();
-      ClearCLImage outputCL = clij.createCLImage(new long[]{2,2,1}, ImageChannelDataType.SignedInt8);
+    ClearCLImage inputCL = clij.converter(testImgBig).getClearCLImage();
+    ClearCLImage outputCL = clij.createCLImage(new long[]{2,2,1}, ImageChannelDataType.SignedInt8);
 
-      Kernels.downsampleSliceBySliceHalfMedian(clij, inputCL, outputCL);
+    Kernels.downsampleSliceBySliceHalfMedian(clij, inputCL, outputCL);
 
-      ImagePlus result = clij.converter(outputCL).getImagePlus();
-      ImagePlus reference = clij.converter(testImgSmall).getImagePlus();
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+    ImagePlus reference = clij.converter(testImgSmall).getImagePlus();
 
-      assertTrue(TestUtilities.compareImages(result, reference));
+    assertTrue(TestUtilities.compareImages(result, reference));
+  }
+
+  @Test public void downsampleSliceBySliceMedian_Buffer() {
+    Img<ByteType> testImgBig = ArrayImgs.bytes(new byte[]{
+            1, 2, 4, 4,
+            2, 3, 4, 4,
+            0, 1, 0, 0,
+            1, 2, 0, 0
+    }, new long[]{4,4,1});
+
+    Img<ByteType> testImgSmall = ArrayImgs.bytes(new byte[]{
+            2, 4,
+            1, 0
+    }, new long[]{2,2,1});
+
+    ClearCLBuffer inputCL = clij.converter(testImgBig).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{2,2,1}, NativeTypeEnum.Byte);
+
+    Kernels.downsampleSliceBySliceHalfMedian(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+    ImagePlus reference = clij.converter(testImgSmall).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(result, reference));
   }
 
   @Test public void erode3d()
   {
     ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
     ClearCLImage
-        maskCLafter =
-        clij.converter(mask3d).getClearCLImage();
+        maskCLafter = clij.createCLImage(maskCL);
+
+    Kernels.erode(clij, maskCL, maskCLafter);
+
+    double sum = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sum == 1);
+
+    maskCL.close();
+    maskCLafter.close();
+  }
+
+  @Test public void erode3d_Buffer()
+  {
+    ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+    ClearCLBuffer
+            maskCLafter = clij.createCLBuffer(maskCL);
 
     Kernels.erode(clij, maskCL, maskCLafter);
 
@@ -1520,8 +1874,23 @@ public class KernelsTest
   {
     ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
     ClearCLImage
-        maskCLafter =
-        clij.converter(mask2d).getClearCLImage();
+            maskCLafter = clij.createCLImage(maskCL);
+
+    Kernels.erode(clij, maskCL, maskCLafter);
+
+    double sum = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sum == 1);
+
+    maskCL.close();
+    maskCLafter.close();
+  }
+
+  @Test public void erode2d_Buffers()
+  {
+    ClearCLBuffer maskCL = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer
+            maskCLafter = clij.createCLBuffer(maskCL);
 
     Kernels.erode(clij, maskCL, maskCLafter);
 
@@ -1635,8 +2004,7 @@ public class KernelsTest
   {
     ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
     ClearCLImage
-        maskCLafter =
-        clij.converter(mask3d).getClearCLImage();
+            maskCLafter = clij.createCLImage(maskCL);
 
     Kernels.invertBinary(clij, maskCL, maskCLafter);
 
@@ -1644,9 +2012,29 @@ public class KernelsTest
     double sumCLafter = Kernels.sumPixels(clij, maskCLafter);
 
     assertTrue(sumCLafter
-               == maskCL.getWidth()
-                  * maskCL.getHeight()
-                  * maskCL.getDepth() - sumCL);
+            == maskCL.getWidth()
+            * maskCL.getHeight()
+            * maskCL.getDepth() - sumCL);
+
+    maskCL.close();
+    maskCLafter.close();
+  }
+
+  @Test public void invertBinary3d_Buffer()
+  {
+    ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+    ClearCLBuffer
+            maskCLafter = clij.createCLBuffer(maskCL);
+
+    Kernels.invertBinary(clij, maskCL, maskCLafter);
+
+    double sumCL = Kernels.sumPixels(clij, maskCL);
+    double sumCLafter = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sumCLafter
+            == maskCL.getWidth()
+            * maskCL.getHeight()
+            * maskCL.getDepth() - sumCL);
 
     maskCL.close();
     maskCLafter.close();
@@ -1656,8 +2044,7 @@ public class KernelsTest
   {
     ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
     ClearCLImage
-        maskCLafter =
-        clij.converter(mask2d).getClearCLImage();
+            maskCLafter = clij.createCLImage(maskCL);
 
     Kernels.invertBinary(clij, maskCL, maskCLafter);
 
@@ -1665,9 +2052,29 @@ public class KernelsTest
     double sumCLafter = Kernels.sumPixels(clij, maskCLafter);
 
     assertTrue(sumCLafter
-               == maskCL.getWidth()
-                  * maskCL.getHeight()
-                  * maskCL.getDepth() - sumCL);
+            == maskCL.getWidth()
+            * maskCL.getHeight()
+            * maskCL.getDepth() - sumCL);
+
+    maskCL.close();
+    maskCLafter.close();
+  }
+
+  @Test public void invertBinary2d_Buffer()
+  {
+    ClearCLBuffer maskCL = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer
+            maskCLafter = clij.createCLBuffer(maskCL);
+
+    Kernels.invertBinary(clij, maskCL, maskCLafter);
+
+    double sumCL = Kernels.sumPixels(clij, maskCL);
+    double sumCLafter = Kernels.sumPixels(clij, maskCLafter);
+
+    assertTrue(sumCLafter
+            == maskCL.getWidth()
+            * maskCL.getHeight()
+            * maskCL.getDepth() - sumCL);
 
     maskCL.close();
     maskCLafter.close();
@@ -1719,10 +2126,28 @@ public class KernelsTest
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
     ClearCLImage mask = clij.converter(mask3d).getClearCLImage();
-    ClearCLImage dst = clij.converter(mask3d).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(mask);
 
     Kernels.mask(clij, src, mask, dst);
 
+    src.close();
+    mask.close();
+    dst.close();
+  }
+
+  @Test public void mask3d_Buffers()
+  {
+    // do operation with ImageJ
+    System.out.println("Todo: implement test for mask3d");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer mask = clij.converter(mask3d).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(mask);
+
+    Kernels.mask(clij, src, mask, dst);
+
+    src.close();
     mask.close();
     dst.close();
   }
@@ -1743,6 +2168,22 @@ public class KernelsTest
     dst.close();
   }
 
+  @Test public void mask2d_Buffers()
+  {
+    // do operation with ImageJ
+    System.out.println("Todo: implement test for mask2d");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer mask = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(mask2d).getClearCLBuffer();
+
+    Kernels.mask(clij, src, mask, dst);
+
+    mask.close();
+    dst.close();
+  }
+
   @Test public void maskStackWithPlane()
   {
     // do operation with ImageJ
@@ -1751,7 +2192,7 @@ public class KernelsTest
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
     ClearCLImage mask = clij.converter(mask2d).getClearCLImage();
-    ClearCLImage dst = clij.converter(mask3d).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
 
     Kernels.maskStackWithPlane(clij, src, mask, dst);
 
@@ -1760,32 +2201,80 @@ public class KernelsTest
 
   }
 
-    @Test public void maximum2d() {
+  @Test public void maskStackWithPlane_Buffers()
+  {
+    // do operation with ImageJ
+    System.out.println("Todo: implement test for maskStackWithPlane");
 
-        ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
-        IJ.run(testImage, "32-bit", "");
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer mask = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
 
-        // do operation with ImageJ
-        ImagePlus reference = new Duplicator().run(testImage);
-        IJ.run(reference, "Maximum...", "radius=1");
+    Kernels.maskStackWithPlane(clij, src, mask, dst);
 
-        // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+    mask.close();
+    dst.close();
 
-        Kernels.maximum(clij, inputCL, outputCl, 3, 3);
+  }
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+  @Test public void maximum2d() {
 
-        //new ImageJ();
-        //clij.show(inputCL, "inp");
-        //clij.show(reference, "ref");
-        //clij.show(result, "res");
-        //new WaitForUserDialog("wait").show();
-        assertTrue(TestUtilities.compareImages(reference, result, 0.001));
-    }
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+    IJ.run(testImage, "32-bit", "");
 
-    @Test public void maximum3d() {
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Maximum...", "radius=1");
+
+    // do operation with ClearCLIJ
+    ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+    ClearCLImage outputCl = clij.createCLImage(inputCL);
+
+    Kernels.maximum(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
+
+  @Test public void maximum2d_Buffers() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Maximum...", "radius=1");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.maximum(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference);
+    result = new Duplicator().run(result);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
+
+  @Test public void maximum3d() {
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
         IJ.run(testImage, "32-bit", "");
 
@@ -1815,6 +2304,36 @@ public class KernelsTest
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
 
+  @Test public void maximum3d_Buffers() {
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Maximum 3D...", "x=1 y=1 z=1");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.maximum(clij, inputCL, outputCl, 3, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges and first and last slice
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+    result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
+
     @Test public void maximumSliceBySlice() {
 
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
@@ -1839,6 +2358,37 @@ public class KernelsTest
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
+
+  @Test public void maximumSliceBySlice_Buffer() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Maximum...", "radius=1 stack");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.maximumSliceBySlice(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference);
+    result = new Duplicator().run(result);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
 
   @Test public void maxPixelWise3d() {
     System.out.println("Todo: implement test for maxPixelwise3d");
@@ -1893,7 +2443,56 @@ public class KernelsTest
     dst.close();
   }
 
-    @Test public void mean2d() {
+  @Test public void maxProjection_Buffers() throws InterruptedException
+  {
+    // do operation with ImageJ
+    ImagePlus
+            maxProjection =
+            NewImage.createShortImage("",
+                    testImp1.getWidth(),
+                    testImp2.getHeight(),
+                    1,
+                    NewImage.FILL_BLACK);
+    ImageProcessor ipMax = maxProjection.getProcessor();
+
+    ImagePlus testImp1copy = new Duplicator().run(testImp1);
+    for (int z = 0; z < testImp1copy.getNSlices(); z++)
+    {
+      testImp1copy.setZ(z + 1);
+      ImageProcessor ip = testImp1copy.getProcessor();
+      for (int x = 0; x < testImp1copy.getWidth(); x++)
+      {
+        for (int y = 0; y < testImp1copy.getHeight(); y++)
+        {
+          float value = ip.getf(x, y);
+          if (value > ipMax.getf(x, y))
+          {
+            ipMax.setf(x, y, value);
+          }
+        }
+      }
+    }
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer
+            dst =
+            clij.createCLBuffer(new long[] { src.getWidth(),
+                            src.getHeight() },
+                    src.getNativeType());
+
+    Kernels.maxProjection(clij, src, dst);
+
+    ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(maxProjection,
+            maxProjectionCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void mean2d() {
 
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
         IJ.run(testImage, "32-bit", "");
@@ -1917,6 +2516,38 @@ public class KernelsTest
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
+
+
+  @Test public void mean2d_Buffers() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Mean...", "radius=1");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.mean(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference);
+    result = new Duplicator().run(result);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
 
     @Test public void mean3d() {
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
@@ -1948,6 +2579,36 @@ public class KernelsTest
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
 
+  @Test public void mean3d_Buffers() {
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Mean 3D...", "x=1 y=1 z=1");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.mean(clij, inputCL, outputCl, 3, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges and first and last slice
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+    result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
+
   @Test public void meanSliceBySlice() {
 
       ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
@@ -1971,6 +2632,37 @@ public class KernelsTest
       //clij.show(result, "res");
       //new WaitForUserDialog("wait").show();
       assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
+
+  @Test public void meanSliceBySlice_Buffers() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Mean...", "radius=1 stack");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.meanSliceBySlice(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges and first and last slice
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+    result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
   }
 
     @Test public void median2d() {
@@ -1998,6 +2690,30 @@ public class KernelsTest
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
 
+  @Test public void median2d_Buffers() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Median...", "radius=1");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.median(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
 
     @Test public void median3d() {
 
@@ -2030,6 +2746,36 @@ public class KernelsTest
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
 
+  @Test public void median3d_Buffers() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Median 3D...", "x=1 y=1 z=1");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.median(clij, inputCL, outputCl, 3, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges and first and last slice
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+    result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
 
     @Test public void medianSliceBySlice() {
 
@@ -2056,6 +2802,37 @@ public class KernelsTest
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
 
+  @Test public void medianSliceBySlice_Buffer() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Median...", "radius=1 stack");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.medianSliceBySlice(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference);
+    result = new Duplicator().run(result);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
+
     @Test public void minimum2d() {
 
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
@@ -2081,7 +2858,33 @@ public class KernelsTest
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
 
-    @Test public void minimum3d() {
+
+  @Test public void minimum2d_Buffers() {
+
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Minimum...", "radius=1");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.minimum(clij, inputCL, outputCl, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
+
+   @Test public void minimum3d() {
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
         IJ.run(testImage, "32-bit", "");
 
@@ -2110,6 +2913,36 @@ public class KernelsTest
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
     }
+
+  @Test public void minimum3d_Buffer() {
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    IJ.run(testImage, "32-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus reference = new Duplicator().run(testImage);
+    IJ.run(reference, "Minimum 3D...", "x=1 y=1 z=1");
+
+    // do operation with ClearCLIJ
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+
+    Kernels.minimum(clij, inputCL, outputCl, 3, 3, 3);
+
+    ImagePlus result = clij.converter(outputCl).getImagePlus();
+
+    // ignore edges and first and last slice
+    reference.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    result.setRoi(new Roi(1,1, reference.getWidth() - 2, reference.getHeight() - 2));
+    reference = new Duplicator().run(reference, 2, result.getNSlices() - 2);
+    result = new Duplicator().run(result, 2, result.getNSlices() - 2);
+
+    //new ImageJ();
+    //clij.show(inputCL, "inp");
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+    assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+  }
 
     @Test public void minimumSliceBySlice() {
 
@@ -2323,7 +3156,27 @@ public class KernelsTest
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-    ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
+
+    Kernels.multiplyScalar(clij, src, dst, 2);
+    ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(added, addedFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+
+  @Test public void multiplyScalar3d_Buffer()
+  {
+    // do operation with ImageJ
+    ImagePlus added = new Duplicator().run(testImp1);
+    IJ.run(added, "Multiply...", "value=2 stack");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
 
     Kernels.multiplyScalar(clij, src, dst, 2);
     ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
@@ -2342,7 +3195,26 @@ public class KernelsTest
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-    ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
+
+    Kernels.multiplyScalar(clij, src, dst, 2);
+    ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(added, addedFromCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void multiplyScalar2d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus added = new Duplicator().run(testImp2D1);
+    IJ.run(added, "Multiply...", "value=2");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
 
     Kernels.multiplyScalar(clij, src, dst, 2);
     ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
@@ -2371,6 +3243,24 @@ public class KernelsTest
 
   }
 
+  @Test public void multiplySliceBySliceWithScalars_Buffer() {
+
+    ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+    ClearCLBuffer multipliedBy2 = clij.createCLBuffer(maskCL);
+
+    float[] factors = new float[(int)maskCL.getDepth()];
+    for (int i = 0; i < factors.length; i++) {
+      factors[i] = 2;
+    }
+    Kernels.multiplySliceBySliceWithScalars(clij, maskCL, multipliedBy2, factors);
+
+    assertEquals(Kernels.sumPixels(clij, maskCL) * 2, Kernels.sumPixels(clij, multipliedBy2), 0.001);
+
+    multipliedBy2.close();
+    maskCL.close();
+
+  }
+
   @Test public void multiplyStackWithPlane()
   {
     // do operation with ImageJ
@@ -2380,7 +3270,25 @@ public class KernelsTest
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp1).getClearCLImage();
     ClearCLImage mask = clij.converter(mask2d).getClearCLImage();
-    ClearCLImage dst = clij.converter(mask3d).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
+
+    Kernels.multiplyStackWithPlane(clij, src, mask, dst);
+
+    mask.close();
+    dst.close();
+
+  }
+
+  @Test public void multiplyStackWithPlane_Buffers()
+  {
+    // do operation with ImageJ
+    System.out.println(
+            "Todo: implement test for multiplyStackWithPlane");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+    ClearCLBuffer mask = clij.converter(mask2d).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
 
     Kernels.multiplyStackWithPlane(clij, src, mask, dst);
 
@@ -2400,7 +3308,7 @@ public class KernelsTest
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-    ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
 
     Kernels.power(clij, src, dst, 2.0f);
 
@@ -2414,6 +3322,30 @@ public class KernelsTest
 
   }
 
+  @Test public void power_Buffers() {
+
+    // do operation with ImageJ
+    ImagePlus
+            squared =
+            new ImageCalculator().run("Multiply create",
+                    testImp2D1,
+                    testImp2D1);
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
+
+    Kernels.power(clij, src, dst, 2.0f);
+
+    ImagePlus squaredCL = clij.converter(dst).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(squared, squaredCL));
+
+    src.close();
+    dst.close();
+
+
+  }
 
     @Test public void resliceBottom() throws InterruptedException {
 
@@ -2444,6 +3376,35 @@ public class KernelsTest
 
     }
 
+  @Test public void resliceBottom_Buffers() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Reslice [/]...", "output=1.0 start=Bottom avoid");
+    Thread.sleep(500);
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[] {inputCL.getWidth(), inputCL.getDepth(), inputCL.getHeight()}, inputCL.getNativeType());
+
+    Kernels.resliceBottom(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+
+
+  }
+
   @Test public void resliceLeft() throws InterruptedException {
 
       testFlyBrain3D.setRoi(0,0, 256,128);
@@ -2469,6 +3430,35 @@ public class KernelsTest
       //new WaitForUserDialog("wait").show();
 
       assertTrue(TestUtilities.compareImages(reference, result));
+
+
+  }
+
+  @Test public void resliceLeft_Buffers() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Reslice [/]...", "output=1.0 start=Left avoid");
+    Thread.sleep(500);
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[] {inputCL.getHeight(), inputCL.getDepth(), inputCL.getWidth()}, inputCL.getNativeType());
+
+    Kernels.resliceLeft(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
 
 
   }
@@ -2502,6 +3492,34 @@ public class KernelsTest
 
     }
 
+  @Test public void resliceRight_Buffers() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Reslice [/]...", "output=1.0 start=Right avoid");
+    Thread.sleep(500);
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[] {inputCL.getHeight(), inputCL.getDepth(), inputCL.getWidth()}, inputCL.getNativeType());
+
+    Kernels.resliceRight(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+
+
+  }
 
     @Test public void resliceTop() throws InterruptedException {
 
@@ -2532,6 +3550,35 @@ public class KernelsTest
 
     }
 
+  @Test public void resliceTop_Buffers() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Reslice [/]...", "output=1.0 start=Top avoid");
+    Thread.sleep(500);
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[] {inputCL.getWidth(), inputCL.getDepth(), inputCL.getHeight()}, inputCL.getNativeType());
+
+    Kernels.resliceTop(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+
+
+  }
+
   @Test public void set3d()
   {
     ClearCLImage imageCL = clij.converter(mask3d).getClearCLImage();
@@ -2549,9 +3596,40 @@ public class KernelsTest
     imageCL.close();
   }
 
+  @Test public void set3d_Buffers()
+  {
+    ClearCLBuffer imageCL = clij.converter(mask3d).getClearCLBuffer();
+
+    Kernels.set(clij, imageCL, 2);
+
+    double sum = Kernels.sumPixels(clij, imageCL);
+
+    assertTrue(sum
+            == imageCL.getWidth()
+            * imageCL.getHeight()
+            * imageCL.getDepth()
+            * 2);
+
+    imageCL.close();
+  }
+
   @Test public void set2d()
   {
     ClearCLImage imageCL = clij.converter(mask2d).getClearCLImage();
+
+    Kernels.set(clij, imageCL, 2);
+
+    double sum = Kernels.sumPixels(clij, imageCL);
+
+    assertTrue(sum == imageCL.getWidth() * imageCL.getHeight() * 2);
+
+    imageCL.close();
+  }
+
+
+  @Test public void set2d_Buffers()
+  {
+    ClearCLBuffer imageCL = clij.converter(mask2d).getClearCLBuffer();
 
     Kernels.set(clij, imageCL, 2);
 
@@ -2573,8 +3651,30 @@ public class KernelsTest
     assertTrue(Kernels.sumPixels(clij, split2) > 0);
   }
 
+  @Test public void splitStack_Buffers() {
+    ClearCLBuffer clearCLImage = clij.converter(testFlyBrain3D).getClearCLBuffer();
+    ClearCLBuffer split1 = clij.createCLBuffer(new long[]{clearCLImage.getWidth(), clearCLImage.getHeight(), clearCLImage.getDepth() / 2}, clearCLImage.getNativeType());
+    ClearCLBuffer split2 = clij.createCLBuffer(new long[]{clearCLImage.getWidth(), clearCLImage.getHeight(), clearCLImage.getDepth() / 2}, clearCLImage.getNativeType());
+
+    Kernels.splitStack(clij, clearCLImage, split1, split2);
+
+    assertTrue(Kernels.sumPixels(clij, split1) > 0);
+    assertTrue(Kernels.sumPixels(clij, split2) > 0);
+  }
+
   @Test public void sumPixelsSliceBySlice() {
     ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+
+    double sum = Kernels.sumPixels(clij, maskCL);
+    double[] sumSliceWise = Kernels.sumPixelsSliceBySlice(clij, maskCL);
+
+    assertTrue(sum == new Sum().evaluate(sumSliceWise));
+
+    maskCL.close();
+  }
+
+  @Test public void sumPixelsSliceBySlice_Buffers() {
+    ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
 
     double sum = Kernels.sumPixels(clij, maskCL);
     double[] sumSliceWise = Kernels.sumPixelsSliceBySlice(clij, maskCL);
@@ -2595,9 +3695,31 @@ public class KernelsTest
     maskCL.close();
   }
 
+  @Test public void sumPixels3d_Buffers()
+  {
+    ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+
+    double sum = Kernels.sumPixels(clij, maskCL);
+
+    assertTrue(sum == 27);
+
+    maskCL.close();
+  }
+
   @Test public void sumPixels2d()
   {
     ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+
+    double sum = Kernels.sumPixels(clij, maskCL);
+
+    assertTrue(sum == 9);
+
+    maskCL.close();
+  }
+
+  @Test public void sumPixels2d_Buffers()
+  {
+    ClearCLBuffer maskCL = clij.converter(mask2d).getClearCLBuffer();
 
     double sum = Kernels.sumPixels(clij, maskCL);
 
@@ -2621,12 +3743,12 @@ public class KernelsTest
     Prefs.blackBackground = false;
     IJ.setRawThreshold(thresholded, 2, 65535, null);
     IJ.run(thresholded,
-           "Convert to Mask",
-           "method=Default background=Dark");
+            "Convert to Mask",
+            "method=Default background=Dark");
 
     // do operation with ClearCL
     ClearCLImage src = clij.converter(testImp2).getClearCLImage();
-    ClearCLImage dst = clij.converter(testImp2).getClearCLImage();
+    ClearCLImage dst = clij.createCLImage(src);
 
     Kernels.threshold(clij, src, dst, 2);
     Kernels.multiplyScalar(clij, dst, src, 255);
@@ -2634,7 +3756,33 @@ public class KernelsTest
     ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
 
     assertTrue(TestUtilities.compareImages(thresholded,
-                                           thresholdedCL));
+            thresholdedCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void threshold3d_Buffers()
+  {
+    // do operation with ImageJ
+    ImagePlus thresholded = new Duplicator().run(testImp2);
+    Prefs.blackBackground = false;
+    IJ.setRawThreshold(thresholded, 2, 65535, null);
+    IJ.run(thresholded,
+            "Convert to Mask",
+            "method=Default background=Dark");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
+
+    Kernels.threshold(clij, src, dst, 2);
+    Kernels.multiplyScalar(clij, dst, src, 255);
+
+    ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(thresholded,
+            thresholdedCL));
 
     src.close();
     dst.close();
