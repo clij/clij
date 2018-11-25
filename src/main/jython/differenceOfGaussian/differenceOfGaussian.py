@@ -17,20 +17,20 @@ import os;
 import inspect
 
 # retrieve the folder where this script is located (thanks to @mountain_man from the ImageJ forum)
-lCLFilesPath = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda:0))) + "/"
+filesPath = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda:0))) + "/"
 
 # take the current image which is open in ImageJ
-lImagePlus = IJ.getImage()
+imp = IJ.openImage("http://imagej.nih.gov/ij/images/t1-head.zip");
 
 # initialize ClearCL context and convenience layer
-lCLIJ = ClearCLIJ.getInstance();
+clij = ClearCLIJ.getInstance();
 
 # convert imglib2 image to CL images (ready for the GPU)
-lInputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
-lOutputCLImage = lCLIJ.createCLImage([lInputCLImage.getWidth(), lInputCLImage.getHeight()], lInputCLImage.getChannelDataType());
+lInputCLImage = clij.converter(imp).getClearCLImage();
+lOutputCLImage = clij.createCLImage([lInputCLImage.getWidth(), lInputCLImage.getHeight()], lInputCLImage.getChannelDataType());
 
 # apply a filter to the image using ClearCL / OpenCL
-lCLIJ.execute(lCLFilesPath + "differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", {
+clij.execute(filesPath + "differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", {
 "input":lInputCLImage,
 "output":lOutputCLImage,
 "radius":6,
@@ -38,7 +38,7 @@ lCLIJ.execute(lCLFilesPath + "differenceOfGaussian.cl", "subtract_convolved_imag
 "sigma_subtrahend":Float(3)});
 
 # convert the result back to imglib2 and show it
-lResultImg = lCLIJ.converter(lOutputCLImage).getRandomAccessibleInterval();
-ImageJFunctions.show(lResultImg);
+resultRAI = clij.converter(lOutputCLImage).getRandomAccessibleInterval();
+ImageJFunctions.show(resultRAI);
 IJ.run("Enhance Contrast", "saturated=0.35");
 

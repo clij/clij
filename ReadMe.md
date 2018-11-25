@@ -1,32 +1,99 @@
 # ClearCLIJ
 
-ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL code from withing Fijis script editor (e.g. jython). ClearCLIJ is based on [ClearCL](http://github.com/ClearVolume/ClearCL), [FastFuse](https://github.com/ClearControl/FastFuse), [Imglib2](https://github.com/imglib) and [SciJava](https://github.com/SciJava).
+ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL GPU accelerated code from withing Fijis script editor (e.g. macro and jython). ClearCLIJ is based on [ClearCL](http://github.com/ClearVolume/ClearCL), [FastFuse](https://github.com/ClearControl/FastFuse), [Imglib2](https://github.com/imglib) and [SciJava](https://github.com/SciJava).
 
-Example code:
+## High level API
 
+The ImageJ macro extensions allow access to all methods in [the Kernels class](https://github.com/ClearControl/clearclij/blob/master/src/main/java/clearcl/imagej/kernels/Kernels.java) which take `ClearCLBuffer`s as parameters. This allows basic operations such as mathematical operations on images.
+
+Example code (ImageJ macro)
+
+```javascript
+run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
+Ext.CLIJ_clear();
+
+// push images to GPU
+Ext.CLIJ_push(input);
+Ext.CLIJ_push(output);
+
+// Blur in GPU
+Ext.CLIJ_blur(input, output, 20, 20, 1, 10, 10, 1);
+
+// Get results back from GPU
+Ext.CLIJ_pull(output);
 ```
-# initialize the GPU context
-lCLIJ = ClearCLIJ.getInstance();
+
+When accessing [the Kernels class](https://github.com/ClearControl/clearclij/blob/master/src/main/java/clearcl/imagej/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with ClearCLIJ, first create an instance. `ClearCLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/ClearControl/clearclij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
+
+```python
+from clearcl.imagej import ClearCLIJ;
+
+clij = ClearCLIJ.getInstance();
+```
+
+Afterwards, you can convert `ImagePlus` objects to ClearCL objects:
+
+```python
+imageInput = clij.converter(imp).getClearCLImage();
+```
+
+Furthermore, you can create images, for example with the same size as a given one:
+```python
+imageOutput = clij.createClearCLImage(imageOutput);
+```
+
+Alternatively, create an image with a given size and a given type:
+
+```python
+imageOutput = clij.createCLImage([imageInput.getWidth(), imageInput.getHeight()], imageInput.getChannelDataType());
+```
+
+Inplace operations are not well supported by OpenCL 1.2. Thus, after creating two images, you can call a kernel taking the first image and filling the pixels of second image wiht data:
+
+```python
+from clearcl.imagej.kernels import Kernels;
+Kernels.maxProjection(clij, imageInput, imageOutput);
+```
+
+Then, use the `show()` method of `ClearCLIJ` to get the image out of the GPU back to view in ImageJ:
+
+```python
+clij.show(imageOutput, "output");
+```
+
+You can also get the result image as ImagePlus:
+
+```python
+result = clij.converter(imageOutput).getImagePlus();
+```
+
+## Low level API
+
+In order to call your own `kernel.cl` files, use the `clij.execute()` method. Example code (Jython):
+
+```python
+# initialize the GPU 
+clij = ClearCLIJ.getInstance();
 
 # convert ImageJ image to CL images (ready for the GPU)
-lInputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage();
-lOutputCLImage = lCLIJ.converter(lImagePlus).getClearCLImage(); # copy again to allocate memory for result image
+lInputCLImage = clij.converter(imp).getClearCLImage();
+lOutputCLImage = clij.converter(imp).getClearCLImage(); # copy again to allocate memory for result image
 
 # downsample the image stack using ClearCL / OpenCL
-lResultStack = lCLIJ.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
+resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
 
 # convert the result back to imglib2 and show it
-lResultImg = lCLIJ.converter(lResultStack).getRandomAccessibleInterval();
-ImageJFunctions.show(lResultImg);
+resultRAI = clij.converter(resultStack).getRandomAccessibleInterval();
+ImageJFunctions.show(resultRAI);
 ```
-Complete jython examples can be found in the src/main/jython directory. More Java example code can be found in the package clearcl.imagej.demo
+Complete jython examples can be found in the [src/main/jython](https://github.com/ClearControl/clearclij/blob/master/src/main/jython/clDownsampling.py) directory. More Java example code can be found in the package clearcl.imagej.demo
 
 ## OpenCL Kernel calls with CLIJ.execute()
 The execute function asks for three or four parameters
 ```
-lCLIJ.execute(<Class>, "filename_open.cl", "kernelfunction", {"src":image, "dst":image, "more":5, "evenmore":image})
+clij.execute(<Class>, "filename_open.cl", "kernelfunction", {"src":image, "dst":image, "more":5, "evenmore":image})
 
-lCLIJ.execute("absolute/or/relative/path/filename_open.cl", "kernelfunction", {"src":image, "dst":image, "more":5, "evenmore":image})
+clij.execute("absolute/or/relative/path/filename_open.cl", "kernelfunction", {"src":image, "dst":image, "more":5, "evenmore":image})
 ```
 * An optional class file as an anchor to have a point for where to start
   searching for the program file (second parameter).
@@ -52,7 +119,7 @@ be at least two image type parameters containing "src", "dst", "input", or "outp
 parameter names. ClearCLIJ will then for example detect the type of an image parameter called
 "src_image" and replace all calls to `READ_IMAGE()` with the respective call to
 `image_readui()` or `image_readf()` calls.
-* Furthermore, variables inside OpenCL programs can be typed with `DTYPE_IN` and `DTYPE_OUT`
+* Variables inside OpenCL programs can be typed with `DTYPE_IN` and `DTYPE_OUT`
 instead of `float` or `int4` in order to make the OpenCL code type agnostic.
 
 
