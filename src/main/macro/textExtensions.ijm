@@ -19,7 +19,9 @@ Ext.CLIJ_push(temp);
 Ext.CLIJ_push(temp2);
 Ext.CLIJ_push(output);
 // cleanup ImageJ
-run("Close All");
+close();
+close();
+close();
 
 // Blur in GPU
 Ext.CLIJ_blur(input, temp, 20, 20, 1, 10, 10, 1);
@@ -31,5 +33,5 @@ Ext.CLIJ_addPixelwise(input, temp2, temp);
 // maximum projection
 Ext.CLIJ_maxProjection(temp, output, 0, 1, 2);
 
-// Get results back
+// Get results back from GPU
 Ext.CLIJ_pull(output);
