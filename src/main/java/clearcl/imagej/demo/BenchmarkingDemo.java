@@ -61,20 +61,22 @@ public class BenchmarkingDemo {
         IJ.run(input, "8-bit","");
         img = ImageJFunctions.wrapReal(input);
 
-        // ---------------------------------------
-        // three test scenarios
-        long timestamp = System.currentTimeMillis();
-        demoImageJ1();
-        System.out.println("The ImageJ1 way took " + (System.currentTimeMillis() - timestamp) + " msec");
+        for (int i=0; i<100; i++) {
+            // ---------------------------------------
+            // three test scenarios
+            long timestamp = System.currentTimeMillis();
+            demoImageJ1();
+            System.out.println("The ImageJ1 way took " + (System.currentTimeMillis() - timestamp) + " msec");
 
-        timestamp = System.currentTimeMillis();
-        demoImageJ2();
-        System.out.println("The ImageJ2 way took " + (System.currentTimeMillis() - timestamp) + " msec");
+            timestamp = System.currentTimeMillis();
+            demoImageJ2();
+            System.out.println("The ImageJ2 way took " + (System.currentTimeMillis() - timestamp) + " msec");
 
-        timestamp = System.currentTimeMillis();
-        demoClearCLIJ();
-        System.out.println("The ClearCL way took " + (System.currentTimeMillis() - timestamp) + " msec");
-        // ---------------------------------------
+            timestamp = System.currentTimeMillis();
+            demoClearCLIJ();
+            System.out.println("The ClearCL way took " + (System.currentTimeMillis() - timestamp) + " msec");
+            // ---------------------------------------
+        }
     }
 
     private static ImagePlus input;
