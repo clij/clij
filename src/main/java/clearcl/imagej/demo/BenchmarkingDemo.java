@@ -56,7 +56,8 @@ public class BenchmarkingDemo {
         ij.ui().showUI();
         lCLIJ = new ClearCLIJ("TITAN");
 
-        input = IJ.openImage("src/main/resources/flybrain.tif");
+        input = NewImage.createByteImage("gt", 512,512, 512, NewImage.FILL_RANDOM);
+                //IJ.openImage("src/main/resources/flybrain.tif");
         input.show();
         IJ.run(input, "8-bit","");
         img = ImageJFunctions.wrapReal(input);
@@ -143,29 +144,43 @@ public class BenchmarkingDemo {
     }
 
     private static void demoClearCLIJ() throws IOException {
+        long timestamp = System.currentTimeMillis();
         ClearCLImage input = lCLIJ.converter(img).getClearCLImage();
         ClearCLImage flip = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
         ClearCLImage flop = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
+        System.out.println("The copy to GPU took " + (System.currentTimeMillis() - timestamp) + " msec");
 
+        timestamp = System.currentTimeMillis();
         Kernels.blurSeparable(lCLIJ, input, flop, (float)sigma, (float)sigma, (float)sigma);
+        System.out.println("The blursep took " + (System.currentTimeMillis() - timestamp) + " msec");
 
         //lCLIJ.converter(flop).getImagePlus().show();
 
+        timestamp = System.currentTimeMillis();
         Kernels.threshold(lCLIJ, flop, flip, 100.0f);
+        System.out.println("The threshold took " + (System.currentTimeMillis() - timestamp) + " msec");
 
         //lCLIJ.converter(flip).getImagePlus().show();
 
+        timestamp = System.currentTimeMillis();
         Kernels.erode(lCLIJ, flip, flop);
+        System.out.println("The erode took " + (System.currentTimeMillis() - timestamp) + " msec");
 
         //lCLIJ.converter(flop).getImagePlus().show();
 
+        timestamp = System.currentTimeMillis();
         Kernels.dilate(lCLIJ, flop, flip);
+        System.out.println("The dilate took " + (System.currentTimeMillis() - timestamp) + " msec");
 
         //lCLIJ.converter(flip).getImagePlus().show();
 
+        timestamp = System.currentTimeMillis();
         Kernels.multiplyPixelwise(lCLIJ, flop, input, flip);
+        System.out.println("The multiplyPixelwise took " + (System.currentTimeMillis() - timestamp) + " msec");
 
+        timestamp = System.currentTimeMillis();
         lCLIJ.converter(flip).getImagePlus().show();
+        System.out.println("The convert back took " + (System.currentTimeMillis() - timestamp) + " msec");
 
         flip.close();
         flop.close();
