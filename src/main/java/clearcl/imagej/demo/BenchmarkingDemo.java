@@ -54,7 +54,7 @@ public class BenchmarkingDemo {
         // Initialize ImageJ, ClearCLIJ and test image
         ij = new ImageJ();
         ij.ui().showUI();
-        lCLIJ = new ClearCLIJ("HD");
+        lCLIJ = new ClearCLIJ("TITAN");
 
         input = IJ.openImage("src/main/resources/flybrain.tif");
         input.show();
@@ -147,7 +147,7 @@ public class BenchmarkingDemo {
         ClearCLImage flip = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
         ClearCLImage flop = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
 
-        Kernels.blur(lCLIJ, input, flop, (int)(sigma * 3), (int)(sigma * 3), (int)(sigma * 3), (float)sigma, (float)sigma, (float)sigma);
+        Kernels.blurSeparable(lCLIJ, input, flop, (float)sigma, (float)sigma, (float)sigma);
 
         //lCLIJ.converter(flop).getImagePlus().show();
 
