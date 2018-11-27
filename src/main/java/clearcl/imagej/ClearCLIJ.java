@@ -67,6 +67,25 @@ public class ClearCLIJ
     return sInstance;
   }
 
+  @Deprecated
+  public ClearCLIJ(int deviceIndex) {
+
+    ClearCLBackendInterface
+            lClearCLBackend = new ClearCLBackendJOCL();
+
+    mClearCL = new ClearCL(lClearCLBackend);
+
+    ArrayList<ClearCLDevice> allDevices = mClearCL.getAllDevices();
+    for ( int i = 0; i < allDevices.size(); i++) {
+      System.out.println(allDevices.get(i).getName());
+    }
+
+    mClearCLDevice = allDevices.get(deviceIndex);
+    System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
+
+
+    mClearCLContext = mClearCLDevice.createContext();
+  }
   /**
    * Deprecated: use getInstance(String) instead
    * @param pDeviceNameMustContain device name
