@@ -30,10 +30,10 @@ Add the update site https://sites.imagej.net/clij to your Fiji installation. Rea
 
 There are five four methods for memory transfer between RAM and GPU:
 
-* `CLIJ_push(image)` sends an image with the given name to the GPU.
-* `CLIJ_pull(image)` retrieves a given image from the GPU and show it.
-* `CLIJ_releas(image)` frees the memory in the GPU which is reserved for a given image.
-* `CLIJ_clear()` releases the memory for all stored images.
+* `Ext.CLIJ_push(image)` sends an image with the given name to the GPU.
+* `Ext.CLIJ_pull(image)` retrieves a given image from the GPU and show it.
+* `Ext.CLIJ_releas(image)` frees the memory in the GPU which is reserved for a given image.
+* `Ext.CLIJ_clear()` releases the memory for all stored images.
 
 Furthermore, there is a `help("")` method to assist you in finding the right OpenCL kernel call for your workflow. Just enter the name of the desired operation:
 
@@ -49,7 +49,7 @@ Ext.CLIJ_mean3d(Image source, Image destination, Number radiusX, Number radiusY,
 Ext.CLIJ_meanSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
 ```
 
-The full list of supported kernels can be retrieved by calling `help("");":`
+The full list of supported kernels can be retrieved by calling `help("");`
 
 ```java
 Found 54 method(s) containing the pattern "":
