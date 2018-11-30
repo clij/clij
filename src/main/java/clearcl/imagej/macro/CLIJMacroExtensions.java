@@ -16,6 +16,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -88,7 +89,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
     @Override
     public String handleExtension(String name, Object[] args) {
-        System.out.println("Handle Ext " + name);
+        ////System.out.println("Handle Ext " + name);
         try {
             if (name.equals(TO_CLIJ)) {
                 toCLIJ((String) args[0]);
@@ -107,22 +108,22 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                 return null;
             }
 
-            System.out.println("methods " + methodMap.size());
+            //System.out.println("methods " + methodMap.size());
             Method method = methodMap.get(name + (args.length + 1)).method;
             if (method == null) {
-                System.out.println("Method not found: " + name);
+                //System.out.println("Method not found: " + name);
                 return "Error: Method not found!";
             }
 
-            System.out.println("Check method: " + name);
+            //System.out.println("Check method: " + name);
             Object[] parsedArguments = new Object[args.length + 1];
             parsedArguments[0] = clij;
             for (int i = 0; i < args.length; i++) {
-                System.out.println("Parsing args: " + args[i] + " " + args[i].getClass());
+                //System.out.println("Parsing args: " + args[i] + " " + args[i].getClass());
                 if (args[i] instanceof Double) {
-                    System.out.println("numeric");
+                    //System.out.println("numeric");
                     Class type = method.getParameters()[i + 1].getType();
-                    System.out.println("type " + type);
+                    //System.out.println("type " + type);
                     if (type == Double.class) {
                         parsedArguments[i + 1] = args[i];
                     } else if (type == Float.class) {
@@ -132,40 +133,40 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                     } else if (type == Boolean.class) {
                         parsedArguments[i + 1] = ((Double) args[i]) > 0;
                     } else {
-                        System.out.println("Unknown type: " + type);
+                        //System.out.println("Unknown type: " + type);
                     }
                 } else {
-                    System.out.println("not numeric");
+                    //System.out.println("not numeric");
                     parsedArguments[i + 1] = bufferMap.get(args[i]);
                 }
-                System.out.println("Parsed args: " + parsedArguments[i + 1]);
+                //System.out.println("Parsed args: " + parsedArguments[i + 1]);
             }
 
 
             System.out.println("Invoke method: " + name);
-            for (int i = 0; i < parsedArguments.length; i++) {
-                if (parsedArguments[i] != null) {
-                    System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
-                }
-            }
+            //for (int i = 0; i < parsedArguments.length; i++) {
+                //if (parsedArguments[i] != null) {
+                    //System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
+                //}
+            //}
 
             try {
                 method.invoke(null, parsedArguments);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-                return "ERROR IAE1";
+                return "IllegalArgumentException";
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
-                return "ERROR IAE2";
+                return "IllegalAccessException";
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
-                return "ERROR ITE";
+                return "InvocationTargetException";
             } catch (Exception e) {
                 e.printStackTrace();
-                return "ERROR E";
+                return "Exception";
             }
 
-            System.out.println("Success");
+            //System.out.println("Success");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -180,14 +181,14 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
     }
 
     private void help(Object[] args) {
-        IJ.log("Help");
+        //IJ.log("Help");
         String searchString = "";
         if (args.length > 0) {
             searchString = (String)(args[0]);
         }
         ArrayList<String> helpList = new ArrayList<String>();
         for (String key : methodMap.keySet()) {
-            System.out.println(key);
+            //System.out.println(key);
             if (searchString.length() == 0 || key.contains(searchString)) {
 
                 helpList.add(methodMap.get(key).name + "(" + methodMap.get(key).parameters + ")");
@@ -195,16 +196,16 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
             }
         }
 
-        IJ.log("Helping");
+        IJ.log("Found " + helpList.size() + " method(s) containing the pattern \"" + searchString + "\":");
         Collections.sort(helpList);
         for (String entry : helpList) {
-            IJ.log(entry);
+            IJ.log("Ext." + entry + ";");
         }
-        IJ.log("Helped");
+        //IJ.log("Helped");
     }
 
     private void releaseBuffer(String arg) {
-        System.out.println("Releasing " + arg);
+        //System.out.println("Releasing " + arg);
         ClearCLBuffer buffer = bufferMap.get(arg);
         buffer.close();
         bufferMap.remove(arg);
@@ -248,7 +249,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         int i = numberOfPredefinedExtensions;
         for (String key: methodMap.keySet()) {
             extensions[i] = methodMap.get(key).extensionDescriptor;
-            //System.out.println("Add method: " + key + methodMap.get(key).parameters);
+            ////System.out.println("Add method: " + key + methodMap.get(key).parameters);
             i++;
         }
 
@@ -258,55 +259,71 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
     private void parseClass(Class c) {
         Method[] methods = c.getDeclaredMethods();
         for (Method method : methods) {
-            ArrayList<Integer> typeList = new ArrayList<Integer>();
-            String parameters = "";
-            boolean makeAvailable = true;
+            if (!method.getName().startsWith("parameter")) {
+                ArrayList<Integer> typeList = new ArrayList<Integer>();
+                String parameters = "";
+                boolean makeAvailable = true;
 
-            int j = 0;
-            for (Parameter parameter : method.getParameters()) {
-                if (parameter.getType() != ClearCLIJ.class) {
-                    if (parameter.getType() == ClearCLImage.class) {
-                        makeAvailable = false;
-                    }
-
-                    String type = "";
-                    if (parameter.getType() == ClearCLBuffer.class) {
-                        type = "image";
-                        typeList.add(MacroExtension.ARG_STRING);
-                    } else if (parameter.getType() == Float.class || parameter.getType() == Integer.class || parameter.getType() == Double.class) {
-                        type = "number";
-                        typeList.add(MacroExtension.ARG_NUMBER);
-                    } else if (parameter.getType() == Boolean.class) {
-                        type = "boolean";
-                        typeList.add(MacroExtension.ARG_NUMBER);
-                    } else {
-                        type = "var";
-                        typeList.add(MacroExtension.ARG_STRING);
-                    }
-
-                    if (parameters.length() == 0) {
-                        parameters = type;
-                    } else {
-                        parameters = parameters + "," + type;
-                    }
+                int j = 0;
+                String parameter_doc = "";
+                try {
+                    Field parameter_doc_field = c.getField("parameter_doc_" + method.getName());
+                    parameter_doc = (String) ((Field) parameter_doc_field).get(null);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
                 }
-                j++;
-            }
-            int[] types = new int[typeList.size()];
-            for (int i = 0; i < typeList.size(); i++) {
-                types[i] = typeList.get(i);
-            }
-            String shortName = "CLIJ_" + method.getName();
-            String key = shortName + (types.length + 1);
-            if (makeAvailable && !methodMap.containsKey(key)) {
-                MethodInfo methodInfo = new MethodInfo(
-                        new ExtensionDescriptor(shortName, types, this),
-                        method,
-                        parameters,
-                        shortName
-                );
-                //.add(methodInfo.extensionDescriptor);
-                methodMap.put(key, methodInfo);
+                for (Parameter parameter : method.getParameters()) {
+                    if (parameter.getType() != ClearCLIJ.class) {
+                        if (parameter.getType() == ClearCLImage.class) {
+                            makeAvailable = false;
+                        }
+
+                        String type = "";
+                        if (parameter.getType() == ClearCLBuffer.class) {
+                            type = "image";
+                            typeList.add(MacroExtension.ARG_STRING);
+                        } else if (parameter.getType() == Float.class || parameter.getType() == Integer.class || parameter.getType() == Double.class) {
+                            type = "number";
+                            typeList.add(MacroExtension.ARG_NUMBER);
+                        } else if (parameter.getType() == Boolean.class) {
+                            type = "boolean";
+                            typeList.add(MacroExtension.ARG_NUMBER);
+                        } else {
+                            type = "var";
+                            typeList.add(MacroExtension.ARG_STRING);
+                        }
+
+                        if (parameters.length() == 0) {
+                            parameters = type;
+                        } else {
+                            parameters = parameters + "," + type;
+                        }
+                        parameters = parameters + " " + parameter.getName();
+                    }
+                    j++;
+                }
+                if (parameter_doc.length() > 0) {
+                    parameters = parameter_doc;
+                }
+
+                int[] types = new int[typeList.size()];
+                for (int i = 0; i < typeList.size(); i++) {
+                    types[i] = typeList.get(i);
+                }
+                String shortName = "CLIJ_" + method.getName();
+                String key = shortName + (types.length + 1);
+                if (makeAvailable && !methodMap.containsKey(key)) {
+                    MethodInfo methodInfo = new MethodInfo(
+                            new ExtensionDescriptor(shortName, types, this),
+                            method,
+                            parameters,
+                            shortName
+                    );
+                    //.add(methodInfo.extensionDescriptor);
+                    methodMap.put(key, methodInfo);
+                }
             }
         }
     }
@@ -330,7 +347,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                 new Double(3),
                 new Double(1)
         };
-        ext.handleExtension("CLIJ_mean", arguments);
+        ext.handleExtension("CLIJ_mean3d", arguments);
     }
 
 }
