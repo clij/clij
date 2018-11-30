@@ -4,7 +4,7 @@ ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL GPU accelerated co
 
 ## Accessing from ImageJ macro
 
-The ImageJ macro extensions allow access to all methods in [the CLIJMacroAPI class](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/java/clearcl/imagej/macro/CLIJMacroAPI.java). See a detailed list below. This allows basic operations such as mathematical operations on images.
+The ImageJ macro extensions allow access to all methods in [the CLIJMacroAPI class](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/java/net/haesleinhuepf/imagej/macro/CLIJMacroAPI.java). See a detailed list below. This allows basic operations such as mathematical operations on images.
 
 Example code (ImageJ macro)
 ```javascript
@@ -112,7 +112,7 @@ Ext.CLIJ_threshold(Image source, Image destination, Number Threshold);
 
 
 ## High level API (Java, Jython, Groovy)
-When accessing [the Kernels class](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/java/clearcl/imagej/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with ClearCLIJ, first create an instance. `ClearCLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
+When accessing [the Kernels class](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/java/net/haesleinhuepf/imagej/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with ClearCLIJ, first create an instance. `ClearCLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
 
 ```python
 from clearcl.imagej import ClearCLIJ;
@@ -175,7 +175,7 @@ resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "d
 resultRAI = clij.converter(resultStack).getRandomAccessibleInterval();
 ImageJFunctions.show(resultRAI);
 ```
-Complete jython examples can be found in the [src/main/jython](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/clDownsampling.py) directory. More Java example code can be found in the package clearcl.imagej.demo
+Complete jython examples can be found in the [src/main/jython](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/) directory. More Java example code can be found in the package net.haesleinhuepf.imagej.demo
 
 ## OpenCL Kernel calls with CLIJ.execute()
 The execute function asks for three or four parameters
