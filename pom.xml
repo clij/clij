@@ -12,8 +12,8 @@
 		<relativePath />
 	</parent>
 
-	<groupId>net.clearcontrol</groupId>
-	<artifactId>clearclij</artifactId>
+	<groupId>net.haesleinhuepf</groupId>
+	<artifactId>clij</artifactId>
 	<version>0.3.28</version>
 
 	<name>ClearCLIJ</name>
@@ -89,10 +89,6 @@
 		</dependency>
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
-			<artifactId>clearcontrol</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.clearcontrol</groupId>
 			<artifactId>clearcl</artifactId>
 		</dependency>
 		<dependency>
@@ -120,6 +116,10 @@
 			<artifactId>junit</artifactId>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -138,6 +138,4 @@
 		</repository>
 
 	</distributionManagement>
-
-
 </project>

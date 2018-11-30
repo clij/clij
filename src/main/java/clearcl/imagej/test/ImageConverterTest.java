@@ -7,8 +7,6 @@ import clearcl.imagej.ClearCLIJ;
 import clearcl.imagej.kernels.Kernels;
 import clearcl.imagej.utilities.ImageTypeConverter;
 import clearcl.util.ElapsedTime;
-import clearcontrol.stack.OffHeapPlanarStack;
-import clearcontrol.stack.StackInterface;
 import coremem.enums.NativeTypeEnum;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
@@ -51,46 +49,30 @@ public class ImageConverterTest
           ArrayImgs.floats(new long[] { 5, 6, 7 });
       fillTestImage(lFloatImg);
       testBackAndForthConversionViaCLImage(lFloatImg);
-      testBackAndForthConversionViaOffHeapPlanarStack(lFloatImg);
-      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-          lFloatImg);
 
       RandomAccessibleInterval<UnsignedByteType>
           lUnsignedByteImg =
           ArrayImgs.unsignedBytes(new long[] { 5, 6, 7 });
       fillTestImage(lUnsignedByteImg);
       testBackAndForthConversionViaCLImage(lUnsignedByteImg);
-      testBackAndForthConversionViaOffHeapPlanarStack(lUnsignedByteImg);
-      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-          lUnsignedByteImg);
 
       RandomAccessibleInterval<ByteType>
           lByteImg =
           ArrayImgs.bytes(new long[] { 5, 6, 7 });
       fillTestImage(lByteImg);
       testBackAndForthConversionViaCLImage(lByteImg);
-      testBackAndForthConversionViaOffHeapPlanarStack(lByteImg);
-      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-          lByteImg);
 
       RandomAccessibleInterval<UnsignedShortType>
           lUnsignedShortImg =
           ArrayImgs.unsignedShorts(new long[] { 5, 6, 7 });
       fillTestImage(lUnsignedShortImg);
       testBackAndForthConversionViaCLImage(lUnsignedShortImg);
-      testBackAndForthConversionViaOffHeapPlanarStack(
-          lUnsignedShortImg);
-      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-          lUnsignedShortImg);
 
       RandomAccessibleInterval<ShortType>
           lShortImg =
           ArrayImgs.shorts(new long[] { 5, 6, 7 });
       fillTestImage(lShortImg);
       testBackAndForthConversionViaCLImage(lShortImg);
-      testBackAndForthConversionViaOffHeapPlanarStack(lShortImg);
-      testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-          lShortImg);
     }
   }
 
@@ -153,66 +135,6 @@ public class ImageConverterTest
     lClearCLImage.close();
   }
 
-  private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStack(
-      RandomAccessibleInterval<T> lRAI)
-  {
-    ClearCLIJ lCLIJ = mCLIJ;
-
-    StackInterface
-        lOffHeapPlanarStack =
-        lCLIJ.converter(lRAI).getOffHeapPlanarStack();
-
-    RandomAccessibleInterval<T>
-        lRAIconvertedTwice =
-        (RandomAccessibleInterval<T>) lCLIJ.converter(
-            lOffHeapPlanarStack).getRandomAccessibleInterval();
-
-    assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
-        lRAI), Views.iterable(lRAIconvertedTwice)));
-
-    lOffHeapPlanarStack.free();
-  }
-
-  private <T extends RealType<T>> void testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(
-      RandomAccessibleInterval<T> lRAI)
-  {
-    ClearCLIJ lCLIJ = mCLIJ;
-
-    StackInterface
-        lOffHeapPlanarStack =
-        lCLIJ.converter(lRAI).getOffHeapPlanarStack();
-
-    ClearCLImage
-        lCLImage =
-        lCLIJ.converter(lOffHeapPlanarStack).getClearCLImage();
-
-    RandomAccessibleInterval<T>
-        lRAIconvertedTwice =
-        (RandomAccessibleInterval<T>) lCLIJ.converter(lCLImage)
-                                           .getRandomAccessibleInterval();
-
-    ClearCLImage
-        lCLImage2 =
-        lCLIJ.converter(lRAIconvertedTwice).getClearCLImage();
-
-    StackInterface
-        lOffHeapPlanarStack2 =
-        lCLIJ.converter(lCLImage2).getOffHeapPlanarStack();
-
-    RandomAccessibleInterval<T>
-        lRAIconverted =
-        lCLIJ.converter(lOffHeapPlanarStack2)
-             .getRandomAccessibleInterval();
-
-    assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
-        lRAI), Views.iterable(lRAIconverted)));
-
-    lOffHeapPlanarStack.free();
-    lOffHeapPlanarStack2.free();
-
-    lCLImage.close();
-    lCLImage2.close();
-  }
 
   @Test public void convertHugeUnsignedShortImageTest()
   {
@@ -224,11 +146,9 @@ public class ImageConverterTest
     lRA.setPosition(new long[] { 1, 1 });
     lRA.get().set(40000);
 
-    testBackAndForthConversionViaOffHeapPlanarStack(lRAI);
 
     testBackAndForthConversionViaCLImage(lRAI);
 
-    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
   }
 
   @Test public void convertHugeSignedShortImageTest()
@@ -241,11 +161,9 @@ public class ImageConverterTest
     lRA.setPosition(new long[] { 0, 0 });
     lRA.get().setReal(-25400);
 
-    testBackAndForthConversionViaOffHeapPlanarStack(lRAI);
 
     testBackAndForthConversionViaCLImage(lRAI);
 
-    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
   }
 
   @Test public void convertHugeFloatImageTest()
@@ -258,28 +176,9 @@ public class ImageConverterTest
     lRA.setPosition(new long[] { 0, 0 });
     lRA.get().setReal(-25400);
 
-    testBackAndForthConversionViaOffHeapPlanarStack(lRAI);
-
     testBackAndForthConversionViaCLImage(lRAI);
-
-    testBackAndForthConversionViaOffHeapPlanarStackAndCLImage(lRAI);
   }
 
-  @Ignore // might not work in CI because of memory limitatons
-  @Test
-  public void testLargeImageConversionTest() {
-      mCLIJ = ClearCLIJ.getInstance();
-
-      long[] size = new long[]{2048, 2048, 512};
-      NativeTypeEnum type = NativeTypeEnum.UnsignedShort;
-
-      ElapsedTime.measureForceOutput("", () -> {
-          StackInterface stack = new OffHeapPlanarStack(true, 0, type, 1, size);
-          System.out.println("whd: " + stack.getWidth() + "/" + stack.getHeight() + "/" + stack.getDepth());
-          RandomAccessibleInterval<UnsignedShortType> img = mCLIJ.converter(stack).getRandomAccessibleInterval();
-          System.out.println("Type of result: " + img.getClass());
-      });
-  }
 
     @Test
     public void testConversionUnsignedShortStackToFloatCLImage() {
@@ -293,11 +192,11 @@ public class ImageConverterTest
         ra.setPosition(new int[] {1,1});
         ra.get().set(4);
 
-        StackInterface stack = mCLIJ.converter(rai).getStack();
+        ClearCLImage stack = mCLIJ.converter(rai).getClearCLImage();
 
         // test starts here
 
-        RandomAccessibleInterval<UnsignedShortType> rai2 = mCLIJ.converter(stack).getRandomAccessibleInterval();
+        RandomAccessibleInterval rai2 = mCLIJ.converter(stack).getRandomAccessibleInterval();
 
         ClearCLImage clImage = mCLIJ.createCLImage(stack.getDimensions(), ImageChannelDataType.Float);
         ImageTypeConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);

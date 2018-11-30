@@ -10,7 +10,6 @@ import clearcl.imagej.utilities.CLInfo;
 import clearcl.imagej.utilities.CLKernelExecutor;
 import clearcl.imagej.utilities.ImageTypeConverter;
 import clearcl.util.ElapsedTime;
-import clearcontrol.stack.StackInterface;
 import coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;
@@ -192,10 +191,6 @@ public class ClearCLIJ
     return lResultMap;
   }
 
-  public ImageTypeConverter converter(StackInterface pStack) {
-    return new ImageTypeConverter(this, pStack);
-  }
-
   public <T extends RealType<T>> ImageTypeConverter<T> converter(RandomAccessibleInterval<T> pRandomAccessibleInterval) {
     return new ImageTypeConverter<T>(this, pRandomAccessibleInterval);
   }
@@ -210,34 +205,6 @@ public class ClearCLIJ
 
   public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLBuffer pClearCLBuffer) {
     return new ImageTypeConverter<T>(this, pClearCLBuffer);
-  }
-
-  public <T extends RealType<T>> ImageTypeConverter<T> converter(byte[][][] array) {
-    return new ImageTypeConverter<T>(this, array);
-  }
-
-  public <T extends RealType<T>> ImageTypeConverter<T> converter(char[][][] array) {
-    return new ImageTypeConverter<T>(this, array);
-  }
-
-  public <T extends RealType<T>> ImageTypeConverter<T> converter(short[][][] array) {
-    return new ImageTypeConverter<T>(this, array);
-  }
-
-  public <T extends RealType<T>> ImageTypeConverter<T> converter(int[][][] array) {
-    return new ImageTypeConverter<T>(this, array);
-  }
-
-  public <T extends RealType<T>> ImageTypeConverter<T> converter(long[][][] array) {
-    return new ImageTypeConverter<T>(this, array);
-  }
-
-  public <T extends RealType<T>> ImageTypeConverter<T> converter(float[][][] array) {
-    return new ImageTypeConverter<T>(this, array);
-  }
-
-  public <T extends RealType<T>> ImageTypeConverter<T> converter(double[][][] array) {
-    return new ImageTypeConverter<T>(this, array);
   }
 
   public static String clinfo() {
@@ -293,9 +260,6 @@ public class ClearCLIJ
     show(converter(input), title);
   }
   public void show(ClearCLBuffer input, String title) {
-    show(converter(input), title);
-  }
-  public void show(StackInterface input, String title) {
     show(converter(input), title);
   }
   public void show(ImageTypeConverter input, String title) {
