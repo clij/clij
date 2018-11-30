@@ -449,7 +449,7 @@ public class CLIJMacroAPI {
         return Kernels.multiplyStackWithPlane(clij, source3d, source2d, destination3d);
     }
 
-    public final static String parameter_doc_power = "Image source, Image destination";
+    public final static String parameter_doc_power = "Image source, Image destination, Number exponent";
     public static boolean power(ClearCLIJ clij,
                                 ClearCLBuffer source,
                                 ClearCLBuffer destination,
