@@ -1,6 +1,6 @@
 # ClearCLIJ
 
-ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL GPU accelerated code from withing Fijis script editor (e.g. macro and jython). ClearCLIJ is based on [ClearCL](http://github.com/ClearControl/ClearCL), [FastFuse](https://github.com/ClearControl/FastFuse), [Imglib2](https://github.com/imglib) and [SciJava](https://github.com/SciJava).
+ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL GPU accelerated code from within Fijis script editor (e.g. macro and jython). ClearCLIJ is based on [ClearCL](http://github.com/ClearControl/ClearCL), [FastFuse](https://github.com/ClearControl/FastFuse), [Imglib2](https://github.com/imglib) and [SciJava](https://github.com/SciJava).
 
 ## Accessing from ImageJ macro
 
