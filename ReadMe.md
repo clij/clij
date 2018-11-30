@@ -28,7 +28,7 @@ Add the update site https://sites.imagej.net/clij to your Fiji installation. [Re
 
 ### Supported methods
 
-There are five four methods for memory transfer between RAM and GPU:
+There are five methods for memory transfer between RAM and GPU:
 
 * `Ext.CLIJ_push(image)` sends an image with the given name to the GPU.
 * `Ext.CLIJ_pull(image)` retrieves a given image from the GPU and show it.
