@@ -32,9 +32,9 @@ Add the update site https://sites.imagej.net/clij to your Fiji installation. [Re
 There are five methods for memory transfer between RAM and GPU:
 
 * `Ext.CLIJ_push(image)` sends an image with the given name to the GPU.
-* `Ext.CLIJ_pull(image)` retrieves a given image from the GPU and show it.
+* `Ext.CLIJ_pull(image)` retrieves a given image from the GPU and shows it.
 * `Ext.CLIJ_releas(image)` frees the memory in the GPU which is reserved for a given image.
-* `Ext.CLIJ_clear()` releases the memory for all stored images.
+* `Ext.CLIJ_clear()` releases the memory for all stored images in the GPU.
 
 Furthermore, there is a `help("")` method to assist you in finding the right OpenCL kernel call for your workflow. Just enter the name of the desired operation:
 
