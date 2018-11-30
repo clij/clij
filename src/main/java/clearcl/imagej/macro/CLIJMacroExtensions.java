@@ -233,7 +233,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
     @Override
     public ExtensionDescriptor[] getExtensionFunctions() {
 
-        parseClass(Kernels.class);
+        parseClass(CLIJMacroAPI.class);
 
         int numberOfPredefinedExtensions = 5;
 
@@ -270,17 +270,17 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                     }
 
                     String type = "";
-                    if (parameter.getType().isAssignableFrom(Integer.class) ||
-                            parameter.getType().isAssignableFrom(Double.class) ||
-                            parameter.getType().isAssignableFrom(Long.class) ||
-                            parameter.getType().isAssignableFrom(Float.class) ||
-                            parameter.getType().isAssignableFrom(Byte.class) ||
-                            parameter.getType().isAssignableFrom(Character.class)
-                    ) {
+                    if (parameter.getType() == ClearCLBuffer.class) {
+                        type = "image";
+                        typeList.add(MacroExtension.ARG_STRING);
+                    } else if (parameter.getType() == Float.class || parameter.getType() == Integer.class || parameter.getType() == Double.class) {
                         type = "number";
                         typeList.add(MacroExtension.ARG_NUMBER);
+                    } else if (parameter.getType() == Boolean.class) {
+                        type = "boolean";
+                        typeList.add(MacroExtension.ARG_NUMBER);
                     } else {
-                        type = "image";
+                        type = "var";
                         typeList.add(MacroExtension.ARG_STRING);
                     }
 
