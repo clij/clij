@@ -1,17 +1,14 @@
-package clearcl.imagej.demo;
+package net.haesleinhuepf.imagej.demo;
 
 import clearcl.ClearCLImage;
-import clearcl.imagej.ClearCLIJ;
-import clearcl.imagej.kernels.Kernels;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
-import ij.gui.NewImage;
 import ij.plugin.Duplicator;
 import ij.plugin.ImageCalculator;
 import net.imagej.ImageJ;
-import net.imagej.ImageJPlugin;
-import net.imagej.ops.OpService;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.neighborhood.DiamondShape;
@@ -20,18 +17,11 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.roi.Regions;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Pair;
 import net.imglib2.view.Views;
-import org.scijava.command.Command;
-import org.scijava.plugin.Parameter;
-import org.scijava.plugin.Plugin;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * This class (rather its main method) applies a simple pipeline to a given image. It blurs it, creates a mask by

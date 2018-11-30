@@ -1,14 +1,13 @@
-package clearcl.imagej;
+package net.haesleinhuepf.imagej;
 
 import clearcl.*;
 import clearcl.backend.ClearCLBackendInterface;
 import clearcl.backend.ClearCLBackends;
-import clearcl.backend.javacl.ClearCLBackendJavaCL;
 import clearcl.backend.jocl.ClearCLBackendJOCL;
 import clearcl.enums.*;
-import clearcl.imagej.utilities.CLInfo;
-import clearcl.imagej.utilities.CLKernelExecutor;
-import clearcl.imagej.utilities.ImageTypeConverter;
+import net.haesleinhuepf.imagej.utilities.CLInfo;
+import net.haesleinhuepf.imagej.utilities.CLKernelExecutor;
+import net.haesleinhuepf.imagej.utilities.ImageTypeConverter;
 import clearcl.util.ElapsedTime;
 import coremem.enums.NativeTypeEnum;
 import ij.IJ;

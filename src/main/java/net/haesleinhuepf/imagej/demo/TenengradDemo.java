@@ -1,15 +1,13 @@
-package clearcl.imagej.demo;
+package net.haesleinhuepf.imagej.demo;
 
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
-import clearcl.imagej.ClearCLIJ;
-import clearcl.imagej.kernels.Kernels;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
-
-import java.util.DuplicateFormatFlagsException;
 
 /**
  * The TenengradDemo loads an image stack containing five images of the same scene. It fuses the first four of them via

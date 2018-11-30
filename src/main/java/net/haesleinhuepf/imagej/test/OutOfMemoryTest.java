@@ -1,9 +1,9 @@
-package clearcl.imagej.test;
+package net.haesleinhuepf.imagej.test;
 
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
-import clearcl.imagej.ClearCLIJ;
-import clearcl.imagej.kernels.Kernels;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 import org.junit.Ignore;
 import org.junit.Test;
 

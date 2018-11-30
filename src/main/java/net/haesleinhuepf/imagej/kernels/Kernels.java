@@ -1,21 +1,17 @@
-package clearcl.imagej.kernels;
+package net.haesleinhuepf.imagej.kernels;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
-import clearcl.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.ClearCLIJ;
 import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.imagej.utilities.CLKernelExecutor;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
-import java.awt.*;
-import java.nio.Buffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
-
-import static clearcl.imagej.utilities.CLKernelExecutor.MAX_ARRAY_SIZE;
 
 
 /**
@@ -1479,7 +1475,7 @@ public class Kernels
                                 ClearCLImage dst,
                                 Integer kernelSizeX,
                                 Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1499,7 +1495,7 @@ public class Kernels
                                 ClearCLBuffer dst,
                                 Integer kernelSizeX,
                                 Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1520,7 +1516,7 @@ public class Kernels
                                 Integer kernelSizeX,
                                 Integer kernelSizeY,
                                 Integer kernelSizeZ) {
-    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1542,7 +1538,7 @@ public class Kernels
                                 Integer kernelSizeX,
                                 Integer kernelSizeY,
                                 Integer kernelSizeZ) {
-    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1563,7 +1559,7 @@ public class Kernels
                                             ClearCLImage dst,
                                             Integer kernelSizeX,
                                             Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1583,7 +1579,7 @@ public class Kernels
                                             ClearCLBuffer dst,
                                             Integer kernelSizeX,
                                             Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1730,7 +1726,7 @@ public class Kernels
                                ClearCLImage dst,
                                Integer kernelSizeX,
                                Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1750,7 +1746,7 @@ public class Kernels
                              ClearCLBuffer dst,
                              Integer kernelSizeX,
                              Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1771,7 +1767,7 @@ public class Kernels
                                Integer kernelSizeX,
                                Integer kernelSizeY,
                                Integer kernelSizeZ) {
-    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1793,7 +1789,7 @@ public class Kernels
                              Integer kernelSizeX,
                              Integer kernelSizeY,
                              Integer kernelSizeZ) {
-    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1814,7 +1810,7 @@ public class Kernels
                                          ClearCLImage dst,
                                          Integer kernelSizeX,
                                          Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1834,7 +1830,7 @@ public class Kernels
                                          ClearCLBuffer dst,
                                          Integer kernelSizeX,
                                          Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1854,7 +1850,7 @@ public class Kernels
                                ClearCLImage dst,
                                Integer kernelSizeX,
                                Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1874,7 +1870,7 @@ public class Kernels
                                ClearCLBuffer dst,
                                Integer kernelSizeX,
                                Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1895,7 +1891,7 @@ public class Kernels
                                Integer kernelSizeX,
                                Integer kernelSizeY,
                                Integer kernelSizeZ) {
-    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1917,7 +1913,7 @@ public class Kernels
                                Integer kernelSizeX,
                                Integer kernelSizeY,
                                Integer kernelSizeZ) {
-    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1938,7 +1934,7 @@ public class Kernels
                                            ClearCLImage dst,
                                            Integer kernelSizeX,
                                            Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1958,7 +1954,7 @@ public class Kernels
                                            ClearCLBuffer dst,
                                            Integer kernelSizeX,
                                            Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1978,7 +1974,7 @@ public class Kernels
                                 ClearCLImage dst,
                                 Integer kernelSizeX,
                                 Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -1998,7 +1994,7 @@ public class Kernels
                                 ClearCLBuffer dst,
                                 Integer kernelSizeX,
                                 Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -2019,7 +2015,7 @@ public class Kernels
                                 Integer kernelSizeX,
                                 Integer kernelSizeY,
                                 Integer kernelSizeZ) {
-    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -2041,7 +2037,7 @@ public class Kernels
                                 Integer kernelSizeX,
                                 Integer kernelSizeY,
                                 Integer kernelSizeZ) {
-    if (kernelSizeX * kernelSizeY * kernelSizeZ > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -2062,7 +2058,7 @@ public class Kernels
                                          ClearCLImage dst,
                                             Integer kernelSizeX,
                                             Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }
@@ -2082,7 +2078,7 @@ public class Kernels
                                             ClearCLBuffer dst,
                                             Integer kernelSizeX,
                                             Integer kernelSizeY) {
-    if (kernelSizeX * kernelSizeY > MAX_ARRAY_SIZE) {
+    if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
       System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
       return false;
     }

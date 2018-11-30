@@ -1,10 +1,8 @@
-package clearcl.imagej.macro;
+package net.haesleinhuepf.imagej.macro;
 
 import clearcl.ClearCLBuffer;
-import clearcl.imagej.ClearCLIJ;
-import clearcl.imagej.kernels.Kernels;
-
-import static clearcl.imagej.utilities.CLKernelExecutor.MAX_ARRAY_SIZE;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 
 /**
  * The CLIJMacroAPI contains all methods which can be called from ImageJ macro

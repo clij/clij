@@ -1,17 +1,15 @@
-package clearcl.imagej.test;
+package net.haesleinhuepf.imagej.test;
 
-import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
-import clearcl.imagej.ClearCLIJ;
-import clearcl.imagej.kernels.Kernels;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 import clearcl.util.ElapsedTime;
 import coremem.enums.NativeTypeEnum;
 import ij.*;
 import ij.gui.NewImage;
 import ij.gui.Roi;
-import ij.gui.WaitForUserDialog;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
 import ij.plugin.ImageCalculator;
@@ -29,8 +27,6 @@ import org.apache.commons.math3.stat.descriptive.summary.Sum;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.awt.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

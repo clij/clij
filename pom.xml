@@ -14,11 +14,11 @@
 
 	<groupId>net.haesleinhuepf</groupId>
 	<artifactId>clij</artifactId>
-	<version>0.3.28</version>
+	<version>0.4.0</version>
 
-	<name>ClearCLIJ</name>
-	<description>ClearCLIJ</description>
-	<url>https://github.com/ClearControl/ClearCLIJ</url>
+	<name>CLIJ</name>
+	<description>CLIJ</description>
+	<url>https://github.com/haesleinhuepf/ClearCLIJ</url>
 	<inceptionYear>2018</inceptionYear>
 	<organization>
 		<name>ClearControl</name>
@@ -62,21 +62,21 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/ClearControl/ClearCLIJ</connection>
-        <developerConnection>scm:git:git@github.com/ClearControl/ClearCLIJ</developerConnection>
+		<connection>scm:git:git://github.com/haesleinhuepf/ClearCLIJ</connection>
+        <developerConnection>scm:git:git@github.com/haesleinhuepf/ClearCLIJ</developerConnection>
         <tag>HEAD</tag>
-		<url>https://github.com/ClearControl/ClearCLIJ</url>
+		<url>https://github.com/haesleinhuepf/ClearCLIJ</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/ClearControl/ClearCLIJ/issues</url>
+		<url>https://github.com/haesleinhuepf/ClearCLIJ/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
 	</ciManagement>
 
 	<properties>
-		<package-name>net.clearcontrol</package-name>
+		<package-name>net.haesleinhuepf</package-name>
 		<license.licenseName>bsd_3</license.licenseName>
 		<license.copyrightOwners>Robert Haase, MPI CBG</license.copyrightOwners>
 		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
@@ -134,7 +134,7 @@
 		<repository>
 			<id>bintray-haesleinhuepf-snapshots</id>
 			<name>bintray-snapshots</name>
-			<url>https://api.bintray.com/maven/haesleinhuepf/snapshots/clearclij/;publish=1</url>
+			<url>https://api.bintray.com/maven/haesleinhuepf/snapshots/clij/;publish=1</url>
 		</repository>
 
 	</distributionManagement>

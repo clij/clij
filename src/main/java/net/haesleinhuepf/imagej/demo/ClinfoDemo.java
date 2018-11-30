@@ -1,7 +1,6 @@
-package clearcl.imagej.demo;
+package net.haesleinhuepf.imagej.demo;
 
-import clearcl.ClearCL;
-import clearcl.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.ClearCLIJ;
 
 /**
  * This demo just shows how to output all information known on available

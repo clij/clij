@@ -1,4 +1,4 @@
-package clearcl.imagej.utilities;
+package net.haesleinhuepf.imagej.utilities;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLContext;
@@ -7,8 +7,8 @@ import clearcl.enums.HostAccessType;
 import clearcl.enums.ImageChannelDataType;
 import clearcl.enums.ImageChannelOrder;
 import clearcl.enums.KernelAccessType;
-import clearcl.imagej.ClearCLIJ;
-import clearcl.imagej.kernels.Kernels;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 import coremem.ContiguousMemoryInterface;
 import coremem.enums.NativeTypeEnum;
 import coremem.offheap.OffHeapMemory;
@@ -23,18 +23,13 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.array.ArrayImgs;
-import net.imglib2.img.basictypeaccess.array.*;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.img.planar.PlanarImg;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.*;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
 
 import javax.lang.model.type.UnknownTypeException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UnknownFormatConversionException;
 
 /**

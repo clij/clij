@@ -1,4 +1,4 @@
-package clearcl.imagej.test;
+package net.haesleinhuepf.imagej.test;
 
 import ij.ImagePlus;
 import ij.process.ImageProcessor;

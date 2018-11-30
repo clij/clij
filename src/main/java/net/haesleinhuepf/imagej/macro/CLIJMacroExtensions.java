@@ -1,9 +1,8 @@
-package clearcl.imagej.macro;
+package net.haesleinhuepf.imagej.macro;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
-import clearcl.imagej.ClearCLIJ;
-import clearcl.imagej.kernels.Kernels;
+import net.haesleinhuepf.imagej.ClearCLIJ;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;

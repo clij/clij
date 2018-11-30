@@ -1,7 +1,7 @@
-package clearcl.imagej.demo;
+package net.haesleinhuepf.imagej.demo;
 
 import clearcl.ClearCLImage;
-import clearcl.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.ClearCLIJ;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;

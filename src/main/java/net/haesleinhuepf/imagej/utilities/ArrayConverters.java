@@ -1,4 +1,4 @@
-package clearcl.imagej.utilities;
+package net.haesleinhuepf.imagej.utilities;
 
 /**
  * ArrayConverters

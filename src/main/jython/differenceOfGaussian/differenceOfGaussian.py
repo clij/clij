@@ -6,7 +6,7 @@
 # March 2018
 #
 
-from clearcl.imagej import ClearCLIJ;
+from net.haesleinhuepf.imagej import ClearCLIJ;
 from net.imglib2 import RandomAccessibleInterval;
 from net.imglib2.img.display.imagej import ImageJFunctions;
 from net.imglib2.type.numeric.integer import UnsignedShortType;
