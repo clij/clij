@@ -29,7 +29,7 @@ import java.util.*;
  * Author: @haesleinhuepf
  * 11 2018
  */
-@Plugin(type = Command.class, menuPath = "SpimCat>CLIJ>CLIJ Macro Extensions")
+@Plugin(type = Command.class, menuPath = "Plugins>CLIJ>CLIJ Macro Extensions")
 public class CLIJMacroExtensions implements Command, MacroExtension {
 
     final String TO_CLIJ = "CLIJ_push";
