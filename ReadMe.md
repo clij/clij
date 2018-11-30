@@ -1,10 +1,10 @@
 # ClearCLIJ
 
-ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL GPU accelerated code from withing Fijis script editor (e.g. macro and jython). ClearCLIJ is based on [ClearCL](http://github.com/ClearVolume/ClearCL), [FastFuse](https://github.com/ClearControl/FastFuse), [Imglib2](https://github.com/imglib) and [SciJava](https://github.com/SciJava).
+ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL GPU accelerated code from withing Fijis script editor (e.g. macro and jython). ClearCLIJ is based on [ClearCL](http://github.com/ClearControl/ClearCL), [FastFuse](https://github.com/ClearControl/FastFuse), [Imglib2](https://github.com/imglib) and [SciJava](https://github.com/SciJava).
 
 ## High level API (ImageJ macro)
 
-The ImageJ macro extensions allow access to all methods in [the Kernels class](https://github.com/ClearControl/clearclij/blob/master/src/main/java/clearcl/imagej/kernels/Kernels.java) which take `ClearCLBuffer`s as parameters. This allows basic operations such as mathematical operations on images.
+The ImageJ macro extensions allow access to all methods in [the CLIJMacroAPI class](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/java/clearcl/imagej/macro/CLIJMacroAPI.java) which take `ClearCLBuffer`s as parameters. This allows basic operations such as mathematical operations on images.
 
 Example code (ImageJ macro)
 
@@ -23,8 +23,96 @@ Ext.CLIJ_blur(input, output, 20, 20, 1, 10, 10, 1);
 Ext.CLIJ_pull(output);
 ```
 
+### Installation to ImageJ/Fiji
+
+Add the update site https://sites.imagej.net/clij to your Fiji installation. Read more about how to activate update sites here.
+
+### Supported methods
+
+There are five four methods for memory transfer between RAM and GPU:
+
+* `CLIJ_push(image)` sends an image with the given name to the GPU.
+* `CLIJ_pull(image)` retrieves a given image from the GPU and show it.
+* `CLIJ_releas(image)` frees the memory in the GPU which is reserved for a given image.
+* `CLIJ_clear()` releases the memory for all stored images.
+
+Furthermore, there is a `help("")` method to assist you in finding the right OpenCL kernel call for your workflow. Just enter the name of the desired operation:
+
+```java
+run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
+Ext.CLIJ_help("mean");
+```
+
+```java
+Found 3 method(s) containing the pattern "mean":
+Ext.CLIJ_mean2d(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_mean3d(Image source, Image destination, Number radiusX, Number radiusY, Number radius Z);
+Ext.CLIJ_meanSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
+```
+
+The full list of supported kernels can be retrieved by calling `help("");":`
+
+```java
+Found 54 method(s) containing the pattern "":
+Ext.CLIJ_absolute(Image source, Image destination);
+Ext.CLIJ_addPixelwise(Image summand1, Image summand2, Image destination);
+Ext.CLIJ_addScalar(Image source, Image destination, Number scalar);
+Ext.CLIJ_addWeightedPixelwise(Image summand1, Image summand2, Image destination, Number factor1, Number factor2);
+Ext.CLIJ_argMaxProjection(Image source, Image destination_max, Image destination_arg_max);
+Ext.CLIJ_binaryAnd(Image source1, Image source2, Image destination);
+Ext.CLIJ_binaryNot(Image source, Image destination);
+Ext.CLIJ_binaryOr(Image source1, Image source2, Image destination);
+Ext.CLIJ_blur2d(Image source, Image destination, Number radiusX, Number radiusY, Number sigmaX, Number sigmaY);
+Ext.CLIJ_blur3d(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ, Number sigmaX, Number sigmaY, Number sigmaZ);
+Ext.CLIJ_copy(Image source, Image destination);
+Ext.CLIJ_copySlice(Image source, Image destination, Number sliceIndex);
+Ext.CLIJ_crop2d(Image source, Image destination, Number startX, Number startY);
+Ext.CLIJ_crop3d(Image source, Image destination, Number startX, Number startY, Number startZ);
+Ext.CLIJ_detectMaxima(Image source, Image destination, Number radius);
+Ext.CLIJ_detectMaximaSliceBySlice(Image source, Image destination, Number radius);
+Ext.CLIJ_detectMinima(Image source, Image destination, Number radius);
+Ext.CLIJ_detectMinimaSliceBySlice(Image source, Image destination, Number radius);
+Ext.CLIJ_dilate(Image source, Image destination);
+Ext.CLIJ_dividePixelwise(Image dividend, Image divisor, Image destination);
+Ext.CLIJ_downsample2d(Image source, Image destination, Number factorX, Number factorY);
+Ext.CLIJ_downsample3d(Image source, Image destination, Number factorX, Number factorY, Number factorZ);
+Ext.CLIJ_downsampleSliceBySliceHalfMedian(Image source, Image destination);
+Ext.CLIJ_erode(Image source, Image destination);
+Ext.CLIJ_flip2d(Image source, Image destination, Boolean flipX, Boolean flipY);
+Ext.CLIJ_flip3d(Image source, Image destination, Boolean flipX, Boolean flipY, Boolean flipZ);
+Ext.CLIJ_invertBinary(Image source, Image destination);
+Ext.CLIJ_mask(Image source, Image mask, Image destination);
+Ext.CLIJ_maskStackWithPlane(Image source3d, Image mask2d, Image destination3d);
+Ext.CLIJ_maxPixelwise(Image source, Image source2, Image destination);
+Ext.CLIJ_maxProjection(Image source, Image destination);
+Ext.CLIJ_maxProjectionDimSelect(Image source, Image destination, Number projectedX, Number projectedY, Number projectedDimension);
+Ext.CLIJ_maximum2d(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_maximum3d(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_maximumSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_mean2d(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_mean3d(Image source, Image destination, Number radiusX, Number radiusY, Number radius Z);
+Ext.CLIJ_meanSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_median2d(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_median3d(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_medianSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY)
+Ext.CLIJ_minimum2d(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_minimum3d(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_minimumSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_multiplyPixelwise(Image factor1, Image factor2, Image destination);
+Ext.CLIJ_multiplyScalar(Image source, Image destination);
+Ext.CLIJ_multiplyStackWithPlane(Image source3d, Image source2d, Image destination3d);
+Ext.CLIJ_power(Image source, Image destination);
+Ext.CLIJ_resliceBottom(Image source, Image destination);
+Ext.CLIJ_resliceLeft(Image source, Image destination);
+Ext.CLIJ_resliceRight(Image source, Image destination);
+Ext.CLIJ_resliceTop(Image source, Image destination);
+Ext.CLIJ_set(Image image, Number value);
+Ext.CLIJ_threshold(Image source, Image destination, Number Threshold);
+```
+
+
 ## High level API (Java, Jython, Groovy)
-When accessing [the Kernels class](https://github.com/ClearControl/clearclij/blob/master/src/main/java/clearcl/imagej/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with ClearCLIJ, first create an instance. `ClearCLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/ClearControl/clearclij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
+When accessing [the Kernels class](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/java/clearcl/imagej/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with ClearCLIJ, first create an instance. `ClearCLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
 
 ```python
 from clearcl.imagej import ClearCLIJ;
@@ -87,7 +175,7 @@ resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "d
 resultRAI = clij.converter(resultStack).getRandomAccessibleInterval();
 ImageJFunctions.show(resultRAI);
 ```
-Complete jython examples can be found in the [src/main/jython](https://github.com/ClearControl/clearclij/blob/master/src/main/jython/clDownsampling.py) directory. More Java example code can be found in the package clearcl.imagej.demo
+Complete jython examples can be found in the [src/main/jython](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/clDownsampling.py) directory. More Java example code can be found in the package clearcl.imagej.demo
 
 ## OpenCL Kernel calls with CLIJ.execute()
 The execute function asks for three or four parameters
@@ -150,11 +238,11 @@ Tests failed on these devices:
 * Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz (OpenCL 1.2, Win 10 64 bit, Mar 2018)
 * Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz (OpenCL 2.0, Fedora 27, Apr 2018)
 
-## Installation
+## Installation using maven
 
 Clone this repo
 ```
-git clone https://github.com/ClearControl/ClearCLIJ
+git clone https://github.com/haesleinhuepf/ClearCLIJ
 ```
 
 Open pom.xml and enter the path of your Fiji installation in the line containing
@@ -170,7 +258,11 @@ cd ClearCLIJ
 deploy.bat
 ```
 
-Take care: ClearCLIJ is in early developmental stage. Installing it to your Fiji may harm your Fiji installation as it brings dependencies which may be incompatible with other plugins. It is recommended not to work in a production environment.
+# Known issues
+
+* Take care: ClearCLIJ is in early developmental stage. Installing it to your Fiji may harm your Fiji installation as it brings dependencies which may be incompatible with other plugins. It is recommended not to work in a production environment.
+* ClearCLIJ needs developmental versions of dependencies, also ClearVolume needs. If both update sites are activated, Fiji may crash.
+
 
 # Troubleshooting
 * "java.io.IOException: Cannot find source: [Object] <path/filename.cl>" exception: Navigate to the jars subdirectory of your Fiji installation and locate `clearcl.jar` files, e.g. by typing `dir clearcl*` or `ls clearcl*`. If there are several versions installed, remove the older one. In order to fix this exception, you need at least `clearcl-0.5.5-RH.jar`.
