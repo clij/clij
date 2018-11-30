@@ -13,8 +13,6 @@ output = getTitle();
 run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
 Ext.CLIJ_clear();
 
-Ext.CLIJ_help("");
-
 // push images to GPU
 Ext.CLIJ_push(input);
 Ext.CLIJ_push(temp);
@@ -37,3 +35,6 @@ Ext.CLIJ_maxProjection(temp, output);
 
 // Get results back from GPU
 Ext.CLIJ_pull(output);
+
+// Cleanup by the end
+Ext.CLIJ_clear();
