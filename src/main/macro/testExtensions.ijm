@@ -1,6 +1,6 @@
 // Get test data
-run("T1 Head (2.4M, 16-bits)");
-run("32-bit");
+open("C:/structure/data/t1-head.tif");
+//run("T1 Head (2.4M, 16-bits)");
 input = getTitle();
 run("Duplicate...", "title=background duplicate");
 background = getTitle();
