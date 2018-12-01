@@ -493,7 +493,7 @@ public class CLIJMacroAPI {
         return Kernels.set(clij, image, value);
     }
 
-    public final static String parameter_doc_threshold = "Image source, Image destination, Number Threshold";
+    public final static String parameter_doc_threshold = "Image source, Image destination, Number threshold";
     public static boolean threshold(ClearCLIJ clij,
                                     ClearCLBuffer source,
                                     ClearCLBuffer destination,
