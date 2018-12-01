@@ -17,11 +17,11 @@ Ext.CLIJ_push(input);
 Ext.CLIJ_push(blurred);
 
 
-// Local mean filter in GPU
+// Local mean filter in CPU
 for (i = 1; i <= 10; i++) {
 	time = getTime();
 	run("Mean 3D...", "x=3 y=3 z=3");
-	print("GPU mean filter no " + i + " took " + (getTime() - time));
+	print("CPU mean filter no " + i + " took " + (getTime() - time));
 }
 
 // cleanup ImageJ
@@ -31,7 +31,7 @@ run("Close All");
 for (i = 1; i <= 10; i++) {
 	time = getTime();
 	Ext.CLIJ_mean3d(input, blurred, 3, 3, 3);
-	print("GPU mean3d filter no " + i + " took " + (getTime() - time));
+	print("GPU mean filter no " + i + " took " + (getTime() - time));
 }
 
 // Get results back from GPU
