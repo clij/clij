@@ -3,8 +3,7 @@ run("T1 Head (2.4M, 16-bits)");
 input = getTitle();
 getDimensions(width, height, channels, slices, frames);
 
-
-// create memory for mask and temp image
+// create an emtpy image to put the blurred pixels in
 newImage("Untitled", "8-bit black", width, height, slices);
 rename("Blurred");
 blurred = getTitle();
