@@ -20,9 +20,9 @@ run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
 Ext.CLIJ_clear();
 
 // push data to GPU
-//Ext.CLIJ_push(input);
-//Ext.CLIJ_push(mask);
-//Ext.CLIJ_push(temp);
+Ext.CLIJ_push(input);
+Ext.CLIJ_push(mask);
+Ext.CLIJ_push(temp);
 
 // cleanup ImageJ
 run("Close All");
