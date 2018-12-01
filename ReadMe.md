@@ -25,7 +25,7 @@ Ext.CLIJ_pull(output);
 
 ### Installation to ImageJ/Fiji
 
-Add the update site https://sites.imagej.net/clij to your Fiji installation. [Read more about how to activate update sites]( https://imagej.net/Following_an_update_site)
+Add the update site http://sites.imagej.net/clij to your Fiji installation. [Read more about how to activate update sites]( https://imagej.net/Following_an_update_site)
 
 ### Supported methods
 
