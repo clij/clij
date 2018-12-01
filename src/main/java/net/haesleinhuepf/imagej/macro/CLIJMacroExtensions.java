@@ -136,7 +136,12 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                     }
                 } else {
                     //System.out.println("not numeric");
-                    parsedArguments[i + 1] = bufferMap.get(args[i]);
+                    ClearCLBuffer bufferImage = bufferMap.get(args[i]);
+                    if (bufferImage == null) {
+                        IJ.log("Error: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
+                        IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
+                    }
+                    parsedArguments[i + 1] = bufferImage;
                 }
                 //System.out.println("Parsed args: " + parsedArguments[i + 1]);
             }
@@ -337,16 +342,17 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         IJ.open("C:/structure/code/clearclij/src/main/resources/flybrain.tif");
         ext.toCLIJ("flybrain.tif");
         IJ.getImage().setTitle("out");
-        ext.toCLIJ("out");
+        //ext.toCLIJ("out");
 
         Object[] arguments = new Object[] {
             "flybrain.tif",
-                "out",
-                new Double(3),
-                new Double(3),
-                new Double(1)
+                "out"//,
+                //new Double(3),
+               // new Double(3),
+                //new Double(1)
         };
-        ext.handleExtension("CLIJ_mean3d", arguments);
+        //ext.handleExtension("CLIJ_mean3d", arguments);
+        ext.handleExtension("CLIJ_erode", arguments);
     }
 
 }
