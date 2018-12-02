@@ -1,6 +1,15 @@
+// ClearCLIJ example macro: thresholding,ijm
+//
+// This macro shows how to apply a threshold to an image in the GPU.
+//
+// Author: Robert Haase
+// December 2018
+// ---------------------------------------------
+
+
 // Get test data
-//run("Blobs (25K)");
-open("C:/structure/data/blobs.gif");
+run("Blobs (25K)");
+//open("C:/structure/data/blobs.gif");
 getDimensions(width, height, channels, slices, frames);
 input = getTitle();
 threshold = 128;

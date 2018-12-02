@@ -1,6 +1,15 @@
+// ClearCLIJ example macro: orthogonalMaximumProjections.ijm
+//
+// This macro shows how maximum-X, -Y and -Z projections can be created using the GPU.
+//
+// Author: Robert Haase
+// December 2018
+// ---------------------------------------------
+
+
 // Get test data
-//run("T1 Head (2.4M, 16-bits)");
-open("C:/structure/data/t1-head.tif");
+run("T1 Head (2.4M, 16-bits)");
+//open("C:/structure/data/t1-head.tif");
 getDimensions(width, height, channels, slices, frames);
 input = getTitle();
 downScalingFactorInXY = 0.666; // because the image has slice distance 1.5

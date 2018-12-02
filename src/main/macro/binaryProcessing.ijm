@@ -1,6 +1,15 @@
+// ClearCLIJ example macro: binaryProcessing.ijm
+//
+// This macro shows how to deal with binary images, e.g. thresholding, dilation, erosion, in the GPU.
+//
+// Author: Robert Haase
+// December 2018
+// ---------------------------------------------
+
+
 // Get test data
-//run("Blobs (25K)");
-open("C:/structure/data/blobs.gif");
+run("Blobs (25K)");
+//open("C:/structure/data/blobs.gif");
 getDimensions(width, height, channels, slices, frames);
 input = getTitle();
 threshold = 128;

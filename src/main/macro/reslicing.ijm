@@ -1,6 +1,15 @@
+// ClearCLIJ example macro: reslicing.ijm
+//
+// This macro shows how stacks can be resliced in the GPU
+//
+// Author: Robert Haase
+// December 2018
+// ---------------------------------------------
+
+
 // Get test data
-//run("T1 Head (2.4M, 16-bits)");
-open("C:/structure/data/t1-head.tif");
+run("T1 Head (2.4M, 16-bits)");
+//open("C:/structure/data/t1-head.tif");
 getDimensions(width, height, channels, slices, frames);
 input = getTitle();
 

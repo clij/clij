@@ -1,3 +1,12 @@
+// ClearCLIJ example macro: benchmarking.ijm
+//
+// This macro shows how to measure performance of GPU and CPU based ImageJ macro code.
+//
+// Author: Robert Haase
+// December 2018
+// ---------------------------------------------
+
+
 // Get test data
 run("T1 Head (2.4M, 16-bits)");
 input = getTitle();

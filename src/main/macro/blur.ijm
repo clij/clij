@@ -1,3 +1,12 @@
+// ClearCLIJ example macro: blur.ijm
+//
+// This macro shows how to blur an image in the GPU.
+//
+// Author: Robert Haase
+// December 2018
+// ---------------------------------------------
+
+
 // Get test data
 run("T1 Head (2.4M, 16-bits)");
 input = getTitle();
