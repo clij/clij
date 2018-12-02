@@ -1,4 +1,4 @@
-__kernel void copy_3d(DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src) {
+__kernel void copy_3d (DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src) {
   const sampler_t sampler = CLK_NORMALIZED_COORDS_FALSE | CLK_ADDRESS_CLAMP_TO_EDGE | CLK_FILTER_NEAREST;
 
   const int dx = get_global_id(0);

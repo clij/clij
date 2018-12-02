@@ -170,7 +170,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                 return "Exception";
             }
 
-            //System.out.println("Success");
+            System.out.println("Success");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -336,23 +336,25 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
     public static void main(String... args) {
         new ImageJ();
         CLIJMacroExtensions ext = new CLIJMacroExtensions();
-        ext.clij = ClearCLIJ.getInstance();
+        ext.clij = ClearCLIJ.getInstance("gfx902");
         ext.getExtensionFunctions();
 
         IJ.open("src/main/resources/flybrain.tif");
         ext.toCLIJ("flybrain.tif");
         IJ.getImage().setTitle("out");
-        //ext.toCLIJ("out");
+        ext.toCLIJ("out");
 
         Object[] arguments = new Object[] {
             "flybrain.tif",
-                "out"//,
-                //new Double(3),
-               // new Double(3),
-                //new Double(1)
+                "out",
+                new Double(3),
+                new Double(3),
+                new Double(1)
         };
-        //ext.handleExtension("CLIJ_mean3d", arguments);
-        ext.handleExtension("CLIJ_erode", arguments);
+        ext.handleExtension("CLIJ_mean3d", arguments);
+        //ext.handleExtension("CLIJ_erode", arguments);
+
+        ext.fromCLIJ("out");
     }
 
 

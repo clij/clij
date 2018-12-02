@@ -108,10 +108,10 @@ public class CLKernelExecutor
       getOpenCLDefines(lOpenCLDefines, lDstImage.getChannelDataType(), false);
     }
     if (lSrcBuffer != null) {
-      getOpenCLDefines(lOpenCLDefines, lSrcBuffer.getNativeType(), lSrcBuffer.getWidth(), lSrcBuffer.getHeight(), lSrcBuffer.getDepth(), true);
+      getOpenCLDefines(lOpenCLDefines, lSrcBuffer.getNativeType(), lSrcBuffer.getWidth(), lSrcBuffer.getHeight(), lSrcBuffer.getDepth(), lSrcBuffer.getDimension(), true);
     }
     if (lDstBuffer != null) {
-      getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), lDstBuffer.getDepth(), false);
+      getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), lDstBuffer.getDepth(), lDstBuffer.getDimension(), false);
     }
 
 
@@ -202,23 +202,25 @@ public class CLKernelExecutor
     }
   }
 
-  public static void getOpenCLDefines(Map<String, Object> lDefines, NativeTypeEnum pDType, long width, long height, long depth, boolean pInput) {
+  public static void getOpenCLDefines(Map<String, Object> lDefines, NativeTypeEnum pDType, long width, long height, long depth, long dimension, boolean pInput) {
+    String typeId = pDType != NativeTypeEnum.Float ? "ui" : "f";
+    String dimendsionalityId = "" + dimension + "d";
     if (pInput) {
       lDefines.put("DTYPE_IMAGE_IN_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_IN_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IN", pDType != NativeTypeEnum.Float ? "ushort" : "float");
-      lDefines.put("READ_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "read_bufferui(" + width + "," + height + ",a,b,c)" : "read_bufferf(" + width + "," + height + ",a,b,c)");
-      lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer_width(" + width + ",a)");
-      lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer_height(" + height + ",a)");
-      lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer_depth(" + depth + ",a)");
+      lDefines.put("READ_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer" + dimendsionalityId + "ui(" + width + "," + height + ",a,b,c)" : "read_buffer" + dimendsionalityId + "f(" + width + "," + height + ",a,b,c)");
+      lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
+      lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
+      lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
     } else {
       lDefines.put("DTYPE_IMAGE_OUT_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_OUT_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_OUT", pDType != NativeTypeEnum.Float ? "ushort" : "float");
-      lDefines.put("WRITE_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "write_bufferui(" + width + "," + height + ",a,b,c)" : "write_bufferf(" + width + "," + height + ",a,b,c)");
-      lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer_width(" + width + ",a)");
-      lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer_height(" + height + ",a)");
-      lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer_depth(" + depth + ",a)");
+      lDefines.put("WRITE_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer" + dimendsionalityId + "ui(" + width + "," + height + ",a,b,c)" : "write_buffer" + dimendsionalityId + "f(" + width + "," + height + ",a,b,c)");
+      lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
+      lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
+      lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
     }
   }
 
@@ -259,6 +261,8 @@ public class CLKernelExecutor
 
       mProgramCacheMap.put(lProgramCacheKey, clProgram);
     }
+    System.out.println(clProgram.getSourceCode());
+    System.out.println(pKernelName);
     ClearCLKernel lKernel = clProgram.createKernel(pKernelName);
     return lKernel;
   }
