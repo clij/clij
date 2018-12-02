@@ -18,7 +18,7 @@ run("Duplicate...", "title=maximum_projected");
 maximum_projected = getTitle();
 
 // Init GPU
-run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
+run("CLIJ Macro Extensions", "cl_device=HD");
 Ext.CLIJ_clear();
 
 // push images to GPU

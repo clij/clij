@@ -34,7 +34,7 @@ rename("Maximum projection in Z");
 maximumProjectionZ = getTitle();
 
 // Init GPU
-run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
+run("CLIJ Macro Extensions", "cl_device=HD");
 Ext.CLIJ_clear();
 
 // push data to GPU
