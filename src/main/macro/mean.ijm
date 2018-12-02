@@ -1,11 +1,12 @@
 // Get test data
 run("T1 Head (2.4M, 16-bits)");
+rename("Mean CPU")
 input = getTitle();
 getDimensions(width, height, channels, slices, frames);
 
 // create an emtpy image to put the blurred pixels in
 newImage("Untitled", "16-bit black", width, height, slices);
-rename("Blurred");
+rename("Mean GPU");
 blurred = getTitle();
 
 // Init GPU
@@ -33,3 +34,12 @@ Ext.CLIJ_pull(blurred);
 
 // Cleanup GPU 
 Ext.CLIJ_clear();
+
+
+imageCalculator("Subtract create 32-bit stack", "Mean CPU","Mean GPU");
+selectWindow("Result of Mean CPU");
+rename("Difference between CPU and GPU");
+setSlice(60);
+run("Enhance Contrast", "saturated=0.35");
+
+
