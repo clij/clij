@@ -12,7 +12,7 @@ inline void copyNeighborhoodToArray(DTYPE_IMAGE_IN_2D src, DTYPE_OUT array[],
 
     for (int x = -c.x; x <= c.x; x++) {
         for (int y = -c.y; y <= c.y; y++) {
-            array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+((int2){x,y})).x;
+            array[count] = (DTYPE_OUT)READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x;
             count++;
         }
     }
@@ -29,7 +29,7 @@ inline void copySliceNeighborhoodToArray(DTYPE_IMAGE_IN_3D src, DTYPE_OUT array[
 
     for (int x = -c.x; x <= c.x; x++) {
         for (int y = -c.y; y <= c.y; y++) {
-            array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+((int4){x,y,0,0})).x;
+            array[count] = (DTYPE_OUT)READ_IMAGE_3D(src,sampler,coord+((int4){x,y,0,0})).x;
             count++;
         }
     }
@@ -55,7 +55,7 @@ inline int copyVolumeNeighborhoodToArray(DTYPE_IMAGE_IN_3D src, DTYPE_OUT array[
             for (int z = -c.z; z <= c.z; z++) {
                 float zSquared = z * z;
                 if (xSquared / aSquared + ySquared / bSquared + zSquared / cSquared <= 1.0) {
-                    array[count] = (DTYPE_OUT)READ_IMAGE(src,sampler,coord+((int4){x,y,z,0})).x;
+                    array[count] = (DTYPE_OUT)READ_IMAGE_3D(src,sampler,coord+((int4){x,y,z,0})).x;
                     count++;
                 }
             }
@@ -132,7 +132,7 @@ __kernel void mean_slicewise_image3d
   copySliceNeighborhoodToArray(src, array, coord, Nx, Ny);
 
   DTYPE_OUT res = average(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_3D(dst, coord, res);
 }
 
 
@@ -151,7 +151,7 @@ __kernel void mean_image2d
   copyNeighborhoodToArray(src, array, coord, Nx, Ny);
 
   DTYPE_OUT res = average(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_2D(dst, coord, res);
 }
 
 __kernel void mean_image3d
@@ -169,7 +169,7 @@ __kernel void mean_image3d
   array_size = copyVolumeNeighborhoodToArray(src, array, coord, Nx, Ny, Nz);
 
   DTYPE_OUT res = average(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_3D(dst, coord, res);
 }
 
 __kernel void median_image2d
@@ -187,7 +187,7 @@ __kernel void median_image2d
   copyNeighborhoodToArray(src, array, coord, Nx, Ny);
 
   DTYPE_OUT res = median(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_2D(dst, coord, res);
 }
 
 
@@ -206,7 +206,7 @@ __kernel void median_image3d
   array_size = copyVolumeNeighborhoodToArray(src, array, coord, Nx, Ny, Nz);
 
   DTYPE_OUT res = median(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_3D(dst, coord, res);
 }
 
 __kernel void median_slicewise_image3d
@@ -224,7 +224,7 @@ __kernel void median_slicewise_image3d
   copySliceNeighborhoodToArray(src, array, coord, Nx, Ny);
 
   DTYPE_OUT res = median(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_3D(dst, coord, res);
 }
 
 __kernel void minimum_slicewise_image3d
@@ -242,7 +242,7 @@ __kernel void minimum_slicewise_image3d
   copySliceNeighborhoodToArray(src, array, coord, Nx, Ny);
 
   DTYPE_OUT res = minimum(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_3D(dst, coord, res);
 }
 
 
@@ -261,7 +261,7 @@ __kernel void minimum_image2d
   copyNeighborhoodToArray(src, array, coord, Nx, Ny);
 
   DTYPE_OUT res = minimum(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_2D(dst, coord, res);
 }
 
 __kernel void minimum_image3d
@@ -279,7 +279,7 @@ __kernel void minimum_image3d
   array_size = copyVolumeNeighborhoodToArray(src, array, coord, Nx, Ny, Nz);
 
   DTYPE_OUT res = minimum(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_3D(dst, coord, res);
 }
 
 __kernel void maximum_slicewise_image3d
@@ -297,7 +297,7 @@ __kernel void maximum_slicewise_image3d
   copySliceNeighborhoodToArray(src, array, coord, Nx, Ny);
 
   DTYPE_OUT res = maximum(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_3D(dst, coord, res);
 }
 
 
@@ -316,7 +316,7 @@ __kernel void maximum_image2d
   copyNeighborhoodToArray(src, array, coord, Nx, Ny);
 
   DTYPE_OUT res = maximum(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_2D(dst, coord, res);
 }
 
 __kernel void maximum_image3d
@@ -334,5 +334,5 @@ __kernel void maximum_image3d
   array_size = copyVolumeNeighborhoodToArray(src, array, coord, Nx, Ny, Nz);
 
   DTYPE_OUT res = maximum(array, array_size);
-  WRITE_IMAGE(dst, coord, res);
+  WRITE_IMAGE_3D(dst, coord, res);
 }

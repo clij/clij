@@ -9,9 +9,9 @@ __kernel void sum_project_3d_2d(
   DTYPE_IN sum = 0;
   for(int z = 0; z < GET_IMAGE_IN_DEPTH(src); z++)
   {
-    sum = sum + READ_IMAGE(src,sampler,(int4)(x,y,z,0)).x;
+    sum = sum + READ_IMAGE_3D(src,sampler,(int4)(x,y,z,0)).x;
   }
-  WRITE_IMAGE(dst,(int2)(x,y),(DTYPE_OUT)sum);
+  WRITE_IMAGE_2D(dst,(int2)(x,y),(DTYPE_OUT)sum);
 }
 
 
@@ -28,14 +28,14 @@ __kernel void arg_max_project_3d_2d(
   int max_pos = 0;
   for(int z = 0; z < GET_IMAGE_IN_DEPTH(src); z++)
   {
-    DTYPE_IN value = READ_IMAGE(src,sampler,(int4)(x,y,z,0)).x;
+    DTYPE_IN value = READ_IMAGE_3D(src,sampler,(int4)(x,y,z,0)).x;
     if (value > max || z == 0) {
       max = value;
       max_pos = z;
     }
   }
-  WRITE_IMAGE(dst_max,(int2)(x,y),(DTYPE_OUT)max);
-  WRITE_IMAGE(dst_arg,(int2)(x,y),(DTYPE_OUT)max_pos);
+  WRITE_IMAGE_2D(dst_max,(int2)(x,y),(DTYPE_OUT)max);
+  WRITE_IMAGE_2D(dst_arg,(int2)(x,y),(DTYPE_OUT)max_pos);
 }
 
 __kernel void max_project_3d_2d(
@@ -49,12 +49,12 @@ __kernel void max_project_3d_2d(
   DTYPE_IN max = 0;
   for(int z = 0; z < GET_IMAGE_IN_DEPTH(src); z++)
   {
-    DTYPE_IN value = READ_IMAGE(src,sampler,(int4)(x,y,z,0)).x;
+    DTYPE_IN value = READ_IMAGE_3D(src,sampler,(int4)(x,y,z,0)).x;
     if (value > max || z == 0) {
       max = value;
     }
   }
-  WRITE_IMAGE(dst_max,(int2)(x,y),(DTYPE_OUT)max);
+  WRITE_IMAGE_2D(dst_max,(int2)(x,y),(DTYPE_OUT)max);
 }
 
 __kernel void max_project_dim_select_3d_2d(
@@ -104,10 +104,10 @@ __kernel void max_project_dim_select_3d_2d(
     } else {
       sourcePos.z = d;
     }
-    DTYPE_IN value = READ_IMAGE(src,sampler, sourcePos).x;
+    DTYPE_IN value = READ_IMAGE_3D(src,sampler, sourcePos).x;
     if (value > max || d == 0) {
       max = value;
     }
   }
-  WRITE_IMAGE(dst_max,targetPos,(DTYPE_OUT)max);
+  WRITE_IMAGE_2D(dst_max,targetPos,(DTYPE_OUT)max);
 }

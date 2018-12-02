@@ -11,13 +11,13 @@ __kernel void apply_threshold_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  DTYPE_IN inputValue = READ_IMAGE(src, sampler, pos).x;
+  DTYPE_IN inputValue = READ_IMAGE_3D(src, sampler, pos).x;
   DTYPE_OUT value = 1.0;
   if (inputValue < threshold) {
     value = 0.0;
   }
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 __kernel void apply_threshold_2d(DTYPE_IMAGE_IN_2D  src,
@@ -30,13 +30,13 @@ __kernel void apply_threshold_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  DTYPE_IN inputValue = READ_IMAGE(src, sampler, pos).x;
+  DTYPE_IN inputValue = READ_IMAGE_2D(src, sampler, pos).x;
   DTYPE_OUT value = 1.0;
   if (inputValue < threshold) {
     value = 0.0;
   }
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 
@@ -51,15 +51,15 @@ __kernel void apply_local_threshold_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  DTYPE_IN inputValue = READ_IMAGE(src, sampler, pos).x;
-  DTYPE_IN threshold = READ_IMAGE(local_threshold, sampler, pos).x;
+  DTYPE_IN inputValue = READ_IMAGE_3D(src, sampler, pos).x;
+  DTYPE_IN threshold = READ_IMAGE_3D(local_threshold, sampler, pos).x;
 
   DTYPE_OUT value = 1.0;
   if (inputValue < threshold) {
     value = 0.0;
   }
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 __kernel void apply_local_threshold_2d(DTYPE_IMAGE_IN_2D  src,
@@ -72,12 +72,12 @@ __kernel void apply_local_threshold_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  DTYPE_IN inputValue = READ_IMAGE(src, sampler, pos).x;
-  DTYPE_IN threshold = READ_IMAGE(local_threshold, sampler, pos).x;
+  DTYPE_IN inputValue = READ_IMAGE_2D(src, sampler, pos).x;
+  DTYPE_IN threshold = READ_IMAGE_2D(local_threshold, sampler, pos).x;
   DTYPE_OUT value = 1.0;
   if (inputValue < threshold) {
     value = 0.0;
   }
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }

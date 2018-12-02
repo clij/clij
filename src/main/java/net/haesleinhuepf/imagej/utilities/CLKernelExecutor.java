@@ -187,7 +187,8 @@ public class CLKernelExecutor
       lDefines.put("DTYPE_IMAGE_IN_3D", "__read_only image3d_t");
       lDefines.put("DTYPE_IMAGE_IN_2D", "__read_only image2d_t");
       lDefines.put("DTYPE_IN", pDType.isInteger() ? "ushort" : "float");
-      lDefines.put("READ_IMAGE", pDType.isInteger() ? "read_imageui" : "read_imagef");
+      lDefines.put("READ_IMAGE_2D", pDType.isInteger() ? "read_imageui" : "read_imagef");
+      lDefines.put("READ_IMAGE_3D", pDType.isInteger() ? "read_imageui" : "read_imagef");
       lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_image_width(a)");
       lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_image_height(a)");
       lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_image_depth(a)");
@@ -195,7 +196,8 @@ public class CLKernelExecutor
       lDefines.put("DTYPE_IMAGE_OUT_3D", "__write_only image3d_t");
       lDefines.put("DTYPE_IMAGE_OUT_2D", "__write_only image2d_t");
       lDefines.put("DTYPE_OUT", pDType.isInteger() ? "ushort" : "float");
-      lDefines.put("WRITE_IMAGE", pDType.isInteger() ? "write_imageui" : "write_imagef");
+      lDefines.put("WRITE_IMAGE_2D", pDType.isInteger() ? "write_imageui" : "write_imagef");
+      lDefines.put("WRITE_IMAGE_3D", pDType.isInteger() ? "write_imageui" : "write_imagef");
       lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_image_width(a)");
       lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_image_height(a)");
       lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_image_depth(a)");
@@ -204,12 +206,12 @@ public class CLKernelExecutor
 
   public static void getOpenCLDefines(Map<String, Object> lDefines, NativeTypeEnum pDType, long width, long height, long depth, long dimension, boolean pInput) {
     String typeId = pDType != NativeTypeEnum.Float ? "ui" : "f";
-    String dimendsionalityId = "" + dimension + "d";
     if (pInput) {
       lDefines.put("DTYPE_IMAGE_IN_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_IN_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IN", pDType != NativeTypeEnum.Float ? "ushort" : "float");
-      lDefines.put("READ_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer" + dimendsionalityId + "ui(" + width + "," + height + ",a,b,c)" : "read_buffer" + dimendsionalityId + "f(" + width + "," + height + ",a,b,c)");
+      lDefines.put("READ_IMAGE_2D(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer2dui(" + width + "," + height + ",a,b,c)" : "read_buffer2df(" + width + "," + height + ",a,b,c)");
+      lDefines.put("READ_IMAGE_3D(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer3dui(" + width + "," + height + ",a,b,c)" : "read_buffer3df(" + width + "," + height + ",a,b,c)");
       lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
       lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
       lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
@@ -217,7 +219,8 @@ public class CLKernelExecutor
       lDefines.put("DTYPE_IMAGE_OUT_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_OUT_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_OUT", pDType != NativeTypeEnum.Float ? "ushort" : "float");
-      lDefines.put("WRITE_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer" + dimendsionalityId + "ui(" + width + "," + height + ",a,b,c)" : "write_buffer" + dimendsionalityId + "f(" + width + "," + height + ",a,b,c)");
+      lDefines.put("WRITE_IMAGE_2D(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer2dui(" + width + "," + height + ",a,b,c)" : "write_buffer2df(" + width + "," + height + ",a,b,c)");
+      lDefines.put("WRITE_IMAGE_3D(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer3dui(" + width + "," + height + ",a,b,c)" : "write_buffer3df(" + width + "," + height + ",a,b,c)");
       lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
       lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
       lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");

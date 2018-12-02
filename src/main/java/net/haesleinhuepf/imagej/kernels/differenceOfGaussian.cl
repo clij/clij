@@ -24,7 +24,7 @@ __kernel void subtract_convolved_images_3d_fast(
             {
                 const int4 kernelPos = {x+radius, y+radius, z+radius, 0};
 
-                float image_pixel_value = READ_IMAGE(src, sampler, pos + (int4){ x, y, z, 0}).x;
+                float image_pixel_value = READ_IMAGE_3D(src, sampler, pos + (int4){ x, y, z, 0}).x;
 
                 float weight_minuend = exp(-((float) (x * x + y * y + z * z) / (3.0f
                                                               * sigma_minuend
@@ -45,7 +45,7 @@ __kernel void subtract_convolved_images_3d_fast(
     }
 
     float pix = weighted_sum_minuend / sum_minuend  - weighted_sum_subtrahend / sum_subtrahend; //,0,0,0};
-	WRITE_IMAGE(dst, pos, (DTYPE_OUT)pix);
+	WRITE_IMAGE_3D(dst, pos, (DTYPE_OUT)pix);
 }
 
 
@@ -73,7 +73,7 @@ __kernel void subtract_convolved_images_3d_slice_by_slice(
             int z = 0;
             const int4 kernelPos = {x+radius, y+radius, z+radius, 0};
 
-            float image_pixel_value = READ_IMAGE(src, sampler, pos + (int4){ x, y, z, 0}).x;
+            float image_pixel_value = READ_IMAGE_3D(src, sampler, pos + (int4){ x, y, z, 0}).x;
 
             float weight_minuend = exp(-((float) (x * x + y * y + z * z) / (3.0f
                                                           * sigma_minuend
@@ -93,7 +93,7 @@ __kernel void subtract_convolved_images_3d_slice_by_slice(
     }
 
     float pix = weighted_sum_minuend / sum_minuend  - weighted_sum_subtrahend / sum_subtrahend;
-	WRITE_IMAGE(dst, pos, (DTYPE_OUT)pix);
+	WRITE_IMAGE_3D(dst, pos, (DTYPE_OUT)pix);
 }
 
 __kernel void subtract_convolved_images_2d_fast(
@@ -119,7 +119,7 @@ __kernel void subtract_convolved_images_2d_fast(
         {
             const int2 kernelPos = {x+radius, y+radius};
 
-            float image_pixel_value = READ_IMAGE(src, sampler, pos + (int2){ x, y}).x;
+            float image_pixel_value = READ_IMAGE_3D(src, sampler, pos + (int2){ x, y}).x;
 
             float weight_minuend = exp(-((float) (x * x + y * y) / (2.0f
                                                           * sigma_minuend
@@ -138,6 +138,6 @@ __kernel void subtract_convolved_images_2d_fast(
     }
 
     float pix = weighted_sum_minuend / sum_minuend  - weighted_sum_subtrahend / sum_subtrahend; //,0,0,0};
-	WRITE_IMAGE(dst, pos, (DTYPE_OUT)pix);
+	WRITE_IMAGE_3D(dst, pos, (DTYPE_OUT)pix);
 }
 

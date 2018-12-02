@@ -269,12 +269,12 @@ __kernel void invert_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x;
+  DTYPE_OUT value = READ_IMAGE_2D(src, sampler, pos).x;
   if (value != 0) {
     value = 0;
   } else {
     value = 1;
   }
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }

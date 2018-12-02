@@ -11,9 +11,9 @@ __kernel void multiplyPixelwise_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x * READ_IMAGE(src1, sampler, pos).x;
+  const DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos).x * READ_IMAGE_3D(src1, sampler, pos).x;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 __kernel void multiplyPixelwise_2d(DTYPE_IMAGE_IN_2D  src,
@@ -26,9 +26,9 @@ __kernel void multiplyPixelwise_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x * READ_IMAGE(src1, sampler, pos).x;
+  const DTYPE_OUT value = READ_IMAGE_2D(src, sampler, pos).x * READ_IMAGE_2D(src1, sampler, pos).x;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 __kernel void dividePixelwise_3d(DTYPE_IMAGE_IN_3D  src,
@@ -42,9 +42,9 @@ __kernel void dividePixelwise_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x / READ_IMAGE(src1, sampler, pos).x;
+  const DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos).x / READ_IMAGE_3D(src1, sampler, pos).x;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 __kernel void dividePixelwise_2d(DTYPE_IMAGE_IN_2D  src,
@@ -57,9 +57,9 @@ __kernel void dividePixelwise_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x / READ_IMAGE(src1, sampler, pos).x;
+  const DTYPE_OUT value = READ_IMAGE_2D(src, sampler, pos).x / READ_IMAGE_2D(src1, sampler, pos).x;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 __kernel void multiplyStackWithPlanePixelwise(DTYPE_IMAGE_IN_3D  src,
@@ -74,9 +74,9 @@ __kernel void multiplyStackWithPlanePixelwise(DTYPE_IMAGE_IN_3D  src,
   const int4 pos3d = (int4){x,y,z,0};
   const int2 pos2d = (int2){x,y};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos3d).x * READ_IMAGE(src1, sampler, pos2d).x;
+  const DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos3d).x * READ_IMAGE_2D(src1, sampler, pos2d).x;
 
-  WRITE_IMAGE (dst, pos3d, value);
+  WRITE_IMAGE_3D (dst, pos3d, value);
 }
 
 __kernel void multiplySliceBySliceWithScalars(DTYPE_IMAGE_IN_3D  src,
@@ -90,9 +90,9 @@ __kernel void multiplySliceBySliceWithScalars(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos3d = (int4){x,y,z,0};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos3d).x * scalars[z];
+  const DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos3d).x * scalars[z];
 
-  WRITE_IMAGE (dst, pos3d, value);
+  WRITE_IMAGE_3D (dst, pos3d, value);
 }
 
 
@@ -107,9 +107,9 @@ __kernel void addPixelwise_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x + READ_IMAGE(src1, sampler, pos).x;
+  const DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos).x + READ_IMAGE_3D(src1, sampler, pos).x;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 __kernel void addPixelwise_2d(DTYPE_IMAGE_IN_2D  src,
@@ -122,9 +122,9 @@ __kernel void addPixelwise_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x + READ_IMAGE(src1, sampler, pos).x;
+  const DTYPE_OUT value = READ_IMAGE_2D(src, sampler, pos).x + READ_IMAGE_2D(src1, sampler, pos).x;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 __kernel void addWeightedPixelwise_3d(DTYPE_IMAGE_IN_3D  src,
@@ -140,9 +140,9 @@ __kernel void addWeightedPixelwise_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x * factor + READ_IMAGE(src1, sampler, pos).x * factor1;
+  const DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos).x * factor + READ_IMAGE_3D(src1, sampler, pos).x * factor1;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 
@@ -158,9 +158,9 @@ __kernel void addWeightedPixelwise_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x * factor + READ_IMAGE(src1, sampler, pos).x * factor1;
+  const DTYPE_OUT value = READ_IMAGE_2D(src, sampler, pos).x * factor + READ_IMAGE_2D(src1, sampler, pos).x * factor1;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 
@@ -175,9 +175,9 @@ __kernel void addScalar_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x + scalar;
+  const DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos).x + scalar;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 
@@ -191,9 +191,9 @@ __kernel void addScalar_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x + scalar;
+  const DTYPE_OUT value = READ_IMAGE_2D(src, sampler, pos).x + scalar;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 
@@ -208,9 +208,9 @@ __kernel void multiplyScalar_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x * scalar;
+  const DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos).x * scalar;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 
@@ -224,9 +224,9 @@ __kernel void multiplyScalar_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x * scalar;
+  const DTYPE_OUT value = READ_IMAGE_2D(src, sampler, pos).x * scalar;
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 
@@ -241,12 +241,12 @@ __kernel void absolute_3d(DTYPE_IMAGE_IN_3D  src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x;
+  DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos).x;
   if ( value < 0 ) {
     value = -1 * value;
   }
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 
@@ -259,12 +259,12 @@ __kernel void absolute_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  DTYPE_OUT value = READ_IMAGE(src, sampler, pos).x;
+  DTYPE_OUT value = READ_IMAGE_2D(src, sampler, pos).x;
   if ( value < 0 ) {
     value = -1 * value;
   }
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 __kernel void maxPixelwise_3d(DTYPE_IMAGE_IN_3D src,
@@ -278,12 +278,12 @@ __kernel void maxPixelwise_3d(DTYPE_IMAGE_IN_3D src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const DTYPE_IN input = READ_IMAGE(src, sampler, pos).x;
-  const DTYPE_IN input1 = READ_IMAGE(src1, sampler, pos).x;
+  const DTYPE_IN input = READ_IMAGE_3D(src, sampler, pos).x;
+  const DTYPE_IN input1 = READ_IMAGE_3D(src1, sampler, pos).x;
 
   const DTYPE_OUT value = max(input, input1);
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 __kernel void maxPixelwise_2d(DTYPE_IMAGE_IN_2D  src,
@@ -296,12 +296,12 @@ __kernel void maxPixelwise_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const DTYPE_IN input = READ_IMAGE(src, sampler, pos).x;
-  const DTYPE_IN input1 = READ_IMAGE(src1, sampler, pos).x;
+  const DTYPE_IN input = READ_IMAGE_2D(src, sampler, pos).x;
+  const DTYPE_IN input1 = READ_IMAGE_2D(src1, sampler, pos).x;
 
   const DTYPE_OUT value = max(input, input1);
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 
@@ -316,11 +316,11 @@ __kernel void power_2d(DTYPE_IMAGE_IN_2D  src,
 
   const int2 pos = (int2){x,y};
 
-  const DTYPE_IN input = READ_IMAGE(src, sampler, pos).x;
+  const DTYPE_IN input = READ_IMAGE_2D(src, sampler, pos).x;
 
   const DTYPE_OUT value = pow(input, exponent);
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_2D (dst, pos, value);
 }
 
 
@@ -335,11 +335,11 @@ __kernel void power_3d(DTYPE_IMAGE_IN_3D src,
 
   const int4 pos = (int4){x,y,z,0};
 
-  const DTYPE_IN input = READ_IMAGE(src, sampler, pos).x;
+  const DTYPE_IN input = READ_IMAGE_3D(src, sampler, pos).x;
 
   const DTYPE_OUT value = pow(input, exponent);
 
-  WRITE_IMAGE (dst, pos, value);
+  WRITE_IMAGE_3D (dst, pos, value);
 }
 
 
