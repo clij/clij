@@ -3,25 +3,7 @@
 ClearCLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL GPU accelerated code from withing Fijis script editor (e.g. macro and jython). ClearCLIJ is based on [ClearCL](http://github.com/ClearVolume/ClearCL), [FastFuse](https://github.com/ClearControl/FastFuse), [Imglib2](https://github.com/imglib) and [SciJava](https://github.com/SciJava).
 
 ## High level API (ImageJ macro)
-
-The ImageJ macro extensions allow access to all methods in [the Kernels class](https://github.com/ClearControl/clearclij/blob/master/src/main/java/clearcl/imagej/kernels/Kernels.java) which take `ClearCLBuffer`s as parameters. This allows basic operations such as mathematical operations on images.
-
-Example code (ImageJ macro)
-
-```javascript
-run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
-Ext.CLIJ_clear();
-
-// push images to GPU
-Ext.CLIJ_push(input);
-Ext.CLIJ_push(output);
-
-// Blur in GPU
-Ext.CLIJ_blur(input, output, 20, 20, 1, 10, 10, 1);
-
-// Get results back from GPU
-Ext.CLIJ_pull(output);
-```
+The ImageJ macro extensions have been moved from this repository to a fork. Read the blog post about [how to use ClearCLIJ from ImageJ macro](http://haesleinhuepf.github.io/clij).
 
 ## High level API (Java, Jython, Groovy)
 When accessing [the Kernels class](https://github.com/ClearControl/clearclij/blob/master/src/main/java/clearcl/imagej/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with ClearCLIJ, first create an instance. `ClearCLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/ClearControl/clearclij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
