@@ -95,19 +95,26 @@ public class ClearCLIJ
             lClearCLBackend = new ClearCLBackendJOCL();
 
     mClearCL = new ClearCL(lClearCLBackend);
-    if (pDeviceNameMustContain == null)
+    if (pDeviceNameMustContain == null || pDeviceNameMustContain.length() == 0)
     {
-      mClearCLDevice = mClearCL.getFastestGPUDeviceForImages();
+      mClearCLDevice = null;
     } else {
       mClearCLDevice = mClearCL.getDeviceByName(pDeviceNameMustContain);
     }
 
     if (mClearCLDevice == null) {
-      System.out.println("Warning: Optimal ClearCL device determination failed. Retrying using first device found.");
+      System.out.println("No GPU name specified. Using first GPU device found.");
+      for (ClearCLDevice device : mClearCL.getAllDevices()) {
+        if (! device.getName().contains("CPU")) {
+          mClearCLDevice = device;
+        }
+      }
+    }
+    if (mClearCLDevice == null) {
+      System.out.println("Warning: GPU device determination failed. Retrying using first device found.");
       mClearCLDevice = mClearCL.getAllDevices().get(0);
     }
     System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
-
 
     mClearCLContext = mClearCLDevice.createContext();
   }

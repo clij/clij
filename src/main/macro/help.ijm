@@ -7,5 +7,5 @@
 // ---------------------------------------------
 
 
-run("CLIJ Macro Extensions", "cl_device=HD");
+run("CLIJ Macro Extensions", "cl_device=");
 Ext.CLIJ_help("add");

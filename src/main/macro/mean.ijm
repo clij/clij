@@ -19,7 +19,7 @@ rename("Mean GPU");
 blurred = getTitle();
 
 // Init GPU
-run("CLIJ Macro Extensions", "cl_device=HD");
+run("CLIJ Macro Extensions", "cl_device=");
 Ext.CLIJ_clear();
 
 // push images to GPU

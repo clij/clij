@@ -25,7 +25,7 @@ temp = getTitle();
 
 
 // Init GPU
-run("CLIJ Macro Extensions", "cl_device=HD");
+run("CLIJ Macro Extensions", "cl_device=");
 Ext.CLIJ_clear();
 
 // push data to GPU
