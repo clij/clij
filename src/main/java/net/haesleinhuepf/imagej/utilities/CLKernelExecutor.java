@@ -264,8 +264,8 @@ public class CLKernelExecutor
 
       mProgramCacheMap.put(lProgramCacheKey, clProgram);
     }
-    System.out.println(clProgram.getSourceCode());
-    System.out.println(pKernelName);
+    //System.out.println(clProgram.getSourceCode());
+    //System.out.println(pKernelName);
     ClearCLKernel lKernel = clProgram.createKernel(pKernelName);
     return lKernel;
   }
