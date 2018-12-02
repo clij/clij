@@ -258,14 +258,10 @@ cd ClearCLIJ
 deploy.bat
 ```
 
-# Known issues
-
-* Take care: ClearCLIJ is in early developmental stage. Installing it to your Fiji may harm your Fiji installation as it brings dependencies which may be incompatible with other plugins. It is recommended not to work in a production environment.
-* ClearCLIJ needs developmental versions of dependencies, also ClearVolume needs. If both update sites are activated, Fiji may crash.
-
-
 # Troubleshooting
 * "java.io.IOException: Cannot find source: [Object] <path/filename.cl>" exception: Navigate to the jars subdirectory of your Fiji installation and locate `clearcl.jar` files, e.g. by typing `dir clearcl*` or `ls clearcl*`. If there are several versions installed, remove the older one. In order to fix this exception, you need at least `clearcl-0.5.5-RH.jar`.
 * "clearcl.exceptions.ClearCLException: problem while setting argument 'parameter_of_type_float'": To hand over parameters of type float, you need to explicitly type it. Use `from java.lang import Float` and `Float(1.5)` to handover a value of 1.5 to an OpenCL parameter of type float.
+* After installation, Fiji doesn't start anymore: Navigate to your Fiji folder. Check if there is clij_0.4.0.jar located in _both_ folders `plugins` and `jars`. Delete both and run the installation instructions again.
+* ClearVolume doesn't work anymore. ClearCLIJ needs developmental versions of dependencies, also ClearVolume needs. If both update sites are activated, Fiji may crash. Install only one of both at a time.
 
 
