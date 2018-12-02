@@ -29,7 +29,7 @@ public class CLKernelExecutor
   Map<String, Object> mParameterMap;
   long[] mGlobalSizes;
 
-  public static int MAX_ARRAY_SIZE = 125;
+  public static int MAX_ARRAY_SIZE = 344;
 
   private String mSourceFile;
 

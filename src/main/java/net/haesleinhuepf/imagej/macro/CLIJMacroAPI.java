@@ -4,6 +4,8 @@ import clearcl.ClearCLBuffer;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.kernels.Kernels;
 
+import static net.haesleinhuepf.imagej.macro.CLIJMacroExtensions.radiusToKernelSize;
+
 /**
  * The CLIJMacroAPI contains all methods which can be called from ImageJ macro
  *
@@ -93,7 +95,7 @@ public class CLIJMacroAPI {
                                Float sigmaX,
                                Float sigmaY)
     {
-        return Kernels.blur(clij, source, destination, nX, nY, sigmaX, sigmaY);
+        return Kernels.blur(clij, source, destination, radiusToKernelSize(nX), radiusToKernelSize(nY), sigmaX, sigmaY);
     }
 
     public final static String parameter_doc_blur3d = "Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ, Number sigmaX, Number sigmaY, Number sigmaZ";
@@ -107,7 +109,7 @@ public class CLIJMacroAPI {
                                Float sigmaY,
                                Float sigmaZ)
     {
-        return Kernels.blur(clij, source, destination, nX, nY, nZ, sigmaX, sigmaY, sigmaZ);
+        return Kernels.blur(clij, source, destination, radiusToKernelSize(nX), radiusToKernelSize(nY), radiusToKernelSize(nZ), sigmaX, sigmaY, sigmaZ);
     }
 
     public final static String parameter_doc_copy = "Image source, Image destination";
@@ -288,7 +290,7 @@ public class CLIJMacroAPI {
                                   ClearCLBuffer destination,
                                   Integer radiusX,
                                   Integer radiusY) {
-        return Kernels.maximum(clij, source, destination, radiusX, radiusY);
+        return Kernels.maximum(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
 
     public final static String parameter_doc_maximum3d = "Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ";
@@ -298,7 +300,7 @@ public class CLIJMacroAPI {
                                   Integer radiusX,
                                   Integer radiusY,
                                   Integer radiusZ) {
-        return Kernels.maximum(clij, source, destination, radiusX, radiusY, radiusZ);
+        return Kernels.maximum(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ));
     }
 
     public final static String parameter_doc_maximumSliceBySlice = "Image source, Image destination, Number radiusX, Number radiusY";
@@ -307,7 +309,7 @@ public class CLIJMacroAPI {
                                               ClearCLBuffer destination,
                                               Integer radiusX,
                                               Integer radiusY) {
-        return Kernels.maximumSliceBySlice(clij, source, destination, radiusX, radiusY);
+        return Kernels.maximumSliceBySlice(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
 
     public final static String parameter_doc_maxPixelwise = "Image source, Image source2, Image destination";
@@ -344,7 +346,7 @@ public class CLIJMacroAPI {
                                ClearCLBuffer destination,
                                Integer radiusX,
                                Integer radiusY) {
-        return Kernels.mean(clij, source, destination, radiusX, radiusY);
+        return Kernels.mean(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
 
     public final static String parameter_doc_mean3d = "Image source, Image destination, Number radiusX, Number radiusY, Number radius Z";
@@ -354,7 +356,7 @@ public class CLIJMacroAPI {
                                Integer radiusX,
                                Integer radiusY,
                                Integer radiusZ) {
-        return Kernels.mean(clij, source, destination, radiusX, radiusY, radiusZ);
+        return Kernels.mean(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ));
     }
 
     public final static String parameter_doc_meanSliceBySlice = "Image source, Image destination, Number radiusX, Number radiusY";
@@ -363,7 +365,7 @@ public class CLIJMacroAPI {
                                            ClearCLBuffer destination,
                                            Integer radiusX,
                                            Integer radiusY) {
-        return Kernels.meanSliceBySlice(clij, source, destination, radiusX, radiusY);
+        return Kernels.meanSliceBySlice(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
 
     public final static String parameter_doc_median2d = "Image source, Image destination, Number radiusX, Number radiusY";
@@ -372,7 +374,7 @@ public class CLIJMacroAPI {
                                  ClearCLBuffer destination,
                                  Integer radiusX,
                                  Integer radiusY) {
-        return Kernels.median(clij, source, destination, radiusX, radiusY);
+        return Kernels.median(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
 
     public final static String parameter_doc_median3d = "Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ";
@@ -382,7 +384,7 @@ public class CLIJMacroAPI {
                                  Integer radiusX,
                                  Integer radiusY,
                                  Integer radiusZ) {
-        return Kernels.median(clij, source, destination, radiusX, radiusY, radiusZ);
+        return Kernels.median(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ));
     }
 
     public final static String parameter_doc_medianSliceBySlice = "Image source, Image destination, Number radiusX, Number radiusY";
@@ -391,7 +393,7 @@ public class CLIJMacroAPI {
                                              ClearCLBuffer destination,
                                              Integer radiusX,
                                              Integer radiusY) {
-        return Kernels.medianSliceBySlice(clij, source, destination, radiusX, radiusY);
+        return Kernels.medianSliceBySlice(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
 
     public final static String parameter_doc_minimum2d = "Image source, Image destination, Number radiusX, Number radiusY";
@@ -400,7 +402,7 @@ public class CLIJMacroAPI {
                                   ClearCLBuffer destination,
                                   Integer radiusX,
                                   Integer radiusY) {
-        return Kernels.minimum(clij, source, destination, radiusX, radiusY);
+        return Kernels.minimum(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
 
     public final static String parameter_doc_minimum3d = "Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ";
@@ -410,7 +412,7 @@ public class CLIJMacroAPI {
                                   Integer radiusX,
                                   Integer radiusY,
                                   Integer radiusZ) {
-        return Kernels.minimum(clij, source, destination, radiusX, radiusY, radiusZ);
+        return Kernels.minimum(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ));
     }
 
     public final static String parameter_doc_minimumSliceBySlice = "Image source, Image destination, Number radiusX, Number radiusY";
@@ -419,7 +421,7 @@ public class CLIJMacroAPI {
                                               ClearCLBuffer destination,
                                               Integer radiusX,
                                               Integer radiusY) {
-        return Kernels.minimumSliceBySlice(clij, source, destination, radiusX, radiusY);
+        return Kernels.minimumSliceBySlice(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
 
     public final static String parameter_doc_multiplyPixelwise = "Image factor1, Image factor2, Image destination";
@@ -501,4 +503,5 @@ public class CLIJMacroAPI {
     {
         return Kernels.threshold(clij, source, destination, threshold);
     }
+    
 }

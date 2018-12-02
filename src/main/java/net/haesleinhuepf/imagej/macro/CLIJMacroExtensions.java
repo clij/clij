@@ -355,4 +355,9 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         ext.handleExtension("CLIJ_erode", arguments);
     }
 
+
+    static int radiusToKernelSize(int radius) {
+        int kernelSize = radius * 2 + 1;
+        return kernelSize;
+    }
 }

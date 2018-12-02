@@ -39,7 +39,7 @@ for (i = 1; i <= 10; i++) {
 // Get results back from GPU
 time = getTime();
 Ext.CLIJ_pull(blurred);
-print("Pulining one image from the GPU took " + (getTime() - time) + " msec");
+print("Pulling one image from the GPU took " + (getTime() - time) + " msec");
 
 // Cleanup GPU 
 Ext.CLIJ_clear();
