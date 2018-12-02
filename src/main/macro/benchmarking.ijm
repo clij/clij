@@ -12,17 +12,19 @@ blurred = getTitle();
 run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
 Ext.CLIJ_clear();
 
-// push images to GPU
-Ext.CLIJ_push(input);
-Ext.CLIJ_push(blurred);
-
-
 // Local mean filter in CPU
 for (i = 1; i <= 10; i++) {
 	time = getTime();
 	run("Mean 3D...", "x=3 y=3 z=3");
-	print("CPU mean filter no " + i + " took " + (getTime() - time));
+	print("CPU mean filter no " + i + " took " + (getTime() - time) + " msec");
 }
+
+// push images to GPU
+time = getTime();
+Ext.CLIJ_push(input);
+Ext.CLIJ_push(blurred);
+print("Pushing two images to the GPU took " + (getTime() - time) + " msec");
+
 
 // cleanup ImageJ
 run("Close All");
@@ -31,11 +33,13 @@ run("Close All");
 for (i = 1; i <= 10; i++) {
 	time = getTime();
 	Ext.CLIJ_mean3d(input, blurred, 3, 3, 3);
-	print("GPU mean filter no " + i + " took " + (getTime() - time));
+	print("GPU mean filter no " + i + " took " + (getTime() - time) + " msec");
 }
 
 // Get results back from GPU
+time = getTime();
 Ext.CLIJ_pull(blurred);
+print("Pulining one image from the GPU took " + (getTime() - time) + " msec");
 
 // Cleanup GPU 
 Ext.CLIJ_clear();
