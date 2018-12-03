@@ -29,7 +29,7 @@ public class CLKernelExecutor
   Map<String, Object> mParameterMap;
   long[] mGlobalSizes;
 
-  public static int MAX_ARRAY_SIZE = 344;
+  public static int MAX_ARRAY_SIZE = 1000;
 
   private String mSourceFile;
 
@@ -163,6 +163,11 @@ public class CLKernelExecutor
       lClearCLKernel.close();
     }
 
+    //for (ClearCLProgram program : mProgramCacheMap.values()) {
+    //  program.close();
+    //}
+    //mProgramCacheMap.clear();
+
     return true;
   }
 
@@ -210,8 +215,10 @@ public class CLKernelExecutor
       lDefines.put("DTYPE_IMAGE_IN_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_IN_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IN", pDType != NativeTypeEnum.Float ? "ushort" : "float");
-      lDefines.put("READ_IMAGE_2D(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer2dui(" + width + "," + height + ",a,b,c)" : "read_buffer2df(" + width + "," + height + ",a,b,c)");
-      lDefines.put("READ_IMAGE_3D(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer3dui(" + width + "," + height + ",a,b,c)" : "read_buffer3df(" + width + "," + height + ",a,b,c)");
+      lDefines.put("READ_IMAGE_2D(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer2dui(" + width + "," + height + "," + depth + ",a,b,c)" :
+                                                                            "read_buffer2df(" + width + "," + height + "," + depth + ",a,b,c)");
+      lDefines.put("READ_IMAGE_3D(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer3dui(" + width + "," + height + "," + depth + ",a,b,c)" :
+                                                                            "read_buffer3df(" + width + "," + height + "," + depth + ",a,b,c)");
       lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
       lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
       lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
@@ -219,8 +226,10 @@ public class CLKernelExecutor
       lDefines.put("DTYPE_IMAGE_OUT_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_OUT_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_OUT", pDType != NativeTypeEnum.Float ? "ushort" : "float");
-      lDefines.put("WRITE_IMAGE_2D(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer2dui(" + width + "," + height + ",a,b,c)" : "write_buffer2df(" + width + "," + height + ",a,b,c)");
-      lDefines.put("WRITE_IMAGE_3D(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer3dui(" + width + "," + height + ",a,b,c)" : "write_buffer3df(" + width + "," + height + ",a,b,c)");
+      lDefines.put("WRITE_IMAGE_2D(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer2dui(" + width + "," + height + "," + depth + ",a,b,c)" :
+                                                                             "write_buffer2df(" + width + "," + height + "," + depth + ",a,b,c)");
+      lDefines.put("WRITE_IMAGE_3D(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer3dui(" + width + "," + height + "," + depth + ",a,b,c)" :
+                                                                             "write_buffer3df(" + width + "," + height + "," + depth + ",a,b,c)");
       lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
       lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
       lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");

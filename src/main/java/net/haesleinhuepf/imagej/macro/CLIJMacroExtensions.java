@@ -339,7 +339,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         ext.clij = ClearCLIJ.getInstance("gfx902");
         ext.getExtensionFunctions();
 
-        IJ.open("src/main/resources/flybrain.tif");
+        IJ.open("C:/Users/rhaase/code/temp/clearclij/src/main/resources/flybrain.tif");
         ext.toCLIJ("flybrain.tif");
         IJ.getImage().setTitle("out");
         ext.toCLIJ("out");
