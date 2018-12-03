@@ -21,7 +21,7 @@ Ext.CLIJ_blur(input, output, 20, 20, 1, 10, 10, 1);
 // Get results back from GPU
 Ext.CLIJ_pull(output);
 ```
-[There is a fully functional ImageJ macro file available in this repository.](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/macro/testExtensions.ijm)
+[There is a fully functional ImageJ macro file available in this repository.](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/macro/backgroundSubtraction.ijm)
 
 ### Installation to ImageJ/Fiji
 
