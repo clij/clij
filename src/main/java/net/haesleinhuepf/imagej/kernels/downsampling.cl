@@ -8,8 +8,8 @@ __kernel void downsample_3d_nearest(DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D sr
   const int sx = factor_x * dx;
   const int sy = factor_y * dy;
   const int sz = factor_z * dz;
-  const DTYPE_IN out = READ_IMAGE(src,sampler,((int4){sx,sy,sz,0})).x;
-  WRITE_IMAGE(dst,((int4){dx,dy,dz,0}),(DTYPE_OUT)out);
+  const DTYPE_IN out = READ_IMAGE_3D(src,sampler,((int4){sx,sy,sz,0})).x;
+  WRITE_IMAGE_3D(dst,((int4){dx,dy,dz,0}),(DTYPE_OUT)out);
 }
 
 __kernel void downsample_2d_nearest(DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src, float factor_x, float factor_y) {
@@ -20,8 +20,8 @@ __kernel void downsample_2d_nearest(DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D sr
 
   const int sx = factor_x * dx;
   const int sy = factor_y * dy;
-  const DTYPE_IN out = READ_IMAGE(src,sampler,((int2){sx,sy})).x;
-  WRITE_IMAGE(dst,((int2){dx,dy}),(DTYPE_OUT)out);
+  const DTYPE_IN out = READ_IMAGE_2D(src,sampler,((int2){sx,sy})).x;
+  WRITE_IMAGE_2D(dst,((int2){dx,dy}),(DTYPE_OUT)out);
 }
 
 #define SIZEX 4
@@ -57,14 +57,14 @@ __kernel void DownSample ( DTYPE_IMAGE_IN_2D src,
        for ( int x = 0; x < SIZEX; x++ ) {
             for ( int y = 0; y < SIZEY; y++ ) {
                 if ( is < dim[0] - x && js < dim[1] - y ) {
-                    total += (READ_IMAGE ( src, sampler, ((int2) { is + x, js + y }) )).x;
+                    total += (READ_IMAGE_2D ( src, sampler, ((int2) { is + x, js + y }) )).x;
                 }
             }
         }
     }
 
     total = (DTYPE_OUT) ( total / SIZETotal );
-    WRITE_IMAGE ( des, ((int2) { i, j }), total );
+    WRITE_IMAGE_2D ( des, ((int2) { i, j }), total );
 }
 
 
@@ -91,10 +91,10 @@ __kernel void downsample_xy_by_half_median(DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_I
   const int x = 2*i, y = 2*j, z = k;
 
   DTYPE_IN pixel[4];
-  pixel[0] = READ_IMAGE(src,sampler,((int4){x+0,y+0,z,0})).x;
-  pixel[1] = READ_IMAGE(src,sampler,((int4){x+0,y+1,z,0})).x;
-  pixel[2] = READ_IMAGE(src,sampler,((int4){x+1,y+0,z,0})).x;
-  pixel[3] = READ_IMAGE(src,sampler,((int4){x+1,y+1,z,0})).x;
+  pixel[0] = READ_IMAGE_3D(src,sampler,((int4){x+0,y+0,z,0})).x;
+  pixel[1] = READ_IMAGE_3D(src,sampler,((int4){x+0,y+1,z,0})).x;
+  pixel[2] = READ_IMAGE_3D(src,sampler,((int4){x+1,y+0,z,0})).x;
+  pixel[3] = READ_IMAGE_3D(src,sampler,((int4){x+1,y+1,z,0})).x;
 
   // // sort pixel array
   // swap(pixel,0,1);
@@ -122,7 +122,7 @@ __kernel void downsample_xy_by_half_median(DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_I
   // output is mean of medians
   const float out = (pixel[1] + pixel[2]) / 2.0f;
 
-  WRITE_IMAGE(dst,coord_out,(DTYPE_OUT)out);
+  WRITE_IMAGE_3D(dst,coord_out,(DTYPE_OUT)out);
 }
 
 

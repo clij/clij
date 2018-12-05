@@ -2587,8 +2587,12 @@ public class KernelsTest
     ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
     ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
 
-    Kernels.mean(clij, inputCL, outputCl, 3, 3, 3);
+    //Kernels.copy(clij, inputCL, outputCl);
 
+    Kernels.mean(clij, inputCL, outputCl, 3, 3, 3);
+    //Kernels.mean(clij, inputCL, outputCl, 3, 3, 3);
+
+    //if (true) return;
     ImagePlus result = clij.converter(outputCl).getImagePlus();
 
     // ignore edges and first and last slice

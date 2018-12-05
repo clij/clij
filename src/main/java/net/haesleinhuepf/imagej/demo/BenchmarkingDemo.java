@@ -89,11 +89,9 @@ public class BenchmarkingDemo {
 
     private static <T extends RealType<T>, B extends BooleanType<B>> void demoImageJ2() {
 
-        // Thanks to @imagejan, @tpietscht and @Awalter from forum.imagej.net
+        // Thanks to @imagejan, @tpietzsch and @Awalter from forum.imagej.net
 
         UnsignedByteType threshold = new UnsignedByteType();
-        //FloatType threshold = new FloatType();
-
         threshold.setReal(100);
         RandomAccessibleInterval gauss = ij.op().filter().gauss(img, sigma);
 
@@ -139,19 +137,10 @@ public class BenchmarkingDemo {
 
         Kernels.blurSeparable(lCLIJ, input, flop, (float)sigma, (float)sigma, (float)sigma);
 
-        //lCLIJ.converter(flop).getImagePlus().show();
-
         Kernels.threshold(lCLIJ, flop, flip, 100.0f);
 
-        //lCLIJ.converter(flip).getImagePlus().show();
-
         Kernels.erode(lCLIJ, flip, flop);
-
-        //lCLIJ.converter(flop).getImagePlus().show();
-
         Kernels.dilate(lCLIJ, flop, flip);
-
-        //lCLIJ.converter(flip).getImagePlus().show();
 
         Kernels.multiplyPixelwise(lCLIJ, flop, input, flip);
 

@@ -29,7 +29,7 @@ public class CLKernelExecutor
   Map<String, Object> mParameterMap;
   long[] mGlobalSizes;
 
-  public static int MAX_ARRAY_SIZE = 344;
+  public static int MAX_ARRAY_SIZE = 1000;
 
   private String mSourceFile;
 
@@ -108,10 +108,10 @@ public class CLKernelExecutor
       getOpenCLDefines(lOpenCLDefines, lDstImage.getChannelDataType(), false);
     }
     if (lSrcBuffer != null) {
-      getOpenCLDefines(lOpenCLDefines, lSrcBuffer.getNativeType(), lSrcBuffer.getWidth(), lSrcBuffer.getHeight(), lSrcBuffer.getDepth(), true);
+      getOpenCLDefines(lOpenCLDefines, lSrcBuffer.getNativeType(), lSrcBuffer.getWidth(), lSrcBuffer.getHeight(), lSrcBuffer.getDepth(), lSrcBuffer.getDimension(), true);
     }
     if (lDstBuffer != null) {
-      getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), lDstBuffer.getDepth(), false);
+      getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), lDstBuffer.getDepth(), lDstBuffer.getDimension(), false);
     }
 
 
@@ -163,6 +163,11 @@ public class CLKernelExecutor
       lClearCLKernel.close();
     }
 
+    //for (ClearCLProgram program : mProgramCacheMap.values()) {
+    //  program.close();
+    //}
+    //mProgramCacheMap.clear();
+
     return true;
   }
 
@@ -187,7 +192,8 @@ public class CLKernelExecutor
       lDefines.put("DTYPE_IMAGE_IN_3D", "__read_only image3d_t");
       lDefines.put("DTYPE_IMAGE_IN_2D", "__read_only image2d_t");
       lDefines.put("DTYPE_IN", pDType.isInteger() ? "ushort" : "float");
-      lDefines.put("READ_IMAGE", pDType.isInteger() ? "read_imageui" : "read_imagef");
+      lDefines.put("READ_IMAGE_2D", pDType.isInteger() ? "read_imageui" : "read_imagef");
+      lDefines.put("READ_IMAGE_3D", pDType.isInteger() ? "read_imageui" : "read_imagef");
       lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_image_width(a)");
       lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_image_height(a)");
       lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_image_depth(a)");
@@ -195,30 +201,38 @@ public class CLKernelExecutor
       lDefines.put("DTYPE_IMAGE_OUT_3D", "__write_only image3d_t");
       lDefines.put("DTYPE_IMAGE_OUT_2D", "__write_only image2d_t");
       lDefines.put("DTYPE_OUT", pDType.isInteger() ? "ushort" : "float");
-      lDefines.put("WRITE_IMAGE", pDType.isInteger() ? "write_imageui" : "write_imagef");
+      lDefines.put("WRITE_IMAGE_2D", pDType.isInteger() ? "write_imageui" : "write_imagef");
+      lDefines.put("WRITE_IMAGE_3D", pDType.isInteger() ? "write_imageui" : "write_imagef");
       lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_image_width(a)");
       lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_image_height(a)");
       lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_image_depth(a)");
     }
   }
 
-  public static void getOpenCLDefines(Map<String, Object> lDefines, NativeTypeEnum pDType, long width, long height, long depth, boolean pInput) {
+  public static void getOpenCLDefines(Map<String, Object> lDefines, NativeTypeEnum pDType, long width, long height, long depth, long dimension, boolean pInput) {
+    String typeId = pDType != NativeTypeEnum.Float ? "ui" : "f";
     if (pInput) {
       lDefines.put("DTYPE_IMAGE_IN_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_IN_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IN", pDType != NativeTypeEnum.Float ? "ushort" : "float");
-      lDefines.put("READ_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "read_bufferui(" + width + "," + height + ",a,b,c)" : "read_bufferf(" + width + "," + height + ",a,b,c)");
-      lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer_width(" + width + ",a)");
-      lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer_height(" + height + ",a)");
-      lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer_depth(" + depth + ",a)");
+      lDefines.put("READ_IMAGE_2D(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer2dui(" + width + "," + height + "," + depth + ",a,b,c)" :
+                                                                            "read_buffer2df(" + width + "," + height + "," + depth + ",a,b,c)");
+      lDefines.put("READ_IMAGE_3D(a,b,c)", pDType != NativeTypeEnum.Float ? "read_buffer3dui(" + width + "," + height + "," + depth + ",a,b,c)" :
+                                                                            "read_buffer3df(" + width + "," + height + "," + depth + ",a,b,c)");
+      lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
+      lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
+      lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
     } else {
       lDefines.put("DTYPE_IMAGE_OUT_3D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_IMAGE_OUT_2D", pDType != NativeTypeEnum.Float ? "__global ushort*" : "__global float*");
       lDefines.put("DTYPE_OUT", pDType != NativeTypeEnum.Float ? "ushort" : "float");
-      lDefines.put("WRITE_IMAGE(a,b,c)", pDType != NativeTypeEnum.Float ? "write_bufferui(" + width + "," + height + ",a,b,c)" : "write_bufferf(" + width + "," + height + ",a,b,c)");
-      lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer_width(" + width + ",a)");
-      lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer_height(" + height + ",a)");
-      lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer_depth(" + depth + ",a)");
+      lDefines.put("WRITE_IMAGE_2D(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer2dui(" + width + "," + height + "," + depth + ",a,b,c)" :
+                                                                             "write_buffer2df(" + width + "," + height + "," + depth + ",a,b,c)");
+      lDefines.put("WRITE_IMAGE_3D(a,b,c)", pDType != NativeTypeEnum.Float ? "write_buffer3dui(" + width + "," + height + "," + depth + ",a,b,c)" :
+                                                                             "write_buffer3df(" + width + "," + height + "," + depth + ",a,b,c)");
+      lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
+      lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
+      lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
     }
   }
 
@@ -259,6 +273,8 @@ public class CLKernelExecutor
 
       mProgramCacheMap.put(lProgramCacheKey, clProgram);
     }
+    //System.out.println(clProgram.getSourceCode());
+    //System.out.println(pKernelName);
     ClearCLKernel lKernel = clProgram.createKernel(pKernelName);
     return lKernel;
   }

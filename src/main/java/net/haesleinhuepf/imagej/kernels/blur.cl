@@ -28,14 +28,14 @@ __kernel void gaussian_blur_image3d
       for (int z = -c.z; z <= c.z; z++) {
         const float wz = (z*z) / n.z;
         const float h = exp(wx + wy + wz);
-        res += h * (float)READ_IMAGE(src,sampler,coord+(int4)(x,y,z,0)).x;
+        res += h * (float)READ_IMAGE_3D(src,sampler,coord+(int4)(x,y,z,0)).x;
         hsum += h;
       }
     }
   }
 
   res /= hsum;
-  WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
+  WRITE_IMAGE_3D(dst,coord,(DTYPE_OUT)res);
 }
 
 
@@ -61,13 +61,13 @@ __kernel void gaussian_blur_slicewise_image3d
     for (int y = -c.y; y <= c.y; y++) {
       const float wy = (y*y) / n.y;
       const float h = exp(wx + wy);
-      res += h * (float)READ_IMAGE(src,sampler,coord+(int4)(x,y,0,0)).x;
+      res += h * (float)READ_IMAGE_3D(src,sampler,coord+(int4)(x,y,0,0)).x;
       hsum += h;
     }
   }
 
   res /= hsum;
-  WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
+  WRITE_IMAGE_3D(dst,coord,(DTYPE_OUT)res);
 }
 
 __kernel void gaussian_blur_image2d
@@ -92,13 +92,13 @@ __kernel void gaussian_blur_image2d
     for (int y = -c.y; y <= c.y; y++) {
       const float wy = (y*y) / n.y;
       const float h = exp(wx + wy);
-      res += h * (float)READ_IMAGE(src,sampler,coord+(int2)(x,y)).x;
+      res += h * (float)READ_IMAGE_2D(src,sampler,coord+(int2)(x,y)).x;
       hsum += h;
     }
   }
 
   res /= hsum;
-  WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
+  WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)res);
 }
 
 __kernel void gaussian_blur_sep_image3d
@@ -119,11 +119,11 @@ __kernel void gaussian_blur_sep_image3d
   float res = 0, hsum = 0;
   for (int v = -c; v <= c; v++) {
     const float h = exp((v*v)/n);
-    res += h * (float)READ_IMAGE(src,sampler,coord+v*dir).x;
+    res += h * (float)READ_IMAGE_3D(src,sampler,coord+v*dir).x;
     hsum += h;
   }
   res /= hsum;
-  WRITE_IMAGE(dst,coord,(DTYPE_OUT)res);
+  WRITE_IMAGE_3D(dst,coord,(DTYPE_OUT)res);
 }
 
 

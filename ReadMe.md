@@ -108,8 +108,6 @@ Ext.CLIJ_resliceRight(Image source, Image destination);
 Ext.CLIJ_resliceTop(Image source, Image destination);
 Ext.CLIJ_set(Image image, Number value);
 Ext.CLIJ_threshold(Image source, Image destination, Number Threshold);
-```
-
 
 ## High level API (Java, Jython, Groovy)
 When accessing [the Kernels class](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/java/net/haesleinhuepf/imagej/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with ClearCLIJ, first create an instance. `ClearCLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
@@ -207,7 +205,7 @@ calls will be replaced during runtime with the function accessing the correct im
 type. However, in order to allow ClearCLIJ to detect the right image data type, there must
 be at least two image type parameters containing "src", "dst", "input", or "output" in their
 parameter names. ClearCLIJ will then for example detect the type of an image parameter called
-"src_image" and replace all calls to `READ_IMAGE_3D()` with the respective call to
+"src_image" and replace all calls to `READ_IMAGE_2D()` with the respective call to
 `image_readui()` or `image_readf()` calls.
 * Variables inside OpenCL programs can be typed with `DTYPE_IN` and `DTYPE_OUT`
 instead of `float` or `int4` in order to make the OpenCL code type agnostic.

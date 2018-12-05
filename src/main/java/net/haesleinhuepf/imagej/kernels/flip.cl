@@ -20,9 +20,9 @@ __kernel void flip_3d (    DTYPE_IMAGE_IN_3D  src,
                           flipy?(height-1-y):y,
                           flipz?(depth-1-z):z,0);
 
-  const DTYPE_IN value = READ_IMAGE(src, intsampler, pos).x;
+  const DTYPE_IN value = READ_IMAGE_3D(src, intsampler, pos).x;
 
-  WRITE_IMAGE (dst, (int4)(x,y,z,0), (DTYPE_OUT)value);
+  WRITE_IMAGE_3D (dst, (int4)(x,y,z,0), (DTYPE_OUT)value);
 }
 
 
@@ -43,7 +43,7 @@ __kernel void flip_2d (    DTYPE_IMAGE_IN_2D  src,
   const int2 pos = (int2)(flipx?(width-1-x):x,
                           flipy?(height-1-y):y);
 
-  const DTYPE_IN value = READ_IMAGE(src, intsampler, pos).x;
+  const DTYPE_IN value = READ_IMAGE_2D(src, intsampler, pos).x;
 
-  WRITE_IMAGE (dst, (int2)(x,y), (DTYPE_OUT)value);
+  WRITE_IMAGE_2D (dst, (int2)(x,y), (DTYPE_OUT)value);
 }
