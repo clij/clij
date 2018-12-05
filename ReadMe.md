@@ -16,12 +16,12 @@ Ext.CLIJ_push(input);
 Ext.CLIJ_push(output);
 
 // Blur in GPU
-Ext.CLIJ_blur(input, output, 20, 20, 1, 10, 10, 1);
+Ext.CLIJ_blur3d(input, output, 20, 20, 1, 10, 10, 1);
 
 // Get results back from GPU
 Ext.CLIJ_pull(output);
 ```
-[There is a fully functional ImageJ macro file available in this repository.](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/macro/testExtensions.ijm)
+[There is a fully functional ImageJ macro file available in this repository.](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/macro/backgroundSubtraction.ijm)
 
 ### Installation to ImageJ/Fiji
 
@@ -139,6 +139,7 @@ Inplace operations are not well supported by OpenCL 1.2. Thus, after creating tw
 
 ```python
 from clearcl.imagej.kernels import Kernels;
+
 Kernels.maxProjection(clij, imageInput, imageOutput);
 ```
 
@@ -199,7 +200,7 @@ clij.execute("absolute/or/relative/path/filename_open.cl", "kernelfunction", {"s
 As jython is a type-agnostic programming language, ClearCLIJ targets bringing the same convenience to OpenCL as well. However, in order to make the executed OpenCL programs image pixel type agnostic, some conventions must be introduced. The conventions are all optional. OpenCL programmers who know how to pass images of a defined type to OpenCL programs using the correct access functions can skip this section.
 
 * Instead of using functions like `read_imagef()`, `write_imagef()`, `write_imageui()` etc.,
-it is recommended to use `WRITE_IMAGE_2D()`, `WRITE_IMAGE_3D()` and `READ_IMAGE_3D()` function calls. These function
+it is recommended to use `WRITE_IMAGE_2D()`, `WRITE_IMAGE_3D()`, `READ_IMAGE_2D()` and `READ_IMAGE_3D()` function calls. These function
 calls will be replaced during runtime with the function accessing the correct image data
 type. However, in order to allow ClearCLIJ to detect the right image data type, there must
 be at least two image type parameters containing "src", "dst", "input", or "output" in their
