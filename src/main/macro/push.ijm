@@ -1,6 +1,6 @@
-// ClearCLIJ example macro: mean.ijm
+// ClearCLIJ example macro: push.ijm
 //
-// This macro shows how the mean average filter works in the GPU.
+// This macro shows how an image is pushed to the GPU.
 //
 // Author: Robert Haase
 // December 2018
