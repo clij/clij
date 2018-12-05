@@ -108,8 +108,6 @@ Ext.CLIJ_resliceRight(Image source, Image destination);
 Ext.CLIJ_resliceTop(Image source, Image destination);
 Ext.CLIJ_set(Image image, Number value);
 Ext.CLIJ_threshold(Image source, Image destination, Number Threshold);
-```
-
 
 ## High level API (Java, Jython, Groovy)
 When accessing [the Kernels class](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/java/net/haesleinhuepf/imagej/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with ClearCLIJ, first create an instance. `ClearCLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
