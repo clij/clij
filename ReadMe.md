@@ -16,7 +16,7 @@ Ext.CLIJ_push(input);
 Ext.CLIJ_push(output);
 
 // Blur in GPU
-Ext.CLIJ_blur(input, output, 20, 20, 1, 10, 10, 1);
+Ext.CLIJ_blur3d(input, output, 20, 20, 1, 10, 10, 1);
 
 // Get results back from GPU
 Ext.CLIJ_pull(output);
@@ -141,6 +141,7 @@ Inplace operations are not well supported by OpenCL 1.2. Thus, after creating tw
 
 ```python
 from clearcl.imagej.kernels import Kernels;
+
 Kernels.maxProjection(clij, imageInput, imageOutput);
 ```
 
@@ -201,12 +202,12 @@ clij.execute("absolute/or/relative/path/filename_open.cl", "kernelfunction", {"s
 As jython is a type-agnostic programming language, ClearCLIJ targets bringing the same convenience to OpenCL as well. However, in order to make the executed OpenCL programs image pixel type agnostic, some conventions must be introduced. The conventions are all optional. OpenCL programmers who know how to pass images of a defined type to OpenCL programs using the correct access functions can skip this section.
 
 * Instead of using functions like `read_imagef()`, `write_imagef()`, `write_imageui()` etc.,
-it is recommended to use `WRITE_IMAGE()` and `READ_IMAGE()` function calls. These function
+it is recommended to use `WRITE_IMAGE_2D()`, `WRITE_IMAGE_3D()`, `READ_IMAGE_2D()` and `READ_IMAGE_3D()` function calls. These function
 calls will be replaced during runtime with the function accessing the correct image data
 type. However, in order to allow ClearCLIJ to detect the right image data type, there must
 be at least two image type parameters containing "src", "dst", "input", or "output" in their
 parameter names. ClearCLIJ will then for example detect the type of an image parameter called
-"src_image" and replace all calls to `READ_IMAGE()` with the respective call to
+"src_image" and replace all calls to `READ_IMAGE_3D()` with the respective call to
 `image_readui()` or `image_readf()` calls.
 * Variables inside OpenCL programs can be typed with `DTYPE_IN` and `DTYPE_OUT`
 instead of `float` or `int4` in order to make the OpenCL code type agnostic.
