@@ -13,7 +13,7 @@ input = getTitle();
 getDimensions(width, height, channels, slices, frames);
 
 // create an emtpy image to put the blurred pixels in
-newImage("Untitled", "8-bit black", width, height, slices);
+newImage("Untitled", "16-bit black", width, height, slices);
 rename("Blurred");
 blurred = getTitle();
 
