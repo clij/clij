@@ -145,8 +145,17 @@ public class ImageTypeConverter<T extends RealType<T>>
   }
 
   public ClearCLBuffer getClearCLBuffer() {
-    ClearCLImage lClImage = getClearCLImage();
-    return convertCLImageToCLBuffer(lClImage);
+    if (mBuffer == null) {
+      if (mClearCLImage != null) {
+        mBuffer = convertCLImageToCLBuffer(mClearCLImage);
+      } else if (mRandomAccessibleInterval != null) {
+        mBuffer = convertRandomAccessibleIntervalToClearCLBuffer(mRandomAccessibleInterval);
+      }
+
+      //ClearCLImage lClImage = getClearCLImage();
+      //return convertCLImageToCLBuffer(lClImage);
+    }
+    return mBuffer;
   }
 
   private ImageChannelDataType nativeTypeToImageChannelType(NativeTypeEnum lType) {
@@ -175,6 +184,35 @@ public class ImageTypeConverter<T extends RealType<T>>
     return lImageChannelType;
 
   }
+
+  private NativeTypeEnum imglib2TypeToNativeType(T lPixel) {
+    if (lPixel instanceof UnsignedByteType)
+    {
+      return NativeTypeEnum.UnsignedByte;
+    }
+    else if (lPixel instanceof ByteType)
+    {
+      return NativeTypeEnum.Byte;
+    }
+    else if (lPixel instanceof UnsignedShortType)
+    {
+      return NativeTypeEnum.UnsignedShort;
+    }
+    else if (lPixel instanceof ShortType)
+    {
+      return NativeTypeEnum.Short;
+    }
+    else if (lPixel instanceof FloatType)
+    {
+      return NativeTypeEnum.Float;
+    }
+    else
+    {
+      throw new IllegalArgumentException(
+              "Cannot convert image of type " + lPixel.toString());
+    }
+  }
+
 
   public static <T extends RealType<T>> RandomAccessibleInterval<T> convertClearClImageToRandomAccessibleInterval(
       ClearCLContext pContext,
@@ -473,6 +511,89 @@ public class ImageTypeConverter<T extends RealType<T>>
       lClearClImage.readFrom(inputArray, true);
     }
 
+  }
+
+  public static <T extends RealType<T>> void copyRandomAccessibleIntervalToClearCLBuffer(RandomAccessibleInterval<T> pRandomAccessibleInterval, ClearCLBuffer lClearClImage) {
+
+
+    T
+            lPixel =
+            Views.iterable(pRandomAccessibleInterval).firstElement();
+
+    long[]
+            dimensions =
+            new long[pRandomAccessibleInterval.numDimensions()];
+    pRandomAccessibleInterval.dimensions(dimensions);
+
+    long numberOfPixels = 1;
+    for (int i = 0; i < dimensions.length; i++)
+    {
+      numberOfPixels *= dimensions[i];
+    }
+
+    int count = 0;
+    Cursor<T>
+            cursor =
+            Views.iterable(pRandomAccessibleInterval).cursor();
+
+    if (lClearClImage.getNativeType() == NativeTypeEnum.Byte ||
+            lClearClImage.getNativeType() == NativeTypeEnum.UnsignedShort   )
+    {
+
+      byte[] inputArray = new byte[(int) numberOfPixels];
+      while (cursor.hasNext())
+      {
+        inputArray[count] = (byte) cursor.next().getRealFloat();
+        count++;
+      }
+      ByteBuffer byteBuffer = ByteBuffer.wrap(inputArray);
+      lClearClImage.readFrom(byteBuffer, true);
+    }
+    else if (lClearClImage.getNativeType() == NativeTypeEnum.Short ||
+    lClearClImage.getNativeType() == NativeTypeEnum.UnsignedShort)
+    {
+
+      short[] inputArray = new short[(int) numberOfPixels];
+      while (cursor.hasNext())
+      {
+        inputArray[count] = (short) cursor.next().getRealFloat();
+        count++;
+      }
+      ShortBuffer shortBuffer = ShortBuffer.wrap(inputArray);
+      lClearClImage.readFrom(shortBuffer, true);
+    }
+    else if (lClearClImage.getNativeType() == NativeTypeEnum.Float  )
+    {
+      float[] inputArray = new float[(int) numberOfPixels];
+      while (cursor.hasNext())
+      {
+        inputArray[count] = cursor.next().getRealFloat();
+        count++;
+      }
+      FloatBuffer floatBuffer = FloatBuffer.wrap(inputArray);
+      lClearClImage.readFrom(floatBuffer, true);
+    }
+  }
+
+  public ClearCLBuffer convertRandomAccessibleIntervalToClearCLBuffer(
+          RandomAccessibleInterval<T> pRandomAccessibleInterval)
+  {
+    long[]
+            dimensions =
+            new long[pRandomAccessibleInterval.numDimensions()];
+    pRandomAccessibleInterval.dimensions(dimensions);
+
+    T pixel = (T)(Views.iterable(pRandomAccessibleInterval).firstElement());
+
+    NativeTypeEnum lImageChannelType = imglib2TypeToNativeType(pixel);
+
+
+    ClearCLBuffer
+            lClearClBuffer = mCLIJ.createCLBuffer(dimensions, lImageChannelType);
+
+    copyRandomAccessibleIntervalToClearCLBuffer(pRandomAccessibleInterval, lClearClBuffer);
+
+    return lClearClBuffer;
   }
 
   public <T extends RealType<T>> ClearCLImage convertRandomAccessibleIntervalToClearCLImage(
