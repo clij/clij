@@ -282,6 +282,8 @@ public class ImageTypeConverter<T extends RealType<T>>
 
     long numberOfBytesToAllocate = lBytesPerPixel * lNumberOfPixels;
 
+    long time = System.currentTimeMillis();
+
     ContiguousMemoryInterface
         contOut =
         new OffHeapMemory("memmm",
@@ -290,22 +292,29 @@ public class ImageTypeConverter<T extends RealType<T>>
                               numberOfBytesToAllocate),
                           numberOfBytesToAllocate);
 
+    System.out.println("Create offheap memory took " + (System.currentTimeMillis() - time) + " msec");
+    time = System.currentTimeMillis();
+
     ClearCLBuffer
         buffer =
         pContext.createBuffer(lInputType, lNumberOfPixels);
 
-    //System.out.println("numberOfPixels " + lNumberOfPixels);
-    //System.out.println("buffer.getSizeInBytes() "
-    //                   + buffer.getSizeInBytes());
-    //System.out.println("contOut.getSizeInBytes() "
-    //                  + contOut.getSizeInBytes());
+    System.out.println("Create buffer took " + (System.currentTimeMillis() - time) + " msec");
+    time = System.currentTimeMillis();
 
     pClearCLImage.copyTo(buffer, true);
+    System.out.println("Copy to buffer took " + (System.currentTimeMillis() - time) + " msec");
+
+    time = System.currentTimeMillis();
     buffer.writeTo(contOut, true);
+    System.out.println("Copy to offheap memory took " + (System.currentTimeMillis() - time) + " msec");
+
+    time = System.currentTimeMillis();
+
 
     int lMemoryOffset = 0;
     Cursor<T> lCursor = img.cursor();
-    double sum = 0;
+    //double sum = 0;
     while (lCursor.hasNext())
     {
       if (lInputType == NativeTypeEnum.Byte
@@ -328,9 +337,11 @@ public class ImageTypeConverter<T extends RealType<T>>
             "Cannot convert object of type " + lInputType.getClass()
                                                          .getCanonicalName());
       }
-      sum += lCursor.get().getRealDouble();
+      //sum += lCursor.get().getRealDouble();
       lMemoryOffset += lBytesPerPixel;
     }
+    System.out.println("Copy to cursor took " + (System.currentTimeMillis() - time) + " msec");
+
     //System.out.println("sumss " + sum);
     return img;
   }
