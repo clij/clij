@@ -38,14 +38,23 @@ public class ImageConverterTest
 
   @Test
   public void testSimpleCopyBackAndForth() {
-    ImagePlus imp = NewImage.createFloatImage("title", 512,512,20, NewImage.FILL_RAMP);
-    ClearCLIJ clij = ClearCLIJ.getInstance();
+    for (int i = 0; i < 2; i++) {
+      ImagePlus imp = NewImage.createFloatImage("title", 512, 512, 20, NewImage.FILL_RAMP);
+      ClearCLIJ clij = ClearCLIJ.getInstance();
 
-    ClearCLBuffer buffer1 = clij.converter(imp).getClearCLBuffer();
-    ClearCLBuffer buffer2 = clij.createCLBuffer(buffer1.getDimensions(), buffer1.getNativeType());
+      long time = System.currentTimeMillis();
+      ClearCLBuffer buffer1 = clij.converter(imp).getClearCLBuffer();
+      System.out.println("Forth took " + (System.currentTimeMillis() - time) + " msec");
+      ClearCLBuffer buffer2 = clij.createCLBuffer(buffer1.getDimensions(), buffer1.getNativeType());
 
-    Kernels.copy(clij, buffer1, buffer2);
+      Kernels.copy(clij, buffer1, buffer2);
 
+
+      time = System.currentTimeMillis();
+      ImagePlus result = clij.converter(buffer2).getImagePlus();
+      System.out.println("Back took " + (System.currentTimeMillis() - time) + " msec");
+      result.show();
+    }
   }
 
   @Test public void testImgClearCLImageConverter()

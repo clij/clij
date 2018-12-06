@@ -314,35 +314,43 @@ public class ImageTypeConverter<T extends RealType<T>>
 
     int lMemoryOffset = 0;
     Cursor<T> lCursor = img.cursor();
-    //double sum = 0;
-    while (lCursor.hasNext())
+
+
+    if (lInputType == NativeTypeEnum.Byte
+        || lInputType == NativeTypeEnum.UnsignedByte)
     {
-      if (lInputType == NativeTypeEnum.Byte
-          || lInputType == NativeTypeEnum.UnsignedByte)
+      while (lCursor.hasNext())
       {
         lCursor.next().setReal(contOut.getByte(lMemoryOffset));
+        lMemoryOffset += lBytesPerPixel;
       }
-      else if (lInputType == NativeTypeEnum.Short
-               || lInputType == NativeTypeEnum.UnsignedShort)
+    }
+    else if (lInputType == NativeTypeEnum.Short
+             || lInputType == NativeTypeEnum.UnsignedShort)
+    {
+      while (lCursor.hasNext())
       {
         lCursor.next().setReal(contOut.getShort(lMemoryOffset));
+        lMemoryOffset += lBytesPerPixel;
       }
-      else if (lInputType == NativeTypeEnum.Float)
+    }
+    else if (lInputType == NativeTypeEnum.Float)
+    {
+      while (lCursor.hasNext())
       {
         lCursor.next().setReal(contOut.getFloat(lMemoryOffset));
+        lMemoryOffset += lBytesPerPixel;
       }
-      else
-      {
-        throw new UnknownFormatConversionException(
-            "Cannot convert object of type " + lInputType.getClass()
-                                                         .getCanonicalName());
-      }
-      //sum += lCursor.get().getRealDouble();
-      lMemoryOffset += lBytesPerPixel;
     }
+    else
+    {
+      throw new UnknownFormatConversionException(
+          "Cannot convert object of type " + lInputType.getClass()
+                                                       .getCanonicalName());
+    }
+
     System.out.println("Copy to cursor took " + (System.currentTimeMillis() - time) + " msec");
 
-    //System.out.println("sumss " + sum);
     return img;
   }
 
