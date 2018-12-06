@@ -296,6 +296,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     System.out.println("Copy to buffer took " + (System.currentTimeMillis() - time) + " msec");
 
     copyClBufferToImg(buffer, img, lBytesPerPixel, lNumberOfPixels);
+    buffer.close();
     return img;
   }
 
@@ -408,6 +409,7 @@ public class ImageTypeConverter<T extends RealType<T>>
           "Cannot convert object of type " + lInputType.getClass()
                                                        .getCanonicalName());
     }
+    contOut.free();
 
     System.out.println("Copy to cursor took " + (System.currentTimeMillis() - time) + " msec");
 
