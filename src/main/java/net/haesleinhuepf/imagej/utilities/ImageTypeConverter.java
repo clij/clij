@@ -537,7 +537,7 @@ public class ImageTypeConverter<T extends RealType<T>>
             Views.iterable(pRandomAccessibleInterval).cursor();
 
     if (lClearClImage.getNativeType() == NativeTypeEnum.Byte ||
-            lClearClImage.getNativeType() == NativeTypeEnum.UnsignedShort   )
+            lClearClImage.getNativeType() == NativeTypeEnum.UnsignedByte   )
     {
 
       byte[] inputArray = new byte[(int) numberOfPixels];
