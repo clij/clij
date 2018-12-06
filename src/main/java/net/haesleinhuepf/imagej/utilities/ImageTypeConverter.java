@@ -243,27 +243,25 @@ public class ImageTypeConverter<T extends RealType<T>>
       ClearCLContext pContext,
       ClearCLImage pClearCLImage,
       ImgFactory<T> pFactory,
-      T pPixel)
-  {
+      T pPixel) {
 
-    Dimensions lDimensions = new Dimensions()
-    {
-      @Override public void dimensions(long[] longs)
-      {
+    Dimensions lDimensions = new Dimensions() {
+      @Override
+      public void dimensions(long[] longs) {
         System.arraycopy(pClearCLImage.getDimensions(),
-                         0,
-                         longs,
-                         0,
-                         pClearCLImage.getDimensions().length);
+                0,
+                longs,
+                0,
+                pClearCLImage.getDimensions().length);
       }
 
-      @Override public long dimension(int i)
-      {
+      @Override
+      public long dimension(int i) {
         return pClearCLImage.getDimensions()[i];
       }
 
-      @Override public int numDimensions()
-      {
+      @Override
+      public int numDimensions() {
         return pClearCLImage.getDimensions().length;
       }
     };
@@ -275,29 +273,17 @@ public class ImageTypeConverter<T extends RealType<T>>
     long lBytesPerPixel = lInputType.getSizeInBytes();
     //System.out.println("lBytesPerPixel " + lBytesPerPixel);
     long
-        lNumberOfPixels =
-        pClearCLImage.getWidth()
-        * pClearCLImage.getHeight()
-        * pClearCLImage.getDepth();
+            lNumberOfPixels =
+            pClearCLImage.getWidth()
+                    * pClearCLImage.getHeight()
+                    * pClearCLImage.getDepth();
 
-    long numberOfBytesToAllocate = lBytesPerPixel * lNumberOfPixels;
 
     long time = System.currentTimeMillis();
 
-    ContiguousMemoryInterface
-        contOut =
-        new OffHeapMemory("memmm",
-                          null,
-                          OffHeapMemoryAccess.allocateMemory(
-                              numberOfBytesToAllocate),
-                          numberOfBytesToAllocate);
-
-    System.out.println("Create offheap memory took " + (System.currentTimeMillis() - time) + " msec");
-    time = System.currentTimeMillis();
-
     ClearCLBuffer
-        buffer =
-        pContext.createBuffer(lInputType, lNumberOfPixels);
+            buffer =
+            pContext.createBuffer(lInputType, lNumberOfPixels);
 
     System.out.println("Create buffer took " + (System.currentTimeMillis() - time) + " msec");
     time = System.currentTimeMillis();
@@ -305,7 +291,150 @@ public class ImageTypeConverter<T extends RealType<T>>
     pClearCLImage.copyTo(buffer, true);
     System.out.println("Copy to buffer took " + (System.currentTimeMillis() - time) + " msec");
 
+    copyClBufferToImg(buffer, img, lBytesPerPixel, lNumberOfPixels);
+    return img;
+  }
+
+  public static <T extends RealType<T>> RandomAccessibleInterval<T> convertClearClBufferToRandomAccessibleInterval(
+          ClearCLContext pContext,
+          ClearCLBuffer pClearCLBuffer)
+  {
+    T lPixel = null;
+    ImgFactory<T> lFactory = null;
+
+    if (pClearCLBuffer.getNativeType()
+            == NativeTypeEnum.Byte)
+    {
+      //System.out.println("byte TYPE2");
+
+      lPixel = (T) new ByteType();
+      lFactory = (ImgFactory<T>) new ArrayImgFactory<ByteType>();
+    }
+    else if (pClearCLBuffer.getNativeType()
+            == NativeTypeEnum.UnsignedByte)
+    {
+      //System.out.println("ubyte TYPE2");
+
+      lPixel = (T) new UnsignedByteType();
+      lFactory =
+              (ImgFactory<T>) new ArrayImgFactory<UnsignedByteType>();
+    }
+    else if (pClearCLBuffer.getNativeType()
+            == NativeTypeEnum.Short)
+    {
+      //System.out.println("short TYPE2");
+
+      lPixel = (T) new ShortType();
+      lFactory = (ImgFactory<T>) new ArrayImgFactory<ShortType>();
+    }
+    else if (pClearCLBuffer.getNativeType()
+            == NativeTypeEnum.UnsignedShort)
+    {
+      //System.out.println("ushort TYPE2");
+
+      lPixel = (T) new UnsignedShortType();
+      lFactory =
+              (ImgFactory<T>) new ArrayImgFactory<UnsignedShortType>();
+    }
+    else if (pClearCLBuffer.getNativeType()
+            == NativeTypeEnum.Float)
+    {
+
+      //System.out.println("float TYPE2");
+
+      lPixel = (T) new FloatType();
+      lFactory = (ImgFactory<T>) new ArrayImgFactory<FloatType>();
+    }
+    else
+    {
+      throw new UnknownFormatConversionException(
+              "Cannot convert image of type "
+                      + pClearCLBuffer.getNativeType().name());
+    }
+
+    return convertClearClBufferToRandomAccessibleInterval(pContext,
+            pClearCLBuffer,
+            lFactory,
+            lPixel);
+  }
+
+  public static <T extends RealType<T>> RandomAccessibleInterval<T> convertClearClBufferToRandomAccessibleInterval(
+          ClearCLContext pContext,
+          ClearCLBuffer pClearCLBuffer,
+          ImgFactory<T> pFactory,
+          T pPixel) {
+
+    Dimensions lDimensions = new Dimensions() {
+      @Override
+      public void dimensions(long[] longs) {
+        System.arraycopy(pClearCLBuffer.getDimensions(),
+                0,
+                longs,
+                0,
+                pClearCLBuffer.getDimensions().length);
+      }
+
+      @Override
+      public long dimension(int i) {
+        return pClearCLBuffer.getDimensions()[i];
+      }
+
+      @Override
+      public int numDimensions() {
+        return pClearCLBuffer.getDimensions().length;
+      }
+    };
+
+    Img<T> img = Imgs.create(pFactory, lDimensions, pPixel);
+
+    NativeTypeEnum lInputType = pClearCLBuffer.getNativeType();
+
+    long lBytesPerPixel = lInputType.getSizeInBytes();
+    //System.out.println("lBytesPerPixel " + lBytesPerPixel);
+    long
+            lNumberOfPixels =
+            pClearCLBuffer.getWidth()
+                    * pClearCLBuffer.getHeight()
+                    * pClearCLBuffer.getDepth();
+
+
+    long time = System.currentTimeMillis();
+
+    ClearCLBuffer
+            buffer =
+            pContext.createBuffer(lInputType, lNumberOfPixels);
+
+    System.out.println("Create buffer took " + (System.currentTimeMillis() - time) + " msec");
     time = System.currentTimeMillis();
+
+    pClearCLBuffer.copyTo(buffer, true);
+    System.out.println("Copy to buffer took " + (System.currentTimeMillis() - time) + " msec");
+
+    copyClBufferToImg(buffer, img, lBytesPerPixel, lNumberOfPixels);
+    return img;
+  }
+
+
+  private static <T extends RealType<T>> void copyClBufferToImg(ClearCLBuffer buffer, Img<T> img, long lBytesPerPixel, long lNumberOfPixels)
+  {
+    NativeTypeEnum lInputType = buffer.getNativeType();
+
+    long numberOfBytesToAllocate = lBytesPerPixel * lNumberOfPixels;
+
+    long time = System.currentTimeMillis();
+
+    ContiguousMemoryInterface
+            contOut =
+            new OffHeapMemory("memmm",
+                    null,
+                    OffHeapMemoryAccess.allocateMemory(
+                            numberOfBytesToAllocate),
+                    numberOfBytesToAllocate);
+
+    System.out.println("Create offheap memory took " + (System.currentTimeMillis() - time) + " msec");
+    time = System.currentTimeMillis();
+
+
     buffer.writeTo(contOut, true);
     System.out.println("Copy to offheap memory took " + (System.currentTimeMillis() - time) + " msec");
 
@@ -351,7 +480,6 @@ public class ImageTypeConverter<T extends RealType<T>>
 
     System.out.println("Copy to cursor took " + (System.currentTimeMillis() - time) + " msec");
 
-    return img;
   }
 
   public static <T extends RealType<T>> void copyRandomAccessibleIntervalToClearCLImage(RandomAccessibleInterval<T> pRandomAccessibleInterval, ClearCLImage lClearClImage) {
@@ -493,7 +621,8 @@ public class ImageTypeConverter<T extends RealType<T>>
   }
 
   private RandomAccessibleInterval<T> convertBufferToRandomAccessibleInterval(ClearCLBuffer pBuffer) {
-      ClearCLImage lCLImage = convertCLBufferToCLImage(pBuffer);
-      return convertClearClImageToRandomAccessibleInterval(mContext, lCLImage);
+      //ClearCLImage lCLImage = convertCLBufferToCLImage(pBuffer);
+      //return convertClearClImageToRandomAccessibleInterval(mContext, lCLImage);
+    return convertClearClBufferToRandomAccessibleInterval(mContext, pBuffer);
   }
 }
