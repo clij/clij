@@ -338,8 +338,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     return img;
   }
 
-  public static <T extends RealType<T>> RandomAccessibleInterval<T> convertClearClBufferToRandomAccessibleInterval(
-          ClearCLContext pContext,
+  public static <T extends RealType<T>> RandomAccessibleInterval<T> convertBufferToRandomAccessibleInterval(
           ClearCLBuffer pClearCLBuffer)
   {
     T lPixel = null;
@@ -359,7 +358,11 @@ public class ImageTypeConverter<T extends RealType<T>>
     {
       ByteBuffer byteBuffer = ByteBuffer.allocate(numberOfPixels);
       pClearCLBuffer.writeTo(byteBuffer, true);
-      return (Img<T>) ArrayImgs.bytes(byteBuffer.array(), pClearCLBuffer.getDimensions());
+      if (pClearCLBuffer.getNativeType() == NativeTypeEnum.Byte) {
+        return (Img<T>) ArrayImgs.bytes(byteBuffer.array(), pClearCLBuffer.getDimensions());
+      } else {
+        return (Img<T>) ArrayImgs.unsignedBytes(byteBuffer.array(), pClearCLBuffer.getDimensions());
+      }
     }
     else if (pClearCLBuffer.getNativeType()
             == NativeTypeEnum.Short ||
@@ -368,7 +371,11 @@ public class ImageTypeConverter<T extends RealType<T>>
     {
       ShortBuffer shortBuffer = ShortBuffer.allocate(numberOfPixels);
       pClearCLBuffer.writeTo(shortBuffer, true);
-      return (Img<T>) ArrayImgs.shorts(shortBuffer.array(), pClearCLBuffer.getDimensions());
+      if (pClearCLBuffer.getNativeType() == NativeTypeEnum.Short) {
+        return (Img<T>) ArrayImgs.shorts(shortBuffer.array(), pClearCLBuffer.getDimensions());
+      } else {
+        return (Img<T>) ArrayImgs.unsignedShorts(shortBuffer.array(), pClearCLBuffer.getDimensions());
+      }
     }
     else if (pClearCLBuffer.getNativeType()
             == NativeTypeEnum.Float)
@@ -672,11 +679,5 @@ public class ImageTypeConverter<T extends RealType<T>>
     ClearCLBuffer output = mCLIJ.createCLBuffer(pClImage.getDimensions(), pClImage.getNativeType());
     Kernels.copy(mCLIJ, pClImage, output);
     return output;
-  }
-
-  private RandomAccessibleInterval<T> convertBufferToRandomAccessibleInterval(ClearCLBuffer pBuffer) {
-      //ClearCLImage lCLImage = convertCLBufferToCLImage(pBuffer);
-      //return convertClearClImageToRandomAccessibleInterval(mContext, lCLImage);
-    return convertClearClBufferToRandomAccessibleInterval(mContext, pBuffer);
   }
 }

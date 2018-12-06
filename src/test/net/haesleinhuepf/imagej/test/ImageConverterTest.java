@@ -39,7 +39,7 @@ public class ImageConverterTest
   @Test
   public void testSimpleCopyBackAndForth() {
     for (int i = 0; i < 2; i++) {
-      ImagePlus imp = NewImage.createFloatImage("title", 512, 512, 20, NewImage.FILL_RAMP);
+      ImagePlus imp = NewImage.createShortImage("title", 512, 512, 20, NewImage.FILL_RAMP);
       ClearCLIJ clij = ClearCLIJ.getInstance();
 
       long time = System.currentTimeMillis();
