@@ -88,7 +88,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
     @Override
     public String handleExtension(String name, Object[] args) {
-        System.out.println("Handle Ext " + name);
+        //System.out.println("Handle Ext " + name);
         try {
             if (name.equals(TO_CLIJ)) {
                 toCLIJ((String) args[0]);
