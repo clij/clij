@@ -84,7 +84,7 @@ public class DoubleFlipTest
       lParameterMap.put("flipy", 0);
       lParameterMap.put("flipz", 0);
 
-      lCLIJ.execute("src/main/java/clearcl/imagej/kernels/flip.cl",
+      lCLIJ.execute("src/main/java/net/haesleinhuepf/imagej/kernels/flip.cl",
                     "flip_3d",
                     lParameterMap);
 

@@ -60,7 +60,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
     HashMap<String, MethodInfo> methodMap = new HashMap<String, MethodInfo>();
 
-    HashMap<String, ClearCLBuffer> bufferMap = new HashMap<String, ClearCLBuffer>();
+    static HashMap<String, ClearCLBuffer> bufferMap = new HashMap<String, ClearCLBuffer>();
 
 
     @Override
@@ -88,7 +88,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
     @Override
     public String handleExtension(String name, Object[] args) {
-        ////System.out.println("Handle Ext " + name);
+        System.out.println("Handle Ext " + name);
         try {
             if (name.equals(TO_CLIJ)) {
                 toCLIJ((String) args[0]);
@@ -209,7 +209,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
     }
 
     private void releaseBuffer(String arg) {
-        //System.out.println("Releasing " + arg);
+        System.out.println("Releasing " + arg);
         ClearCLBuffer buffer = bufferMap.get(arg);
         buffer.close();
         bufferMap.remove(arg);
@@ -223,6 +223,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         for (String key : keysToRelease) {
             releaseBuffer(key);
         }
+        bufferMap.clear();
     }
 
     private void fromCLIJ(String arg) {
@@ -339,7 +340,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         ext.clij = ClearCLIJ.getInstance("gfx902");
         ext.getExtensionFunctions();
 
-        IJ.open("C:/Users/rhaase/code/temp/clearclij/src/main/resources/flybrain.tif");
+        IJ.open("C:/structure/code/haesleinhuepf_clearclij/src/main/resources/flybrain.tif");
         ext.toCLIJ("flybrain.tif");
         IJ.getImage().setTitle("out");
         ext.toCLIJ("out");
@@ -355,6 +356,8 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         //ext.handleExtension("CLIJ_erode", arguments);
 
         ext.fromCLIJ("out");
+
+        ext.handleExtension("CLIJ_clear", new Object[]{});
     }
 
 

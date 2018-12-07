@@ -327,11 +327,11 @@ public class ImageTypeConverter<T extends RealType<T>>
             buffer =
             pContext.createBuffer(lInputType, lNumberOfPixels);
 
-    System.out.println("Create buffer took " + (System.currentTimeMillis() - time) + " msec");
+    //System.out.println("Create buffer took " + (System.currentTimeMillis() - time) + " msec");
     time = System.currentTimeMillis();
 
     pClearCLImage.copyTo(buffer, true);
-    System.out.println("Copy to buffer took " + (System.currentTimeMillis() - time) + " msec");
+    //System.out.println("Copy to buffer took " + (System.currentTimeMillis() - time) + " msec");
 
     copyClBufferToImg(buffer, img, lBytesPerPixel, lNumberOfPixels);
     buffer.close();
@@ -361,7 +361,11 @@ public class ImageTypeConverter<T extends RealType<T>>
       if (pClearCLBuffer.getNativeType() == NativeTypeEnum.Byte) {
         return (Img<T>) ArrayImgs.bytes(byteBuffer.array(), pClearCLBuffer.getDimensions());
       } else {
-        return (Img<T>) ArrayImgs.unsignedBytes(byteBuffer.array(), pClearCLBuffer.getDimensions());
+        byte[] array = byteBuffer.array();
+        for (int i = 0; i < byteBuffer.limit(); i++ ) {
+          array[i] = (byte)(255 & array[i]);
+        }
+        return (Img<T>) ArrayImgs.unsignedBytes(array, pClearCLBuffer.getDimensions());
       }
     }
     else if (pClearCLBuffer.getNativeType()
@@ -408,12 +412,12 @@ public class ImageTypeConverter<T extends RealType<T>>
                             numberOfBytesToAllocate),
                     numberOfBytesToAllocate);
 
-    System.out.println("Create offheap memory took " + (System.currentTimeMillis() - time) + " msec");
+    //System.out.println("Create offheap memory took " + (System.currentTimeMillis() - time) + " msec");
     time = System.currentTimeMillis();
 
 
     buffer.writeTo(contOut, true);
-    System.out.println("Copy to offheap memory took " + (System.currentTimeMillis() - time) + " msec");
+    //System.out.println("Copy to offheap memory took " + (System.currentTimeMillis() - time) + " msec");
 
     time = System.currentTimeMillis();
 
@@ -456,7 +460,7 @@ public class ImageTypeConverter<T extends RealType<T>>
     }
     contOut.free();
 
-    System.out.println("Copy to cursor took " + (System.currentTimeMillis() - time) + " msec");
+    //System.out.println("Copy to cursor took " + (System.currentTimeMillis() - time) + " msec");
 
   }
 
@@ -675,7 +679,7 @@ public class ImageTypeConverter<T extends RealType<T>>
   }
 
   private ClearCLBuffer convertCLImageToCLBuffer(ClearCLImage pClImage) {
-      System.out.println("Native type: " + pClImage.getNativeType());
+      //System.out.println("Native type: " + pClImage.getNativeType());
     ClearCLBuffer output = mCLIJ.createCLBuffer(pClImage.getDimensions(), pClImage.getNativeType());
     Kernels.copy(mCLIJ, pClImage, output);
     return output;
