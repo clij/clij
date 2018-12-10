@@ -1,6 +1,6 @@
 from ij import IJ;
-from clearcl.imagej import ClearCLIJ;
-from clearcl.imagej.kernels import Kernels;
+from net.haesleinhuepf.imagej import ClearCLIJ;
+from net.haesleinhuepf.imagej.kernels import Kernels;
 
 # Init GPU
 clij = ClearCLIJ.getInstance();
