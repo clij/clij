@@ -10,10 +10,8 @@
 //open("C:/structure/data/t1-head.tif");
 run("T1 Head (2.4M, 16-bits)");
 input = getTitle();
-run("Duplicate...", "title=background duplicate");
-background = getTitle();
-run("Duplicate...", "title=background_subtracted duplicate");
-background_subtracted = getTitle();
+background = "background";
+background_subtracted = "background_subtracted";
 run("Duplicate...", "title=maximum_projected");
 maximum_projected = getTitle();
 
@@ -23,12 +21,9 @@ Ext.CLIJ_clear();
 
 // push images to GPU
 Ext.CLIJ_push(input);
-Ext.CLIJ_push(background);
-Ext.CLIJ_push(background_subtracted);
 Ext.CLIJ_push(maximum_projected);
-// cleanup ImageJ
-close();
-close();
+
+// CleanUp ImageJ
 close();
 
 // Blur in GPU

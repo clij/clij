@@ -60,7 +60,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
     HashMap<String, MethodInfo> methodMap = new HashMap<String, MethodInfo>();
 
-    HashMap<String, ClearCLBuffer> bufferMap = new HashMap<String, ClearCLBuffer>();
+    static HashMap<String, ClearCLBuffer> bufferMap = new HashMap<String, ClearCLBuffer>();
 
 
     @Override
@@ -88,7 +88,9 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
     @Override
     public String handleExtension(String name, Object[] args) {
-        ////System.out.println("Handle Ext " + name);
+        ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
+        HashMap<Integer, String> missingImageIndices = new HashMap<Integer, String>();
+        //System.out.println("Handle Ext " + name);
         try {
             if (name.equals(TO_CLIJ)) {
                 toCLIJ((String) args[0]);
@@ -138,14 +140,29 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                     //System.out.println("not numeric");
                     ClearCLBuffer bufferImage = bufferMap.get(args[i]);
                     if (bufferImage == null) {
-                        IJ.log("Error: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
+                        IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
                         IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
+                        missingImageIndices.put(i + 1, (String)args[i]);
+                    } else {
+                        existingImageIndices.add(i + 1);
                     }
                     parsedArguments[i + 1] = bufferImage;
                 }
                 //System.out.println("Parsed args: " + parsedArguments[i + 1]);
             }
 
+            // create missing images by making images as given images
+            if (existingImageIndices.size() > 0) {
+                for (int i : missingImageIndices.keySet()) {
+                    String nameInCache = missingImageIndices.get(i);
+                    if (bufferMap.keySet().contains(nameInCache)) {
+                        parsedArguments[i] = bufferMap.get(nameInCache);
+                    } else {
+                        parsedArguments[i] = clij.createCLBuffer((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
+                        bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
+                    }
+                }
+            }
 
             System.out.println("Invoke method: " + name);
             //for (int i = 0; i < parsedArguments.length; i++) {
@@ -209,7 +226,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
     }
 
     private void releaseBuffer(String arg) {
-        //System.out.println("Releasing " + arg);
+        System.out.println("Releasing " + arg);
         ClearCLBuffer buffer = bufferMap.get(arg);
         buffer.close();
         bufferMap.remove(arg);
@@ -223,6 +240,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         for (String key : keysToRelease) {
             releaseBuffer(key);
         }
+        bufferMap.clear();
     }
 
     private void fromCLIJ(String arg) {
@@ -339,7 +357,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         ext.clij = ClearCLIJ.getInstance("gfx902");
         ext.getExtensionFunctions();
 
-        IJ.open("C:/Users/rhaase/code/temp/clearclij/src/main/resources/flybrain.tif");
+        IJ.open("C:/structure/code/haesleinhuepf_clearclij/src/main/resources/flybrain.tif");
         ext.toCLIJ("flybrain.tif");
         IJ.getImage().setTitle("out");
         ext.toCLIJ("out");
@@ -355,6 +373,8 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         //ext.handleExtension("CLIJ_erode", arguments);
 
         ext.fromCLIJ("out");
+
+        ext.handleExtension("CLIJ_clear", new Object[]{});
     }
 
 

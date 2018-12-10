@@ -28,6 +28,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -3764,8 +3767,10 @@ public class KernelsTest
 
   @Test public void threshold3d_Buffers()
   {
+    ImagePlus testImage = new Duplicator().run(testImp2);
+    IJ.run(testImage, "32-bit", "");
     // do operation with ImageJ
-    ImagePlus thresholded = new Duplicator().run(testImp2);
+    ImagePlus thresholded = new Duplicator().run(testImage);
     Prefs.blackBackground = false;
     IJ.setRawThreshold(thresholded, 2, 65535, null);
     IJ.run(thresholded,
@@ -3773,7 +3778,7 @@ public class KernelsTest
             "method=Default background=Dark");
 
     // do operation with ClearCL
-    ClearCLBuffer src = clij.converter(testImp2).getClearCLBuffer();
+    ClearCLBuffer src = clij.converter(testImage).getClearCLBuffer();
     ClearCLBuffer dst = clij.createCLBuffer(src);
 
     Kernels.threshold(clij, src, dst, 2f);
@@ -3809,6 +3814,78 @@ public class KernelsTest
 
     assertTrue(TestUtilities.compareImages(thresholded,
                                            thresholdedCL));
+
+    src.close();
+    dst.close();
+  }
+
+
+  @Test public void threshold2d_Buffer()
+  {
+    // do operation with ImageJ
+    ImagePlus thresholded = new Duplicator().run(testImp2D2);
+    Prefs.blackBackground = false;
+    IJ.setRawThreshold(thresholded, 2, 65535, null);
+    IJ.run(thresholded,
+            "Convert to Mask",
+            "method=Default background=Dark");
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImp2D2).getClearCLBuffer();
+    ClearCLBuffer dst = clij.converter(testImp2D2).getClearCLBuffer();
+
+    Kernels.threshold(clij, src, dst, 2f);
+    Kernels.multiplyScalar(clij, dst, src, 255f);
+
+    ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+
+    assertTrue(TestUtilities.compareImages(thresholded,
+            thresholdedCL));
+
+    src.close();
+    dst.close();
+  }
+
+  @Test public void threshold2d_Buffer_blobs() throws InterruptedException {
+    ImagePlus testImage = IJ.openImage("src/test/resources/blobs.gif");
+            //new Duplicator().run(testImp2D2);
+    IJ.run(testImage, "8-bit", "");
+
+    // do operation with ImageJ
+    ImagePlus thresholded = new Duplicator().run(testImage);
+    Prefs.blackBackground = false;
+    IJ.setRawThreshold(thresholded, 127, 65535, null);
+    IJ.run(thresholded,
+            "Convert to Mask",
+            "method=Default background=Dark");
+
+
+
+    // do operation with ClearCL
+    ClearCLBuffer src = clij.converter(testImage).getClearCLBuffer();
+    ClearCLBuffer dst = clij.createCLBuffer(src);
+
+
+    ByteBuffer buffer = ByteBuffer.allocate((int) src.getSizeInBytes());
+    //src.writeTo(buffer, true);
+    //System.out.println("src " + Arrays.toString(buffer.array()));
+
+    Kernels.threshold(clij, src, dst, 128f);
+    Kernels.copy(clij, dst, src);
+    //Kernels.multiplyScalar(clij, dst, src, 255f);
+
+    src.writeTo(buffer, true);
+    System.out.println("src " + Arrays.toString(buffer.array()));
+
+    ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+
+    clij.show(thresholded, "thresholded");
+    clij.show(thresholdedCL, "thresholded_cl");
+    Thread.sleep(5000);
+    assertTrue(TestUtilities.compareImages(thresholded,
+            thresholdedCL));
+
+
 
     src.close();
     dst.close();
