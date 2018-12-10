@@ -88,6 +88,8 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
     @Override
     public String handleExtension(String name, Object[] args) {
+        ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
+        HashMap<Integer, String> missingImageIndices = new HashMap<Integer, String>();
         //System.out.println("Handle Ext " + name);
         try {
             if (name.equals(TO_CLIJ)) {
@@ -138,14 +140,29 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                     //System.out.println("not numeric");
                     ClearCLBuffer bufferImage = bufferMap.get(args[i]);
                     if (bufferImage == null) {
-                        IJ.log("Error: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
+                        IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
                         IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
+                        missingImageIndices.put(i + 1, (String)args[i]);
+                    } else {
+                        existingImageIndices.add(i + 1);
                     }
                     parsedArguments[i + 1] = bufferImage;
                 }
                 //System.out.println("Parsed args: " + parsedArguments[i + 1]);
             }
 
+            // create missing images by making images as given images
+            if (existingImageIndices.size() > 0) {
+                for (int i : missingImageIndices.keySet()) {
+                    String nameInCache = missingImageIndices.get(i);
+                    if (bufferMap.keySet().contains(nameInCache)) {
+                        parsedArguments[i] = bufferMap.get(nameInCache);
+                    } else {
+                        parsedArguments[i] = clij.createCLBuffer((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
+                        bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
+                    }
+                }
+            }
 
             System.out.println("Invoke method: " + name);
             //for (int i = 0; i < parsedArguments.length; i++) {
