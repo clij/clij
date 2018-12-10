@@ -140,8 +140,8 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                     //System.out.println("not numeric");
                     ClearCLBuffer bufferImage = bufferMap.get(args[i]);
                     if (bufferImage == null) {
-                        IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
-                        IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
+                        //IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
+                        //IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
                         missingImageIndices.put(i + 1, (String)args[i]);
                     } else {
                         existingImageIndices.add(i + 1);
