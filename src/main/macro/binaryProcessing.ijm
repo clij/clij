@@ -15,14 +15,8 @@ getDimensions(width, height, channels, slices, frames);
 input = getTitle();
 threshold = 128;
 
-// create memory for mask and temp image
-newImage("Untitled", "16-bit black", width, height, slices);
-rename("Mask");
-mask = getTitle();
-
-newImage("Untitled", "16-bit black", width, height, slices);
-rename("Temp");
-temp = getTitle();
+mask = "mask";
+temp = "temp";
 
 
 // Init GPU
@@ -31,8 +25,6 @@ Ext.CLIJ_clear();
 
 // push data to GPU
 Ext.CLIJ_push(input);
-Ext.CLIJ_push(mask);
-Ext.CLIJ_push(temp);
 
 // cleanup ImageJ
 run("Close All");
