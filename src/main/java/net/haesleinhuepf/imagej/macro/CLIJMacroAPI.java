@@ -433,7 +433,7 @@ public class CLIJMacroAPI {
         return Kernels.multiplyPixelwise(clij, factor1, factor2, destination);
     }
 
-    public final static String parameter_doc_multiplyScalar = "Image source, Image destination";
+    public final static String parameter_doc_multiplyScalar = "Image source, Image destination, Number scalar";
     public static boolean multiplyScalar(ClearCLIJ clij,
                                          ClearCLBuffer source,
                                          ClearCLBuffer destination,
