@@ -1,10 +1,10 @@
 package net.haesleinhuepf.imagej.demo;
 
 import clearcl.ClearCLImage;
-import net.haesleinhuepf.imagej.ClearCLIJ;
-import net.haesleinhuepf.imagej.kernels.Kernels;
 import ij.IJ;
 import ij.ImagePlus;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 
 /**
  * LocalThresholdDemo

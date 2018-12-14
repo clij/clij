@@ -2,7 +2,6 @@ package net.haesleinhuepf.imagej.macro;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
-import net.haesleinhuepf.imagej.ClearCLIJ;
 import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
@@ -11,6 +10,7 @@ import ij.gui.GenericDialog;
 import ij.macro.ExtensionDescriptor;
 import ij.macro.Functions;
 import ij.macro.MacroExtension;
+import net.haesleinhuepf.imagej.ClearCLIJ;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
@@ -19,7 +19,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * CLIJMacroExtensions
@@ -32,36 +34,45 @@ import java.util.*;
 @Plugin(type = Command.class, menuPath = "Plugins>CLIJ>CLIJ Macro Extensions")
 public class CLIJMacroExtensions implements Command, MacroExtension {
 
+    static HashMap<String, ClearCLBuffer> bufferMap = new HashMap<String, ClearCLBuffer>();
     final String TO_CLIJ = "CLIJ_push";
     final String FROM_CLIJ = "CLIJ_pull";
     final String RELEASE_BUFFER = "CLIJ_release";
     final String CLEAR_CLIJ = "CLIJ_clear";
     final String HELP = "CLIJ_help";
-
-
-
     ClearCLIJ clij;
-
-    private class MethodInfo {
-        MethodInfo(ExtensionDescriptor extensionDescriptor, Method method, String parameters, String name) {
-            this.extensionDescriptor = extensionDescriptor;
-            this.method = method;
-            this.parameters = parameters;
-            this.name = name;
-        }
-        final ExtensionDescriptor extensionDescriptor;
-        final Method method;
-        final String parameters;
-        final String name;
-    }
-
-    //ArrayList<ExtensionDescriptor> list = new ArrayList<ExtensionDescriptor>();
-    //HashMap<String, Method> map = new HashMap<String, Method>();
-
     HashMap<String, MethodInfo> methodMap = new HashMap<String, MethodInfo>();
 
-    static HashMap<String, ClearCLBuffer> bufferMap = new HashMap<String, ClearCLBuffer>();
+    public static void main(String... args) {
+        new ImageJ();
+        CLIJMacroExtensions ext = new CLIJMacroExtensions();
+        ext.clij = ClearCLIJ.getInstance("gfx902");
+        ext.getExtensionFunctions();
 
+        IJ.open("C:/structure/code/haesleinhuepf_clearclij/src/main/resources/flybrain.tif");
+        ext.pushToGPU("flybrain.tif");
+        IJ.getImage().setTitle("out");
+        ext.pushToGPU("out");
+
+        Object[] arguments = new Object[]{
+                "flybrain.tif",
+                "out",
+                new Double(3),
+                new Double(3),
+                new Double(1)
+        };
+        ext.handleExtension("CLIJ_mean3d", arguments);
+        //ext.handleExtension("CLIJ_erode", arguments);
+
+        ext.pullFromGPU("out");
+
+        ext.handleExtension("CLIJ_clear", new Object[]{});
+    }
+
+    static int radiusToKernelSize(int radius) {
+        int kernelSize = radius * 2 + 1;
+        return kernelSize;
+    }
 
     @Override
     public void run() {
@@ -85,7 +96,6 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         Functions.registerExtensions(this);
     }
 
-
     @Override
     public String handleExtension(String name, Object[] args) {
         ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
@@ -93,16 +103,16 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         //System.out.println("Handle Ext " + name);
         try {
             if (name.equals(TO_CLIJ)) {
-                toCLIJ((String) args[0]);
+                pushToGPU((String) args[0]);
                 return null;
             } else if (name.equals(FROM_CLIJ)) {
-                fromCLIJ((String) args[0]);
+                pullFromGPU((String) args[0]);
                 return null;
             } else if (name.equals(RELEASE_BUFFER)) {
                 releaseBuffer((String) args[0]);
                 return null;
             } else if (name.equals(CLEAR_CLIJ)) {
-                clearCLIJ();
+                clearGPU();
                 return null;
             } else if (name.equals(HELP)) {
                 help(args);
@@ -142,7 +152,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
                     if (bufferImage == null) {
                         //IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
                         //IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
-                        missingImageIndices.put(i + 1, (String)args[i]);
+                        missingImageIndices.put(i + 1, (String) args[i]);
                     } else {
                         existingImageIndices.add(i + 1);
                     }
@@ -166,9 +176,9 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
 
             System.out.println("Invoke method: " + name);
             //for (int i = 0; i < parsedArguments.length; i++) {
-                //if (parsedArguments[i] != null) {
-                    //System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
-                //}
+            //if (parsedArguments[i] != null) {
+            //System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
+            //}
             //}
 
             try {
@@ -198,14 +208,14 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         if (text instanceof Double) {
             return true;
         }
-        return NumberUtils.isNumber((String)text);
+        return NumberUtils.isNumber((String) text);
     }
 
     private void help(Object[] args) {
         //IJ.log("Help");
         String searchString = "";
         if (args.length > 0) {
-            searchString = (String)(args[0]);
+            searchString = (String) (args[0]);
         }
         ArrayList<String> helpList = new ArrayList<String>();
         for (String key : methodMap.keySet()) {
@@ -232,7 +242,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         bufferMap.remove(arg);
     }
 
-    private void clearCLIJ() {
+    private void clearGPU() {
         ArrayList<String> keysToRelease = new ArrayList<String>();
         for (String key : bufferMap.keySet()) {
             keysToRelease.add(key);
@@ -243,12 +253,12 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         bufferMap.clear();
     }
 
-    private void fromCLIJ(String arg) {
+    private void pullFromGPU(String arg) {
         ClearCLBuffer buffer = bufferMap.get(arg);
         clij.show(buffer, arg);
     }
 
-    private void toCLIJ(String arg) {
+    private void pushToGPU(String arg) {
         ImagePlus imp = WindowManager.getImage(arg);
         bufferMap.put(arg, clij.converter(imp).getClearCLBuffer());
     }
@@ -269,7 +279,7 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         extensions[4] = new ExtensionDescriptor(HELP, new int[]{MacroExtension.ARG_STRING}, this);
 
         int i = numberOfPredefinedExtensions;
-        for (String key: methodMap.keySet()) {
+        for (String key : methodMap.keySet()) {
             extensions[i] = methodMap.get(key).extensionDescriptor;
             ////System.out.println("Add method: " + key + methodMap.get(key).parameters);
             i++;
@@ -350,36 +360,16 @@ public class CLIJMacroExtensions implements Command, MacroExtension {
         }
     }
 
-
-    public static void main(String... args) {
-        new ImageJ();
-        CLIJMacroExtensions ext = new CLIJMacroExtensions();
-        ext.clij = ClearCLIJ.getInstance("gfx902");
-        ext.getExtensionFunctions();
-
-        IJ.open("C:/structure/code/haesleinhuepf_clearclij/src/main/resources/flybrain.tif");
-        ext.toCLIJ("flybrain.tif");
-        IJ.getImage().setTitle("out");
-        ext.toCLIJ("out");
-
-        Object[] arguments = new Object[] {
-            "flybrain.tif",
-                "out",
-                new Double(3),
-                new Double(3),
-                new Double(1)
-        };
-        ext.handleExtension("CLIJ_mean3d", arguments);
-        //ext.handleExtension("CLIJ_erode", arguments);
-
-        ext.fromCLIJ("out");
-
-        ext.handleExtension("CLIJ_clear", new Object[]{});
-    }
-
-
-    static int radiusToKernelSize(int radius) {
-        int kernelSize = radius * 2 + 1;
-        return kernelSize;
+    private class MethodInfo {
+        final ExtensionDescriptor extensionDescriptor;
+        final Method method;
+        final String parameters;
+        final String name;
+        MethodInfo(ExtensionDescriptor extensionDescriptor, Method method, String parameters, String name) {
+            this.extensionDescriptor = extensionDescriptor;
+            this.method = method;
+            this.parameters = parameters;
+            this.name = name;
+        }
     }
 }

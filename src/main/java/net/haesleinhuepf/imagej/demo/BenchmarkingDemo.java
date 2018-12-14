@@ -28,14 +28,14 @@ import java.io.IOException;
  * thresholding, does some erosion and dilatation to make the edges smoother and finally sets all background pixels in
  * the original image to zero. This pipeline is executed in the ImageJ1 way and in OpenCL to compare performance and
  * results.
- *
+ * <p>
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * March 2018
  */
 public class BenchmarkingDemo {
 
     private static ImageJ ij;
-    private static ClearCLIJ lCLIJ;
+    private static ClearCLIJ clij;
     private static double sigma = 3;
 
     public static void main(String... args) throws IOException {
@@ -44,14 +44,14 @@ public class BenchmarkingDemo {
         // Initialize ImageJ, ClearCLIJ and test image
         ij = new ImageJ();
         ij.ui().showUI();
-        lCLIJ = new ClearCLIJ("TITAN");
+        clij = ClearCLIJ.getInstance("TITAN");
 
         input = IJ.openImage("src/main/resources/flybrain.tif");
         input.show();
-        IJ.run(input, "8-bit","");
+        IJ.run(input, "8-bit", "");
         img = ImageJFunctions.wrapReal(input);
 
-        for (int i=0; i<100; i++) {
+        for (int i = 0; i < 100; i++) {
             // ---------------------------------------
             // three test scenarios
             long timestamp = System.currentTimeMillis();
@@ -75,7 +75,7 @@ public class BenchmarkingDemo {
     private static void demoImageJ1() {
         ImagePlus copy = new Duplicator().run(input, 1, input.getNSlices());
         Prefs.blackBackground = false;
-        IJ.run(copy,"Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
+        IJ.run(copy, "Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
         IJ.setRawThreshold(copy, 100, 255, null);
         IJ.run(copy, "Convert to Mask", "method=Default background=Dark");
         IJ.run(copy, "Erode", "stack");
@@ -113,7 +113,7 @@ public class BenchmarkingDemo {
                 Regions.iterable(dilatedImg),
                 Views.pair(output, img)
         );
-        sample.forEach(pair -> pair.getA().set(pair.getB()) );
+        sample.forEach(pair -> pair.getA().set(pair.getB()));
 
         ImageJFunctions.show(output);
 
@@ -122,7 +122,7 @@ public class BenchmarkingDemo {
     private static RandomAccessibleInterval makeRai(IterableInterval ii) {
         RandomAccessibleInterval rai;
         if (ii instanceof RandomAccessibleInterval) {
-            rai = (RandomAccessibleInterval)ii;
+            rai = (RandomAccessibleInterval) ii;
         } else {
             rai = ij.op().create().img(ii);
             ij.op().copy().iterableInterval((Img) rai, ii);
@@ -131,20 +131,20 @@ public class BenchmarkingDemo {
     }
 
     private static void demoClearCLIJ() throws IOException {
-        ClearCLImage input = lCLIJ.converter(img).getClearCLImage();
-        ClearCLImage flip = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
-        ClearCLImage flop = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
+        ClearCLImage input = clij.converter(img).getClearCLImage();
+        ClearCLImage flip = clij.createCLImage(input.getDimensions(), input.getChannelDataType());
+        ClearCLImage flop = clij.createCLImage(input.getDimensions(), input.getChannelDataType());
 
-        Kernels.blurSeparable(lCLIJ, input, flop, (float)sigma, (float)sigma, (float)sigma);
+        Kernels.blurSeparable(clij, input, flop, (float) sigma, (float) sigma, (float) sigma);
 
-        Kernels.threshold(lCLIJ, flop, flip, 100.0f);
+        Kernels.threshold(clij, flop, flip, 100.0f);
 
-        Kernels.erode(lCLIJ, flip, flop);
-        Kernels.dilate(lCLIJ, flop, flip);
+        Kernels.erode(clij, flip, flop);
+        Kernels.dilate(clij, flop, flip);
 
-        Kernels.multiplyPixelwise(lCLIJ, flop, input, flip);
+        Kernels.multiplyPixelwise(clij, flop, input, flip);
 
-        lCLIJ.converter(flip).getImagePlus().show();
+        clij.converter(flip).getImagePlus().show();
 
         flip.close();
         flop.close();

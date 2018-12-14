@@ -10,7 +10,7 @@ import static net.haesleinhuepf.imagej.macro.CLIJMacroExtensions.radiusToKernelS
  * The CLIJMacroAPI contains all methods which can be called from ImageJ macro
  *
  * Author: @haesleinhuepf
- * 11 2018
+ * November 2018
  */
 public class CLIJMacroAPI {
 
@@ -517,5 +517,5 @@ public class CLIJMacroAPI {
     {
         return Kernels.threshold(clij, source, destination, threshold);
     }
-    
+
 }
