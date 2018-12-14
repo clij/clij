@@ -2435,7 +2435,67 @@ public class Kernels
             lParameters);
   }
 
-  public static boolean set(ClearCLIJ clij,
+  public static boolean rotateLeft(ClearCLIJ clij,
+                                   ClearCLBuffer src,
+                                   ClearCLBuffer dst){
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+
+    return clij.execute(Kernels.class,
+            "rotate.cl",
+            "rotate_left_" + dst.getDimension() + "d",
+            lParameters);
+  }
+
+  public static boolean rotateLeft(ClearCLIJ clij,
+                                   ClearCLImage src,
+                                   ClearCLImage dst){
+    HashMap<String, Object> lParameters = new HashMap<>();
+
+    lParameters.clear();
+    lParameters.put("src", src);
+    lParameters.put("dst", dst);
+
+    return clij.execute(Kernels.class,
+            "rotate.cl",
+            "rotate_left_" + dst.getDimension() + "d",
+            lParameters);
+  }
+
+    public static boolean rotateRight(ClearCLIJ clij,
+                                     ClearCLBuffer src,
+                                     ClearCLBuffer dst){
+        HashMap<String, Object> lParameters = new HashMap<>();
+
+        lParameters.clear();
+        lParameters.put("src", src);
+        lParameters.put("dst", dst);
+
+        return clij.execute(Kernels.class,
+                "rotate.cl",
+                "rotate_right_" + dst.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean rotateRight(ClearCLIJ clij,
+                                     ClearCLImage src,
+                                     ClearCLImage dst){
+        HashMap<String, Object> lParameters = new HashMap<>();
+
+        lParameters.clear();
+        lParameters.put("src", src);
+        lParameters.put("dst", dst);
+
+        return clij.execute(Kernels.class,
+                "rotate.cl",
+                "rotate_right_" + dst.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean set(ClearCLIJ clij,
                             ClearCLImage clImage,
                             Float value)
   {

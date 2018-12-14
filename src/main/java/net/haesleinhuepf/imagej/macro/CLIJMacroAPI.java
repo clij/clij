@@ -487,6 +487,20 @@ public class CLIJMacroAPI {
         return Kernels.resliceTop(clij, source, destination);
     }
 
+    public final static String parameter_doc_rotateLeft = "Image source, Image destination";
+    public static boolean rotateLeft(ClearCLIJ clij,
+                                     ClearCLBuffer source,
+                                     ClearCLBuffer destination){
+        return Kernels.rotateLeft(clij, source, destination);
+    }
+
+    public final static String parameter_doc_rotateRight = "Image source, Image destination";
+    public static boolean rotateRight(ClearCLIJ clij,
+                                     ClearCLBuffer source,
+                                     ClearCLBuffer destination){
+        return Kernels.rotateRight(clij, source, destination);
+    }
+
     public final static String parameter_doc_set = "Image image, Number value";
     public static boolean set(ClearCLIJ clij,
                               ClearCLBuffer image,

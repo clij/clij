@@ -3,6 +3,8 @@ package net.haesleinhuepf.imagej.test;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
+import ij.gui.WaitForUserDialog;
+import ij.plugin.filter.Transformer;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.kernels.Kernels;
 import clearcl.util.ElapsedTime;
@@ -3581,6 +3583,224 @@ public class KernelsTest
 
 
   }
+
+
+  @Test public void rotateLeft2d() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 10, 10);
+    ImagePlus testImage2 = new Duplicator().run(testFlyBrain3D, 10, 10);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Rotate 90 Degrees Left", "");
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLImage inputCL = clij.converter(testImage2).getClearCLImage();
+    ClearCLImage outputCL = clij.createCLImage(new long[] {inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
+
+    Kernels.rotateLeft(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+  }
+
+  @Test public void rotateLeft2d_Buffers() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 10, 10);
+    ImagePlus testImage2 = new Duplicator().run(testFlyBrain3D, 10, 10);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Rotate 90 Degrees Left", "");
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLBuffer inputCL = clij.converter(testImage2).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[] {inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
+
+    Kernels.rotateLeft(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+  }
+
+  @Test public void rotateLeft3d() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    ImagePlus testImage2 = new Duplicator().run(testFlyBrain3D);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Rotate 90 Degrees Left", "");
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLImage inputCL = clij.converter(testImage2).getClearCLImage();
+    ClearCLImage outputCL = clij.createCLImage(new long[] {inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
+
+    Kernels.rotateLeft(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+  }
+
+  @Test public void rotateLeft3d_Buffers() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    ImagePlus testImage2 = new Duplicator().run(testFlyBrain3D);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Rotate 90 Degrees Left", "");
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLBuffer inputCL = clij.converter(testImage2).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[] {inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
+
+    Kernels.rotateLeft(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+  }
+
+  @Test public void rotateRight2d() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 10, 10);
+    ImagePlus testImage2 = new Duplicator().run(testFlyBrain3D, 10, 10);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Rotate 90 Degrees Right", "");
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLImage inputCL = clij.converter(testImage2).getClearCLImage();
+    ClearCLImage outputCL = clij.createCLImage(new long[] {inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
+
+    Kernels.rotateRight(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+  }
+
+  @Test public void rotateRight2d_Buffers() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 10, 10);
+    ImagePlus testImage2 = new Duplicator().run(testFlyBrain3D, 10, 10);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Rotate 90 Degrees Right", "");
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLBuffer inputCL = clij.converter(testImage2).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[] {inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
+
+    Kernels.rotateRight(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+  }
+
+  @Test public void rotateRight3d() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    ImagePlus testImage2 = new Duplicator().run(testFlyBrain3D);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Rotate 90 Degrees Right", "");
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLImage inputCL = clij.converter(testImage2).getClearCLImage();
+    ClearCLImage outputCL = clij.createCLImage(new long[] {inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
+
+    Kernels.rotateRight(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+  }
+
+  @Test public void rotateRight3d_Buffers() throws InterruptedException {
+
+    testFlyBrain3D.setRoi(0,0, 256,128);
+    ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
+    ImagePlus testImage2 = new Duplicator().run(testFlyBrain3D);
+    testImage.show();
+
+    // do operation with ImageJ
+    new ImageJ();
+    IJ.run(testImage, "Rotate 90 Degrees Right", "");
+    ImagePlus reference = IJ.getImage();
+
+    // do operation with OpenCL
+    ClearCLBuffer inputCL = clij.converter(testImage2).getClearCLBuffer();
+    ClearCLBuffer outputCL = clij.createCLBuffer(new long[] {inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
+
+    Kernels.rotateRight(clij, inputCL, outputCL);
+
+    ImagePlus result = clij.converter(outputCL).getImagePlus();
+
+    //clij.show(reference, "ref");
+    //clij.show(result, "res");
+    //new WaitForUserDialog("wait").show();
+
+    assertTrue(TestUtilities.compareImages(reference, result));
+  }
+
 
   @Test public void set3d()
   {
