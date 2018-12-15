@@ -32,4 +32,10 @@ public class ResliceLeft extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
     public String getParameterHelpText() {
         return "Image source, Image destination";
     }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        return clij.createCLBuffer(new long[]{input.getHeight(), input.getDepth(), input.getWidth()}, input.getNativeType());
+    }
 }

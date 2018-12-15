@@ -31,4 +31,10 @@ public class ArgMaxProjection extends AbstractCLIJPlugin implements CLIJMacroPlu
     public String getParameterHelpText() {
         return "Image source, Image destination_max, Image destination_arg_max";
     }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        return clij.createCLBuffer(new long[]{input.getWidth(), input.getHeight()}, input.getNativeType());
+    }
 }

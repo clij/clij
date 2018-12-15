@@ -12,7 +12,7 @@ import net.imglib2.RandomAccessibleInterval;
  * Author: @haesleinhuepf
  * December 2018
  */
-public abstract class AbstractCLIJPlugin {
+public abstract class AbstractCLIJPlugin implements CLIJMacroPlugin{
     protected ClearCLIJ clij;
     protected Object[] args;
     public AbstractCLIJPlugin() { }
@@ -171,6 +171,12 @@ public abstract class AbstractCLIJPlugin {
     protected static int radiusToKernelSize(int radius) {
         int kernelSize = radius * 2 + 1;
         return kernelSize;
+    }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        return clij.createCLBuffer(input);
     }
 
 }

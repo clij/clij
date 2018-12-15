@@ -32,4 +32,15 @@ public class RotateRight extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
     public String getParameterHelpText() {
         return "Image source, Image destination";
     }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        if (input.getDimension() == 2) {
+            return clij.createCLBuffer(new long[]{input.getHeight(), input.getWidth()}, input.getNativeType());
+        } else {
+            return clij.createCLBuffer(new long[]{input.getHeight(), input.getWidth(), input.getDepth()}, input.getNativeType());
+        }
+    }
+
 }

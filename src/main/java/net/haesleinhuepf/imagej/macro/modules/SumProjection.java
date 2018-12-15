@@ -31,4 +31,11 @@ public class SumProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin
     public String getParameterHelpText() {
         return "Image source, Image destination_sum";
     }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        return clij.createCLBuffer(new long[]{input.getWidth(), input.getHeight()}, input.getNativeType());
+    }
+
 }

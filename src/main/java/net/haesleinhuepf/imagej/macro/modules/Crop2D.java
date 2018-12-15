@@ -31,4 +31,14 @@ public class Crop2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
     public String getParameterHelpText() {
         return "Image source, Image destination, Number startX, Number startY";
     }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        int startX = asInteger(args[2]);
+        int startY = asInteger(args[3]);
+
+        return clij.createCLBuffer(new long[]{(long)(input.getWidth() - startX), (long)(input.getHeight() - startY)}, input.getNativeType());
+    }
+
 }

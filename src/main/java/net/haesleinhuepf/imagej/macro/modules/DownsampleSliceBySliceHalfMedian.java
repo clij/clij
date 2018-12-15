@@ -32,4 +32,10 @@ public class DownsampleSliceBySliceHalfMedian extends AbstractCLIJPlugin impleme
     public String getParameterHelpText() {
         return "Image source, Image destination";
     }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        return clij.createCLBuffer(new long[]{input.getWidth() / 2, input.getHeight() / 2, input.getDepth()}, input.getNativeType());
+    }
 }

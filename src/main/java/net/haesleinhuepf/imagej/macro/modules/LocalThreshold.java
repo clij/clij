@@ -13,16 +13,16 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_resliceBottom")
-public class ResliceBottom extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_localThreshold")
+public class LocalThreshold extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.resliceBottom(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
+            return Kernels.localThreshold(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.resliceBottom(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
+            boolean result = Kernels.localThreshold(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
             releaseBuffers(args);
             return result;
         }
@@ -30,12 +30,6 @@ public class ResliceBottom extends AbstractCLIJPlugin implements CLIJMacroPlugin
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination";
-    }
-
-    @Override
-    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
-    {
-        return clij.createCLBuffer(new long[]{input.getWidth(), input.getDepth(), input.getHeight()}, input.getNativeType());
+        return "Image source, Image localThreshold, Image destination";
     }
 }

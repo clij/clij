@@ -135,8 +135,29 @@ public class CLIJHandler implements MacroExtension {
             System.out.println("Invoking plugin " + name);
             plugin.setClij(clij);
             Object[] arguments = new Object[parsedArguments.length - 1];
+
+            // copy first to hand over all parameters as they came
             System.arraycopy(parsedArguments, 1, arguments, 0, arguments.length);
             plugin.setArgs(arguments);
+
+            // fill missing images
+            if (existingImageIndices.size() > 0) {
+                for (int i : missingImageIndices.keySet()) {
+                    String nameInCache = missingImageIndices.get(i);
+                    if (bufferMap.keySet().contains(nameInCache)) {
+                        parsedArguments[i] = bufferMap.get(nameInCache);
+                    } else {
+                        parsedArguments[i] = plugin.createOutputBufferFromSource((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
+                        bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
+                    }
+                }
+            }
+
+            // hand over complete parameters again
+            System.arraycopy(parsedArguments, 1, arguments, 0, arguments.length);
+            plugin.setArgs(arguments);
+
+
             if (plugin instanceof CLIJOpenCLProcessor) {
                 ((CLIJOpenCLProcessor) plugin).executeCL();
             } else {

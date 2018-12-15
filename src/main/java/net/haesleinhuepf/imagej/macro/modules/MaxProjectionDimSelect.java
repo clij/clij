@@ -31,4 +31,11 @@ public class MaxProjectionDimSelect extends AbstractCLIJPlugin implements CLIJMa
     public String getParameterHelpText() {
         return "Image source, Image destination_max, Number dimensionX, Number dimensionY, Number projectedDimension";
     }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        return clij.createCLBuffer(new long[]{input.getWidth(), input.getHeight()}, input.getNativeType());
+    }
+
 }

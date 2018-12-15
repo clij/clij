@@ -34,4 +34,14 @@ public class Downsample2D extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     public String getParameterHelpText() {
         return "Image source, Image destination, Number factorX, Number factorY, Number factorZ";
     }
+
+    @Override
+    public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
+    {
+        float downsampleX = asFloat(args[2]);
+        float downsampleY = asFloat(args[3]);
+        float downsampleZ = asFloat(args[4]);
+
+        return clij.createCLBuffer(new long[]{(long)(input.getWidth() * downsampleX), (long)(input.getHeight() * downsampleY), (long)(input.getDepth() * downsampleZ)}, input.getNativeType());
+    }
 }
