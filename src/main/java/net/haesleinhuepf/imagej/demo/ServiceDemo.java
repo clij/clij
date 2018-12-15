@@ -37,7 +37,7 @@ public class ServiceDemo {
         //ext.clij = ClearCLIJ.getInstance("gfx902");
         //ext.getExtensionFunctions();
 
-        IJ.open("C:/structure/code/haesleinhuepf_clearclij/src/main/resources/flybrain.tif");
+        IJ.open("src/main/resources/flybrain.tif");
         CLIJHandler.getInstance().handleExtension("CLIJ_push", new Object[] {"flybrain.tif"});
 
         IJ.getImage().setTitle("out");
@@ -50,7 +50,7 @@ public class ServiceDemo {
                 new Double(5),
                 new Double(5)
         };
-        CLIJHandler.getInstance().handleExtension("CLIJ_blur3d", arguments);
+        CLIJHandler.getInstance().handleExtension("CLIJ_mean3d", arguments);
 
         //ext.handleExtension("CLIJ_erode", arguments);
 

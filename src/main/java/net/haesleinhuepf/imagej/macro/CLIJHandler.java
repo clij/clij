@@ -177,6 +177,7 @@ public class CLIJHandler implements MacroExtension {
                 }
                 System.out.println("Success");
             } else { // plugin != null
+                System.out.println("Invoking plugin " + name);
                 plugin.setClij(clij);
                 Object[] arguments = new Object[parsedArguments.length - 1];
                 System.arraycopy(parsedArguments, 1, arguments, 0, arguments.length);

@@ -150,6 +150,10 @@ public class ClearCLIJ {
                            Map<String, Object> pParameterMap) {
         final boolean[] result = new boolean[1];
 
+        for (String key : pParameterMap.keySet()) {
+            System.out.println(key + " = " + pParameterMap.get(key));
+        }
+
         ElapsedTime.measure("kernel + build " + pKernelname, () -> {
             if (mCLKernelExecutor == null) {
                 try {
