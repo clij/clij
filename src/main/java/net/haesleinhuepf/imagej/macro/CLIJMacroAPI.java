@@ -340,6 +340,7 @@ public class CLIJMacroAPI {
         return Kernels.maxProjection(clij, source, destination, projectedX, projectedY, projectedDimension);
     }
 
+    /*
     public final static String parameter_doc_mean2d = "Image source, Image destination, Number radiusX, Number radiusY";
     public static boolean mean2d(ClearCLIJ clij,
                                ClearCLBuffer source,
@@ -348,6 +349,7 @@ public class CLIJMacroAPI {
                                Integer radiusY) {
         return Kernels.mean(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
+    */
 
     public final static String parameter_doc_mean3d = "Image source, Image destination, Number radiusX, Number radiusY, Number radius Z";
     public static boolean mean3d(ClearCLIJ clij,
