@@ -19,7 +19,6 @@ public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroP
     public boolean executeCL() {
         float sigmaX = asFloat(args[2]);
         float sigmaY = asFloat(args[3]);
-        float sigmaZ = asFloat(args[4]);
         int nX = (int)(sigmaX * 3.5);
         int nY = (int)(sigmaY * 3.5);
         if (nX % 2 == 0) nX++;
@@ -30,7 +29,7 @@ public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroP
             Object[] args = openCLImageArgs();
             boolean result = Kernels.blurSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), nX, nY, sigmaX, sigmaY);
             // copy result back to the bufffer
-            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLImage)this.args[1]);
+            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
             // cleanup
             releaseImages(args);
             return result;
@@ -41,6 +40,6 @@ public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ";
+        return "Image source, Image destination, Number sigmaX, Number sigmaY";
     }
 }

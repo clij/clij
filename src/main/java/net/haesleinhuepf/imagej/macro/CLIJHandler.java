@@ -88,6 +88,8 @@ public class CLIJHandler implements MacroExtension {
             }
 
             System.out.println("methods " + methodMap.size());
+            System.out.println("plugins " + CLIJHandler.getInstance().pluginService.getCLIJMethodNames().size());
+
             Method method = null;
             String methodKey = name + (args.length + 1);
             if (methodMap.containsKey(methodKey)) {
@@ -206,12 +208,22 @@ public class CLIJHandler implements MacroExtension {
                 //IJ.log(key + "(" + methodMap.get(key).parameters + ")");
             }
         }
+        for (String name : pluginService.getCLIJMethodNames()) {
+            if (searchString.length() == 0 || name.contains(searchString)) {
+
+                helpList.add(name + "(" + pluginService.clijMacroPlugin(name).getParameterHelpText() + ")");
+                //IJ.log(key + "(" + methodMap.get(key).parameters + ")");
+            }
+        }
 
         IJ.log("Found " + helpList.size() + " method(s) containing the pattern \"" + searchString + "\":");
         Collections.sort(helpList);
         for (String entry : helpList) {
             IJ.log("Ext." + entry + ";");
         }
+
+
+
         //IJ.log("Helped");
     }
 

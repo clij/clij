@@ -13,7 +13,7 @@ input = getTitle();
 getDimensions(width, height, channels, slices, frames);
 
 // create an emtpy image to put the blurred pixels in
-newImage("Untitled", "8-bit black", width, height, slices);
+newImage("Untitled", "16-bit black", width, height, slices);
 rename("Blurred");
 blurred = getTitle();
 
@@ -29,7 +29,7 @@ Ext.CLIJ_push(blurred);
 run("Close All");
 
 // Blur in GPU
-Ext.CLIJ_blur3d(input, blurred, 20, 20, 1, 10, 10, 1);
+Ext.CLIJ_blur3dSeparable(input, blurred, 5, 5, 1);
 
 // Get results back from GPU
 Ext.CLIJ_pull(blurred);

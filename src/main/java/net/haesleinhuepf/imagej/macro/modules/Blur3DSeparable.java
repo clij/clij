@@ -26,7 +26,7 @@ public class Blur3DSeparable extends AbstractCLIJPlugin implements CLIJMacroPlug
             Object[] args = openCLImageArgs();
             boolean result = Kernels.blurSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), sigmaX, sigmaY, sigmaZ);
             // copy result back to the bufffer
-            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLImage)this.args[1]);
+            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
             // cleanup
             releaseImages(args);
             return result;

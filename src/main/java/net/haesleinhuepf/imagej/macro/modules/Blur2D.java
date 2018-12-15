@@ -36,6 +36,6 @@ public class Blur2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ";
+        return "Image source, Image destination, Number sigmaX, Number sigmaY";
     }
 }

@@ -50,7 +50,8 @@ public class ServiceDemo {
                 new Double(5),
                 new Double(5)
         };
-        CLIJHandler.getInstance().handleExtension("CLIJ_mean3d", arguments);
+        CLIJHandler.getInstance().handleExtension("CLIJ_blur3d", arguments);
+
         //ext.handleExtension("CLIJ_erode", arguments);
 
         CLIJHandler.getInstance().handleExtension("CLIJ_pull", new Object[] {"out"});

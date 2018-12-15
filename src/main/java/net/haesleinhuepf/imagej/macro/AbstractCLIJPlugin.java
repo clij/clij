@@ -115,8 +115,9 @@ public abstract class AbstractCLIJPlugin {
     }
 
     protected void releaseImages(Object[] args) {
-        for (Object item : args) {
-            if (item instanceof ClearCLImage) {
+        for (int i = 0; i < args.length; i ++) {
+            Object item = args[i];
+            if (item instanceof ClearCLImage && args[i] != this.args[i]) {
                 ((ClearCLImage) item).close();
             }
         }
@@ -124,8 +125,9 @@ public abstract class AbstractCLIJPlugin {
 
 
     protected void releaseBuffers(Object[] args) {
-        for (Object item : args) {
-            if (item instanceof ClearCLBuffer) {
+        for (int i = 0; i < args.length; i ++) {
+            Object item = args[i];
+            if (item instanceof ClearCLBuffer && args[i] != this.args[i]) {
                 ((ClearCLBuffer) item).close();
             }
         }
