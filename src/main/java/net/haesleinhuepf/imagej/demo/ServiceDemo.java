@@ -37,7 +37,7 @@ public class ServiceDemo {
         //ext.clij = ClearCLIJ.getInstance("gfx902");
         //ext.getExtensionFunctions();
 
-        IJ.open("src/main/resources/flybrain.tif");
+        IJ.open("c:/structure/code/haesleinhuepf_clearclij/src/main/resources/flybrain.tif");
         CLIJHandler.getInstance().handleExtension("CLIJ_push", new Object[] {"flybrain.tif"});
 
         IJ.getImage().setTitle("out");

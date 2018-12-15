@@ -54,19 +54,24 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
             throw new IllegalArgumentException("No animal of that name");
         }
 
-        final CLIJMacroPlugin animal = pluginService().createInstance(info);
-        String[] parameters = animal.getParameterHelpText().split(",");
-        int[] parameterTypes = new int[parameters.length];
-        int i = 0;
-        for (String parameter : parameters) {
-            if (parameter.trim().startsWith("Image")) {
-                parameterTypes[i] = MacroExtension.ARG_STRING;
-            } else if (parameter.trim().startsWith("String")) {
-                parameterTypes[i] = MacroExtension.ARG_STRING;
-            } else {
-                parameterTypes[i] = MacroExtension.ARG_NUMBER;
+        final CLIJMacroPlugin plugin = pluginService().createInstance(info);
+
+        String[] parameters = plugin.getParameterHelpText().split(",");
+        int[] parameterTypes = new int[0];
+
+        if (parameters.length > 1 || parameters[0].length() > 0) {
+            parameterTypes = new int[parameters.length];
+            int i = 0;
+            for (String parameter : parameters) {
+                if (parameter.trim().startsWith("Image")) {
+                    parameterTypes[i] = MacroExtension.ARG_STRING;
+                } else if (parameter.trim().startsWith("String")) {
+                    parameterTypes[i] = MacroExtension.ARG_STRING;
+                } else {
+                    parameterTypes[i] = MacroExtension.ARG_NUMBER;
+                }
+                i++;
             }
-            i++;
         }
         return new ExtensionDescriptor(name, parameterTypes, CLIJHandler.getInstance());
     }
