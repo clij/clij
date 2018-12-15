@@ -1512,7 +1512,7 @@ public class Kernels {
                 src1.getDimension(),
                 dst.getDimension())) {
             System.out.println(
-                    "Error: number of dimensions don't match! (addPixelwise)");
+                    "Error: number of dimensions don't match! (maxPixelwise)");
             return false;
         }
         return pCLIJ.execute(Kernels.class,
@@ -1534,7 +1534,7 @@ public class Kernels {
                 src1.getDimension(),
                 dst.getDimension())) {
             System.out.println(
-                    "Error: number of dimensions don't match! (addPixelwise)");
+                    "Error: number of dimensions don't match! (maxPixelwise)");
             return false;
         }
         return pCLIJ.execute(Kernels.class,
@@ -1543,6 +1543,44 @@ public class Kernels {
                 lParameters);
     }
 
+
+    public static boolean minPixelwise(ClearCLIJ clij, ClearCLImage src, ClearCLImage src1, ClearCLImage dst) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("src1", src1);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src1.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (minPixelwise)");
+            return false;
+        }
+        return clij.execute(Kernels.class,
+                "math.cl",
+                "minPixelwise_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean minPixelwise(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer src1, ClearCLBuffer dst) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("src1", src1);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src1.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (minPixelwise)");
+            return false;
+        }
+        return clij.execute(Kernels.class,
+                "math.cl",
+                "minPixelwise_" + src.getDimension() + "d",
+                lParameters);
+    }
 
     public static boolean maxProjection(ClearCLIJ pCLIJ,
                                         ClearCLImage src,
@@ -2562,6 +2600,28 @@ public class Kernels {
         }
         slice.close();
         return result;
+    }
+
+    public static boolean sumProjection(ClearCLIJ clij, ClearCLImage clImage, ClearCLImage clReducedImage) {
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("src", clImage);
+            parameters.put("dst", clReducedImage);
+            return clij.execute(Kernels.class,
+                    "projections.cl",
+                    "sum_project_3d_2d",
+                    parameters);
+    }
+
+    public static boolean sumProjection(ClearCLIJ clij, ClearCLBuffer clImage, ClearCLBuffer clReducedImage) {
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", clImage);
+        parameters.put("dst", clReducedImage);
+        return clij.execute(Kernels.class,
+                "projections.cl",
+                "sum_project_3d_2d",
+                parameters);
     }
 
     public static boolean tenengradWeightsSliceBySlice(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage clImageIn) {

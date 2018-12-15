@@ -2410,6 +2410,11 @@ public class KernelsTest {
     }
 
     @Test
+    public void minPixelWise3d() {
+        System.out.println("Todo: implement test for minPixelwise3d");
+    }
+
+    @Test
     public void maxProjection() throws InterruptedException {
         // do operation with ImageJ
         ImagePlus
@@ -3935,6 +3940,49 @@ public class KernelsTest {
     }
 
     @Test
+    public void sumProjection() throws InterruptedException {
+        // do operation with ImageJ
+        ImagePlus
+                sumProjection =
+                NewImage.createShortImage("",
+                        testImp1.getWidth(),
+                        testImp2.getHeight(),
+                        1,
+                        NewImage.FILL_BLACK);
+        ImageProcessor ipSum = sumProjection.getProcessor();
+
+        ImagePlus testImp1copy = new Duplicator().run(testImp1);
+        for (int z = 0; z < testImp1copy.getNSlices(); z++) {
+            testImp1copy.setZ(z + 1);
+            ImageProcessor ip = testImp1copy.getProcessor();
+            for (int x = 0; x < testImp1copy.getWidth(); x++) {
+                for (int y = 0; y < testImp1copy.getHeight(); y++) {
+                    float value = ip.getf(x, y) + ipSum.getf(x, y);
+                    ipSum.setf(x, y, value);
+                }
+            }
+        }
+
+        // do operation with ClearCL
+        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage
+                dst =
+                clij.createCLImage(new long[]{src.getWidth(),
+                                src.getHeight()},
+                        src.getChannelDataType());
+
+        Kernels.sumProjection(clij, src, dst);
+
+        ImagePlus sumProjectionCL = clij.converter(dst).getImagePlus();
+
+        assertTrue(TestUtilities.compareImages(sumProjection,
+                sumProjectionCL));
+
+        src.close();
+        dst.close();
+    }
+
+        @Test
     public void sumPixelsSliceBySlice() {
         ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
 

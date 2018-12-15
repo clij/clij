@@ -112,7 +112,7 @@ public class CLIJMacroAPI {
                                Float sigmaZ)
     {
         return Kernels.blur(clij, source, destination, radiusToKernelSize(nX), radiusToKernelSize(nY), radiusToKernelSize(nZ), sigmaX, sigmaY, sigmaZ);
-    }*/
+    }
 
     public final static String parameter_doc_copy = "Image source, Image destination";
     public static boolean copy(ClearCLIJ clij,
@@ -342,7 +342,7 @@ public class CLIJMacroAPI {
         return Kernels.maxProjection(clij, source, destination, projectedX, projectedY, projectedDimension);
     }
 
-    /*
+
     public final static String parameter_doc_mean2d = "Image source, Image destination, Number radiusX, Number radiusY";
     public static boolean mean2d(ClearCLIJ clij,
                                ClearCLBuffer source,
@@ -362,7 +362,7 @@ public class CLIJMacroAPI {
                                Integer radiusZ) {
         return Kernels.mean(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ));
     }
-    */
+
 
     public final static String parameter_doc_meanSliceBySlice = "Image source, Image destination, Number radiusX, Number radiusY";
     public static boolean meanSliceBySlice(ClearCLIJ clij,
@@ -428,6 +428,7 @@ public class CLIJMacroAPI {
                                               Integer radiusY) {
         return Kernels.minimumSliceBySlice(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
+
 
     public final static String parameter_doc_multiplyPixelwise = "Image factor1, Image factor2, Image destination";
     public static boolean multiplyPixelwise(ClearCLIJ clij,
@@ -521,6 +522,6 @@ public class CLIJMacroAPI {
                                     Float threshold)
     {
         return Kernels.threshold(clij, source, destination, threshold);
-    }
+    }*/
 
 }

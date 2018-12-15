@@ -151,6 +151,15 @@ public abstract class AbstractCLIJPlugin {
         }
     }
 
+
+    protected Boolean asBoolean(Object object) {
+        if (object instanceof Boolean ) {
+            return (Boolean)object;
+        } else {
+            return Boolean.parseBoolean(new String("" + object));
+        }
+    }
+
     protected Integer asInteger(Object number) {
         if (number instanceof Integer ) {
             return (Integer)number;
