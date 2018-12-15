@@ -12,26 +12,21 @@ import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
 
 /**
- * MeanFilter2D
- * <p>
  * Author: @haesleinhuepf
  * December 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "mean2d")
-public class MeanFilter2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
-    public MeanFilter2D(ClearCLIJ clij, Object[] args) {
-        super(clij, args);
-    }
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2d")
+public class Mean2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
     public boolean executeCL() {
-        if (containsCLBufferArguments()) {
-            return Kernels.mean(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]), asInteger(args[3]));
-        } else if (containsCLImageArguments()) {
+        if (containsCLImageArguments()) {
             return Kernels.mean(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]), asInteger(args[3]));
         } else {
             Object[] args = openCLBufferArgs();
-            return Kernels.mean(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]), asInteger(args[3]));
+            boolean result = Kernels.mean(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]), asInteger(args[3]));
+            releaseBuffers(args);
+            return result;
         }
     }
 

@@ -14,6 +14,7 @@ import static net.haesleinhuepf.imagej.macro.CLIJMacroExtensions.radiusToKernelS
  */
 public class CLIJMacroAPI {
 
+    /*
     public final static String parameter_doc_absolute = "Image source, Image destination";
     public static boolean absolute(ClearCLIJ clij,
                                    ClearCLBuffer source,
@@ -21,6 +22,7 @@ public class CLIJMacroAPI {
     {
         return Kernels.absolute(clij, source, destination);
     }
+
 
     public final static String parameter_doc_addPixelwise = "Image summand1, Image summand2, Image destination";
     public static boolean addPixelwise(ClearCLIJ clij,
@@ -110,7 +112,7 @@ public class CLIJMacroAPI {
                                Float sigmaZ)
     {
         return Kernels.blur(clij, source, destination, radiusToKernelSize(nX), radiusToKernelSize(nY), radiusToKernelSize(nZ), sigmaX, sigmaY, sigmaZ);
-    }
+    }*/
 
     public final static String parameter_doc_copy = "Image source, Image destination";
     public static boolean copy(ClearCLIJ clij,
@@ -349,7 +351,7 @@ public class CLIJMacroAPI {
                                Integer radiusY) {
         return Kernels.mean(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY));
     }
-    */
+
 
     public final static String parameter_doc_mean3d = "Image source, Image destination, Number radiusX, Number radiusY, Number radius Z";
     public static boolean mean3d(ClearCLIJ clij,
@@ -360,6 +362,7 @@ public class CLIJMacroAPI {
                                Integer radiusZ) {
         return Kernels.mean(clij, source, destination, radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ));
     }
+    */
 
     public final static String parameter_doc_meanSliceBySlice = "Image source, Image destination, Number radiusX, Number radiusY";
     public static boolean meanSliceBySlice(ClearCLIJ clij,

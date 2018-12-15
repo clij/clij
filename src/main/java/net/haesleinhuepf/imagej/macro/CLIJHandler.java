@@ -87,8 +87,12 @@ public class CLIJHandler implements MacroExtension {
                 plugin = pluginService.clijMacroPlugin(name);
             }
 
-            //System.out.println("methods " + methodMap.size());
-            Method method = methodMap.get(name + (args.length + 1)).method;
+            System.out.println("methods " + methodMap.size());
+            Method method = null;
+            String methodKey = name + (args.length + 1);
+            if (methodMap.containsKey(methodKey)) {
+                method = methodMap.get(methodKey).method;
+            }
             if (method == null && plugin == null) {
                 //System.out.println("Method not found: " + name);
                 return "Error: Method or plugin not found!";
@@ -101,18 +105,22 @@ public class CLIJHandler implements MacroExtension {
                 //System.out.println("Parsing args: " + args[i] + " " + args[i].getClass());
                 if (args[i] instanceof Double) {
                     //System.out.println("numeric");
-                    Class type = method.getParameters()[i + 1].getType();
-                    //System.out.println("type " + type);
-                    if (type == Double.class) {
-                        parsedArguments[i + 1] = args[i];
-                    } else if (type == Float.class) {
-                        parsedArguments[i + 1] = ((Double) args[i]).floatValue();
-                    } else if (type == Integer.class) {
-                        parsedArguments[i + 1] = ((Double) args[i]).intValue();
-                    } else if (type == Boolean.class) {
-                        parsedArguments[i + 1] = ((Double) args[i]) > 0;
+                    if (method != null) {
+                        Class type = method.getParameters()[i + 1].getType();
+                        //System.out.println("type " + type);
+                        if (type == Double.class) {
+                            parsedArguments[i + 1] = args[i];
+                        } else if (type == Float.class) {
+                            parsedArguments[i + 1] = ((Double) args[i]).floatValue();
+                        } else if (type == Integer.class) {
+                            parsedArguments[i + 1] = ((Double) args[i]).intValue();
+                        } else if (type == Boolean.class) {
+                            parsedArguments[i + 1] = ((Double) args[i]) > 0;
+                        } else {
+                            //System.out.println("Unknown type: " + type);
+                        }
                     } else {
-                        //System.out.println("Unknown type: " + type);
+                        parsedArguments[i + 1] = args[i];
                     }
                 } else {
                     //System.out.println("not numeric");
@@ -168,7 +176,7 @@ public class CLIJHandler implements MacroExtension {
                 System.out.println("Success");
             } else { // plugin != null
                 plugin.setClij(clij);
-                Object[] arguments = new Object[parsedArguments.length];
+                Object[] arguments = new Object[parsedArguments.length - 1];
                 System.arraycopy(parsedArguments, 1, arguments, 0, arguments.length);
                 plugin.setArgs(arguments);
                 if (plugin instanceof CLIJOpenCLProcessor) {
@@ -242,7 +250,9 @@ public class CLIJHandler implements MacroExtension {
 
         int numberOfPredefinedExtensions = 5;
 
-        ExtensionDescriptor[] extensions = new ExtensionDescriptor[methodMap.size() + numberOfPredefinedExtensions];
+        int numberOfPlugins = (pluginService != null)?pluginService.getCLIJMethodNames().size():0;
+
+        ExtensionDescriptor[] extensions = new ExtensionDescriptor[methodMap.size() + numberOfPredefinedExtensions + numberOfPlugins];
 
         extensions[0] = new ExtensionDescriptor(TO_CLIJ, new int[]{MacroExtension.ARG_STRING}, this);
         extensions[1] = new ExtensionDescriptor(FROM_CLIJ, new int[]{MacroExtension.ARG_STRING}, this);
@@ -251,6 +261,13 @@ public class CLIJHandler implements MacroExtension {
         extensions[4] = new ExtensionDescriptor(HELP, new int[]{MacroExtension.ARG_STRING}, this);
 
         int i = numberOfPredefinedExtensions;
+        if (pluginService != null) {
+            for (String name : pluginService.getCLIJMethodNames()) {
+                extensions[i] = pluginService.getPluginExtensionDescriptor(name);
+                i++;
+            }
+        }
+
         for (String key : methodMap.keySet()) {
             extensions[i] = methodMap.get(key).extensionDescriptor;
             ////System.out.println("Add method: " + key + methodMap.get(key).parameters);

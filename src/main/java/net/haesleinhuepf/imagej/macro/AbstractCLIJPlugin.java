@@ -114,6 +114,24 @@ public abstract class AbstractCLIJPlugin {
         return false;
     }
 
+    protected void releaseImages(Object[] args) {
+        for (Object item : args) {
+            if (item instanceof ClearCLImage) {
+                ((ClearCLImage) item).close();
+            }
+        }
+    }
+
+
+    protected void releaseBuffers(Object[] args) {
+        for (Object item : args) {
+            if (item instanceof ClearCLBuffer) {
+                ((ClearCLBuffer) item).close();
+            }
+        }
+    }
+
+
     protected boolean containsCLBufferArguments() {
         for (Object item : args) {
             if (item instanceof ClearCLBuffer) {
@@ -135,7 +153,7 @@ public abstract class AbstractCLIJPlugin {
         if (number instanceof Integer ) {
             return (Integer)number;
         } else {
-            return Integer.parseInt(new String("" + number));
+            return new Integer((int)Double.parseDouble(new String("" + number)));
         }
     }
 }

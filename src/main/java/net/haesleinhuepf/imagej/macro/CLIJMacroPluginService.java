@@ -38,7 +38,8 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
         final PluginInfo<CLIJMacroPlugin> info = animals.get(name);
 
         if (info == null) {
-            throw new IllegalArgumentException("No animal of that name");
+            //throw new IllegalArgumentException("No clij plugin of name " + name);
+            return null;
         }
 
         final CLIJMacroPlugin animal = pluginService().createInstance(info);
