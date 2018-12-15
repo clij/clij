@@ -20,11 +20,14 @@ public class Mean2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
 
     @Override
     public boolean executeCL() {
+        int kernelSizeX = radiusToKernelSize(asInteger(args[2]));
+        int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
+
         if (containsCLImageArguments()) {
-            return Kernels.mean(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]), asInteger(args[3]));
+            return Kernels.mean(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.mean(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]), asInteger(args[3]));
+            boolean result = Kernels.mean(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }

@@ -19,10 +19,8 @@ public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroP
     public boolean executeCL() {
         float sigmaX = asFloat(args[2]);
         float sigmaY = asFloat(args[3]);
-        int nX = (int)(sigmaX * 3.5);
-        int nY = (int)(sigmaY * 3.5);
-        if (nX % 2 == 0) nX++;
-        if (nY % 2 == 0) nY++;
+        int nX = radiusToKernelSize((int)sigmaX);
+        int nY = radiusToKernelSize((int)sigmaY);
 
         if (containsCLBufferArguments()) {
             // convert all arguments to CLImages

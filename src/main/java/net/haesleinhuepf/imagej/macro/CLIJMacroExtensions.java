@@ -34,38 +34,6 @@ import java.util.HashMap;
 @Plugin(type = Command.class, menuPath = "Plugins>CLIJ>CLIJ Macro Extensions")
 public class CLIJMacroExtensions implements Command {
 
-    /*
-    public static void main(String... args) {
-        new ImageJ();
-        CLIJMacroExtensions ext = new CLIJMacroExtensions();
-        ext.clij = ClearCLIJ.getInstance("gfx902");
-        ext.getExtensionFunctions();
-
-        IJ.open("C:/structure/code/haesleinhuepf_clearclij/src/main/resources/flybrain.tif");
-        ext.pushToGPU("flybrain.tif");
-        IJ.getImage().setTitle("out");
-        ext.pushToGPU("out");
-
-        Object[] arguments = new Object[]{
-                "flybrain.tif",
-                "out",
-                new Double(3),
-                new Double(3),
-                new Double(1)
-        };
-        ext.handleExtension("CLIJ_mean3d", arguments);
-        //ext.handleExtension("CLIJ_erode", arguments);
-
-        ext.pullFromGPU("out");
-
-        ext.handleExtension("CLIJ_clear", new Object[]{});
-    }*/
-
-    static int radiusToKernelSize(int radius) {
-        int kernelSize = radius * 2 + 1;
-        return kernelSize;
-    }
-
     @Override
     public void run() {
         ArrayList<String> deviceList = ClearCLIJ.getAvailableDeviceNames();
@@ -87,13 +55,4 @@ public class CLIJMacroExtensions implements Command {
         }
         Functions.registerExtensions(CLIJHandler.getInstance());
     }
-
-
-    private boolean isNumeric(Object text) {
-        if (text instanceof Double) {
-            return true;
-        }
-        return NumberUtils.isNumber((String) text);
-    }
-
 }

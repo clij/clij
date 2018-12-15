@@ -18,7 +18,7 @@ rename("Blurred");
 blurred = getTitle();
 
 // Init GPU
-run("CLIJ Macro Extensions", "cl_device=");
+run("CLIJ Macro Extensions", "cl_device=geforce");
 Ext.CLIJ_clear();
 
 // Local mean filter in CPU

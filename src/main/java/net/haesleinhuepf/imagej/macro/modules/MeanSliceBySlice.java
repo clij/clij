@@ -17,14 +17,15 @@ public class MeanSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroPlu
 
     @Override
     public boolean executeCL() {
-        int radiusX = asInteger(args[2]);
-        int radiusY = asInteger(args[3]);
+        int kernelSizeX = radiusToKernelSize(asInteger(args[2]));
+        int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
+        int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
-            return Kernels.meanSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY);
+            return Kernels.meanSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.meanSliceBySlice(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), radiusX, radiusY);
+            boolean result = Kernels.meanSliceBySlice(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }

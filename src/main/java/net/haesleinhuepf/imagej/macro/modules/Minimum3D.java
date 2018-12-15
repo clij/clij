@@ -17,15 +17,15 @@ public class Minimum3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
 
     @Override
     public boolean executeCL() {
-        int radiusX = asInteger(args[2]);
-        int radiusY = asInteger(args[3]);
-        int radiusZ = asInteger(args[4]);
+        int kernelSizeX = radiusToKernelSize(asInteger(args[2]));
+        int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
+        int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
-            return Kernels.minimum(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
+            return Kernels.minimum(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.minimum(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), radiusX, radiusY, radiusZ);
+            boolean result = Kernels.minimum(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
             releaseBuffers(args);
             return result;
         }

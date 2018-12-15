@@ -167,4 +167,10 @@ public abstract class AbstractCLIJPlugin {
             return new Integer((int)Double.parseDouble(new String("" + number)));
         }
     }
+
+    protected static int radiusToKernelSize(int radius) {
+        int kernelSize = radius * 2 + 1;
+        return kernelSize;
+    }
+
 }

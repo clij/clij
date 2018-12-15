@@ -20,12 +20,9 @@ public class Blur3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         float sigmaX = asFloat(args[2]);
         float sigmaY = asFloat(args[3]);
         float sigmaZ = asFloat(args[4]);
-        int nX = (int)(sigmaX * 3.5);
-        int nY = (int)(sigmaY * 3.5);
-        int nZ = (int)(sigmaZ * 3.5);
-        if (nX % 2 == 0) nX++;
-        if (nY % 2 == 0) nY++;
-        if (nZ % 2 == 0) nZ++;
+        int nX = radiusToKernelSize((int)sigmaX);
+        int nY = radiusToKernelSize((int)sigmaY);
+        int nZ = radiusToKernelSize((int)sigmaZ);
 
         if (containsCLImageArguments()) {
             return Kernels.blur(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), nX, nY, nZ, sigmaX, sigmaY, sigmaZ);

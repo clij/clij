@@ -9,10 +9,8 @@ import ij.macro.ExtensionDescriptor;
 import ij.macro.MacroExtension;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,7 +40,6 @@ public class CLIJHandler implements MacroExtension {
     final String RELEASE_BUFFER = "CLIJ_release";
     final String CLEAR_CLIJ = "CLIJ_clear";
     final String HELP = "CLIJ_help";
-    HashMap<String, MethodInfo> methodMap = new HashMap<String, MethodInfo>();
 
 
     public void setCLIJ(ClearCLIJ clij) {
@@ -87,54 +84,37 @@ public class CLIJHandler implements MacroExtension {
                 plugin = pluginService.clijMacroPlugin(name);
             }
 
-            System.out.println("methods " + methodMap.size());
             System.out.println("plugins " + CLIJHandler.getInstance().pluginService.getCLIJMethodNames().size());
 
-            Method method = null;
-            String methodKey = name + (args.length + 1);
-            if (methodMap.containsKey(methodKey)) {
-                method = methodMap.get(methodKey).method;
-            }
-            if (method == null && plugin == null) {
+            if (plugin == null) {
                 //System.out.println("Method not found: " + name);
-                return "Error: Method or plugin not found!";
+                return "Error: Plugin not found!";
             }
 
             //System.out.println("Check method: " + name);
+            String[] pluginParameters = plugin.getParameterHelpText().split(",");
             Object[] parsedArguments = new Object[args.length + 1];
             parsedArguments[0] = clij;
             for (int i = 0; i < args.length; i++) {
                 //System.out.println("Parsing args: " + args[i] + " " + args[i].getClass());
                 if (args[i] instanceof Double) {
                     //System.out.println("numeric");
-                    if (method != null) {
-                        Class type = method.getParameters()[i + 1].getType();
-                        //System.out.println("type " + type);
-                        if (type == Double.class) {
-                            parsedArguments[i + 1] = args[i];
-                        } else if (type == Float.class) {
-                            parsedArguments[i + 1] = ((Double) args[i]).floatValue();
-                        } else if (type == Integer.class) {
-                            parsedArguments[i + 1] = ((Double) args[i]).intValue();
-                        } else if (type == Boolean.class) {
-                            parsedArguments[i + 1] = ((Double) args[i]) > 0;
+                    parsedArguments[i + 1] = args[i];
+                } else {
+                    if (pluginParameters[i].trim().startsWith("Image")) {
+                        //System.out.println("not numeric");
+                        ClearCLBuffer bufferImage = bufferMap.get(args[i]);
+                        if (bufferImage == null) {
+                            //IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
+                            //IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
+                            missingImageIndices.put(i + 1, (String) args[i]);
                         } else {
-                            //System.out.println("Unknown type: " + type);
+                            existingImageIndices.add(i + 1);
                         }
+                        parsedArguments[i + 1] = bufferImage;
                     } else {
                         parsedArguments[i + 1] = args[i];
                     }
-                } else {
-                    //System.out.println("not numeric");
-                    ClearCLBuffer bufferImage = bufferMap.get(args[i]);
-                    if (bufferImage == null) {
-                        //IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
-                        //IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
-                        missingImageIndices.put(i + 1, (String) args[i]);
-                    } else {
-                        existingImageIndices.add(i + 1);
-                    }
-                    parsedArguments[i + 1] = bufferImage;
                 }
                 //System.out.println("Parsed args: " + parsedArguments[i + 1]);
             }
@@ -152,42 +132,17 @@ public class CLIJHandler implements MacroExtension {
                 }
             }
 
-            if (method != null) {
-                System.out.println("Invoke method: " + name);
-                //for (int i = 0; i < parsedArguments.length; i++) {
-                //if (parsedArguments[i] != null) {
-                //System.out.println("" + parsedArguments[i] + " " + parsedArguments[i].getClass());
-                //}
-                //}
-
-                try {
-                    method.invoke(null, parsedArguments);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                    return "IllegalArgumentException";
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    return "IllegalAccessException";
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                    return "InvocationTargetException";
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return "Exception";
-                }
-                System.out.println("Success");
-            } else { // plugin != null
-                System.out.println("Invoking plugin " + name);
-                plugin.setClij(clij);
-                Object[] arguments = new Object[parsedArguments.length - 1];
-                System.arraycopy(parsedArguments, 1, arguments, 0, arguments.length);
-                plugin.setArgs(arguments);
-                if (plugin instanceof CLIJOpenCLProcessor) {
-                    ((CLIJOpenCLProcessor) plugin).executeCL();
-                } else {
-                    System.out.println("Couldn't execute CLIJ plugin!");
-                }
+            System.out.println("Invoking plugin " + name);
+            plugin.setClij(clij);
+            Object[] arguments = new Object[parsedArguments.length - 1];
+            System.arraycopy(parsedArguments, 1, arguments, 0, arguments.length);
+            plugin.setArgs(arguments);
+            if (plugin instanceof CLIJOpenCLProcessor) {
+                ((CLIJOpenCLProcessor) plugin).executeCL();
+            } else {
+                System.out.println("Couldn't execute CLIJ plugin!");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -201,14 +156,7 @@ public class CLIJHandler implements MacroExtension {
             searchString = (String) (args[0]);
         }
         ArrayList<String> helpList = new ArrayList<String>();
-        for (String key : methodMap.keySet()) {
-            //System.out.println(key);
-            if (searchString.length() == 0 || key.contains(searchString)) {
 
-                helpList.add(methodMap.get(key).name + "(" + methodMap.get(key).parameters + ")");
-                //IJ.log(key + "(" + methodMap.get(key).parameters + ")");
-            }
-        }
         for (String name : pluginService.getCLIJMethodNames()) {
             if (searchString.length() == 0 || name.contains(searchString)) {
 
@@ -259,13 +207,11 @@ public class CLIJHandler implements MacroExtension {
     @Override
     public ExtensionDescriptor[] getExtensionFunctions() {
 
-        parseClass(CLIJMacroAPI.class);
-
         int numberOfPredefinedExtensions = 5;
 
         int numberOfPlugins = (pluginService != null)?pluginService.getCLIJMethodNames().size():0;
 
-        ExtensionDescriptor[] extensions = new ExtensionDescriptor[methodMap.size() + numberOfPredefinedExtensions + numberOfPlugins];
+        ExtensionDescriptor[] extensions = new ExtensionDescriptor[numberOfPredefinedExtensions + numberOfPlugins];
 
         extensions[0] = new ExtensionDescriptor(TO_CLIJ, new int[]{MacroExtension.ARG_STRING}, this);
         extensions[1] = new ExtensionDescriptor(FROM_CLIJ, new int[]{MacroExtension.ARG_STRING}, this);
@@ -281,98 +227,6 @@ public class CLIJHandler implements MacroExtension {
             }
         }
 
-        for (String key : methodMap.keySet()) {
-            extensions[i] = methodMap.get(key).extensionDescriptor;
-            ////System.out.println("Add method: " + key + methodMap.get(key).parameters);
-            i++;
-        }
-
         return extensions;
     }
-
-    private void parseClass(Class c) {
-        Method[] methods = c.getDeclaredMethods();
-        for (Method method : methods) {
-            if (!method.getName().startsWith("parameter")) {
-                ArrayList<Integer> typeList = new ArrayList<Integer>();
-                String parameters = "";
-                boolean makeAvailable = true;
-
-                int j = 0;
-                String parameter_doc = "";
-                try {
-                    Field parameter_doc_field = c.getField("parameter_doc_" + method.getName());
-                    parameter_doc = (String) ((Field) parameter_doc_field).get(null);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
-                }
-                for (Parameter parameter : method.getParameters()) {
-                    if (parameter.getType() != ClearCLIJ.class) {
-                        if (parameter.getType() == ClearCLImage.class) {
-                            makeAvailable = false;
-                        }
-
-                        String type = "";
-                        if (parameter.getType() == ClearCLBuffer.class) {
-                            type = "image";
-                            typeList.add(MacroExtension.ARG_STRING);
-                        } else if (parameter.getType() == Float.class || parameter.getType() == Integer.class || parameter.getType() == Double.class) {
-                            type = "number";
-                            typeList.add(MacroExtension.ARG_NUMBER);
-                        } else if (parameter.getType() == Boolean.class) {
-                            type = "boolean";
-                            typeList.add(MacroExtension.ARG_NUMBER);
-                        } else {
-                            type = "var";
-                            typeList.add(MacroExtension.ARG_STRING);
-                        }
-
-                        if (parameters.length() == 0) {
-                            parameters = type;
-                        } else {
-                            parameters = parameters + "," + type;
-                        }
-                        parameters = parameters + " " + parameter.getName();
-                    }
-                    j++;
-                }
-                if (parameter_doc.length() > 0) {
-                    parameters = parameter_doc;
-                }
-
-                int[] types = new int[typeList.size()];
-                for (int i = 0; i < typeList.size(); i++) {
-                    types[i] = typeList.get(i);
-                }
-                String shortName = "CLIJ_" + method.getName();
-                String key = shortName + (types.length + 1);
-                if (makeAvailable && !methodMap.containsKey(key)) {
-                    MethodInfo methodInfo = new MethodInfo(
-                            new ExtensionDescriptor(shortName, types, this),
-                            method,
-                            parameters,
-                            shortName
-                    );
-                    //.add(methodInfo.extensionDescriptor);
-                    methodMap.put(key, methodInfo);
-                }
-            }
-        }
-    }
-
-    private class MethodInfo {
-        final ExtensionDescriptor extensionDescriptor;
-        final Method method;
-        final String parameters;
-        final String name;
-        MethodInfo(ExtensionDescriptor extensionDescriptor, Method method, String parameters, String name) {
-            this.extensionDescriptor = extensionDescriptor;
-            this.method = method;
-            this.parameters = parameters;
-            this.name = name;
-        }
-    }
-
 }
