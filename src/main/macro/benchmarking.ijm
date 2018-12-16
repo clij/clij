@@ -12,10 +12,7 @@ run("T1 Head (2.4M, 16-bits)");
 input = getTitle();
 getDimensions(width, height, channels, slices, frames);
 
-// create an emtpy image to put the blurred pixels in
-newImage("Untitled", "16-bit black", width, height, slices);
-rename("Blurred");
-blurred = getTitle();
+blurred = "Blurred";
 
 // Init GPU
 run("CLIJ Macro Extensions", "cl_device=geforce");
@@ -31,9 +28,7 @@ for (i = 1; i <= 1; i++) {
 // push images to GPU
 time = getTime();
 Ext.CLIJ_push(input);
-Ext.CLIJ_push(blurred);
-print("Pushing two images to the GPU took " + (getTime() - time) + " msec");
-
+print("Pushing one image to the GPU took " + (getTime() - time) + " msec");
 
 // cleanup ImageJ
 run("Close All");
@@ -47,8 +42,8 @@ for (i = 1; i <= 10; i++) {
 
 // Get results back from GPU
 time = getTime();
-res = Ext.CLIJ_pull(blurred);
-print("res: " + res);
+Ext.CLIJ_pull(blurred);
+
 print("Pulling one image from the GPU took " + (getTime() - time) + " msec");
 
 // Cleanup GPU 
