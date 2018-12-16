@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maxProjection")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maxProjectionDimSelect")
 public class MaxProjectionDimSelect extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
