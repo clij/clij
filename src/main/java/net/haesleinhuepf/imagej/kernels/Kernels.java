@@ -1589,6 +1589,49 @@ public class Kernels {
                 lParameters);
     }
 
+    public static boolean maxPixelwiseScalar(ClearCLIJ pCLIJ,
+                                       ClearCLImage src,
+                                       ClearCLImage dst,
+                                             Float valueB) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("valueB", valueB);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (maxPixelwise)");
+            return false;
+        }
+        return pCLIJ.execute(Kernels.class,
+                "math.cl",
+                "maxPixelwiseScalar_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean maxPixelwiseScalar(ClearCLIJ pCLIJ,
+                                       ClearCLBuffer src,
+                                       ClearCLBuffer dst,
+                                             Float valueB) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("valueB", valueB);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (maxPixelwise)");
+            return false;
+        }
+        return pCLIJ.execute(Kernels.class,
+                "math.cl",
+                "maxPixelwiseScalar_" + src.getDimension() + "d",
+                lParameters);
+    }
 
     public static boolean minPixelwise(ClearCLIJ clij, ClearCLImage src, ClearCLImage src1, ClearCLImage dst) {
         HashMap<String, Object> lParameters = new HashMap<>();
@@ -1627,6 +1670,45 @@ public class Kernels {
                 "minPixelwise_" + src.getDimension() + "d",
                 lParameters);
     }
+
+    public static boolean minPixelwiseScalar(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Float valueB) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("valueB", valueB);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (minPixelwiseScalar)");
+            return false;
+        }
+        return clij.execute(Kernels.class,
+                "math.cl",
+                "minPixelwiseScalar_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean minPixelwiseScalar(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Float valueB) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("valueB", valueB);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (minPixelwiseScalar)");
+            return false;
+        }
+        return clij.execute(Kernels.class,
+                "math.cl",
+                "minPixelwiseScalar_" + src.getDimension() + "d",
+                lParameters);
+    }
+
 
     public static boolean maxProjection(ClearCLIJ pCLIJ,
                                         ClearCLImage src,
