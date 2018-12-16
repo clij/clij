@@ -1,6 +1,7 @@
 package net.haesleinhuepf.imagej.macro;
 
 import clearcl.ClearCLBuffer;
+import clearcl.util.ElapsedTime;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.macro.ExtensionDescriptor;
@@ -52,51 +53,53 @@ public class CLIJHandler implements MacroExtension {
 
     @Override
     public String handleExtension(String name, Object[] args) {
-        ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
-        HashMap<Integer, String> missingImageIndices = new HashMap<Integer, String>();
-        CLIJMacroPlugin plugin = null;
-        //System.out.println("Handle Ext " + name);
-        try {
-            plugin = pluginService.clijMacroPlugin(name);
 
-            System.out.println("plugins " + CLIJHandler.getInstance().pluginService.getCLIJMethodNames().size());
+        ElapsedTime.measureForceOutput("Whole extension handling", () -> {
+            ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
+            HashMap<Integer, String> missingImageIndices = new HashMap<Integer, String>();
+            CLIJMacroPlugin plugin = null;
+            //System.out.println("Handle Ext " + name);
+            try {
+                plugin = pluginService.clijMacroPlugin(name);
 
-            if (plugin == null) {
-                //System.out.println("Method not found: " + name);
-                return "Error: Plugin not found!";
-            }
+                //System.out.println("plugins " + CLIJHandler.getInstance().pluginService.getCLIJMethodNames().size());
 
-            //System.out.println("Check method: " + name);
-            String[] pluginParameters = plugin.getParameterHelpText().split(",");
-            Object[] parsedArguments = new Object[0];
-            if (args != null) {
-                parsedArguments = new Object[args.length];
-                for (int i = 0; i < args.length; i++) {
-                    //System.out.println("Parsing args: " + args[i] + " " + args[i].getClass());
-                    if (args[i] instanceof Double) {
-                        //System.out.println("numeric");
-                        parsedArguments[i] = args[i];
-                    } else {
-                        if (pluginParameters[i].trim().startsWith("Image")) {
-                            //System.out.println("not numeric");
-                            ClearCLBuffer bufferImage = bufferMap.get(args[i]);
-                            if (bufferImage == null) {
-                                //IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
-                                //IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
-                                missingImageIndices.put(i, (String) args[i]);
-                                parsedArguments[i] = (String) args[i];
-                            } else {
-                                existingImageIndices.add(i);
-                                parsedArguments[i] = bufferImage;
-                            }
-                        } else {
-                            parsedArguments[i] = args[i];
-                        }
-                    }
-                    //System.out.println("Parsed args: " + parsedArguments[i + 1]);
+                if (plugin == null) {
+                    System.out.println("Method not found: " + name);
+                    return;
                 }
-            }
-            // create missing images by making images as given images
+
+                //System.out.println("Check method: " + name);
+                String[] pluginParameters = plugin.getParameterHelpText().split(",");
+                Object[] parsedArguments = new Object[0];
+                if (args != null) {
+                    parsedArguments = new Object[args.length];
+                    for (int i = 0; i < args.length; i++) {
+                        //System.out.println("Parsing args: " + args[i] + " " + args[i].getClass());
+                        if (args[i] instanceof Double) {
+                            //System.out.println("numeric");
+                            parsedArguments[i] = args[i];
+                        } else {
+                            if (pluginParameters[i].trim().startsWith("Image")) {
+                                //System.out.println("not numeric");
+                                ClearCLBuffer bufferImage = bufferMap.get(args[i]);
+                                if (bufferImage == null) {
+                                    //IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
+                                    //IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
+                                    missingImageIndices.put(i, (String) args[i]);
+                                    parsedArguments[i] = (String) args[i];
+                                } else {
+                                    existingImageIndices.add(i);
+                                    parsedArguments[i] = bufferImage;
+                                }
+                            } else {
+                                parsedArguments[i] = args[i];
+                            }
+                        }
+                        //System.out.println("Parsed args: " + parsedArguments[i + 1]);
+                    }
+                }
+                // create missing images by making images as given images
             /*if (existingImageIndices.size() > 0) {
                 for (int i : missingImageIndices.keySet()) {
                     String nameInCache = missingImageIndices.get(i);
@@ -109,39 +112,40 @@ public class CLIJHandler implements MacroExtension {
                 }
             }*/
 
-            System.out.println("Invoking plugin " + name + " " + Arrays.toString(args));
-            plugin.setClij(clij);
+                System.out.println("Invoking plugin " + name + " " + Arrays.toString(args));
+                plugin.setClij(clij);
 
-            // copy first to hand over all parameters as they came
-            plugin.setArgs(parsedArguments);
+                // copy first to hand over all parameters as they came
+                plugin.setArgs(parsedArguments);
 
-            // fill missing images
-            if (existingImageIndices.size() > 0) {
-                for (int i : missingImageIndices.keySet()) {
-                    String nameInCache = missingImageIndices.get(i);
-                    if (bufferMap.keySet().contains(nameInCache)) {
-                        parsedArguments[i] = bufferMap.get(nameInCache);
-                    } else {
-                        parsedArguments[i] = plugin.createOutputBufferFromSource((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
-                        bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
+                // fill missing images
+                if (existingImageIndices.size() > 0) {
+                    for (int i : missingImageIndices.keySet()) {
+                        String nameInCache = missingImageIndices.get(i);
+                        if (bufferMap.keySet().contains(nameInCache)) {
+                            parsedArguments[i] = bufferMap.get(nameInCache);
+                        } else {
+                            parsedArguments[i] = plugin.createOutputBufferFromSource((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
+                            bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
+                        }
                     }
                 }
+
+                // hand over complete parameters again
+                plugin.setArgs(parsedArguments);
+
+
+                if (plugin instanceof CLIJOpenCLProcessor) {
+                    ((CLIJOpenCLProcessor) plugin).executeCL();
+                } else {
+                    System.out.println("Couldn't execute CLIJ plugin!");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            // hand over complete parameters again
-            plugin.setArgs(parsedArguments);
-
-
-            if (plugin instanceof CLIJOpenCLProcessor) {
-                ((CLIJOpenCLProcessor) plugin).executeCL();
-            } else {
-                System.out.println("Couldn't execute CLIJ plugin!");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        });
+        return "hell2o";
     }
 
     public void releaseBufferInGPU(String arg) {

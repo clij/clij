@@ -431,25 +431,30 @@ public class Kernels {
                 lParameters);
     }
 
-    public static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float... blurSigma) {
-        return blurSeparable_internal(clij, src, dst, blurSigma);
+    public static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
+        return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
     }
 
-//  public static boolean blurSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, float... blurSigma) {
-//    return blurSeparable_internal(clij, src, dst, blurSigma);
-//  }
+    public static boolean blurSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
+        return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
+    }
 
-    private static boolean blurSeparable_internal(ClearCLIJ clij, Object src, Object dst, float... blurSigma) {
-        int[] n = new int[blurSigma.length];
+    private static int radiusToKernelSize(int radius) {
+        int kernelSize = radius * 2 + 1;
+        return kernelSize;
+    }
 
-        for (int d = 0; d < n.length; d++) {
-            n[d] = Math.max(1, (int) Math.round(2 * 3.5 * blurSigma[d]));
-            if (n[d] % 2 != 1) {
-                n[d] = n[d] + 1;
-            }
-            //System.out.println("n[" + d + "] = " + n[d]);
+    private static int sigmaToKernelSize(float sigma) {
+        int n = (int)(sigma * 3.5);
+        if (n % 2 == 0) {
+            n++;
         }
+        return n;
+    }
 
+    private static boolean executeSeparableKernel(ClearCLIJ clij, Object src, Object dst, String clFilename, String kernelname, int nX, int nY, int nZ, float blurSigmaX, float blurSigmaY, float blurSigmaZ, long dimensions) {
+        int[] n = new int[]{nX, nY, nZ};
+        float[] blurSigma = new float[]{blurSigmaX, blurSigmaY, blurSigmaZ};
 
         Object temp;
         if (src instanceof ClearCLBuffer) {
@@ -468,34 +473,44 @@ public class Kernels {
         lParameters.put("s", blurSigma[0]);
         lParameters.put("dim", 0);
         lParameters.put("src", src);
-        lParameters.put("dst", dst);
+        if (dimensions == 2) {
+            lParameters.put("dst", temp);
+        } else {
+            lParameters.put("dst", dst);
+        }
         clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_sep_image3d",
+                clFilename,
+                kernelname,
                 lParameters);
 
         lParameters.clear();
         lParameters.put("N", n[1]);
         lParameters.put("s", blurSigma[1]);
         lParameters.put("dim", 1);
-        lParameters.put("src", dst);
-        lParameters.put("dst", temp);
+        if (dimensions == 2) {
+            lParameters.put("src", temp);
+            lParameters.put("dst", dst);
+        } else {
+            lParameters.put("src", dst);
+            lParameters.put("dst", temp);
+        }
         clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_sep_image3d",
+                clFilename,
+                kernelname,
                 lParameters);
 
-        lParameters.clear();
-        lParameters.put("N", n[2]);
-        lParameters.put("s", blurSigma[2]);
-        lParameters.put("dim", 2);
-        lParameters.put("src", temp);
-        lParameters.put("dst", dst);
-        clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_sep_image3d",
-                lParameters);
-
+        if (dimensions == 3) {
+            lParameters.clear();
+            lParameters.put("N", n[2]);
+            lParameters.put("s", blurSigma[2]);
+            lParameters.put("dim", 2);
+            lParameters.put("src", temp);
+            lParameters.put("dst", dst);
+            clij.execute(Kernels.class,
+                    clFilename,
+                    kernelname,
+                    lParameters);
+        }
         if (temp instanceof ClearCLBuffer) {
             ((ClearCLBuffer) temp).close();
         } else if (temp instanceof ClearCLImage) {
@@ -1502,6 +1517,14 @@ public class Kernels {
                 "maximum_slicewise_image3d", lParameters);
     }
 
+    public static boolean maximumSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "max_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
+    public static boolean maximumSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "max_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
     public static boolean maximumSliceBySlice(ClearCLIJ clij,
                                               ClearCLBuffer src,
                                               ClearCLBuffer dst,
@@ -1763,6 +1786,15 @@ public class Kernels {
                 "mean_image3d", lParameters);
     }
 
+    public static boolean meanSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "mean_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
+    public static boolean meanSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "mean_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
+
     public static boolean meanSliceBySlice(ClearCLIJ clij,
                                            ClearCLImage src,
                                            ClearCLImage dst,
@@ -2009,6 +2041,15 @@ public class Kernels {
         return clij.execute(Kernels.class,
                 "filtering.cl",
                 "minimum_image3d", lParameters);
+    }
+
+
+    public static boolean minimumSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "min_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
+    public static boolean minimumSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "min_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
     }
 
     public static boolean minimumSliceBySlice(ClearCLIJ clij,

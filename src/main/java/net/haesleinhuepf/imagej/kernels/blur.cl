@@ -127,3 +127,29 @@ __kernel void gaussian_blur_sep_image3d
 }
 
 
+__kernel void gaussian_blur_sep_image2d
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int dim, const int N, const float s
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1);
+  const int2 coord = (int2)(i,j);
+  const int2 dir   = (int2)(dim==0,dim==1);
+
+  // center
+  const int   c = (N-1)/2;
+  // normalization
+  const float n = -2*s*s;
+
+  float res = 0, hsum = 0;
+  for (int v = -c; v <= c; v++) {
+    const float h = exp((v*v)/n);
+    res += h * (float)READ_IMAGE_2D(src,sampler,coord+v*dir).x;
+    hsum += h;
+  }
+  res /= hsum;
+  WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)res);
+}
+
+

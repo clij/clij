@@ -2,6 +2,7 @@ package net.haesleinhuepf.imagej.utilities;
 
 import clearcl.*;
 import clearcl.enums.ImageChannelDataType;
+import clearcl.util.ElapsedTime;
 import coremem.enums.NativeTypeEnum;
 
 import java.io.IOException;
@@ -244,13 +245,16 @@ public class CLKernelExecutor {
             }
             //System.out.println("Exec " + mProgramCacheMap.size());
 
-            try {
-                lClearCLKernel.run(pWaitToFinish);
-            } catch (Exception e) {
-                e.printStackTrace();
+            final ClearCLKernel kernel = lClearCLKernel;
+            ElapsedTime.measureForceOutput("Pure kernel execution", () -> {
+                try {
+                    kernel.run(pWaitToFinish);
+                } catch (Exception e) {
+                    e.printStackTrace();
 
-                System.out.println(lClearCLKernel.getSourceCode());
-            }
+                    System.out.println(kernel.getSourceCode());
+                }
+            });
 
             //System.out.println("Ret");
             lClearCLKernel.close();

@@ -22,7 +22,7 @@ run("CLIJ Macro Extensions", "cl_device=geforce");
 Ext.CLIJ_clear();
 
 // Local mean filter in CPU
-for (i = 1; i <= 10; i++) {
+for (i = 1; i <= 1; i++) {
 	time = getTime();
 	run("Mean 3D...", "x=3 y=3 z=3");
 	print("CPU mean filter no " + i + " took " + (getTime() - time) + " msec");
@@ -41,13 +41,14 @@ run("Close All");
 // Local mean filter in GPU
 for (i = 1; i <= 10; i++) {
 	time = getTime();
-	Ext.CLIJ_mean3d(input, blurred, 3, 3, 3);
+	Ext.CLIJ_mean3dSeparable(input, blurred, 3, 3, 3);
 	print("GPU mean filter no " + i + " took " + (getTime() - time) + " msec");
 }
 
 // Get results back from GPU
 time = getTime();
-Ext.CLIJ_pull(blurred);
+res = Ext.CLIJ_pull(blurred);
+print("res: " + res);
 print("Pulling one image from the GPU took " + (getTime() - time) + " msec");
 
 // Cleanup GPU 
