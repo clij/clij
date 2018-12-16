@@ -18,10 +18,10 @@ public class Set extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpen
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.set(clij, (ClearCLImage)( args[0]), asFloat(args[2]));
+            return Kernels.set(clij, (ClearCLImage)( args[0]), asFloat(args[1]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.set(clij, (ClearCLBuffer)( args[0]),  asFloat(args[2]));
+            boolean result = Kernels.set(clij, (ClearCLBuffer)( args[0]),  asFloat(args[1]));
             releaseBuffers(args);
             return result;
         }
@@ -29,6 +29,6 @@ public class Set extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpen
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination";
+        return "Image source, Number value";
     }
 }

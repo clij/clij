@@ -33,6 +33,6 @@ public class Flip3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number flipX, Number flipY";
+        return "Image source, Image destination, Boolean flipX, Boolean flipY, Boolean flipZ";
     }
 }
