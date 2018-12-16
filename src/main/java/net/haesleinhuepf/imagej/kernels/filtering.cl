@@ -7,12 +7,19 @@ inline void copyNeighborhoodToArray(DTYPE_IMAGE_IN_2D src, DTYPE_OUT array[],
     // centers
     const int4   e = (int4)  { (Nx-1)/2, (Ny-1)/2, 0, 0 };
 
+    float aSquared = e.x * e.x;
+    float bSquared = e.y * e.y;
+
     int count = 0;
 
     for (int x = -e.x; x <= e.x; x++) {
+        float xSquared = x * x;
         for (int y = -e.y; y <= e.y; y++) {
-            array[count] = (DTYPE_OUT)READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x;
-            count++;
+            float ySquared = y * y;
+            if (xSquared / aSquared + ySquared / bSquared <= 1.0) {
+                array[count] = (DTYPE_OUT)READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x;
+                count++;
+            }
         }
     }
 }
@@ -24,12 +31,19 @@ inline void copySliceNeighborhoodToArray(DTYPE_IMAGE_IN_3D src, DTYPE_OUT array[
     // centers
     const int4   e = (int4)  { (Nx-1)/2, (Ny-1)/2, 0, 0 };
 
+    float aSquared = e.x * e.x;
+    float bSquared = e.y * e.y;
+
     int count = 0;
 
     for (int x = -e.x; x <= e.x; x++) {
+        float xSquared = x * x;
         for (int y = -e.y; y <= e.y; y++) {
-            array[count] = (DTYPE_OUT)READ_IMAGE_3D(src,sampler,coord+((int4){x,y,0,0})).x;
-            count++;
+            float ySquared = y * y;
+            if (xSquared / aSquared + ySquared / bSquared <= 1.0) {
+                array[count] = (DTYPE_OUT)READ_IMAGE_3D(src,sampler,coord+((int4){x,y,0,0})).x;
+                count++;
+            }
         }
     }
 }

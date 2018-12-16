@@ -12,30 +12,31 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximum2dSeparable")
-public class Maximum2DSeparable extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean3dMooreNeighborhood")
+public class Mean3DMooreNeighborhood extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
     public boolean executeCL() {
         int radiusX = asInteger(args[2]);
         int radiusY = asInteger(args[3]);
+        int radiusZ = asInteger(args[4]);
 
         if (containsCLBufferArguments()) {
             // convert all arguments to CLImages
             Object[] args = openCLImageArgs();
-            boolean result = Kernels.maximumSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), radiusX, radiusY, 0);
+            boolean result = Kernels.meanSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), radiusX, radiusY, radiusZ);
             // copy result back to the bufffer
             Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
             // cleanup
             releaseImages(args);
             return result;
         } else {
-            return Kernels.maximumSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, 0);
+            return Kernels.meanSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
         }
     }
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number radiusX, Number radiusY";
+        return "Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ";
     }
 }

@@ -12,8 +12,8 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean3dSeparable")
-public class Mean3DSeparable extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximum3dMooreNeighborhood")
+public class Maximum3DMooreNeighborhood extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
     public boolean executeCL() {
@@ -24,14 +24,14 @@ public class Mean3DSeparable extends AbstractCLIJPlugin implements CLIJMacroPlug
         if (containsCLBufferArguments()) {
             // convert all arguments to CLImages
             Object[] args = openCLImageArgs();
-            boolean result = Kernels.meanSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), radiusX, radiusY, radiusZ);
+            boolean result = Kernels.maximumSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), radiusX, radiusY, radiusZ);
             // copy result back to the bufffer
             Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
             // cleanup
             releaseImages(args);
             return result;
         } else {
-            return Kernels.meanSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
+            return Kernels.maximumSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
         }
     }
 

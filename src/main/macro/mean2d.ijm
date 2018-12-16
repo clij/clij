@@ -9,6 +9,7 @@
 
 // Get test data
 run("T1 Head (2.4M, 16-bits)");
+run("Duplicate...", " ");
 rename("Mean CPU")
 input = getTitle();
 getDimensions(width, height, channels, slices, frames);
@@ -29,14 +30,15 @@ Ext.CLIJ_push(blurred);
 
 // Local mean filter in CPU
 selectWindow(input);
-run("Mean 3D...", "x=3 y=3 z=3");
+run("Mean...", "radius=3");
+//run("Mean...", "x=3 y=3 z=3");
 selectWindow(blurred);
 
 // cleanup ImageJ
 close();
 
 // Local mean filter in GPU
-Ext.CLIJ_mean3d(input, blurred, 3, 3, 3);
+Ext.CLIJ_mean2dSeparable(input, blurred, 3, 3);
 
 // Get results back from GPU
 Ext.CLIJ_pull(blurred);
@@ -48,7 +50,7 @@ Ext.CLIJ_clear();
 imageCalculator("Subtract create 32-bit stack", "Mean CPU","Mean GPU");
 selectWindow("Result of Mean CPU");
 rename("Difference between CPU and GPU");
-setSlice(60);
+//setSlice(60);
 run("Enhance Contrast", "saturated=0.35");
 
 
