@@ -13,7 +13,6 @@ Ext.CLIJ_clear();
 
 // push images to GPU
 Ext.CLIJ_push(input);
-Ext.CLIJ_push(output);
 
 // Blur in GPU
 Ext.CLIJ_blur3d(input, output, 10, 10, 1);
