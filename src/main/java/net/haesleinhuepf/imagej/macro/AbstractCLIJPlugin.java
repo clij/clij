@@ -153,9 +153,15 @@ public abstract class AbstractCLIJPlugin implements CLIJMacroPlugin{
 
 
     protected Boolean asBoolean(Object object) {
+        System.out.println("asBoolean " + object);
         if (object instanceof Boolean ) {
-            return (Boolean)object;
+            return (Boolean) object;
+        } else if (object instanceof Double) {
+            System.out.println("double " + new String("" + object));
+            return ((Double)object) != 0;
         } else {
+            System.out.println("convert " + new String("" + object));
+            System.out.println("convert " + Boolean.parseBoolean(new String("" + object)));
             return Boolean.parseBoolean(new String("" + object));
         }
     }
