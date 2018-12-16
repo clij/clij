@@ -2,6 +2,7 @@ package net.haesleinhuepf.imagej.macro;
 
 import clearcl.ClearCLBuffer;
 import clearcl.util.ElapsedTime;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.macro.ExtensionDescriptor;
@@ -140,12 +141,11 @@ public class CLIJHandler implements MacroExtension {
                 } else {
                     System.out.println("Couldn't execute CLIJ plugin!");
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-        return "hell2o";
+        return null;
     }
 
     public void releaseBufferInGPU(String arg) {
@@ -191,5 +191,36 @@ public class CLIJHandler implements MacroExtension {
         }
 
         return extensions;
+    }
+
+    public void reportGPUMemory() {
+        long bytesSum = 0;
+        IJ.log("GPU contains " + bufferMap.keySet().size() + " images.");
+        for (String key : bufferMap.keySet()) {
+            ClearCLBuffer buffer = bufferMap.get(key);
+            IJ.log("* " + key + " " + humanReadableBytes(buffer.getSizeInBytes()));
+            bytesSum = bytesSum + buffer.getSizeInBytes();
+        }
+        IJ.log("= " + humanReadableBytes(bytesSum));
+
+
+    }
+
+    private String humanReadableBytes(long bytesSum) {
+        if (bytesSum > 1024) {
+            bytesSum = bytesSum / 1024;
+            if (bytesSum > 1024) {
+                bytesSum = bytesSum / 1024;
+                if (bytesSum > 1024) {
+                    bytesSum = bytesSum / 1024;
+                    return (bytesSum + " Gb");
+                } else {
+                    return (bytesSum + " Mb");
+                }
+            } else {
+                return (bytesSum + " kb");
+            }
+        }
+        return bytesSum + " b";
     }
 }
