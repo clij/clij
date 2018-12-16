@@ -19,7 +19,7 @@ run("CLIJ Macro Extensions", "cl_device=geforce");
 Ext.CLIJ_clear();
 
 // Local mean filter in CPU
-for (i = 1; i <= 1; i++) {
+for (i = 1; i <= 10; i++) {
 	time = getTime();
 	run("Mean 3D...", "x=3 y=3 z=3");
 	print("CPU mean filter no " + i + " took " + (getTime() - time) + " msec");
