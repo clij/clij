@@ -38,7 +38,7 @@ selectWindow(blurred);
 close();
 
 // Local mean filter in GPU
-Ext.CLIJ_mean2dSeparable(input, blurred, 3, 3);
+Ext.CLIJ_mean2dMooreNeighborhood(input, blurred, 3, 3);
 
 // Get results back from GPU
 Ext.CLIJ_pull(blurred);
