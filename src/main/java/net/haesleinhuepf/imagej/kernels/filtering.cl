@@ -7,12 +7,19 @@ inline void copyNeighborhoodToArray(DTYPE_IMAGE_IN_2D src, DTYPE_OUT array[],
     // centers
     const int4   e = (int4)  { (Nx-1)/2, (Ny-1)/2, 0, 0 };
 
+    float aSquared = e.x * e.x;
+    float bSquared = e.y * e.y;
+
     int count = 0;
 
     for (int x = -e.x; x <= e.x; x++) {
+        float xSquared = x * x;
         for (int y = -e.y; y <= e.y; y++) {
-            array[count] = (DTYPE_OUT)READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x;
-            count++;
+            float ySquared = y * y;
+            if (xSquared / aSquared + ySquared / bSquared <= 1.0) {
+                array[count] = (DTYPE_OUT)READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x;
+                count++;
+            }
         }
     }
 }
@@ -24,12 +31,19 @@ inline void copySliceNeighborhoodToArray(DTYPE_IMAGE_IN_3D src, DTYPE_OUT array[
     // centers
     const int4   e = (int4)  { (Nx-1)/2, (Ny-1)/2, 0, 0 };
 
+    float aSquared = e.x * e.x;
+    float bSquared = e.y * e.y;
+
     int count = 0;
 
     for (int x = -e.x; x <= e.x; x++) {
+        float xSquared = x * x;
         for (int y = -e.y; y <= e.y; y++) {
-            array[count] = (DTYPE_OUT)READ_IMAGE_3D(src,sampler,coord+((int4){x,y,0,0})).x;
-            count++;
+            float ySquared = y * y;
+            if (xSquared / aSquared + ySquared / bSquared <= 1.0) {
+                array[count] = (DTYPE_OUT)READ_IMAGE_3D(src,sampler,coord+((int4){x,y,0,0})).x;
+                count++;
+            }
         }
     }
 }
@@ -341,3 +355,135 @@ __kernel void maximum_image3d
   DTYPE_OUT res = maximum(array, array_size);
   WRITE_IMAGE_3D(dst, coord, res);
 }
+
+__kernel void mean_sep_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int dim, const int N, const float s
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+  const int4 dir   = (int4)(dim==0,dim==1,dim==2,0);
+
+  // center
+  const int   c = (N-1)/2;
+
+  float res = 0, count = 0;
+  for (int v = -c; v <= c; v++) {
+    res += (float)READ_IMAGE_3D(src,sampler,coord+v*dir).x;
+    count += 1;
+  }
+  res /= count;
+  WRITE_IMAGE_3D(dst,coord,(DTYPE_OUT)res);
+}
+
+
+__kernel void min_sep_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int dim, const int N, const float s
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+  const int4 dir   = (int4)(dim==0,dim==1,dim==2,0);
+
+  // center
+  const int   c = (N-1)/2;
+
+  float res = READ_IMAGE_3D(src,sampler,coord).x;
+  for (int v = -c; v <= c; v++) {
+    res = min(res, (float)READ_IMAGE_3D(src,sampler,coord+v*dir).x);
+  }
+  WRITE_IMAGE_3D(dst,coord,(DTYPE_OUT)res);
+}
+
+__kernel void max_sep_image3d
+(
+  DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
+  const int dim, const int N, const float s
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1), k = get_global_id(2);
+  const int4 coord = (int4)(i,j,k,0);
+  const int4 dir   = (int4)(dim==0,dim==1,dim==2,0);
+
+  // center
+  const int   c = (N-1)/2;
+
+  float res = READ_IMAGE_3D(src,sampler,coord).x;
+  for (int v = -c; v <= c; v++) {
+    res = max(res, (float)READ_IMAGE_3D(src,sampler,coord+v*dir).x);
+  }
+  WRITE_IMAGE_3D(dst,coord,(DTYPE_OUT)res);
+}
+
+
+__kernel void mean_sep_image2d
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int dim, const int N, const float s
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1);
+  const int2 coord = (int2)(i,j);
+  const int2 dir   = (int2)(dim==0,dim==1);
+
+  // center
+  const int   c = (N-1)/2;
+
+  float res = 0, count = 0;
+  for (int v = -c; v <= c; v++) {
+    res += (float)READ_IMAGE_2D(src,sampler,coord+v*dir).x;
+    count += 1;
+  }
+  res /= count;
+  WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)res);
+}
+
+__kernel void min_sep_image2d
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int dim, const int N, const float s
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1);
+  const int2 coord = (int2)(i,j);
+  const int2 dir   = (int2)(dim==0,dim==1);
+
+  // center
+  const int   c = (N-1)/2;
+
+  float res = (float)(READ_IMAGE_2D(src,sampler,coord).x);
+  for (int v = -c; v <= c; v++) {
+    if (v != 0) {
+      res = min(res, (float)(READ_IMAGE_2D(src,sampler,coord+v*dir).x));
+    }
+  }
+  WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)res);
+}
+
+
+__kernel void max_sep_image2d
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int dim, const int N, const float s
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1);
+  const int2 coord = (int2)(i,j);
+  const int2 dir   = (int2)(dim==0,dim==1);
+
+  // center
+  const int   c = (N-1)/2;
+
+  float res = (float)READ_IMAGE_2D(src,sampler,coord).x;
+  for (int v = -c; v <= c; v++) {
+    if (v != 0) {
+      res = max(res, (float)(READ_IMAGE_2D(src,sampler,coord+v*dir).x));
+    }
+  }
+  WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)res);
+}
+

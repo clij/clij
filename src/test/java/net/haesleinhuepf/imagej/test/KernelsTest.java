@@ -909,32 +909,32 @@ public class KernelsTest {
         //assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlurSeparableB, 2.0));
     }
 
-//  @Test
-//  public void blur3dSeparable_Buffer() throws InterruptedException {
-//    ClearCLBuffer src = clij.converter(testFlyBrain3D).getClearCLBuffer();
-//    ClearCLBuffer dstBlur = clij.createCLBuffer(src);
-//    ClearCLBuffer dstBlurSeparable = clij.createCLBuffer(src);
-//
-//    Kernels.blur(clij, src, dstBlur, 15, 15, 15, 2, 2, 2);
-//    Kernels.blurSeparable(clij, src, dstBlurSeparable, 2, 2, 2);
-//
-//    //ClearCLBuffer srcB = clij.converter(testFlyBrain3D).getClearCLBuffer();
-//    //ClearCLBuffer dstBlurSeparableB = clij.createCLBuffer(srcB);
-//    //Kernels.blurSeparable(clij, srcB, dstBlurSeparableB, 2, 2, 2);
-//
-//    ImagePlus gaussBlur = clij.converter(dstBlur).getImagePlus();
-//    ImagePlus gaussBlurSeparable = clij.converter(dstBlurSeparable).getImagePlus();
-//    //ImagePlus gaussBlurSeparableB = clij.converter(dstBlurSeparableB).getImagePlus();
-//
-//    src.close();
-//    dstBlur.close();
-//    dstBlurSeparable.close();
-//    //srcB.close();
-//    //dstBlurSeparableB.close();
-//
-//    assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlur, 2.0));
-//    //assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlurSeparableB, 2.0));
-//  }
+    @Test
+    public void blur3dSeparable_Buffer() throws InterruptedException {
+        ClearCLBuffer src = clij.converter(testFlyBrain3D).getClearCLBuffer();
+        ClearCLBuffer dstBlur = clij.createCLBuffer(src);
+        ClearCLBuffer dstBlurSeparable = clij.createCLBuffer(src);
+
+        Kernels.blur(clij, src, dstBlur, 15, 15, 15, 2f, 2f, 2f);
+        Kernels.blurSeparable(clij, src, dstBlurSeparable, 2, 2, 2);
+
+        //ClearCLBuffer srcB = clij.converter(testFlyBrain3D).getClearCLBuffer();
+        //ClearCLBuffer dstBlurSeparableB = clij.createCLBuffer(srcB);
+        //Kernels.blurSeparable(clij, srcB, dstBlurSeparableB, 2, 2, 2);
+
+        ImagePlus gaussBlur = clij.converter(dstBlur).getImagePlus();
+        ImagePlus gaussBlurSeparable = clij.converter(dstBlurSeparable).getImagePlus();
+        //ImagePlus gaussBlurSeparableB = clij.converter(dstBlurSeparableB).getImagePlus();
+
+        src.close();
+        dstBlur.close();
+        dstBlurSeparable.close();
+        //srcB.close();
+        //dstBlurSeparableB.close();
+
+        assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlur, 2.0));
+        //assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlurSeparableB, 2.0));
+    }
 
     @Test
     public void blur2d() {
@@ -2095,7 +2095,7 @@ public class KernelsTest {
         ClearCLImage temp = clij.createCLImage(input);
         ClearCLImage blurred = clij.createCLImage(input);
 
-        Kernels.blurSeparable(clij, input, blurred, new float[]{2, 2, 2});
+        Kernels.blurSeparable(clij, input, blurred, 2, 2, 2);
 
         // usual way: blur, subtract, threshold
         ElapsedTime.measureForceOutput("traditional thresholding", () -> {
@@ -2407,6 +2407,11 @@ public class KernelsTest {
     @Test
     public void maxPixelWise3d() {
         System.out.println("Todo: implement test for maxPixelwise3d");
+    }
+
+    @Test
+    public void minPixelWise3d() {
+        System.out.println("Todo: implement test for minPixelwise3d");
     }
 
     @Test
@@ -2969,6 +2974,110 @@ public class KernelsTest {
         //clij.show(result, "res");
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+    }
+
+    @Test
+    public void minimum2dSeparable() throws InterruptedException {
+        ClearCLImage src = clij.converter(testFlyBrain2D).getClearCLImage();
+        ClearCLImage minimumCL = clij.createCLImage(src);
+        ClearCLImage minimumSepCL = clij.createCLImage(src);
+
+        Kernels.minimum(clij, src, minimumCL, 7,7);
+        Kernels.minimumSeparable(clij, src, minimumSepCL, 3, 3, 3);
+
+        ImagePlus minimumImp = clij.converter(minimumCL).getImagePlus();
+        ImagePlus minimumSepImp = clij.converter(minimumSepCL).getImagePlus();
+
+        // ignore edges
+        minimumImp.setRoi(new Roi(1, 1, minimumImp.getWidth() - 2, minimumImp.getHeight() - 2));
+        minimumSepImp.setRoi(new Roi(1, 1, minimumSepImp.getWidth() - 2, minimumSepImp.getHeight() - 2));
+        minimumImp = new Duplicator().run(minimumImp);
+        minimumSepImp = new Duplicator().run(minimumSepImp);
+
+        src.close();
+        minimumCL.close();
+        minimumSepCL.close();
+
+        assertTrue(TestUtilities.compareImages(minimumSepImp, minimumImp, 2.0));
+    }
+
+    @Test
+    public void minimum2dSeparable_Buffer() throws InterruptedException {
+        ClearCLBuffer src = clij.converter(testFlyBrain2D).getClearCLBuffer();
+        ClearCLBuffer minimumCL = clij.createCLBuffer(src);
+        ClearCLBuffer minimumSepCL = clij.createCLBuffer(src);
+
+        Kernels.minimum(clij, src, minimumCL, 3,3);
+        Kernels.minimumSeparable(clij, src, minimumSepCL, 1, 1, 1);
+
+        ImagePlus minimumImp = clij.converter(minimumCL).getImagePlus();
+        ImagePlus minimumSepImp = clij.converter(minimumSepCL).getImagePlus();
+
+
+        // ignore edges
+        minimumImp.setRoi(new Roi(1, 1, minimumImp.getWidth() - 2, minimumImp.getHeight() - 2));
+        minimumSepImp.setRoi(new Roi(1, 1, minimumSepImp.getWidth() - 2, minimumSepImp.getHeight() - 2));
+        minimumImp = new Duplicator().run(minimumImp);
+        minimumSepImp = new Duplicator().run(minimumSepImp);
+
+        src.close();
+        minimumCL.close();
+        minimumSepCL.close();
+
+        assertTrue(TestUtilities.compareImages(minimumSepImp, minimumImp, 2.0));
+    }
+
+    @Test
+    public void minimum3dSeparable() throws InterruptedException {
+        ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
+        ClearCLImage minimumCL = clij.createCLImage(src);
+        ClearCLImage minimumSepCL = clij.createCLImage(src);
+
+        Kernels.minimum(clij, src, minimumCL, 7,7, 7);
+        Kernels.minimumSeparable(clij, src, minimumSepCL, 3, 3, 3);
+
+        ImagePlus minimumImp = clij.converter(minimumCL).getImagePlus();
+        ImagePlus minimumSepImp = clij.converter(minimumSepCL).getImagePlus();
+
+        // ignore edges
+        minimumImp.setRoi(new Roi(1, 1, minimumImp.getWidth() - 2, minimumImp.getHeight() - 2));
+        minimumSepImp.setRoi(new Roi(1, 1, minimumSepImp.getWidth() - 2, minimumSepImp.getHeight() - 2));
+        minimumImp = new Duplicator().run(minimumImp);
+        minimumSepImp = new Duplicator().run(minimumSepImp);
+
+        src.close();
+        minimumCL.close();
+        minimumSepCL.close();
+
+        System.out.println("Todo: minimum uses a elipsoid as mask while minimumSeparable uses a cuboid");
+        assertTrue(TestUtilities.compareImages(minimumSepImp, minimumImp, 2.0));
+    }
+
+    @Test
+    public void minimum3dSeparable_Buffer() throws InterruptedException {
+        ClearCLBuffer src = clij.converter(testFlyBrain3D).getClearCLBuffer();
+        ClearCLBuffer minimumCL = clij.createCLBuffer(src);
+        ClearCLBuffer minimumSepCL = clij.createCLBuffer(src);
+
+        Kernels.minimum(clij, src, minimumCL, 3,3, 3);
+        Kernels.minimumSeparable(clij, src, minimumSepCL, 1, 1, 1);
+
+        ImagePlus minimumImp = clij.converter(minimumCL).getImagePlus();
+        ImagePlus minimumSepImp = clij.converter(minimumSepCL).getImagePlus();
+
+
+        // ignore edges
+        minimumImp.setRoi(new Roi(1, 1, minimumImp.getWidth() - 2, minimumImp.getHeight() - 2));
+        minimumSepImp.setRoi(new Roi(1, 1, minimumSepImp.getWidth() - 2, minimumSepImp.getHeight() - 2));
+        minimumImp = new Duplicator().run(minimumImp);
+        minimumSepImp = new Duplicator().run(minimumSepImp);
+
+        src.close();
+        minimumCL.close();
+        minimumSepCL.close();
+
+        System.out.println("Todo: minimum uses a elipsoid as mask while minimumSeparable uses a cuboid");
+        assertTrue(TestUtilities.compareImages(minimumSepImp, minimumImp, 2.0));
     }
 
     @Test
@@ -3935,6 +4044,49 @@ public class KernelsTest {
     }
 
     @Test
+    public void sumProjection() throws InterruptedException {
+        // do operation with ImageJ
+        ImagePlus
+                sumProjection =
+                NewImage.createShortImage("",
+                        testImp1.getWidth(),
+                        testImp2.getHeight(),
+                        1,
+                        NewImage.FILL_BLACK);
+        ImageProcessor ipSum = sumProjection.getProcessor();
+
+        ImagePlus testImp1copy = new Duplicator().run(testImp1);
+        for (int z = 0; z < testImp1copy.getNSlices(); z++) {
+            testImp1copy.setZ(z + 1);
+            ImageProcessor ip = testImp1copy.getProcessor();
+            for (int x = 0; x < testImp1copy.getWidth(); x++) {
+                for (int y = 0; y < testImp1copy.getHeight(); y++) {
+                    float value = ip.getf(x, y) + ipSum.getf(x, y);
+                    ipSum.setf(x, y, value);
+                }
+            }
+        }
+
+        // do operation with ClearCL
+        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage
+                dst =
+                clij.createCLImage(new long[]{src.getWidth(),
+                                src.getHeight()},
+                        src.getChannelDataType());
+
+        Kernels.sumProjection(clij, src, dst);
+
+        ImagePlus sumProjectionCL = clij.converter(dst).getImagePlus();
+
+        assertTrue(TestUtilities.compareImages(sumProjection,
+                sumProjectionCL));
+
+        src.close();
+        dst.close();
+    }
+
+        @Test
     public void sumPixelsSliceBySlice() {
         ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
 

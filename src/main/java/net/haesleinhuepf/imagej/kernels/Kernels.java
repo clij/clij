@@ -431,25 +431,30 @@ public class Kernels {
                 lParameters);
     }
 
-    public static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float... blurSigma) {
-        return blurSeparable_internal(clij, src, dst, blurSigma);
+    public static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
+        return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
     }
 
-//  public static boolean blurSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, float... blurSigma) {
-//    return blurSeparable_internal(clij, src, dst, blurSigma);
-//  }
+    public static boolean blurSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
+        return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
+    }
 
-    private static boolean blurSeparable_internal(ClearCLIJ clij, Object src, Object dst, float... blurSigma) {
-        int[] n = new int[blurSigma.length];
+    private static int radiusToKernelSize(int radius) {
+        int kernelSize = radius * 2 + 1;
+        return kernelSize;
+    }
 
-        for (int d = 0; d < n.length; d++) {
-            n[d] = Math.max(1, (int) Math.round(2 * 3.5 * blurSigma[d]));
-            if (n[d] % 2 != 1) {
-                n[d] = n[d] + 1;
-            }
-            //System.out.println("n[" + d + "] = " + n[d]);
+    private static int sigmaToKernelSize(float sigma) {
+        int n = (int)(sigma * 3.5);
+        if (n % 2 == 0) {
+            n++;
         }
+        return n;
+    }
 
+    private static boolean executeSeparableKernel(ClearCLIJ clij, Object src, Object dst, String clFilename, String kernelname, int nX, int nY, int nZ, float blurSigmaX, float blurSigmaY, float blurSigmaZ, long dimensions) {
+        int[] n = new int[]{nX, nY, nZ};
+        float[] blurSigma = new float[]{blurSigmaX, blurSigmaY, blurSigmaZ};
 
         Object temp;
         if (src instanceof ClearCLBuffer) {
@@ -468,34 +473,44 @@ public class Kernels {
         lParameters.put("s", blurSigma[0]);
         lParameters.put("dim", 0);
         lParameters.put("src", src);
-        lParameters.put("dst", dst);
+        if (dimensions == 2) {
+            lParameters.put("dst", temp);
+        } else {
+            lParameters.put("dst", dst);
+        }
         clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_sep_image3d",
+                clFilename,
+                kernelname,
                 lParameters);
 
         lParameters.clear();
         lParameters.put("N", n[1]);
         lParameters.put("s", blurSigma[1]);
         lParameters.put("dim", 1);
-        lParameters.put("src", dst);
-        lParameters.put("dst", temp);
+        if (dimensions == 2) {
+            lParameters.put("src", temp);
+            lParameters.put("dst", dst);
+        } else {
+            lParameters.put("src", dst);
+            lParameters.put("dst", temp);
+        }
         clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_sep_image3d",
+                clFilename,
+                kernelname,
                 lParameters);
 
-        lParameters.clear();
-        lParameters.put("N", n[2]);
-        lParameters.put("s", blurSigma[2]);
-        lParameters.put("dim", 2);
-        lParameters.put("src", temp);
-        lParameters.put("dst", dst);
-        clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_sep_image3d",
-                lParameters);
-
+        if (dimensions == 3) {
+            lParameters.clear();
+            lParameters.put("N", n[2]);
+            lParameters.put("s", blurSigma[2]);
+            lParameters.put("dim", 2);
+            lParameters.put("src", temp);
+            lParameters.put("dst", dst);
+            clij.execute(Kernels.class,
+                    clFilename,
+                    kernelname,
+                    lParameters);
+        }
         if (temp instanceof ClearCLBuffer) {
             ((ClearCLBuffer) temp).close();
         } else if (temp instanceof ClearCLImage) {
@@ -1305,6 +1320,29 @@ public class Kernels {
     }
 
 
+    public static boolean localThreshold(ClearCLIJ clij,
+                                         ClearCLBuffer src,
+                                         ClearCLBuffer dst,
+                                         ClearCLBuffer threshold) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+
+        lParameters.clear();
+        lParameters.put("local_threshold", threshold);
+        lParameters.put("src", src);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(), dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (addScalar)");
+            return false;
+        }
+
+        return clij.execute(Kernels.class,
+                "thresholding.cl",
+                "apply_local_threshold_" + src.getDimension() + "d",
+                lParameters);
+    }
+
     public static boolean mask(ClearCLIJ pCLIJ,
                                ClearCLImage src,
                                ClearCLImage mask,
@@ -1479,6 +1517,14 @@ public class Kernels {
                 "maximum_slicewise_image3d", lParameters);
     }
 
+    public static boolean maximumSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "max_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
+    public static boolean maximumSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "max_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
     public static boolean maximumSliceBySlice(ClearCLIJ clij,
                                               ClearCLBuffer src,
                                               ClearCLBuffer dst,
@@ -1512,7 +1558,7 @@ public class Kernels {
                 src1.getDimension(),
                 dst.getDimension())) {
             System.out.println(
-                    "Error: number of dimensions don't match! (addPixelwise)");
+                    "Error: number of dimensions don't match! (maxPixelwise)");
             return false;
         }
         return pCLIJ.execute(Kernels.class,
@@ -1534,12 +1580,132 @@ public class Kernels {
                 src1.getDimension(),
                 dst.getDimension())) {
             System.out.println(
-                    "Error: number of dimensions don't match! (addPixelwise)");
+                    "Error: number of dimensions don't match! (maxPixelwise)");
             return false;
         }
         return pCLIJ.execute(Kernels.class,
                 "math.cl",
                 "maxPixelwise_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean maxPixelwiseScalar(ClearCLIJ pCLIJ,
+                                       ClearCLImage src,
+                                       ClearCLImage dst,
+                                             Float valueB) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("valueB", valueB);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (maxPixelwise)");
+            return false;
+        }
+        return pCLIJ.execute(Kernels.class,
+                "math.cl",
+                "maxPixelwiseScalar_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean maxPixelwiseScalar(ClearCLIJ pCLIJ,
+                                       ClearCLBuffer src,
+                                       ClearCLBuffer dst,
+                                             Float valueB) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("valueB", valueB);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (maxPixelwise)");
+            return false;
+        }
+        return pCLIJ.execute(Kernels.class,
+                "math.cl",
+                "maxPixelwiseScalar_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean minPixelwise(ClearCLIJ clij, ClearCLImage src, ClearCLImage src1, ClearCLImage dst) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("src1", src1);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src1.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (minPixelwise)");
+            return false;
+        }
+        return clij.execute(Kernels.class,
+                "math.cl",
+                "minPixelwise_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean minPixelwise(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer src1, ClearCLBuffer dst) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("src1", src1);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src1.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (minPixelwise)");
+            return false;
+        }
+        return clij.execute(Kernels.class,
+                "math.cl",
+                "minPixelwise_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean minPixelwiseScalar(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Float valueB) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("valueB", valueB);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (minPixelwiseScalar)");
+            return false;
+        }
+        return clij.execute(Kernels.class,
+                "math.cl",
+                "minPixelwiseScalar_" + src.getDimension() + "d",
+                lParameters);
+    }
+
+    public static boolean minPixelwiseScalar(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Float valueB) {
+        HashMap<String, Object> lParameters = new HashMap<>();
+        lParameters.put("src", src);
+        lParameters.put("valueB", valueB);
+        lParameters.put("dst", dst);
+
+        if (!checkDimensions(src.getDimension(),
+                src.getDimension(),
+                dst.getDimension())) {
+            System.out.println(
+                    "Error: number of dimensions don't match! (minPixelwiseScalar)");
+            return false;
+        }
+        return clij.execute(Kernels.class,
+                "math.cl",
+                "minPixelwiseScalar_" + src.getDimension() + "d",
                 lParameters);
     }
 
@@ -1701,6 +1867,15 @@ public class Kernels {
                 "filtering.cl",
                 "mean_image3d", lParameters);
     }
+
+    public static boolean meanSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "mean_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
+    public static boolean meanSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "mean_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
 
     public static boolean meanSliceBySlice(ClearCLIJ clij,
                                            ClearCLImage src,
@@ -1948,6 +2123,15 @@ public class Kernels {
         return clij.execute(Kernels.class,
                 "filtering.cl",
                 "minimum_image3d", lParameters);
+    }
+
+
+    public static boolean minimumSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "min_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    }
+
+    public static boolean minimumSeparable(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "min_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
     }
 
     public static boolean minimumSliceBySlice(ClearCLIJ clij,
@@ -2562,6 +2746,28 @@ public class Kernels {
         }
         slice.close();
         return result;
+    }
+
+    public static boolean sumProjection(ClearCLIJ clij, ClearCLImage clImage, ClearCLImage clReducedImage) {
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("src", clImage);
+            parameters.put("dst", clReducedImage);
+            return clij.execute(Kernels.class,
+                    "projections.cl",
+                    "sum_project_3d_2d",
+                    parameters);
+    }
+
+    public static boolean sumProjection(ClearCLIJ clij, ClearCLBuffer clImage, ClearCLBuffer clReducedImage) {
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", clImage);
+        parameters.put("dst", clReducedImage);
+        return clij.execute(Kernels.class,
+                "projections.cl",
+                "sum_project_3d_2d",
+                parameters);
     }
 
     public static boolean tenengradWeightsSliceBySlice(ClearCLIJ clij, ClearCLImage clImageOut, ClearCLImage clImageIn) {
