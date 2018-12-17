@@ -57,9 +57,13 @@ import java.util.UnknownFormatConversionException;
  * wrote, but all the ifs and elses are necessary to convert between
  * ClearCL, CoreMem, ImageJ1 and ImageJ2 worlds.
  * <p>
+ *
+ * Deprecated: Use the CLIJConverterService instead!
+ *
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * February 2018
  */
+@Deprecated
 public class ImageTypeConverter<T extends RealType<T>> {
     private ClearCLContext mContext;
     private ClearCLIJ mCLIJ;

@@ -51,4 +51,23 @@ public class ConverterUtilities {
                     "Cannot convert image of type " + pixel);
         }
     }
+
+    public static ImageChannelDataType nativeTypeToImageChannelDataType(NativeTypeEnum lType) {
+        ImageChannelDataType lImageChannelType = null;
+
+        if (lType == NativeTypeEnum.UnsignedByte) {
+            lImageChannelType = ImageChannelDataType.UnsignedInt8;
+        } else if (lType == NativeTypeEnum.Byte) {
+            lImageChannelType = ImageChannelDataType.SignedInt8;
+        } else if (lType == NativeTypeEnum.UnsignedShort) {
+            lImageChannelType = ImageChannelDataType.UnsignedInt16;
+        } else if (lType == NativeTypeEnum.Short) {
+            lImageChannelType = ImageChannelDataType.SignedInt16;
+        } else if (lType == NativeTypeEnum.Float) {
+            lImageChannelType = ImageChannelDataType.Float;
+        }
+        return lImageChannelType;
+
+    }
+
 }

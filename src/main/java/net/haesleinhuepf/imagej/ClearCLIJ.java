@@ -10,9 +10,12 @@ import coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
+import net.haesleinhuepf.imagej.converters.CLIJConverterPlugin;
+import net.haesleinhuepf.imagej.converters.CLIJConverterService;
 import net.haesleinhuepf.imagej.utilities.CLInfo;
 import net.haesleinhuepf.imagej.utilities.CLKernelExecutor;
 import net.haesleinhuepf.imagej.utilities.ImageTypeConverter;
+import net.imagej.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.RealType;
 
@@ -182,6 +185,7 @@ public class ClearCLIJ {
 
     public void dispose() {
         mClearCLContext.close();
+        converterService = null;
         if (sInstance == this) {
             sInstance = null;
         }
@@ -206,18 +210,34 @@ public class ClearCLIJ {
         return lResultMap;
     }
 
+    /**
+     * Deprecated: Use the convert() method instead!
+     */
+    @Deprecated
     public <T extends RealType<T>> ImageTypeConverter<T> converter(RandomAccessibleInterval<T> pRandomAccessibleInterval) {
         return new ImageTypeConverter<T>(this, pRandomAccessibleInterval);
     }
 
+    /**
+     * Deprecated: Use the convert() method instead!
+     */
+    @Deprecated
     public ImageTypeConverter converter(ImagePlus pImagePlus) {
         return new ImageTypeConverter(this, pImagePlus);
     }
 
+    /**
+     * Deprecated: Use the convert() method instead!
+     */
+    @Deprecated
     public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLImage pClearCLImage) {
         return new ImageTypeConverter<T>(this, pClearCLImage);
     }
 
+    /**
+     * Deprecated: Use the convert() method instead!
+     */
+    @Deprecated
     public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLBuffer pClearCLBuffer) {
         return new ImageTypeConverter<T>(this, pClearCLBuffer);
     }
@@ -287,5 +307,16 @@ public class ClearCLIJ {
         return true;
     }
 
+    private CLIJConverterService converterService = null;
+    public void setConverterService(CLIJConverterService converterService) {
+        this.converterService = converterService;
+    }
 
+    public <S, T> T convert(S source, Class<T> targetClass) {
+        if (converterService == null) {
+            converterService = new ImageJ().getContext().service(CLIJConverterService.class);
+        }
+        CLIJConverterPlugin<S, T> converter = (CLIJConverterPlugin<S, T>) converterService.getConverter(source.getClass(), targetClass);
+        return converter.convert(source);
+    }
 }

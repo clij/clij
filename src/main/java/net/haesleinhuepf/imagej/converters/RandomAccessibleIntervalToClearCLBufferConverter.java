@@ -14,7 +14,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 /**
- * RandomAccessibleIntervalClearCLBufferConverter
+ * RandomAccessibleIntervalToClearCLBufferConverter
  * <p>
  * <p>
  * <p>
@@ -22,7 +22,7 @@ import java.nio.ShortBuffer;
  * 12 2018
  */
 @Plugin(type = CLIJConverterPlugin.class)
-public class RandomAccessibleIntervalClearCLBufferConverter extends AbstractCLIJConverter<RandomAccessibleInterval, ClearCLBuffer> {
+public class RandomAccessibleIntervalToClearCLBufferConverter extends AbstractCLIJConverter<RandomAccessibleInterval, ClearCLBuffer> {
 
     @Override
     public ClearCLBuffer convert(RandomAccessibleInterval source) {
