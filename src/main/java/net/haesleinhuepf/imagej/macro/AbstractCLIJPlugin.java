@@ -30,13 +30,13 @@ public abstract class AbstractCLIJPlugin implements CLIJMacroPlugin{
         int i = 0;
         for (Object item : args) {
             if (item instanceof RandomAccessibleInterval) {
-                result[i] = clij.converter((RandomAccessibleInterval)item).getImagePlus();
+                result[i] = clij.convert((RandomAccessibleInterval)item, ImagePlus.class);
             } else if (item instanceof ImagePlus) {
-                result[i] = clij.converter((ImagePlus)item).getImagePlus();
+                result[i] = (ImagePlus)item;
             } else if(item instanceof ClearCLImage) {
-                result[i] = clij.converter((ClearCLImage)item).getImagePlus();
+                result[i] = clij.convert((ClearCLImage)item, ImagePlus.class);
             } else if(item instanceof ClearCLBuffer) {
-                result[i] = clij.converter((ClearCLBuffer)item).getImagePlus();
+                result[i] = clij.convert((ClearCLBuffer)item, ImagePlus.class);
             } else {
                 result[i] = item;
             }
@@ -50,13 +50,13 @@ public abstract class AbstractCLIJPlugin implements CLIJMacroPlugin{
         int i = 0;
         for (Object item : args) {
             if (item instanceof RandomAccessibleInterval) {
-                result[i] = clij.converter((RandomAccessibleInterval)item).getClearCLBuffer();
+                result[i] = clij.convert((RandomAccessibleInterval)item, ClearCLBuffer.class);
             } else if (item instanceof ImagePlus) {
-                result[i] = clij.converter((ImagePlus)item).getClearCLBuffer();
+                result[i] = clij.convert((ImagePlus)item, ClearCLBuffer.class);
             } else if(item instanceof ClearCLImage) {
-                result[i] = clij.converter((ClearCLImage)item).getClearCLBuffer();
+                result[i] = clij.convert((ClearCLImage)item, ClearCLBuffer.class);
             } else if(item instanceof ClearCLBuffer) {
-                result[i] = clij.converter((ClearCLBuffer)item).getClearCLBuffer();
+                result[i] = (ClearCLBuffer)item;
             } else {
                 result[i] = item;
             }
@@ -70,13 +70,13 @@ public abstract class AbstractCLIJPlugin implements CLIJMacroPlugin{
         int i = 0;
         for (Object item : args) {
             if (item instanceof RandomAccessibleInterval) {
-                result[i] = clij.converter((RandomAccessibleInterval)item).getClearCLImage();
+                result[i] = clij.convert((RandomAccessibleInterval)item, ClearCLImage.class);
             } else if (item instanceof ImagePlus) {
-                result[i] = clij.converter((ImagePlus)item).getClearCLImage();
+                result[i] = clij.convert((ImagePlus)item, ClearCLImage.class);
             } else if(item instanceof ClearCLImage) {
-                result[i] = clij.converter((ClearCLImage)item).getClearCLImage();
+                result[i] = (ClearCLImage)item;
             } else if(item instanceof ClearCLBuffer) {
-                result[i] = clij.converter((ClearCLBuffer)item).getClearCLImage();
+                result[i] = clij.convert((ClearCLBuffer)item, ClearCLImage.class);
             } else {
                 result[i] = item;
             }
@@ -90,13 +90,13 @@ public abstract class AbstractCLIJPlugin implements CLIJMacroPlugin{
         int i = 0;
         for (Object item : args) {
             if (item instanceof RandomAccessibleInterval) {
-                result[i] = clij.converter((RandomAccessibleInterval)item).getRandomAccessibleInterval();
+                result[i] = (RandomAccessibleInterval)item;
             } else if (item instanceof ImagePlus) {
-                result[i] = clij.converter((ImagePlus)item).getRandomAccessibleInterval();
+                result[i] = clij.convert((ImagePlus)item, RandomAccessibleInterval.class);
             } else if(item instanceof ClearCLImage) {
-                result[i] = clij.converter((ClearCLImage)item).getRandomAccessibleInterval();
+                result[i] = clij.convert((ClearCLImage)item, RandomAccessibleInterval.class);
             } else if(item instanceof ClearCLBuffer) {
-                result[i] = clij.converter((ClearCLBuffer)item).getRandomAccessibleInterval();
+                result[i] = clij.convert((ClearCLBuffer)item, RandomAccessibleInterval.class);
             } else {
                 result[i] = item;
             }
