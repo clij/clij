@@ -1,7 +1,9 @@
-package net.haesleinhuepf.imagej.converters;
+package net.haesleinhuepf.imagej.converters.implementations;
 
 import clearcl.ClearCLBuffer;
 import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.imagej.converters.AbstractCLIJConverter;
+import net.haesleinhuepf.imagej.converters.CLIJConverterPlugin;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;

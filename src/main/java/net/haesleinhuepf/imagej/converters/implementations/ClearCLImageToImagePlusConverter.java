@@ -1,8 +1,9 @@
-package net.haesleinhuepf.imagej.converters;
+package net.haesleinhuepf.imagej.converters.implementations;
 
-import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import ij.ImagePlus;
+import net.haesleinhuepf.imagej.converters.AbstractCLIJConverter;
+import net.haesleinhuepf.imagej.converters.CLIJConverterPlugin;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import org.scijava.plugin.Plugin;

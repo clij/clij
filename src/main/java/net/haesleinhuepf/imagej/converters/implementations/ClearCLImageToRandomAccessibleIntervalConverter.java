@@ -1,4 +1,4 @@
-package net.haesleinhuepf.imagej.converters;
+package net.haesleinhuepf.imagej.converters.implementations;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLContext;
@@ -8,6 +8,8 @@ import coremem.ContiguousMemoryInterface;
 import coremem.enums.NativeTypeEnum;
 import coremem.offheap.OffHeapMemory;
 import coremem.offheap.OffHeapMemoryAccess;
+import net.haesleinhuepf.imagej.converters.AbstractCLIJConverter;
+import net.haesleinhuepf.imagej.converters.CLIJConverterPlugin;
 import net.imagej.ops.create.img.Imgs;
 import net.imglib2.Cursor;
 import net.imglib2.Dimensions;

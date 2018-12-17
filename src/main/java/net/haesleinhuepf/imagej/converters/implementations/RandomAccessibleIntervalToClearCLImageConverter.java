@@ -1,10 +1,13 @@
-package net.haesleinhuepf.imagej.converters;
+package net.haesleinhuepf.imagej.converters.implementations;
 
 import clearcl.ClearCLImage;
 import clearcl.enums.HostAccessType;
 import clearcl.enums.ImageChannelDataType;
 import clearcl.enums.ImageChannelOrder;
 import clearcl.enums.KernelAccessType;
+import net.haesleinhuepf.imagej.converters.AbstractCLIJConverter;
+import net.haesleinhuepf.imagej.converters.CLIJConverterPlugin;
+import net.haesleinhuepf.imagej.converters.ConverterUtilities;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.RealType;
@@ -25,7 +28,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 @Plugin(type = CLIJConverterPlugin.class)
-public class RandomAccessibleIntervalToClearCLImageConverter extends AbstractCLIJConverter<RandomAccessibleInterval, ClearCLImage>{
+public class RandomAccessibleIntervalToClearCLImageConverter extends AbstractCLIJConverter<RandomAccessibleInterval, ClearCLImage> {
 
     @Override
     public ClearCLImage convert(RandomAccessibleInterval source) {
