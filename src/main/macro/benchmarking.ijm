@@ -6,7 +6,6 @@
 // December 2018
 // ---------------------------------------------
 
-
 // Get test data
 run("T1 Head (2.4M, 16-bits)");
 input = getTitle();
@@ -36,7 +35,7 @@ run("Close All");
 // Local mean filter in GPU
 for (i = 1; i <= 10; i++) {
 	time = getTime();
-	Ext.CLIJ_mean3dSeparable(input, blurred, 3, 3, 3);
+	Ext.CLIJ_mean3dMooreNeighborhood(input, blurred, 3, 3, 3);
 	print("GPU mean filter no " + i + " took " + (getTime() - time) + " msec");
 }
 
