@@ -14,7 +14,6 @@ import net.haesleinhuepf.imagej.converters.CLIJConverterPlugin;
 import net.haesleinhuepf.imagej.converters.CLIJConverterService;
 import net.haesleinhuepf.imagej.utilities.CLInfo;
 import net.haesleinhuepf.imagej.utilities.CLKernelExecutor;
-import net.haesleinhuepf.imagej.utilities.ImageTypeConverter;
 import net.imagej.ImageJ;
 import net.imagej.patcher.LegacyInjector;
 import net.imglib2.RandomAccessibleInterval;
@@ -210,38 +209,6 @@ public class ClearCLIJ {
             lResultMap.put((String) pParameterList[i], pParameterList[i + 1]);
         }
         return lResultMap;
-    }
-
-    /**
-     * Deprecated: Use the convert() method instead!
-     */
-    @Deprecated
-    public <T extends RealType<T>> ImageTypeConverter<T> converter(RandomAccessibleInterval<T> pRandomAccessibleInterval) {
-        return new ImageTypeConverter<T>(this, pRandomAccessibleInterval);
-    }
-
-    /**
-     * Deprecated: Use the convert() method instead!
-     */
-    @Deprecated
-    public ImageTypeConverter converter(ImagePlus pImagePlus) {
-        return new ImageTypeConverter(this, pImagePlus);
-    }
-
-    /**
-     * Deprecated: Use the convert() method instead!
-     */
-    @Deprecated
-    public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLImage pClearCLImage) {
-        return new ImageTypeConverter<T>(this, pClearCLImage);
-    }
-
-    /**
-     * Deprecated: Use the convert() method instead!
-     */
-    @Deprecated
-    public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLBuffer pClearCLBuffer) {
-        return new ImageTypeConverter<T>(this, pClearCLBuffer);
     }
 
     public ClearCLImage createCLImage(ClearCLImage pInputImage) {
