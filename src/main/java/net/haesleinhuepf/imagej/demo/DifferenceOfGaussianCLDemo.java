@@ -38,8 +38,8 @@ public class DifferenceOfGaussianCLDemo {
         // ---------------------------------------------------------------
         // Example 1: Flip image in X
         {
-            ClearCLImage srcImage = clij.converter(input).getClearCLImage();
-            ClearCLImage dstImage = clij.converter(output).getClearCLImage();
+            ClearCLImage srcImage = clij.convert(input, ClearCLImage.class);
+            ClearCLImage dstImage = clij.convert(output, ClearCLImage.class);
 
             Map<String, Object> lParameterMap = new HashMap<>();
             lParameterMap.put("input", srcImage);
@@ -50,7 +50,7 @@ public class DifferenceOfGaussianCLDemo {
 
             clij.execute("src/main/jython/differenceOfGaussian/differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", lParameterMap);
 
-            RandomAccessibleInterval result = clij.converter(dstImage).getRandomAccessibleInterval();
+            RandomAccessibleInterval result = clij.convert(dstImage, RandomAccessibleInterval.class);
 
             ImageJFunctions.show(result);
         }

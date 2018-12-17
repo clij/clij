@@ -10,11 +10,15 @@ import coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
+import net.haesleinhuepf.imagej.converters.CLIJConverterPlugin;
+import net.haesleinhuepf.imagej.converters.CLIJConverterService;
 import net.haesleinhuepf.imagej.utilities.CLInfo;
 import net.haesleinhuepf.imagej.utilities.CLKernelExecutor;
-import net.haesleinhuepf.imagej.utilities.ImageTypeConverter;
+import net.imagej.ImageJ;
+import net.imagej.patcher.LegacyInjector;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.RealType;
+import org.scijava.Context;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -182,6 +186,7 @@ public class ClearCLIJ {
 
     public void dispose() {
         mClearCLContext.close();
+        converterService = null;
         if (sInstance == this) {
             sInstance = null;
         }
@@ -204,22 +209,6 @@ public class ClearCLIJ {
             lResultMap.put((String) pParameterList[i], pParameterList[i + 1]);
         }
         return lResultMap;
-    }
-
-    public <T extends RealType<T>> ImageTypeConverter<T> converter(RandomAccessibleInterval<T> pRandomAccessibleInterval) {
-        return new ImageTypeConverter<T>(this, pRandomAccessibleInterval);
-    }
-
-    public ImageTypeConverter converter(ImagePlus pImagePlus) {
-        return new ImageTypeConverter(this, pImagePlus);
-    }
-
-    public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLImage pClearCLImage) {
-        return new ImageTypeConverter<T>(this, pClearCLImage);
-    }
-
-    public <T extends RealType<T>> ImageTypeConverter<T> converter(ClearCLBuffer pClearCLBuffer) {
-        return new ImageTypeConverter<T>(this, pClearCLBuffer);
     }
 
     public ClearCLImage createCLImage(ClearCLImage pInputImage) {
@@ -250,24 +239,21 @@ public class ClearCLIJ {
         );
     }
 
-    public void show(ImagePlus input, String title) {
-        show(converter(input), title);
-    }
 
     public void show(RandomAccessibleInterval input, String title) {
-        show(converter(input), title);
+        show(convert(input, ImagePlus.class), title);
     }
 
     public void show(ClearCLImage input, String title) {
-        show(converter(input), title);
+        show(convert(input, ImagePlus.class), title);
     }
 
     public void show(ClearCLBuffer input, String title) {
-        show(converter(input), title);
+        show(convert(input, ImagePlus.class), title);
     }
 
-    public void show(ImageTypeConverter input, String title) {
-        ImagePlus imp = new Duplicator().run(input.getImagePlus());
+    public void show(ImagePlus input, String title) {
+        ImagePlus imp = new Duplicator().run(input);
         imp.setTitle(title);
         imp.setZ(imp.getNSlices() / 2);
         imp.setC(imp.getNChannels() / 2);
@@ -287,5 +273,20 @@ public class ClearCLIJ {
         return true;
     }
 
+    private CLIJConverterService converterService = null;
+    public void setConverterService(CLIJConverterService converterService) {
+        this.converterService = converterService;
+    }
 
+    public <S, T> T convert(S source, Class<T> targetClass) {
+        if (targetClass.isAssignableFrom(source.getClass())) {
+            return (T) source;
+        }
+        if (converterService == null) {
+            converterService = new Context(CLIJConverterService.class).service(CLIJConverterService.class);
+                    //new ImageJ().getContext().service(CLIJConverterService.class);
+        }
+        CLIJConverterPlugin<S, T> converter = (CLIJConverterPlugin<S, T>) converterService.getConverter(source.getClass(), targetClass);
+        return converter.convert(source);
+    }
 }

@@ -21,7 +21,7 @@ public class LocalThresholdDemo {
         ClearCLIJ clij = ClearCLIJ.getInstance();
 
         // conversion
-        ClearCLImage input = clij.converter(imp).getClearCLImage();
+        ClearCLImage input = clij.convert(imp, ClearCLImage.class);
         ClearCLImage output = clij.createCLImage(input);
         ClearCLImage temp = clij.createCLImage(input);
 

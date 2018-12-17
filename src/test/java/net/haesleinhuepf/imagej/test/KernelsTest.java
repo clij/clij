@@ -18,6 +18,7 @@ import ij.plugin.ImageCalculator;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import net.imagej.patcher.LegacyInjector;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
@@ -44,6 +45,9 @@ import static org.junit.Assert.assertTrue;
  * March 2018
  */
 public class KernelsTest {
+    //static {
+    //    LegacyInjector.preinit();
+    //}
 
     ImagePlus testFlyBrain3D;
     ImagePlus testFlyBrain2D;
@@ -53,7 +57,7 @@ public class KernelsTest {
     ImagePlus testImp2D2;
     ImagePlus mask3d;
     ImagePlus mask2d;
-    static ClearCLIJ clij;
+    ClearCLIJ clij;
 
     @Before
     public void initTest() {
@@ -124,6 +128,7 @@ public class KernelsTest {
 
     @Test
     public void absolute3d() {
+
         ImagePlus negativeImp =
                 NewImage.createImage("",
                         2,
@@ -135,7 +140,8 @@ public class KernelsTest {
         ImageProcessor ip1 = negativeImp.getProcessor();
         ip1.setf(0, 1, -1.0f);
 
-        ClearCLImage input = clij.converter(negativeImp).getClearCLImage();
+        ClearCLImage input = clij.convert(negativeImp, ClearCLImage.class);
+
 
         assertEquals(-1, Kernels.sumPixels(clij, input), 0.0001);
 
@@ -157,7 +163,8 @@ public class KernelsTest {
         ImageProcessor ip1 = negativeImp.getProcessor();
         ip1.setf(0, 1, -1.0f);
 
-        ClearCLBuffer input = clij.converter(negativeImp).getClearCLBuffer();
+        ClearCLBuffer input = clij.convert(negativeImp, ClearCLBuffer.class);
+                //converter(negativeImp).getClearCLBuffer();
 
         assertEquals(-1, Kernels.sumPixels(clij, input), 0.0001);
 
@@ -173,12 +180,16 @@ public class KernelsTest {
         ImagePlus sumImp = ic.run("Add create stack", testImp1, testImp2);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+                //convert(testImp1, ClearCLImage.class);
+        ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
+                //convert(testImp2, ClearCLImage.class);
+        ClearCLImage dst = clij.createCLImage(src);
+                //convert(testImp1, ClearCLImage.class);
 
         Kernels.addPixelwise(clij, src, src1, dst);
-        ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
+                //clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
 
@@ -195,12 +206,16 @@ public class KernelsTest {
         ImagePlus sumImp = ic.run("Add create stack", testImp1, testImp2);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+                //convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
+                //convert(testImp2, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.createCLBuffer(src);
+                //convert(testImp1, ClearCLBuffer.class);
 
         Kernels.addPixelwise(clij, src, src1, dst);
-        ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
+                //clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
 
@@ -216,12 +231,16 @@ public class KernelsTest {
         ImagePlus sumImp = ic.run("Add create", testImp2D1, testImp2D2);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
+                //convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage src1 = clij.convert(testImp2D2, ClearCLImage.class);
+                //convert(testImp2D2, ClearCLImage.class);
+        ClearCLImage dst = clij.createCLImage(src);
+                //convert(testImp2D1, ClearCLImage.class);
 
         Kernels.addPixelwise(clij, src, src1, dst);
-        ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
+                //clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
 
@@ -237,12 +256,16 @@ public class KernelsTest {
         ImagePlus sumImp = ic.run("Add create", testImp2D1, testImp2D2);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
-        ClearCLBuffer src1 = clij.converter(testImp2D2).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp2D1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
+                //convert(testImp2D1, ClearCLBuffer.class);
+        ClearCLBuffer src1 = clij.convert(testImp2D2, ClearCLBuffer.class);
+                //convert(testImp2D2, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.createCLBuffer(src);
+                //convert(testImp2D1, ClearCLBuffer.class);
 
         Kernels.addPixelwise(clij, src, src1, dst);
-        ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
+                //clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
 
@@ -258,11 +281,11 @@ public class KernelsTest {
         IJ.run(added, "Add...", "value=1 stack");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
         Kernels.addScalar(clij, src, dst, 1f);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
@@ -278,11 +301,11 @@ public class KernelsTest {
         IJ.run(added, "Add...", "value=1 stack");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.convert(testImp1, ClearCLBuffer.class);
 
         Kernels.addScalar(clij, src, dst, 1f);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
@@ -297,11 +320,11 @@ public class KernelsTest {
         IJ.run(added, "Add...", "value=1");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp2D1, ClearCLImage.class);
 
         Kernels.addScalar(clij, src, dst, 1f);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
@@ -316,11 +339,11 @@ public class KernelsTest {
         IJ.run(added, "Add...", "value=1");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp2D1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.convert(testImp2D1, ClearCLBuffer.class);
 
         Kernels.addScalar(clij, src, dst, 1f);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
@@ -349,9 +372,9 @@ public class KernelsTest {
                 ic.run("Add create stack", testImp1copy, testImp2copy);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
         Kernels.addWeightedPixelwise(clij,
                 src,
@@ -359,7 +382,7 @@ public class KernelsTest {
                 dst,
                 factor1,
                 factor2);
-        ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
 
@@ -389,9 +412,9 @@ public class KernelsTest {
                 ic.run("Add create stack", testImp1copy, testImp2copy);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.convert(testImp1, ClearCLBuffer.class);
 
         Kernels.addWeightedPixelwise(clij,
                 src,
@@ -399,7 +422,7 @@ public class KernelsTest {
                 dst,
                 factor1,
                 factor2);
-        ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
 
@@ -425,9 +448,9 @@ public class KernelsTest {
                 ic.run("Add create ", testImp1copy, testImp2copy);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage src1 = clij.convert(testImp2D2, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp2D1, ClearCLImage.class);
 
         Kernels.addWeightedPixelwise(clij,
                 src,
@@ -435,7 +458,7 @@ public class KernelsTest {
                 dst,
                 factor1,
                 factor2);
-        ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
 
@@ -461,9 +484,9 @@ public class KernelsTest {
                 ic.run("Add create ", testImp1copy, testImp2copy);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
-        ClearCLBuffer src1 = clij.converter(testImp2D2).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp2D1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
+        ClearCLBuffer src1 = clij.convert(testImp2D2, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.convert(testImp2D1, ClearCLBuffer.class);
 
         Kernels.addWeightedPixelwise(clij,
                 src,
@@ -471,7 +494,7 @@ public class KernelsTest {
                 dst,
                 factor1,
                 factor2);
-        ImagePlus sumImpFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumImp, sumImpFromCL));
 
@@ -516,7 +539,7 @@ public class KernelsTest {
         }
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(new long[]{src.getWidth(),
@@ -530,10 +553,10 @@ public class KernelsTest {
 
         Kernels.argMaxProjection(clij, src, dst, dst_arg);
 
-        ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
+        ImagePlus maxProjectionCL = clij.convert(dst, ImagePlus.class);
         ImagePlus
                 argMaxProjectionCL =
-                clij.converter(dst_arg).getImagePlus();
+                clij.convert(dst_arg, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(maxProjection,
                 maxProjectionCL));
@@ -581,7 +604,7 @@ public class KernelsTest {
         }
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(new long[]{src.getWidth(),
@@ -595,10 +618,10 @@ public class KernelsTest {
 
         Kernels.argMaxProjection(clij, src, dst, dst_arg);
 
-        ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
+        ImagePlus maxProjectionCL = clij.convert(dst, ImagePlus.class);
         ImagePlus
                 argMaxProjectionCL =
-                clij.converter(dst_arg).getImagePlus();
+                clij.convert(dst_arg, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(maxProjection,
                 maxProjectionCL));
@@ -612,7 +635,7 @@ public class KernelsTest {
 
     @Test
     public void binaryAnd2d() {
-        ClearCLImage clearCLImage = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage clearCLImage = clij.convert(testImp2, ClearCLImage.class);;
         ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
         ClearCLImage clearCLImageAnd = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
 
@@ -633,7 +656,7 @@ public class KernelsTest {
 
     @Test
     public void binaryAnd2d_Buffers() {
-        ClearCLBuffer clearCLImage = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer clearCLImage = clij.convert(testImp2, ClearCLBuffer.class);;
         ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
         ClearCLBuffer clearCLImageAnd = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
@@ -654,7 +677,7 @@ public class KernelsTest {
 
     @Test
     public void binaryAnd3d() {
-        ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage clearCLImage = clij.convert(mask3d, ClearCLImage.class);
         ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
         ClearCLImage clearCLImageAnd = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
 
@@ -676,7 +699,7 @@ public class KernelsTest {
 
     @Test
     public void binaryAnd3d_Buffers() {
-        ClearCLBuffer clearCLImage = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer clearCLImage = clij.convert(mask3d, ClearCLBuffer.class);
         ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
         ClearCLBuffer clearCLImageAnd = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
@@ -697,7 +720,7 @@ public class KernelsTest {
 
     @Test
     public void binaryNot2d() throws InterruptedException {
-        ClearCLImage clearCLImage = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage clearCLImage = clij.convert(testImp2, ClearCLImage.class);;
         ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
 
         Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
@@ -714,7 +737,7 @@ public class KernelsTest {
 
     @Test
     public void binaryNot2d_Buffers() throws InterruptedException {
-        ClearCLBuffer clearCLImage = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer clearCLImage = clij.convert(testImp2, ClearCLBuffer.class);;
         ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
         Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
@@ -731,7 +754,7 @@ public class KernelsTest {
 
     @Test
     public void binaryNot3d() throws InterruptedException {
-        ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage clearCLImage = clij.convert(mask3d, ClearCLImage.class);
         ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
 
         Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
@@ -749,7 +772,7 @@ public class KernelsTest {
 
     @Test
     public void binaryNot3d_Buffers() throws InterruptedException {
-        ClearCLBuffer clearCLImage = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer clearCLImage = clij.convert(mask3d, ClearCLBuffer.class);
         ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
         Kernels.binaryNot(clij, clearCLImage, clearCLImageNot);
@@ -766,7 +789,7 @@ public class KernelsTest {
 
     @Test
     public void binaryOr2d() {
-        ClearCLImage clearCLImage = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage clearCLImage = clij.convert(testImp2, ClearCLImage.class);;
         ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
         ClearCLImage clearCLImageOr = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
 
@@ -786,7 +809,7 @@ public class KernelsTest {
 
     @Test
     public void binaryOr2d_Buffer() {
-        ClearCLBuffer clearCLImage = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer clearCLImage = clij.convert(testImp2, ClearCLBuffer.class);;
         ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
         ClearCLBuffer clearCLImageOr = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
@@ -806,7 +829,7 @@ public class KernelsTest {
 
     @Test
     public void binaryOr3d() {
-        ClearCLImage clearCLImage = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage clearCLImage = clij.convert(mask3d, ClearCLImage.class);
         ClearCLImage clearCLImageNot = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
         ClearCLImage clearCLImageOr = clij.createCLImage(clearCLImage.getDimensions(), clearCLImage.getChannelDataType());
 
@@ -826,7 +849,7 @@ public class KernelsTest {
 
     @Test
     public void binaryOr3d_Buffers() {
-        ClearCLBuffer clearCLImage = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer clearCLImage = clij.convert(mask3d, ClearCLBuffer.class);
         ClearCLBuffer clearCLImageNot = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
         ClearCLBuffer clearCLImageOr = clij.createCLBuffer(clearCLImage.getDimensions(), clearCLImage.getNativeType());
 
@@ -851,11 +874,11 @@ public class KernelsTest {
         GaussianBlur3D.blur(gauss, 2, 2, 2);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.blur(clij, src, dst, 6, 6, 6, 2f, 2f, 2f);
-        ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
 
@@ -870,11 +893,11 @@ public class KernelsTest {
         GaussianBlur3D.blur(gauss, 2, 2, 2);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.blur(clij, src, dst, 6, 6, 6, 2f, 2f, 2f);
-        ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL));
 
@@ -884,19 +907,19 @@ public class KernelsTest {
 
     @Test
     public void blur3dSeparable() throws InterruptedException {
-        ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
+        ClearCLImage src = clij.convert(testFlyBrain3D, ClearCLImage.class);;
         ClearCLImage dstBlur = clij.createCLImage(src);
         ClearCLImage dstBlurSeparable = clij.createCLImage(src);
 
         Kernels.blur(clij, src, dstBlur, 15, 15, 15, 2f, 2f, 2f);
         Kernels.blurSeparable(clij, src, dstBlurSeparable, 2, 2, 2);
 
-        //ClearCLBuffer srcB = clij.converter(testFlyBrain3D).getClearCLBuffer();
+        //ClearCLBuffer srcB = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
         //ClearCLBuffer dstBlurSeparableB = clij.createCLBuffer(srcB);
         //Kernels.blurSeparable(clij, srcB, dstBlurSeparableB, 2, 2, 2);
 
-        ImagePlus gaussBlur = clij.converter(dstBlur).getImagePlus();
-        ImagePlus gaussBlurSeparable = clij.converter(dstBlurSeparable).getImagePlus();
+        ImagePlus gaussBlur = clij.convert(dstBlur, ImagePlus.class);;
+        ImagePlus gaussBlurSeparable = clij.convert(dstBlurSeparable, ImagePlus.class);;
         //ImagePlus gaussBlurSeparableB = clij.converter(dstBlurSeparableB).getImagePlus();
 
         src.close();
@@ -911,19 +934,19 @@ public class KernelsTest {
 
     @Test
     public void blur3dSeparable_Buffer() throws InterruptedException {
-        ClearCLBuffer src = clij.converter(testFlyBrain3D).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
         ClearCLBuffer dstBlur = clij.createCLBuffer(src);
         ClearCLBuffer dstBlurSeparable = clij.createCLBuffer(src);
 
         Kernels.blur(clij, src, dstBlur, 15, 15, 15, 2f, 2f, 2f);
         Kernels.blurSeparable(clij, src, dstBlurSeparable, 2, 2, 2);
 
-        //ClearCLBuffer srcB = clij.converter(testFlyBrain3D).getClearCLBuffer();
+        //ClearCLBuffer srcB = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
         //ClearCLBuffer dstBlurSeparableB = clij.createCLBuffer(srcB);
         //Kernels.blurSeparable(clij, srcB, dstBlurSeparableB, 2, 2, 2);
 
-        ImagePlus gaussBlur = clij.converter(dstBlur).getImagePlus();
-        ImagePlus gaussBlurSeparable = clij.converter(dstBlurSeparable).getImagePlus();
+        ImagePlus gaussBlur = clij.convert(dstBlur, ImagePlus.class);;
+        ImagePlus gaussBlurSeparable = clij.convert(dstBlurSeparable, ImagePlus.class);;
         //ImagePlus gaussBlurSeparableB = clij.converter(dstBlurSeparableB).getImagePlus();
 
         src.close();
@@ -944,11 +967,11 @@ public class KernelsTest {
         IJ.run(gauss, "Gaussian Blur...", "sigma=2");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(gaussCopy).getClearCLImage();
+        ClearCLImage src = clij.convert(gaussCopy, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.blur(clij, src, dst, 15, 15, 2f, 2f);
-        ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
 
@@ -964,11 +987,11 @@ public class KernelsTest {
         IJ.run(gauss, "Gaussian Blur...", "sigma=2");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(gaussCopy).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(gaussCopy, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.blur(clij, src, dst, 15, 15, 2f, 2f);
-        ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
 
@@ -983,11 +1006,11 @@ public class KernelsTest {
         IJ.run(gauss, "Gaussian Blur...", "sigma=2 stack");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
+        ClearCLImage src = clij.convert(testFlyBrain3D, ClearCLImage.class);;
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.blurSliceBySlice(clij, src, dst, 15, 15, 2f, 2f);
-        ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
 
@@ -1002,11 +1025,11 @@ public class KernelsTest {
 //    IJ.run(gauss, "Gaussian Blur...", "sigma=2 stack");
 //
 //    // do operation with ClearCL
-//    ClearCLBuffer src = clij.converter(testFlyBrain3D).getClearCLBuffer();
+//    ClearCLBuffer src = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
 //    ClearCLBuffer dst = clij.createCLBuffer(src);
 //
 //    Kernels.blurSliceBySlice(clij, src, dst, 15, 15, 2, 2);
-//    ImagePlus gaussFromCL = clij.converter(dst).getImagePlus();
+//    ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 //
 //    assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
 //
@@ -1016,13 +1039,13 @@ public class KernelsTest {
 
     @Test
     public void copyImageToBuffer3d() {
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(src.getDimensions(), src.getNativeType());
 
         Kernels.copy(clij, src, dst);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
 
@@ -1032,13 +1055,13 @@ public class KernelsTest {
 
     @Test
     public void copyImageToBuffer2d() {
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(src.getDimensions(), src.getNativeType());
 
         Kernels.copy(clij, src, dst);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
 
@@ -1048,13 +1071,13 @@ public class KernelsTest {
 
     @Test
     public void copyBufferToImage3d() {
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
         Kernels.set(clij, dst, 0f);
 
         Kernels.copy(clij, src, dst);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
 
@@ -1064,13 +1087,13 @@ public class KernelsTest {
 
     @Test
     public void copyBufferToImage2d() {
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
-        ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
+        ClearCLImage dst = clij.convert(testImp2D1, ClearCLImage.class);
 
         Kernels.set(clij, dst, 0f);
 
         Kernels.copy(clij, src, dst);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
 
@@ -1080,7 +1103,7 @@ public class KernelsTest {
 
     @Test
     public void copy3d() {
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(src.getDimensions(),
@@ -1088,7 +1111,7 @@ public class KernelsTest {
         ;
 
         Kernels.copy(clij, src, dst);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
 
@@ -1098,14 +1121,14 @@ public class KernelsTest {
 
     @Test
     public void copy2d() {
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(src.getDimensions(),
                         src.getChannelDataType());
 
         Kernels.copy(clij, src, dst);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
 
@@ -1118,18 +1141,18 @@ public class KernelsTest {
         ImagePlus imp = new Duplicator().run(testImp1);
         Img<FloatType> img = ImageJFunctions.convertFloat(testImp1);
 
-        ClearCLBuffer src = clij.converter(imp).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(imp, ClearCLBuffer.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(src.getDimensions(), src.getNativeType());
 
         Kernels.copy(clij, src, dst);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
         assertTrue(TestUtilities.compareImages(testImp1, copyFromCL));
 
         RandomAccessibleInterval
                 rai =
-                clij.converter(dst).getRandomAccessibleInterval();
+                clij.convert(dst, RandomAccessibleInterval.class);
         assertTrue(TestUtilities.compareIterableIntervals(img,
                 Views.iterable(
                         rai)));
@@ -1143,18 +1166,18 @@ public class KernelsTest {
         ImagePlus imp = new Duplicator().run(testImp2D1);
         Img<FloatType> img = ImageJFunctions.convertFloat(testImp2D1);
 
-        ClearCLBuffer src = clij.converter(imp).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(imp, ClearCLBuffer.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(src.getDimensions(), src.getNativeType());
 
         Kernels.copy(clij, src, dst);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
         assertTrue(TestUtilities.compareImages(testImp2D1, copyFromCL));
 
         RandomAccessibleInterval
                 rai =
-                clij.converter(dst).getRandomAccessibleInterval();
+                clij.convert(dst, RandomAccessibleInterval.class);
         assertTrue(TestUtilities.compareIterableIntervals(img,
                 Views.iterable(
                         rai)));
@@ -1169,7 +1192,7 @@ public class KernelsTest {
         ImagePlus copy = new Duplicator().run(testImp1, 3, 3);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(new long[]{src.getWidth(),
@@ -1177,7 +1200,7 @@ public class KernelsTest {
                         src.getChannelDataType());
 
         Kernels.copySlice(clij, src, dst, 2);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(copy, copyFromCL));
 
@@ -1194,7 +1217,7 @@ public class KernelsTest {
         ImagePlus copy = new Duplicator().run(testImp1, 3, 3);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(new long[]{src.getWidth(),
@@ -1202,7 +1225,7 @@ public class KernelsTest {
                         src.getNativeType());
 
         Kernels.copySlice(clij, src, dst, 2);
-        ImagePlus copyFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus copyFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(copy, copyFromCL));
 
@@ -1218,14 +1241,14 @@ public class KernelsTest {
         ImagePlus crop = new Duplicator().run(testImp1, 3, 12);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(new long[]{10, 10, 10},
                         src.getChannelDataType());
 
         Kernels.crop(clij, src, dst, 2, 2, 2);
-        ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus cropFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(crop, cropFromCL));
 
@@ -1241,14 +1264,14 @@ public class KernelsTest {
         ImagePlus crop = new Duplicator().run(testImp2D1);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(new long[]{10, 10},
                         src.getChannelDataType());
 
         Kernels.crop(clij, src, dst, 2, 2);
-        ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus cropFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(crop, cropFromCL));
 
@@ -1264,14 +1287,14 @@ public class KernelsTest {
         ImagePlus crop = new Duplicator().run(testImp1, 3, 12);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(new long[]{10, 10, 10},
                         src.getNativeType());
 
         Kernels.crop(clij, src, dst, 2, 2, 2);
-        ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus cropFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(crop, cropFromCL));
 
@@ -1287,14 +1310,14 @@ public class KernelsTest {
         ImagePlus crop = new Duplicator().run(testImp2D1);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(new long[]{10, 10},
                         src.getNativeType());
 
         Kernels.crop(clij, src, dst, 2, 2);
-        ImagePlus cropFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus cropFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(crop, cropFromCL));
 
@@ -1332,11 +1355,11 @@ public class KernelsTest {
         ImagePlus maximaImp = new ImagePlus("A", byteProcessor);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(spotsImage).getClearCLImage();
+        ClearCLImage src = clij.convert(spotsImage, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.detectOptima(clij, src, dst, 1, true);
-        ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus maximaFromCL = clij.convert(dst, ImagePlus.class);
         maximaFromCL = new Duplicator().run(maximaFromCL, 2, 2);
 
         IJ.run(maximaImp, "Divide...", "value=255");
@@ -1377,11 +1400,11 @@ public class KernelsTest {
         ImagePlus maximaImp = new ImagePlus("A", byteProcessor);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(spotsImage).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(spotsImage, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.detectOptima(clij, src, dst, 1, true);
-        ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus maximaFromCL = clij.convert(dst, ImagePlus.class);
         maximaFromCL = new Duplicator().run(maximaFromCL, 2, 2);
 
         IJ.run(maximaImp, "Divide...", "value=255");
@@ -1422,11 +1445,11 @@ public class KernelsTest {
         ImagePlus maximaImp = new ImagePlus("A", byteProcessor);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(spotsImage).getClearCLImage();
+        ClearCLImage src = clij.convert(spotsImage, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.detectOptima(clij, src, dst, 1, true);
-        ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus maximaFromCL = clij.convert(dst, ImagePlus.class);
         //    maximaFromCL = new Duplicator().run(maximaFromCL, 2, 2);
 
         IJ.run(maximaImp, "Divide...", "value=255");
@@ -1467,11 +1490,11 @@ public class KernelsTest {
         ImagePlus maximaImp = new ImagePlus("A", byteProcessor);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(spotsImage).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(spotsImage, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.detectOptima(clij, src, dst, 1, true);
-        ImagePlus maximaFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus maximaFromCL = clij.convert(dst, ImagePlus.class);
         //    maximaFromCL = new Duplicator().run(maximaFromCL, 2, 2);
 
         IJ.run(maximaImp, "Divide...", "value=255");
@@ -1488,8 +1511,8 @@ public class KernelsTest {
         System.out.println("Todo: implement test for DoG");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
         Kernels.differenceOfGaussian(clij, src, dst, 6, 1.1f, 3.3f);
 
@@ -1503,8 +1526,8 @@ public class KernelsTest {
         System.out.println("Todo: implement test for DoG slice by slice");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
         Kernels.differenceOfGaussianSliceBySlice(clij, src, dst, 6, 1.1f, 3.3f);
 
@@ -1519,8 +1542,8 @@ public class KernelsTest {
         System.out.println("Todo: implement test for DoG");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp2D1, ClearCLImage.class);
 
         Kernels.differenceOfGaussian(clij, src, dst, 6, 1.1f, 3.3f);
 
@@ -1530,7 +1553,7 @@ public class KernelsTest {
 
     @Test
     public void dilate3d() {
-        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(mask3d, ClearCLImage.class);
         ClearCLImage
                 maskCLafter =
                 clij.createCLImage(maskCL);
@@ -1547,7 +1570,7 @@ public class KernelsTest {
 
     @Test
     public void dilate3d_Buffers() {
-        ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(mask3d, ClearCLBuffer.class);
         ClearCLBuffer
                 maskCLafter =
                 clij.createCLBuffer(maskCL);
@@ -1564,7 +1587,7 @@ public class KernelsTest {
 
     @Test
     public void dilate2d() {
-        ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(testImp2, ClearCLImage.class);;
         ClearCLImage
                 maskCLafter = clij.createCLImage(maskCL);
 
@@ -1580,7 +1603,7 @@ public class KernelsTest {
 
     @Test
     public void dilate2d_Buffers() {
-        ClearCLBuffer maskCL = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(testImp2, ClearCLBuffer.class);;
         ClearCLBuffer
                 maskCLafter = clij.createCLBuffer(maskCL);
 
@@ -1604,13 +1627,13 @@ public class KernelsTest {
                         testImp2);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.dividePixelwise(clij, src, src1, dst);
 
-        ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+        ImagePlus dividedCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(divided, dividedCL));
 
@@ -1630,13 +1653,13 @@ public class KernelsTest {
                         testImp2);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.dividePixelwise(clij, src, src1, dst);
 
-        ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+        ImagePlus dividedCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(divided, dividedCL));
 
@@ -1655,13 +1678,13 @@ public class KernelsTest {
                         testImp2D2);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage src1 = clij.convert(testImp2D2, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.dividePixelwise(clij, src, src1, dst);
 
-        ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+        ImagePlus dividedCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(divided, dividedCL));
 
@@ -1680,13 +1703,13 @@ public class KernelsTest {
                         testImp2D2);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
-        ClearCLBuffer src1 = clij.converter(testImp2D2).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
+        ClearCLBuffer src1 = clij.convert(testImp2D2, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.dividePixelwise(clij, src, src1, dst);
 
-        ImagePlus dividedCL = clij.converter(dst).getImagePlus();
+        ImagePlus dividedCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(divided, dividedCL));
 
@@ -1706,7 +1729,7 @@ public class KernelsTest {
 
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage dst =
                 clij.createCLImage(new long[]{src.getWidth() / 2,
                                 src.getHeight() / 2,
@@ -1716,7 +1739,7 @@ public class KernelsTest {
 
         Kernels.downsample(clij, src, dst, 0.5f, 0.5f, 0.5f);
 
-        ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+        ImagePlus downsampledCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
     }
@@ -1731,7 +1754,7 @@ public class KernelsTest {
 
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer dst =
                 clij.createCLBuffer(new long[]{src.getWidth() / 2,
                                 src.getHeight() / 2,
@@ -1741,7 +1764,7 @@ public class KernelsTest {
 
         Kernels.downsample(clij, src, dst, 0.5f, 0.5f, 0.5f);
 
-        ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+        ImagePlus downsampledCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
     }
@@ -1755,7 +1778,7 @@ public class KernelsTest {
         ImagePlus downsampled = IJ.getImage();
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(new long[]{src.getWidth() / 2,
@@ -1764,7 +1787,7 @@ public class KernelsTest {
 
         Kernels.downsample(clij, src, dst, 0.5f, 0.5f);
 
-        ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+        ImagePlus downsampledCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
 
@@ -1780,7 +1803,7 @@ public class KernelsTest {
         ImagePlus downsampled = IJ.getImage();
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(new long[]{src.getWidth() / 2,
@@ -1789,7 +1812,7 @@ public class KernelsTest {
 
         Kernels.downsample(clij, src, dst, 0.5f, 0.5f);
 
-        ImagePlus downsampledCL = clij.converter(dst).getImagePlus();
+        ImagePlus downsampledCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
 
@@ -1809,13 +1832,13 @@ public class KernelsTest {
                 1, 0
         }, new long[]{2, 2, 1});
 
-        ClearCLImage inputCL = clij.converter(testImgBig).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImgBig, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{2, 2, 1}, ImageChannelDataType.SignedInt8);
 
         Kernels.downsampleSliceBySliceHalfMedian(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
-        ImagePlus reference = clij.converter(testImgSmall).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
+        ImagePlus reference = clij.convert(testImgSmall, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(result, reference));
     }
@@ -1834,20 +1857,20 @@ public class KernelsTest {
                 1, 0
         }, new long[]{2, 2, 1});
 
-        ClearCLBuffer inputCL = clij.converter(testImgBig).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImgBig, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{2, 2, 1}, NativeTypeEnum.Byte);
 
         Kernels.downsampleSliceBySliceHalfMedian(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
-        ImagePlus reference = clij.converter(testImgSmall).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
+        ImagePlus reference = clij.convert(testImgSmall, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(result, reference));
     }
 
     @Test
     public void erode3d() {
-        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(mask3d, ClearCLImage.class);
         ClearCLImage
                 maskCLafter = clij.createCLImage(maskCL);
 
@@ -1863,7 +1886,7 @@ public class KernelsTest {
 
     @Test
     public void erode3d_Buffer() {
-        ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(mask3d, ClearCLBuffer.class);
         ClearCLBuffer
                 maskCLafter = clij.createCLBuffer(maskCL);
 
@@ -1879,7 +1902,7 @@ public class KernelsTest {
 
     @Test
     public void erode2d() {
-        ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(testImp2, ClearCLImage.class);;
         ClearCLImage
                 maskCLafter = clij.createCLImage(maskCL);
 
@@ -1895,7 +1918,7 @@ public class KernelsTest {
 
     @Test
     public void erode2d_Buffers() {
-        ClearCLBuffer maskCL = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(testImp2, ClearCLBuffer.class);;
         ClearCLBuffer
                 maskCLafter = clij.createCLBuffer(maskCL);
 
@@ -1911,16 +1934,16 @@ public class KernelsTest {
 
     @Test
     public void flip3d() throws InterruptedException {
-        ClearCLImage testCL = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage flip = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage flop = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage testCL = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage flip = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage flop = clij.convert(testImp1, ClearCLImage.class);
 
         Kernels.flip(clij, testCL, flip, true, false, false);
 
-        ImagePlus testFlipped = clij.converter(flip).getImagePlus();
+        ImagePlus testFlipped = clij.convert(flip, ImagePlus.class);
 
         Kernels.flip(clij, flip, flop, true, false, false);
-        ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
+        ImagePlus testFlippedTwice = clij.convert(flop, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp1,
                 testFlippedTwice));
@@ -1935,16 +1958,16 @@ public class KernelsTest {
     public void flip2d() {
         ClearCLImage
                 testCL =
-                clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage flip = clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage flop = clij.converter(testImp2D1).getClearCLImage();
+                clij.convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage flip = clij.convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage flop = clij.convert(testImp2D1, ClearCLImage.class);
 
         Kernels.flip(clij, testCL, flip, true, false);
 
-        ImagePlus testFlipped = clij.converter(flip).getImagePlus();
+        ImagePlus testFlipped = clij.convert(flip, ImagePlus.class);
 
         Kernels.flip(clij, flip, flop, true, false);
-        ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
+        ImagePlus testFlippedTwice = clij.convert(flop, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp2D1,
                 testFlippedTwice));
@@ -1959,16 +1982,16 @@ public class KernelsTest {
     public void flipBuffer3d() {
         ClearCLBuffer
                 testCL =
-                clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer flip = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer flop = clij.converter(testImp1).getClearCLBuffer();
+                clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer flip = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer flop = clij.convert(testImp1, ClearCLBuffer.class);
 
         Kernels.flip(clij, testCL, flip, true, false, false);
 
-        ImagePlus testFlipped = clij.converter(flip).getImagePlus();
+        ImagePlus testFlipped = clij.convert(flip, ImagePlus.class);
 
         Kernels.flip(clij, flip, flop, true, false, false);
-        ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
+        ImagePlus testFlippedTwice = clij.convert(flop, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp1,
                 testFlippedTwice));
@@ -1983,20 +2006,20 @@ public class KernelsTest {
     public void flipBuffer2d() {
         ClearCLBuffer
                 testCL =
-                clij.converter(testImp2D1).getClearCLBuffer();
+                clij.convert(testImp2D1, ClearCLBuffer.class);
         ClearCLBuffer
                 flip =
-                clij.converter(testImp2D1).getClearCLBuffer();
+                clij.convert(testImp2D1, ClearCLBuffer.class);
         ClearCLBuffer
                 flop =
-                clij.converter(testImp2D1).getClearCLBuffer();
+                clij.convert(testImp2D1, ClearCLBuffer.class);
 
         Kernels.flip(clij, testCL, flip, true, false);
 
-        ImagePlus testFlipped = clij.converter(flip).getImagePlus();
+        ImagePlus testFlipped = clij.convert(flip, ImagePlus.class);
 
         Kernels.flip(clij, flip, flop, true, false);
-        ImagePlus testFlippedTwice = clij.converter(flop).getImagePlus();
+        ImagePlus testFlippedTwice = clij.convert(flop, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(testImp2D1,
                 testFlippedTwice));
@@ -2009,7 +2032,7 @@ public class KernelsTest {
 
     @Test
     public void invertBinary3d() {
-        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(mask3d, ClearCLImage.class);
         ClearCLImage
                 maskCLafter = clij.createCLImage(maskCL);
 
@@ -2029,7 +2052,7 @@ public class KernelsTest {
 
     @Test
     public void invertBinary3d_Buffer() {
-        ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(mask3d, ClearCLBuffer.class);
         ClearCLBuffer
                 maskCLafter = clij.createCLBuffer(maskCL);
 
@@ -2049,7 +2072,7 @@ public class KernelsTest {
 
     @Test
     public void invertBinary2d() {
-        ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(testImp2, ClearCLImage.class);;
         ClearCLImage
                 maskCLafter = clij.createCLImage(maskCL);
 
@@ -2069,7 +2092,7 @@ public class KernelsTest {
 
     @Test
     public void invertBinary2d_Buffer() {
-        ClearCLBuffer maskCL = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(testImp2, ClearCLBuffer.class);;
         ClearCLBuffer
                 maskCLafter = clij.createCLBuffer(maskCL);
 
@@ -2089,7 +2112,7 @@ public class KernelsTest {
 
     @Test
     public void localThreshold3D() {
-        ClearCLImage input = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage input = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage output1 = clij.createCLImage(input);
         ClearCLImage output2 = clij.createCLImage(input);
         ClearCLImage temp = clij.createCLImage(input);
@@ -2132,8 +2155,8 @@ public class KernelsTest {
         System.out.println("Todo: implement test for mask3d");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage mask = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage mask = clij.convert(mask3d, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(mask);
 
         Kernels.mask(clij, src, mask, dst);
@@ -2149,8 +2172,8 @@ public class KernelsTest {
         System.out.println("Todo: implement test for mask3d");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer mask = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer mask = clij.convert(mask3d, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(mask);
 
         Kernels.mask(clij, src, mask, dst);
@@ -2166,9 +2189,9 @@ public class KernelsTest {
         System.out.println("Todo: implement test for mask2d");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage mask = clij.converter(mask2d).getClearCLImage();
-        ClearCLImage dst = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage mask = clij.convert(testImp2, ClearCLImage.class);;
+        ClearCLImage dst = clij.convert(testImp2, ClearCLImage.class);;
 
         Kernels.mask(clij, src, mask, dst);
 
@@ -2182,9 +2205,9 @@ public class KernelsTest {
         System.out.println("Todo: implement test for mask2d");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
-        ClearCLBuffer mask = clij.converter(mask2d).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
+        ClearCLBuffer mask = clij.convert(testImp2, ClearCLBuffer.class);;
+        ClearCLBuffer dst = clij.convert(testImp2, ClearCLBuffer.class);;
 
         Kernels.mask(clij, src, mask, dst);
 
@@ -2198,8 +2221,8 @@ public class KernelsTest {
         System.out.println("Todo: implement test for maskStackWithPlane");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage mask = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage mask = clij.convert(testImp2, ClearCLImage.class);;
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.maskStackWithPlane(clij, src, mask, dst);
@@ -2215,8 +2238,8 @@ public class KernelsTest {
         System.out.println("Todo: implement test for maskStackWithPlane");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer mask = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer mask = clij.convert(testImp2, ClearCLBuffer.class);;
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.maskStackWithPlane(clij, src, mask, dst);
@@ -2237,12 +2260,12 @@ public class KernelsTest {
         IJ.run(reference, "Maximum...", "radius=1");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.maximum(clij, inputCL, outputCl, 3, 3);
+        Kernels.maximum(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2263,12 +2286,12 @@ public class KernelsTest {
         IJ.run(reference, "Maximum...", "radius=1");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.maximum(clij, inputCL, outputCl, 3, 3);
+        Kernels.maximum(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2294,12 +2317,12 @@ public class KernelsTest {
         IJ.run(reference, "Maximum 3D...", "x=1 y=1 z=1");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.maximum(clij, inputCL, outputCl, 3, 3, 3);
+        Kernels.maximum(clij, inputCL, outputCL, 3, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2325,12 +2348,12 @@ public class KernelsTest {
         IJ.run(reference, "Maximum 3D...", "x=1 y=1 z=1");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.maximum(clij, inputCL, outputCl, 3, 3, 3);
+        Kernels.maximum(clij, inputCL, outputCL, 3, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2357,12 +2380,12 @@ public class KernelsTest {
         IJ.run(reference, "Maximum...", "radius=1 stack");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.maximumSliceBySlice(clij, inputCL, outputCl, 3, 3);
+        Kernels.maximumSliceBySlice(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2383,12 +2406,12 @@ public class KernelsTest {
         IJ.run(reference, "Maximum...", "radius=1 stack");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.maximumSliceBySlice(clij, inputCL, outputCl, 3, 3);
+        Kernels.maximumSliceBySlice(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2441,7 +2464,7 @@ public class KernelsTest {
         }
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(new long[]{src.getWidth(),
@@ -2450,7 +2473,7 @@ public class KernelsTest {
 
         Kernels.maxProjection(clij, src, dst);
 
-        ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
+        ImagePlus maxProjectionCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(maxProjection,
                 maxProjectionCL));
@@ -2486,7 +2509,7 @@ public class KernelsTest {
         }
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer
                 dst =
                 clij.createCLBuffer(new long[]{src.getWidth(),
@@ -2495,7 +2518,7 @@ public class KernelsTest {
 
         Kernels.maxProjection(clij, src, dst);
 
-        ImagePlus maxProjectionCL = clij.converter(dst).getImagePlus();
+        ImagePlus maxProjectionCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(maxProjection,
                 maxProjectionCL));
@@ -2515,12 +2538,12 @@ public class KernelsTest {
         IJ.run(reference, "Mean...", "radius=1");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.mean(clij, inputCL, outputCl, 3, 3);
+        Kernels.mean(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2542,12 +2565,12 @@ public class KernelsTest {
         IJ.run(reference, "Mean...", "radius=1");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.mean(clij, inputCL, outputCl, 3, 3);
+        Kernels.mean(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2573,12 +2596,12 @@ public class KernelsTest {
         IJ.run(reference, "Mean 3D...", "x=1 y=1 z=1");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.mean(clij, inputCL, outputCl, 3, 3, 3);
+        Kernels.mean(clij, inputCL, outputCL, 3, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2604,16 +2627,16 @@ public class KernelsTest {
         IJ.run(reference, "Mean 3D...", "x=1 y=1 z=1");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        //Kernels.copy(clij, inputCL, outputCl);
+        //Kernels.copy(clij, inputCL, outputCL);
 
-        Kernels.mean(clij, inputCL, outputCl, 3, 3, 3);
-        //Kernels.mean(clij, inputCL, outputCl, 3, 3, 3);
+        Kernels.mean(clij, inputCL, outputCL, 3, 3, 3);
+        //Kernels.mean(clij, inputCL, outputCL, 3, 3, 3);
 
         //if (true) return;
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2640,12 +2663,12 @@ public class KernelsTest {
         IJ.run(reference, "Mean...", "radius=1 stack");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.meanSliceBySlice(clij, inputCL, outputCl, 3, 3);
+        Kernels.meanSliceBySlice(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2666,12 +2689,12 @@ public class KernelsTest {
         IJ.run(reference, "Mean...", "radius=1 stack");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.meanSliceBySlice(clij, inputCL, outputCl, 3, 3);
+        Kernels.meanSliceBySlice(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2698,12 +2721,12 @@ public class KernelsTest {
         IJ.run(reference, "Median...", "radius=1");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.median(clij, inputCL, outputCl, 3, 3);
+        Kernels.median(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2724,12 +2747,12 @@ public class KernelsTest {
         IJ.run(reference, "Median...", "radius=1");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.median(clij, inputCL, outputCl, 3, 3);
+        Kernels.median(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2750,12 +2773,12 @@ public class KernelsTest {
         IJ.run(reference, "Median 3D...", "x=1 y=1 z=1");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.median(clij, inputCL, outputCl, 3, 3, 3);
+        Kernels.median(clij, inputCL, outputCL, 3, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2782,12 +2805,12 @@ public class KernelsTest {
         IJ.run(reference, "Median 3D...", "x=1 y=1 z=1");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.median(clij, inputCL, outputCl, 3, 3, 3);
+        Kernels.median(clij, inputCL, outputCL, 3, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2814,12 +2837,12 @@ public class KernelsTest {
         IJ.run(reference, "Median...", "radius=1 stack");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.medianSliceBySlice(clij, inputCL, outputCl, 3, 3);
+        Kernels.medianSliceBySlice(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2840,12 +2863,12 @@ public class KernelsTest {
         IJ.run(reference, "Median...", "radius=1 stack");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.medianSliceBySlice(clij, inputCL, outputCl, 3, 3);
+        Kernels.medianSliceBySlice(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2872,12 +2895,12 @@ public class KernelsTest {
         IJ.run(reference, "Minimum...", "radius=1");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.minimum(clij, inputCL, outputCl, 3, 3);
+        Kernels.minimum(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2899,12 +2922,12 @@ public class KernelsTest {
         IJ.run(reference, "Minimum...", "radius=1");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.minimum(clij, inputCL, outputCl, 3, 3);
+        Kernels.minimum(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -2924,12 +2947,12 @@ public class KernelsTest {
         IJ.run(reference, "Minimum 3D...", "x=1 y=1 z=1");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.minimum(clij, inputCL, outputCl, 3, 3, 3);
+        Kernels.minimum(clij, inputCL, outputCL, 3, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2955,12 +2978,12 @@ public class KernelsTest {
         IJ.run(reference, "Minimum 3D...", "x=1 y=1 z=1");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.minimum(clij, inputCL, outputCl, 3, 3, 3);
+        Kernels.minimum(clij, inputCL, outputCL, 3, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         // ignore edges and first and last slice
         reference.setRoi(new Roi(1, 1, reference.getWidth() - 2, reference.getHeight() - 2));
@@ -2978,15 +3001,15 @@ public class KernelsTest {
 
     @Test
     public void minimum2dSeparable() throws InterruptedException {
-        ClearCLImage src = clij.converter(testFlyBrain2D).getClearCLImage();
+        ClearCLImage src = clij.convert(testFlyBrain2D, ClearCLImage.class);
         ClearCLImage minimumCL = clij.createCLImage(src);
         ClearCLImage minimumSepCL = clij.createCLImage(src);
 
         Kernels.minimum(clij, src, minimumCL, 7,7);
         Kernels.minimumSeparable(clij, src, minimumSepCL, 3, 3, 3);
 
-        ImagePlus minimumImp = clij.converter(minimumCL).getImagePlus();
-        ImagePlus minimumSepImp = clij.converter(minimumSepCL).getImagePlus();
+        ImagePlus minimumImp = clij.convert(minimumCL, ImagePlus.class);
+        ImagePlus minimumSepImp = clij.convert(minimumSepCL, ImagePlus.class);
 
         // ignore edges
         minimumImp.setRoi(new Roi(1, 1, minimumImp.getWidth() - 2, minimumImp.getHeight() - 2));
@@ -3003,15 +3026,15 @@ public class KernelsTest {
 
     @Test
     public void minimum2dSeparable_Buffer() throws InterruptedException {
-        ClearCLBuffer src = clij.converter(testFlyBrain2D).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testFlyBrain2D, ClearCLBuffer.class);
         ClearCLBuffer minimumCL = clij.createCLBuffer(src);
         ClearCLBuffer minimumSepCL = clij.createCLBuffer(src);
 
         Kernels.minimum(clij, src, minimumCL, 3,3);
         Kernels.minimumSeparable(clij, src, minimumSepCL, 1, 1, 1);
 
-        ImagePlus minimumImp = clij.converter(minimumCL).getImagePlus();
-        ImagePlus minimumSepImp = clij.converter(minimumSepCL).getImagePlus();
+        ImagePlus minimumImp = clij.convert(minimumCL, ImagePlus.class);
+        ImagePlus minimumSepImp = clij.convert(minimumSepCL, ImagePlus.class);
 
 
         // ignore edges
@@ -3029,15 +3052,15 @@ public class KernelsTest {
 
     @Test
     public void minimum3dSeparable() throws InterruptedException {
-        ClearCLImage src = clij.converter(testFlyBrain3D).getClearCLImage();
+        ClearCLImage src = clij.convert(testFlyBrain3D, ClearCLImage.class);;
         ClearCLImage minimumCL = clij.createCLImage(src);
         ClearCLImage minimumSepCL = clij.createCLImage(src);
 
         Kernels.minimum(clij, src, minimumCL, 7,7, 7);
         Kernels.minimumSeparable(clij, src, minimumSepCL, 3, 3, 3);
 
-        ImagePlus minimumImp = clij.converter(minimumCL).getImagePlus();
-        ImagePlus minimumSepImp = clij.converter(minimumSepCL).getImagePlus();
+        ImagePlus minimumImp = clij.convert(minimumCL, ImagePlus.class);
+        ImagePlus minimumSepImp = clij.convert(minimumSepCL, ImagePlus.class);
 
         // ignore edges
         minimumImp.setRoi(new Roi(1, 1, minimumImp.getWidth() - 2, minimumImp.getHeight() - 2));
@@ -3055,15 +3078,15 @@ public class KernelsTest {
 
     @Test
     public void minimum3dSeparable_Buffer() throws InterruptedException {
-        ClearCLBuffer src = clij.converter(testFlyBrain3D).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
         ClearCLBuffer minimumCL = clij.createCLBuffer(src);
         ClearCLBuffer minimumSepCL = clij.createCLBuffer(src);
 
         Kernels.minimum(clij, src, minimumCL, 3,3, 3);
         Kernels.minimumSeparable(clij, src, minimumSepCL, 1, 1, 1);
 
-        ImagePlus minimumImp = clij.converter(minimumCL).getImagePlus();
-        ImagePlus minimumSepImp = clij.converter(minimumSepCL).getImagePlus();
+        ImagePlus minimumImp = clij.convert(minimumCL, ImagePlus.class);
+        ImagePlus minimumSepImp = clij.convert(minimumSepCL, ImagePlus.class);
 
 
         // ignore edges
@@ -3091,12 +3114,12 @@ public class KernelsTest {
         IJ.run(reference, "Minimum...", "radius=1 stack");
 
         // do operation with ClearCLIJ
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
-        ClearCLImage outputCl = clij.createCLImage(inputCL);
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
+        ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.minimumSliceBySlice(clij, inputCL, outputCl, 3, 3);
+        Kernels.minimumSliceBySlice(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -3117,12 +3140,12 @@ public class KernelsTest {
         IJ.run(reference, "Minimum...", "radius=1 stack");
 
         // do operation with ClearCLIJ
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
-        ClearCLBuffer outputCl = clij.createCLBuffer(inputCL);
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.minimumSliceBySlice(clij, inputCL, outputCl, 3, 3);
+        Kernels.minimumSliceBySlice(clij, inputCL, outputCL, 3, 3);
 
-        ImagePlus result = clij.converter(outputCl).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //new ImageJ();
         //clij.show(inputCL, "inp");
@@ -3142,13 +3165,13 @@ public class KernelsTest {
                         testImp2);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
         Kernels.multiplyPixelwise(clij, src, src1, dst);
 
-        ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+        ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
 
@@ -3169,13 +3192,13 @@ public class KernelsTest {
 
         for (int i = 0; i < 1000; i++) {
             // do operation with ClearCL
-            ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-            ClearCLImage src1 = clij.converter(testImp2).getClearCLImage();
-            ClearCLImage dst = clij.converter(testImp1).getClearCLImage();
+            ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+            ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
+            ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
             Kernels.multiplyPixelwise(clij, src, src1, dst);
 
-            ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+            ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
             assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
 
@@ -3195,13 +3218,13 @@ public class KernelsTest {
                         testImp2);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.convert(testImp1, ClearCLBuffer.class);
 
         Kernels.multiplyPixelwise(clij, src, src1, dst);
 
-        ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+        ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
 
@@ -3222,13 +3245,13 @@ public class KernelsTest {
 
         for (int i = 0; i < 1000; i++) {
             // do operation with ClearCL
-            ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-            ClearCLBuffer src1 = clij.converter(testImp2).getClearCLBuffer();
-            ClearCLBuffer dst = clij.converter(testImp1).getClearCLBuffer();
+            ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+            ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
+            ClearCLBuffer dst = clij.convert(testImp1, ClearCLBuffer.class);
 
             Kernels.multiplyPixelwise(clij, src, src1, dst);
 
-            ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+            ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
             assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
 
@@ -3249,13 +3272,13 @@ public class KernelsTest {
                         testImp2D2);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
-        ClearCLImage src1 = clij.converter(testImp2D2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
+        ClearCLImage src1 = clij.convert(testImp2D2, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp2D1, ClearCLImage.class);
 
         Kernels.multiplyPixelwise(clij, src, src1, dst);
 
-        ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+        ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
 
@@ -3274,13 +3297,13 @@ public class KernelsTest {
                         testImp2D2);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
-        ClearCLBuffer src1 = clij.converter(testImp2D2).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp2D1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
+        ClearCLBuffer src1 = clij.convert(testImp2D2, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.convert(testImp2D1, ClearCLBuffer.class);
 
         Kernels.multiplyPixelwise(clij, src, src1, dst);
 
-        ImagePlus multipliedCL = clij.converter(dst).getImagePlus();
+        ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(multiplied, multipliedCL));
 
@@ -3296,11 +3319,11 @@ public class KernelsTest {
         IJ.run(added, "Multiply...", "value=2 stack");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.multiplyScalar(clij, src, dst, 2f);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
@@ -3316,11 +3339,11 @@ public class KernelsTest {
         IJ.run(added, "Multiply...", "value=2 stack");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.multiplyScalar(clij, src, dst, 2f);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
@@ -3335,11 +3358,11 @@ public class KernelsTest {
         IJ.run(added, "Multiply...", "value=2");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.multiplyScalar(clij, src, dst, 2f);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
@@ -3354,11 +3377,11 @@ public class KernelsTest {
         IJ.run(added, "Multiply...", "value=2");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.multiplyScalar(clij, src, dst, 2f);
-        ImagePlus addedFromCL = clij.converter(dst).getImagePlus();
+        ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
 
@@ -3369,7 +3392,7 @@ public class KernelsTest {
     @Test
     public void multiplySliceBySliceWithScalars() {
 
-        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(mask3d, ClearCLImage.class);
         ClearCLImage multipliedBy2 = clij.createCLImage(maskCL);
 
         float[] factors = new float[(int) maskCL.getDepth()];
@@ -3388,7 +3411,7 @@ public class KernelsTest {
     @Test
     public void multiplySliceBySliceWithScalars_Buffer() {
 
-        ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(mask3d, ClearCLBuffer.class);
         ClearCLBuffer multipliedBy2 = clij.createCLBuffer(maskCL);
 
         float[] factors = new float[(int) maskCL.getDepth()];
@@ -3411,8 +3434,8 @@ public class KernelsTest {
                 "Todo: implement test for multiplyStackWithPlane");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
-        ClearCLImage mask = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
+        ClearCLImage mask = clij.convert(testImp2, ClearCLImage.class);;
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.multiplyStackWithPlane(clij, src, mask, dst);
@@ -3429,8 +3452,8 @@ public class KernelsTest {
                 "Todo: implement test for multiplyStackWithPlane");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp1).getClearCLBuffer();
-        ClearCLBuffer mask = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
+        ClearCLBuffer mask = clij.convert(testImp2, ClearCLBuffer.class);;
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.multiplyStackWithPlane(clij, src, mask, dst);
@@ -3451,12 +3474,12 @@ public class KernelsTest {
                         testImp2D1);
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.power(clij, src, dst, 2.0f);
 
-        ImagePlus squaredCL = clij.converter(dst).getImagePlus();
+        ImagePlus squaredCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(squared, squaredCL));
 
@@ -3477,12 +3500,12 @@ public class KernelsTest {
                         testImp2D1);
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D1).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.power(clij, src, dst, 2.0f);
 
-        ImagePlus squaredCL = clij.converter(dst).getImagePlus();
+        ImagePlus squaredCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(squared, squaredCL));
 
@@ -3506,12 +3529,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getWidth(), inputCL.getDepth(), inputCL.getHeight()}, inputCL.getChannelDataType());
 
         Kernels.resliceBottom(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3536,12 +3559,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getWidth(), inputCL.getDepth(), inputCL.getHeight()}, inputCL.getNativeType());
 
         Kernels.resliceBottom(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3566,12 +3589,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getHeight(), inputCL.getDepth(), inputCL.getWidth()}, inputCL.getChannelDataType());
 
         Kernels.resliceLeft(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3596,12 +3619,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getHeight(), inputCL.getDepth(), inputCL.getWidth()}, inputCL.getNativeType());
 
         Kernels.resliceLeft(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3626,12 +3649,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getHeight(), inputCL.getDepth(), inputCL.getWidth()}, inputCL.getChannelDataType());
 
         Kernels.resliceRight(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3656,12 +3679,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getHeight(), inputCL.getDepth(), inputCL.getWidth()}, inputCL.getNativeType());
 
         Kernels.resliceRight(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3686,12 +3709,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLImage inputCL = clij.converter(testImage).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getWidth(), inputCL.getDepth(), inputCL.getHeight()}, inputCL.getChannelDataType());
 
         Kernels.resliceTop(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3716,12 +3739,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLBuffer inputCL = clij.converter(testImage).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getWidth(), inputCL.getDepth(), inputCL.getHeight()}, inputCL.getNativeType());
 
         Kernels.resliceTop(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3747,12 +3770,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLImage inputCL = clij.converter(testImage2).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImage2, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
 
         Kernels.rotateLeft(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3775,12 +3798,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLBuffer inputCL = clij.converter(testImage2).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImage2, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
 
         Kernels.rotateLeft(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3803,12 +3826,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLImage inputCL = clij.converter(testImage2).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImage2, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
 
         Kernels.rotateLeft(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3831,12 +3854,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLBuffer inputCL = clij.converter(testImage2).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImage2, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
 
         Kernels.rotateLeft(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3859,12 +3882,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLImage inputCL = clij.converter(testImage2).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImage2, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
 
         Kernels.rotateRight(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3887,12 +3910,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLBuffer inputCL = clij.converter(testImage2).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImage2, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
 
         Kernels.rotateRight(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3915,12 +3938,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLImage inputCL = clij.converter(testImage2).getClearCLImage();
+        ClearCLImage inputCL = clij.convert(testImage2, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
 
         Kernels.rotateRight(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3943,12 +3966,12 @@ public class KernelsTest {
         ImagePlus reference = IJ.getImage();
 
         // do operation with OpenCL
-        ClearCLBuffer inputCL = clij.converter(testImage2).getClearCLBuffer();
+        ClearCLBuffer inputCL = clij.convert(testImage2, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
 
         Kernels.rotateRight(clij, inputCL, outputCL);
 
-        ImagePlus result = clij.converter(outputCL).getImagePlus();
+        ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
         //clij.show(reference, "ref");
         //clij.show(result, "res");
@@ -3960,7 +3983,7 @@ public class KernelsTest {
 
     @Test
     public void set3d() {
-        ClearCLImage imageCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage imageCL = clij.convert(mask3d, ClearCLImage.class);
 
         Kernels.set(clij, imageCL, 2f);
 
@@ -3977,7 +4000,7 @@ public class KernelsTest {
 
     @Test
     public void set3d_Buffers() {
-        ClearCLBuffer imageCL = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer imageCL = clij.convert(mask3d, ClearCLBuffer.class);
 
         Kernels.set(clij, imageCL, 2f);
 
@@ -3994,7 +4017,7 @@ public class KernelsTest {
 
     @Test
     public void set2d() {
-        ClearCLImage imageCL = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage imageCL = clij.convert(testImp2, ClearCLImage.class);;
 
         Kernels.set(clij, imageCL, 2f);
 
@@ -4008,7 +4031,7 @@ public class KernelsTest {
 
     @Test
     public void set2d_Buffers() {
-        ClearCLBuffer imageCL = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer imageCL = clij.convert(testImp2, ClearCLBuffer.class);;
 
         Kernels.set(clij, imageCL, 2f);
 
@@ -4021,7 +4044,7 @@ public class KernelsTest {
 
     @Test
     public void splitStack() {
-        ClearCLImage clearCLImage = clij.converter(testFlyBrain3D).getClearCLImage();
+        ClearCLImage clearCLImage = clij.convert(testFlyBrain3D, ClearCLImage.class);;
         ClearCLImage split1 = clij.createCLImage(new long[]{clearCLImage.getWidth(), clearCLImage.getHeight(), clearCLImage.getDepth() / 2}, clearCLImage.getChannelDataType());
         ClearCLImage split2 = clij.createCLImage(new long[]{clearCLImage.getWidth(), clearCLImage.getHeight(), clearCLImage.getDepth() / 2}, clearCLImage.getChannelDataType());
 
@@ -4033,7 +4056,7 @@ public class KernelsTest {
 
     @Test
     public void splitStack_Buffers() {
-        ClearCLBuffer clearCLImage = clij.converter(testFlyBrain3D).getClearCLBuffer();
+        ClearCLBuffer clearCLImage = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
         ClearCLBuffer split1 = clij.createCLBuffer(new long[]{clearCLImage.getWidth(), clearCLImage.getHeight(), clearCLImage.getDepth() / 2}, clearCLImage.getNativeType());
         ClearCLBuffer split2 = clij.createCLBuffer(new long[]{clearCLImage.getWidth(), clearCLImage.getHeight(), clearCLImage.getDepth() / 2}, clearCLImage.getNativeType());
 
@@ -4068,7 +4091,7 @@ public class KernelsTest {
         }
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp1).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage
                 dst =
                 clij.createCLImage(new long[]{src.getWidth(),
@@ -4077,7 +4100,7 @@ public class KernelsTest {
 
         Kernels.sumProjection(clij, src, dst);
 
-        ImagePlus sumProjectionCL = clij.converter(dst).getImagePlus();
+        ImagePlus sumProjectionCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(sumProjection,
                 sumProjectionCL));
@@ -4088,7 +4111,7 @@ public class KernelsTest {
 
         @Test
     public void sumPixelsSliceBySlice() {
-        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(mask3d, ClearCLImage.class);
 
         double sum = Kernels.sumPixels(clij, maskCL);
         double[] sumSliceWise = Kernels.sumPixelsSliceBySlice(clij, maskCL);
@@ -4100,7 +4123,7 @@ public class KernelsTest {
 
     @Test
     public void sumPixelsSliceBySlice_Buffers() {
-        ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(mask3d, ClearCLBuffer.class);
 
         double sum = Kernels.sumPixels(clij, maskCL);
         double[] sumSliceWise = Kernels.sumPixelsSliceBySlice(clij, maskCL);
@@ -4112,7 +4135,7 @@ public class KernelsTest {
 
     @Test
     public void sumPixels3d() {
-        ClearCLImage maskCL = clij.converter(mask3d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(mask3d, ClearCLImage.class);
 
         double sum = Kernels.sumPixels(clij, maskCL);
 
@@ -4123,7 +4146,7 @@ public class KernelsTest {
 
     @Test
     public void sumPixels3d_Buffers() {
-        ClearCLBuffer maskCL = clij.converter(mask3d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(mask3d, ClearCLBuffer.class);
 
         double sum = Kernels.sumPixels(clij, maskCL);
 
@@ -4134,7 +4157,7 @@ public class KernelsTest {
 
     @Test
     public void sumPixels2d() {
-        ClearCLImage maskCL = clij.converter(mask2d).getClearCLImage();
+        ClearCLImage maskCL = clij.convert(testImp2, ClearCLImage.class);;
 
         double sum = Kernels.sumPixels(clij, maskCL);
 
@@ -4145,7 +4168,7 @@ public class KernelsTest {
 
     @Test
     public void sumPixels2d_Buffers() {
-        ClearCLBuffer maskCL = clij.converter(mask2d).getClearCLBuffer();
+        ClearCLBuffer maskCL = clij.convert(testImp2, ClearCLBuffer.class);;
 
         double sum = Kernels.sumPixels(clij, maskCL);
 
@@ -4175,13 +4198,13 @@ public class KernelsTest {
                 "method=Default background=Dark");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.threshold(clij, src, dst, 2f);
         Kernels.multiplyScalar(clij, dst, src, 255f);
 
-        ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+        ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(thresholded,
                 thresholdedCL));
@@ -4203,13 +4226,13 @@ public class KernelsTest {
                 "method=Default background=Dark");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImage).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.threshold(clij, src, dst, 2f);
         Kernels.multiplyScalar(clij, dst, src, 255f);
 
-        ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+        ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(thresholded,
                 thresholdedCL));
@@ -4229,13 +4252,13 @@ public class KernelsTest {
                 "method=Default background=Dark");
 
         // do operation with ClearCL
-        ClearCLImage src = clij.converter(testImp2D2).getClearCLImage();
-        ClearCLImage dst = clij.converter(testImp2D2).getClearCLImage();
+        ClearCLImage src = clij.convert(testImp2D2, ClearCLImage.class);
+        ClearCLImage dst = clij.convert(testImp2D2, ClearCLImage.class);
 
         Kernels.threshold(clij, src, dst, 2f);
         Kernels.multiplyScalar(clij, dst, src, 255f);
 
-        ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+        ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(thresholded,
                 thresholdedCL));
@@ -4256,13 +4279,13 @@ public class KernelsTest {
                 "method=Default background=Dark");
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImp2D2).getClearCLBuffer();
-        ClearCLBuffer dst = clij.converter(testImp2D2).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImp2D2, ClearCLBuffer.class);
+        ClearCLBuffer dst = clij.convert(testImp2D2, ClearCLBuffer.class);
 
         Kernels.threshold(clij, src, dst, 2f);
         Kernels.multiplyScalar(clij, dst, src, 255f);
 
-        ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+        ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(thresholded,
                 thresholdedCL));
@@ -4287,7 +4310,7 @@ public class KernelsTest {
 
 
         // do operation with ClearCL
-        ClearCLBuffer src = clij.converter(testImage).getClearCLBuffer();
+        ClearCLBuffer src = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
 
@@ -4302,7 +4325,7 @@ public class KernelsTest {
         src.writeTo(buffer, true);
         System.out.println("src " + Arrays.toString(buffer.array()));
 
-        ImagePlus thresholdedCL = clij.converter(src).getImagePlus();
+        ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
         clij.show(thresholded, "thresholded");
         clij.show(thresholdedCL, "thresholded_cl");

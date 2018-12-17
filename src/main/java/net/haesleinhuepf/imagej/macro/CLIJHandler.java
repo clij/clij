@@ -173,7 +173,7 @@ public class CLIJHandler implements MacroExtension {
 
     public void pushToGPU(String arg) {
         ImagePlus imp = WindowManager.getImage(arg);
-        bufferMap.put(arg, clij.converter(imp).getClearCLBuffer());
+        bufferMap.put(arg, clij.convert(imp, ClearCLBuffer.class));
     }
 
     @Override

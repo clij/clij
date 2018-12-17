@@ -1,5 +1,6 @@
 package net.haesleinhuepf.imagej.demo;
 
+import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.kernels.Kernels;
@@ -131,9 +132,9 @@ public class BenchmarkingDemo {
     }
 
     private static void demoClearCLIJ() throws IOException {
-        ClearCLImage input = clij.converter(img).getClearCLImage();
-        ClearCLImage flip = clij.createCLImage(input.getDimensions(), input.getChannelDataType());
-        ClearCLImage flop = clij.createCLImage(input.getDimensions(), input.getChannelDataType());
+        ClearCLBuffer input = clij.convert(img, ClearCLBuffer.class);
+        ClearCLBuffer flip = clij.createCLBuffer(input.getDimensions(), input.getNativeType());
+        ClearCLBuffer flop = clij.createCLBuffer(input.getDimensions(), input.getNativeType());
 
         Kernels.blurSeparable(clij, input, flop, (float) sigma, (float) sigma, (float) sigma);
 
@@ -144,7 +145,7 @@ public class BenchmarkingDemo {
 
         Kernels.multiplyPixelwise(clij, flop, input, flip);
 
-        clij.converter(flip).getImagePlus().show();
+        clij.convert(flip, ImagePlus.class).show();
 
         flip.close();
         flop.close();
