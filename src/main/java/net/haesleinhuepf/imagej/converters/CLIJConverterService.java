@@ -55,8 +55,17 @@ public class CLIJConverterService extends AbstractPTService<CLIJConverterPlugin>
         return CLIJConverterPlugin.class;
     }
 
+    private PluginInfo<CLIJConverterPlugin> findPluginInfo(ClassPair pair) {
+        for (ClassPair item : converterPlugins.keySet()) {
+            if( item.a.isAssignableFrom(pair.a) && item.b == pair.b) {
+                return converterPlugins.get(item);
+            }
+        }
+        return null;
+    }
+
     public <S, T> CLIJConverterPlugin<S, T> getConverter(Class<S> a, Class<T> b) {
-        PluginInfo<CLIJConverterPlugin> info = converterPlugins.get(new ClassPair(a, b));
+        PluginInfo<CLIJConverterPlugin> info = findPluginInfo(new ClassPair(a, b));
         if (info == null) {
             throw new IllegalArgumentException("No converter found from " + a + " to " + b);
         }

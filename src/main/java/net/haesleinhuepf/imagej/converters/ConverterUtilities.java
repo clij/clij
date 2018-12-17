@@ -56,18 +56,39 @@ public class ConverterUtilities {
         ImageChannelDataType lImageChannelType = null;
 
         if (lType == NativeTypeEnum.UnsignedByte) {
-            lImageChannelType = ImageChannelDataType.UnsignedInt8;
+            return ImageChannelDataType.UnsignedInt8;
         } else if (lType == NativeTypeEnum.Byte) {
-            lImageChannelType = ImageChannelDataType.SignedInt8;
+            return ImageChannelDataType.SignedInt8;
         } else if (lType == NativeTypeEnum.UnsignedShort) {
-            lImageChannelType = ImageChannelDataType.UnsignedInt16;
+            return ImageChannelDataType.UnsignedInt16;
         } else if (lType == NativeTypeEnum.Short) {
-            lImageChannelType = ImageChannelDataType.SignedInt16;
+            return ImageChannelDataType.SignedInt16;
         } else if (lType == NativeTypeEnum.Float) {
-            lImageChannelType = ImageChannelDataType.Float;
+            return ImageChannelDataType.Float;
+        } else {
+            throw new IllegalArgumentException(
+                    "Cannot convert image of type " + lType);
         }
-        return lImageChannelType;
-
     }
 
+    public static NativeTypeEnum imageChannelDataTypeToNativeType(ImageChannelDataType lType) {
+
+        if (lType == ImageChannelDataType.UnsignedInt8) {
+            return NativeTypeEnum.UnsignedByte;
+        } else if (lType == ImageChannelDataType.SignedInt8) {
+            return NativeTypeEnum.Byte;
+        } else if (lType == ImageChannelDataType.UnsignedInt8) {
+            return NativeTypeEnum.UnsignedByte;
+        } else if (lType == ImageChannelDataType.UnsignedInt16) {
+            return NativeTypeEnum.UnsignedShort;
+        } else if (lType == ImageChannelDataType.SignedInt16) {
+            return NativeTypeEnum.Short;
+        } else if (lType == ImageChannelDataType.Float) {
+            return NativeTypeEnum.Float;
+        } else  {
+            throw new IllegalArgumentException(
+                    "Cannot convert image of type " + lType);
+        }
+
+    }
 }
