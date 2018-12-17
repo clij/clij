@@ -7,6 +7,7 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
+import net.imagej.patcher.LegacyInjector;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -26,6 +27,10 @@ import static org.junit.Assert.assertFalse;
  */
 public class DoubleFlipTest
 {
+  static {
+    LegacyInjector.preinit();
+  }
+
   public static void main(String... args) throws IOException
   {
     new ImageJ();
@@ -37,7 +42,7 @@ public class DoubleFlipTest
   {
     for (String lDeviceName : ClearCLIJ.getAvailableDeviceNames())
     {
-      ClearCLIJ lCLIJ = new ClearCLIJ(lDeviceName);
+      ClearCLIJ lCLIJ = ClearCLIJ.getInstance(lDeviceName);
 
       System.out.println("Testing " + lDeviceName);
 
@@ -45,13 +50,12 @@ public class DoubleFlipTest
           lInputImagePlus =
           IJ.openImage("src/main/resources/flybrain.tif");
 
-      ClearCLImage
-          lCLImage =
-          lCLIJ.converter(lInputImagePlus).getClearCLImage();
+      ClearCLImage lCLImage = lCLIJ.convert(lInputImagePlus, ClearCLImage.class);
+          //lCLIJ.converter(lInputImagePlus).getClearCLImage();
 
       RandomAccessibleInterval
-          lInputImagePlus2 =
-          lCLIJ.converter(lCLImage).getRandomAccessibleInterval();
+          lInputImagePlus2 = lCLIJ.convert(lCLImage, RandomAccessibleInterval.class);
+          //lCLIJ.converter(lCLImage).getRandomAccessibleInterval();
 
       assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
           lInputImagePlus2),
@@ -67,11 +71,11 @@ public class DoubleFlipTest
           ImageJFunctions.wrap(new Duplicator().run(lInputImagePlus));
 
       ClearCLImage
-          lSrcImage =
-          lCLIJ.converter(lInputImg).getClearCLImage();
+          lSrcImage = lCLIJ.convert(lInputImg, ClearCLImage.class);
+          //lCLIJ.converter(lInputImg).getClearCLImage();
       ClearCLImage
-          lDstImage =
-          lCLIJ.converter(lOutputImg).getClearCLImage();
+          lDstImage = lCLIJ.convert(lOutputImg, ClearCLImage.class);
+          //lCLIJ.converter(lOutputImg).getClearCLImage();
 
       // flip once
       Kernels.flip(lCLIJ, lSrcImage, lDstImage, true, false, false);
@@ -90,8 +94,8 @@ public class DoubleFlipTest
 
       RandomAccessibleInterval<UnsignedShortType>
           lIntermediateResultImg =
-          (RandomAccessibleInterval<UnsignedShortType>) lCLIJ.converter(
-              lDstImage).getRandomAccessibleInterval();
+          (RandomAccessibleInterval<UnsignedShortType>) lCLIJ.convert(lDstImage, RandomAccessibleInterval.class);
+                  //converter(lDstImage).getRandomAccessibleInterval();
 
       System.out.println("Should be different:");
       assertFalse(TestUtilities.compareIterableIntervals(Views.iterable(
@@ -99,8 +103,9 @@ public class DoubleFlipTest
 
       RandomAccessibleInterval<UnsignedShortType>
           lResultImg =
-          (RandomAccessibleInterval<UnsignedShortType>) lCLIJ.converter(
-              lSrcImage).getRandomAccessibleInterval();
+          (RandomAccessibleInterval<UnsignedShortType>) lCLIJ.convert(lSrcImage, RandomAccessibleInterval.class);
+                  //converter(
+              //lSrcImage).getRandomAccessibleInterval();
 
       System.out.println("Should be same:");
       assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
