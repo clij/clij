@@ -2669,7 +2669,7 @@ public class Kernels {
 
         RandomAccessibleInterval
                 rai =
-                clij.converter(clReducedImage).getRandomAccessibleInterval();
+                clij.convert(clReducedImage, RandomAccessibleInterval.class);
         Cursor cursor = Views.iterable(rai).cursor();
         float sum = 0;
         while (cursor.hasNext()) {
@@ -2701,7 +2701,7 @@ public class Kernels {
 
         RandomAccessibleInterval
                 rai =
-                clij.converter(clReducedImage).getRandomAccessibleInterval();
+                clij.convert(clReducedImage, RandomAccessibleInterval.class);
         Cursor cursor = Views.iterable(rai).cursor();
         float sum = 0;
         while (cursor.hasNext()) {

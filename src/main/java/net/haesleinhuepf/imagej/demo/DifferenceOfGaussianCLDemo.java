@@ -50,7 +50,7 @@ public class DifferenceOfGaussianCLDemo {
 
             clij.execute("src/main/jython/differenceOfGaussian/differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", lParameterMap);
 
-            RandomAccessibleInterval result = clij.converter(dstImage).getRandomAccessibleInterval();
+            RandomAccessibleInterval result = clij.convert(dstImage, RandomAccessibleInterval.class);
 
             ImageJFunctions.show(result);
         }
