@@ -272,24 +272,21 @@ public class ClearCLIJ {
         );
     }
 
-    public void show(ImagePlus input, String title) {
-        show(converter(input), title);
-    }
 
     public void show(RandomAccessibleInterval input, String title) {
-        show(converter(input), title);
+        show(convert(input, ImagePlus.class), title);
     }
 
     public void show(ClearCLImage input, String title) {
-        show(converter(input), title);
+        show(convert(input, ImagePlus.class), title);
     }
 
     public void show(ClearCLBuffer input, String title) {
-        show(converter(input), title);
+        show(convert(input, ImagePlus.class), title);
     }
 
-    public void show(ImageTypeConverter input, String title) {
-        ImagePlus imp = new Duplicator().run(input.getImagePlus());
+    public void show(ImagePlus input, String title) {
+        ImagePlus imp = new Duplicator().run(input);
         imp.setTitle(title);
         imp.setZ(imp.getNSlices() / 2);
         imp.setC(imp.getNChannels() / 2);
