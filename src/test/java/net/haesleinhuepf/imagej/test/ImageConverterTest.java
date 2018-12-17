@@ -36,9 +36,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class ImageConverterTest
 {
-  static {
-    LegacyInjector.preinit();
-  }
 
   ClearCLIJ clij = null;
 

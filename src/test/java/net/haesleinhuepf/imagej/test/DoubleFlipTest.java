@@ -27,10 +27,6 @@ import static org.junit.Assert.assertFalse;
  */
 public class DoubleFlipTest
 {
-  static {
-    LegacyInjector.preinit();
-  }
-
   public static void main(String... args) throws IOException
   {
     new ImageJ();
