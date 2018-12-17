@@ -38,8 +38,8 @@ public class PipelineCLDemo {
         // Startup OpenCL device, convert images to ClearCL format
         ClearCLIJ clij = ClearCLIJ.getInstance();
 
-        ClearCLImage inputCLImage = clij.converter(input).getClearCLImage();
-        ClearCLImage outputCLImage = clij.converter(output).getClearCLImage();
+        ClearCLImage inputCLImage = clij.convert(input, ClearCLImage.class);
+        ClearCLImage outputCLImage = clij.convert(output, ClearCLImage.class);
 
         // ---------------------------------------------------------------
         // Example step 1: Downsampling
@@ -54,7 +54,7 @@ public class PipelineCLDemo {
         clij.execute(Kernels.class, "downsampling.cl", "downsample_3d_nearest", lParameterMap);
 
         // Convert/copy and show intermediate result
-        RandomAccessibleInterval intermediateResult = clij.converter(outputCLImage).getRandomAccessibleInterval();
+        RandomAccessibleInterval intermediateResult = clij.convert(outputCLImage, RandomAccessibleInterval.class);
 
         ImageJFunctions.show(intermediateResult);
 
@@ -76,7 +76,7 @@ public class PipelineCLDemo {
         clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image3d", lBlurParameterMap);
 
         // Convert and show final result
-        RandomAccessibleInterval result = clij.converter(inputCLImage).getRandomAccessibleInterval();
+        RandomAccessibleInterval result = clij.convert(inputCLImage, RandomAccessibleInterval.class);
 
         ImageJFunctions.show(result);
 
