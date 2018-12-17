@@ -40,21 +40,29 @@ public class ClearCLImageToRandomAccessibleIntervalConverter extends AbstractCLI
     @Override
     public RandomAccessibleInterval convert(ClearCLImage source) {
 
+        long[] dimensions = new long[]{
+                source.getWidth(),
+                source.getHeight(),
+                1,
+                source.getDepth(),
+                1
+        };
+
         Img rai = null;
 
         if (source.getChannelDataType()
                 == ImageChannelDataType.SignedInt8) {
-            rai = ArrayImgs.bytes(source.getDimensions());
+            rai = ArrayImgs.bytes(dimensions);
         } else if (source.getChannelDataType() == ImageChannelDataType.UnsignedInt8 ||
                    source.getChannelDataType() == ImageChannelDataType.UnsignedNormalizedInt8) {
-            rai = ArrayImgs.unsignedBytes(source.getDimensions());
+            rai = ArrayImgs.unsignedBytes(dimensions);
         } else if (source.getChannelDataType() == ImageChannelDataType.SignedInt16) {
-            rai = ArrayImgs.shorts(source.getDimensions());
+            rai = ArrayImgs.shorts(dimensions);
         } else if (source.getChannelDataType() == ImageChannelDataType.UnsignedInt16 ||
                    source.getChannelDataType() == ImageChannelDataType.UnsignedNormalizedInt16) {
-            rai = ArrayImgs.unsignedShorts(source.getDimensions());
+            rai = ArrayImgs.unsignedShorts(dimensions);
         } else if (source.getChannelDataType() == ImageChannelDataType.Float) {
-            rai = ArrayImgs.floats(source.getDimensions());
+            rai = ArrayImgs.floats(dimensions);
         } else {
             throw new UnknownFormatConversionException(
                     "Cannot convert image of type "
