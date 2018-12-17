@@ -15,7 +15,7 @@ import java.util.Set;
 @Plugin(type = Service.class)
 public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> implements ImageJService {
 
-    private HashMap<String, PluginInfo<CLIJMacroPlugin>> animals = new HashMap<>();
+    private HashMap<String, PluginInfo<CLIJMacroPlugin>> clijPlugins = new HashMap<>();
 
     @Override
     public void initialize() {
@@ -24,18 +24,18 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
             if (name == null || name.isEmpty()) {
                 name = info.getClassName();
             }
-            animals.put(name, info);
+            clijPlugins.put(name, info);
         }
         CLIJHandler.getInstance().setPluginService(this);
     }
 
 
     public Set<String> getCLIJMethodNames() {
-        return animals.keySet();
+        return clijPlugins.keySet();
     }
 
     public CLIJMacroPlugin clijMacroPlugin(final String name) {
-        final PluginInfo<CLIJMacroPlugin> info = animals.get(name);
+        final PluginInfo<CLIJMacroPlugin> info = clijPlugins.get(name);
 
         if (info == null) {
             //throw new IllegalArgumentException("No clij plugin of name " + name);
@@ -48,7 +48,7 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
     }
 
     public ExtensionDescriptor getPluginExtensionDescriptor(String name){
-        final PluginInfo<CLIJMacroPlugin> info = animals.get(name);
+        final PluginInfo<CLIJMacroPlugin> info = clijPlugins.get(name);
 
         if (info == null) {
             throw new IllegalArgumentException("No animal of that name");
