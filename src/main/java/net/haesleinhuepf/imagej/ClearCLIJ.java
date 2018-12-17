@@ -16,8 +16,10 @@ import net.haesleinhuepf.imagej.utilities.CLInfo;
 import net.haesleinhuepf.imagej.utilities.CLKernelExecutor;
 import net.haesleinhuepf.imagej.utilities.ImageTypeConverter;
 import net.imagej.ImageJ;
+import net.imagej.patcher.LegacyInjector;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.RealType;
+import org.scijava.Context;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -313,8 +315,12 @@ public class ClearCLIJ {
     }
 
     public <S, T> T convert(S source, Class<T> targetClass) {
+        if (targetClass.isAssignableFrom(source.getClass())) {
+            return (T) source;
+        }
         if (converterService == null) {
-            converterService = new ImageJ().getContext().service(CLIJConverterService.class);
+            converterService = new Context(CLIJConverterService.class).service(CLIJConverterService.class);
+                    //new ImageJ().getContext().service(CLIJConverterService.class);
         }
         CLIJConverterPlugin<S, T> converter = (CLIJConverterPlugin<S, T>) converterService.getConverter(source.getClass(), targetClass);
         return converter.convert(source);
