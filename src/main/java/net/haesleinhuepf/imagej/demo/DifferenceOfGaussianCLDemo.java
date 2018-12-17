@@ -38,8 +38,8 @@ public class DifferenceOfGaussianCLDemo {
         // ---------------------------------------------------------------
         // Example 1: Flip image in X
         {
-            ClearCLImage srcImage = clij.converter(input).getClearCLImage();
-            ClearCLImage dstImage = clij.converter(output).getClearCLImage();
+            ClearCLImage srcImage = clij.convert(input, ClearCLImage.class);
+            ClearCLImage dstImage = clij.convert(output, ClearCLImage.class);
 
             Map<String, Object> lParameterMap = new HashMap<>();
             lParameterMap.put("input", srcImage);
