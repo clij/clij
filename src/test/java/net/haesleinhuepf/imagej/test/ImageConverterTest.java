@@ -8,7 +8,6 @@ import ij.gui.NewImage;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.converters.implementations.RandomAccessibleIntervalToClearCLImageConverter;
 import net.haesleinhuepf.imagej.kernels.Kernels;
-import net.haesleinhuepf.imagej.utilities.ImageTypeConverter;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
@@ -149,8 +148,7 @@ public class ImageConverterTest
 
     RandomAccessibleInterval<T>
         lRAIconvertedTwice =
-        (RandomAccessibleInterval<T>) clij.converter(lClearCLImage)
-                                           .getRandomAccessibleInterval();
+        (RandomAccessibleInterval<T>) clij.convert(lClearCLImage, RandomAccessibleInterval.class);
 
     assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
         lRAI), Views.iterable(lRAIconvertedTwice)));
