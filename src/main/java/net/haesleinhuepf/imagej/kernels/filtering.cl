@@ -154,6 +154,39 @@ __kernel void mean_slicewise_image3d
   WRITE_IMAGE_3D(dst, coord, res);
 }
 
+__kernel void mean_image2d_ij
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int radius
+)
+{
+    const int i = get_global_id(0), j = get_global_id(1);
+    const int2 coord = (int2){i,j};
+
+    // centers
+    const int4   e = (int4)  { radius, radius, 0, 0 };
+
+    float rSquared = radius * radius;
+
+    int count = 0;
+
+    float sum = 0;
+    for (int x = -e.x; x <= e.x; x++) {
+        float xSquared = x * x;
+        for (int y = -e.y; y <= e.y; y++) {
+            float ySquared = y * y;
+            if (xSquared + ySquared < rSquared) {
+                sum = (float)(READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x);
+                count++;
+            }
+        }
+    }
+
+
+    DTYPE_OUT res = sum / count;
+    WRITE_IMAGE_2D(dst, coord, res);
+}
+
 
 __kernel void mean_image2d
 (
