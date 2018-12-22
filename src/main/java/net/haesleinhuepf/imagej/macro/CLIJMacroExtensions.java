@@ -32,7 +32,7 @@ import java.util.HashMap;
  * Author: @haesleinhuepf
  * 11 2018
  */
-@Plugin(type = Command.class, menuPath = "Plugins>CLIJ>CLIJ Macro Extensions")
+@Plugin(type = Command.class, menuPath = "Plugins>ImageJ on GPU (CLIJ)>CLIJ Macro Extensions")
 public class CLIJMacroExtensions implements Command {
 
     @Parameter
