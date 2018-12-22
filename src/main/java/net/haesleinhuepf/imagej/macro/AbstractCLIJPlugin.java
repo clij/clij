@@ -257,7 +257,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             if (parameterType.compareTo("Image") == 0) {
                 if (parameterName.contains("destination")) {
                     if (allBuffers.size() > 0) {
-                        ClearCLBuffer destination = clij.createCLBuffer(allBuffers.get(0));
+                        ClearCLBuffer destination = createOutputBufferFromSource(allBuffers.get(0));
                         args[i] = destination;
                         allBuffers.add(destination);
                         String destinationName = name + "_" + parameterName + "_" + imageTitle;
