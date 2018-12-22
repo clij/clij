@@ -2,9 +2,19 @@ package net.haesleinhuepf.imagej.macro;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import fiji.util.gui.GenericDialogPlus;
+import ij.IJ;
 import ij.ImagePlus;
+import ij.gui.GenericDialog;
+import ij.macro.MacroExtension;
+import ij.plugin.filter.PlugInFilter;
+import ij.plugin.frame.Recorder;
+import ij.process.ImageProcessor;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.imglib2.RandomAccessibleInterval;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * AbstractCLIJPlugin
@@ -12,10 +22,14 @@ import net.imglib2.RandomAccessibleInterval;
  * Author: @haesleinhuepf
  * December 2018
  */
-public abstract class AbstractCLIJPlugin implements CLIJMacroPlugin{
+public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugin {
     protected ClearCLIJ clij;
     protected Object[] args;
-    public AbstractCLIJPlugin() { }
+    protected String name;
+    public AbstractCLIJPlugin() {
+        String name = this.getClass().getSimpleName();
+        this.name = "CLIJ_" + name.substring(0, 1).toLowerCase() + name.substring(1, name.length());
+    }
 
     public void setClij(ClearCLIJ clij) {
         this.clij = clij;
@@ -185,4 +199,127 @@ public abstract class AbstractCLIJPlugin implements CLIJMacroPlugin{
         return clij.createCLBuffer(input);
     }
 
+
+
+
+
+    @Override
+    public int setup(String arg, ImagePlus imp) {
+        return PlugInFilter.DOES_ALL;
+    }
+
+    @Override
+    public void run(ImageProcessor ip) {
+        GenericDialogPlus gd = new GenericDialogPlus(name);
+
+        ArrayList<String> deviceList = ClearCLIJ.getAvailableDeviceNames();
+        String[] deviceArray = new String[deviceList.size()];
+        deviceList.toArray(deviceArray);
+        gd.addChoice("CL_Device", deviceArray, deviceArray[0]);
+
+        String[] parameters = getParameterHelpText().split(",");
+        args = new Object[parameters.length];
+        for (int i = 0; i < parameters.length; i++) {
+            String[] parameterParts = parameters[i].trim().split(" ");
+            String parameterType = parameterParts[0];
+            String parameterName = parameterParts[1];
+            if (parameterType.compareTo("Image") == 0) {
+                if (!parameterName.contains("destination")) {
+                    gd.addImageChoice(parameterName, IJ.getImage().getTitle());
+                }
+            } else if (parameterType.compareTo("String") == 0) {
+                gd.addStringField(parameterName, "");
+            } else if (parameterType.compareTo("Boolean") == 0) {
+                gd.addCheckbox(parameterName, true);
+            } else { // Number
+                gd.addNumericField(parameterName, 2, 2);
+            }
+        }
+        // gd.addNumericField("Radius (in pixels)", 2, 0);
+
+        gd.showDialog();
+        if (gd.wasCanceled()) {
+            return;
+        }
+        clij = ClearCLIJ.getInstance(gd.getNextChoice());
+
+        ArrayList<ClearCLBuffer> allBuffers = new ArrayList<ClearCLBuffer>();
+
+        HashMap<String, ClearCLBuffer> destinations = new HashMap<String, ClearCLBuffer>();
+
+        String imageTitle = "";
+        String calledParameters = "";
+
+        for (int i = 0; i < parameters.length; i++) {
+            String[] parameterParts = parameters[i].trim().split(" ");
+            String parameterType = parameterParts[0];
+            String parameterName = parameterParts[1];
+            if (parameterType.compareTo("Image") == 0) {
+                if (parameterName.contains("destination")) {
+                    if (allBuffers.size() > 0) {
+                        ClearCLBuffer destination = clij.createCLBuffer(allBuffers.get(0));
+                        args[i] = destination;
+                        allBuffers.add(destination);
+                        String destinationName = name + "_" + parameterName + "_" + imageTitle;
+                        calledParameters = calledParameters + "\"" + destinationName + "\"";
+
+                        destinations.put(destinationName, destination);
+                    }
+                } else {
+                    ImagePlus imp = gd.getNextImage();
+                    recordIfNotRecorded("Ext.CLIJ_push", imp.getTitle());
+                    args[i] = clij.convert(imp, ClearCLBuffer.class);
+                    allBuffers.add((ClearCLBuffer)args[i]);
+                    calledParameters = calledParameters + "\"" + imp.getTitle() + "\"";
+                }
+            } else if (parameterType.compareTo("String") == 0) {
+                args[i] = gd.getNextString();
+                calledParameters = calledParameters + "\"" + args[i] + "\"";
+            } else if (parameterType.compareTo("Boolean") == 0) {
+                boolean value = gd.getNextBoolean();
+                args[i] = value?1.0:0.0;
+                calledParameters = calledParameters + (value?"true":"false");
+            } else { // Number
+                args[i] = gd.getNextNumber();
+                calledParameters = calledParameters + args[i];
+            }
+            if (calledParameters.length() > 0 && i < parameters.length - 1) {
+                calledParameters = calledParameters + ", ";
+            }
+        }
+
+        if (this instanceof CLIJOpenCLProcessor) {
+            ((CLIJOpenCLProcessor)this).executeCL();
+        } else if (this instanceof CLIJImageJProcessor) {
+            ((CLIJImageJProcessor)this).executeIJ();
+        }
+
+        record("Ext." + name, calledParameters);
+
+
+        for (String destinationName : destinations.keySet()) {
+            record("Ext.CLIJ_pull", destinationName);
+            clij.show(destinations.get(destinationName), destinationName);
+        }
+        //record("// Or:", "");
+
+        for (ClearCLBuffer buffer : allBuffers) {
+            buffer.close();
+        }
+    }
+
+    private void recordIfNotRecorded(String recordMethod, String recordParameters) {
+        if (Recorder.getInstance() == null) {
+            return;
+        }
+        if (Recorder.getInstance().getText().contains(recordMethod)) {
+            return;
+        }
+        record(recordMethod, recordParameters);
+    }
+
+    private void record(String recordMethod, String recordParameters) {
+        Recorder.record(recordMethod, recordParameters);
+
+    }
 }

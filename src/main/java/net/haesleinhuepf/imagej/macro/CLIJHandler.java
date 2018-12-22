@@ -61,7 +61,7 @@ public class CLIJHandler implements MacroExtension {
             CLIJMacroPlugin plugin = null;
             //System.out.println("Handle Ext " + name);
             try {
-                plugin = pluginService.clijMacroPlugin(name);
+                plugin = pluginService.getCLIJMacroPlugin(name);
 
                 //System.out.println("plugins " + CLIJHandler.getInstance().pluginService.getCLIJMethodNames().size());
 

@@ -1,9 +1,6 @@
 package net.haesleinhuepf.imagej.macro.modules;
 
-import clearcl.ClearCLBuffer;
-import clearcl.ClearCLImage;
 import ij.IJ;
-import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.*;
 import org.scijava.plugin.Plugin;
 
@@ -30,7 +27,7 @@ public class Help extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
         for (String name : pluginService.getCLIJMethodNames()) {
             if (searchString.length() == 0 || name.contains(searchString)) {
 
-                helpList.add(name + "(" + pluginService.clijMacroPlugin(name).getParameterHelpText() + ")");
+                helpList.add(name + "(" + pluginService.getCLIJMacroPlugin(name).getParameterHelpText() + ")");
                 //IJ.log(key + "(" + methodMap.get(key).parameters + ")");
             }
         }

@@ -8,13 +8,13 @@
 	<parent>
 		<groupId>net.clearcontrol</groupId>
 		<artifactId>ClearParentPom</artifactId>
-		<version>0.6.32</version>
+		<version>0.6.35</version>
 		<relativePath />
 	</parent>
 
 	<groupId>net.haesleinhuepf</groupId>
 	<artifactId>clij_</artifactId>
-	<version>0.6.0</version>
+	<version>0.6.1</version>
 
 	<name>CLIJ</name>
 	<description>CLIJ</description>
@@ -131,6 +131,10 @@
 			<groupId>com.nativelibs4java</groupId>
 			<artifactId>javacl</artifactId>
 			<version>1.0.0-RC4</version>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>fiji-lib</artifactId>
 		</dependency>
 	</dependencies>
 

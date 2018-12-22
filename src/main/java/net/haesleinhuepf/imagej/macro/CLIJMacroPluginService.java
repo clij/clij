@@ -34,7 +34,7 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
         return clijPlugins.keySet();
     }
 
-    public CLIJMacroPlugin clijMacroPlugin(final String name) {
+    public CLIJMacroPlugin getCLIJMacroPlugin(final String name) {
         final PluginInfo<CLIJMacroPlugin> info = clijPlugins.get(name);
 
         if (info == null) {
@@ -79,5 +79,14 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
     @Override
     public Class<CLIJMacroPlugin> getPluginType() {
         return CLIJMacroPlugin.class;
+    }
+
+    public String getNameByClass(Class<? extends AbstractCLIJPlugin> aClass) {
+        for (String name : getCLIJMethodNames()) {
+            if (getCLIJMacroPlugin(name).getClass() == aClass) {
+                return name;
+            }
+        }
+        return null;
     }
 }

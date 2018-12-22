@@ -4,13 +4,20 @@ import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.gui.GenericDialog;
 import ij.plugin.Duplicator;
+import ij.plugin.PlugIn;
+import ij.plugin.filter.PlugInFilter;
+import ij.process.ImageProcessor;
+import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJImageJProcessor;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
+
+import java.util.ArrayList;
 
 /**
  * Author: @haesleinhuepf
@@ -35,7 +42,7 @@ public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number radiusX, Number radiusY";
+        return "Image source, Image destination, Number radius";
     }
 
     @Override
@@ -66,4 +73,5 @@ public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
         result.close();
         return true;
     }
+
 }

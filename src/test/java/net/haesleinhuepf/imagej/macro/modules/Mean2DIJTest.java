@@ -30,9 +30,9 @@ public class Mean2DIJTest extends AbstractMacroPluginTest {
         ClearCLImage bufferOutIJ = clij.createCLImage(bufferIn);
 
 
-        Object[] argsCL = {bufferIn, bufferOutCL, new Double(1)};
+        Object[] argsCL = {bufferIn, bufferOutCL, new Double(2)};
         makeMean2DIJ(clij, argsCL).executeCL();
-        Object[] argsIJ = {bufferIn, bufferOutIJ, new Double(1)};
+        Object[] argsIJ = {bufferIn, bufferOutIJ, new Double(2)};
         makeMean2DIJ(clij, argsIJ).executeIJ();
 
         clij.show(bufferOutCL, "cl " + bufferOutCL);
