@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2dMooreNeighborhood")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2DMooreNeighborhood")
 public class Mean2DMooreNeighborhood extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
@@ -21,13 +21,7 @@ public class Mean2DMooreNeighborhood extends AbstractCLIJPlugin implements CLIJM
         int radiusY = asInteger(args[3]);
 
         if (containsCLBufferArguments()) {
-            // convert all arguments to CLImages
-            Object[] args = openCLImageArgs();
-            boolean result = Kernels.meanSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), radiusX, radiusY, 0);
-            // copy result back to the bufffer
-            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
-            // cleanup
-            releaseImages(args);
+            boolean result = Kernels.meanSeparable(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, 0);
             return result;
         } else {
             return Kernels.meanSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, 0);

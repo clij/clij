@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean3d")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean3D")
 public class Mean3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override

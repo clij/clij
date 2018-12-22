@@ -21,13 +21,7 @@ public class Maximum2DMooreNeighborhood extends AbstractCLIJPlugin implements CL
         int radiusY = asInteger(args[3]);
 
         if (containsCLBufferArguments()) {
-            // convert all arguments to CLImages
-            Object[] args = openCLImageArgs();
-            boolean result = Kernels.maximumSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), radiusX, radiusY, 0);
-            // copy result back to the bufffer
-            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
-            // cleanup
-            releaseImages(args);
+            boolean result = Kernels.maximumSeparable(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, 0);
             return result;
         } else {
             return Kernels.maximumSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, 0);

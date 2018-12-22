@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Author: @haesleinhuepf
  * December 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2dIJ")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2DIJ")
 public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor {
 
     @Override

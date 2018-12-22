@@ -5,7 +5,8 @@
 // Author: Robert Haase
 // December 2018
 // ---------------------------------------------
-run ("Close All");
+
+run ("Close All");
 
 // Get test data
 //open("C:/structure/data/t1-head.tif");
@@ -26,7 +27,7 @@ Ext.CLIJ_push(input);
 close();
 
 // Blur in GPU
-Ext.CLIJ_blur3d(input, background, 10, 10, 1);
+Ext.CLIJ_blur3D(input, background, 10, 10, 1);
 
 // subtraction from original
 Ext.CLIJ_addWeightedPixelwise(input, background, background_subtracted, 1, -1);

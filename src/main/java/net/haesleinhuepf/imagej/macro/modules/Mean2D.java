@@ -14,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2d")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2D")
 public class Mean2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override

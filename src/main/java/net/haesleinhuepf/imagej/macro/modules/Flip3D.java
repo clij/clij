@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_flip3d")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_flip3D")
 public class Flip3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override

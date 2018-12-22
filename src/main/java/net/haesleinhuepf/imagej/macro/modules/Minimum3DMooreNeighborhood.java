@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_minimum3dMooreNeighborhood")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_minimum3DMooreNeighborhood")
 public class Minimum3DMooreNeighborhood extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
@@ -22,13 +22,7 @@ public class Minimum3DMooreNeighborhood extends AbstractCLIJPlugin implements CL
         int radiusZ = asInteger(args[4]);
 
         if (containsCLBufferArguments()) {
-            // convert all arguments to CLImages
-            Object[] args = openCLImageArgs();
-            boolean result = Kernels.minimumSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), radiusX, radiusY, radiusZ);
-            // copy result back to the bufffer
-            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
-            // cleanup
-            releaseImages(args);
+            boolean result = Kernels.minimumSeparable(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
             return result;
         } else {
             return Kernels.minimumSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);

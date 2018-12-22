@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur2dSeparable")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur2DSeparable")
 public class Blur2DSeparable extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override

@@ -21,6 +21,7 @@ public class ClearCLBufferToClearCLImageConverter extends AbstractCLIJConverter<
     @Override
     public ClearCLImage convert(ClearCLBuffer source) {
         ClearCLImage target = clij.createCLImage(source.getDimensions(), ConverterUtilities.nativeTypeToImageChannelDataType(source.getNativeType()));
+        System.out.println("conversion target " + target);
         Kernels.copy(clij, source, target);
         return target;
     }

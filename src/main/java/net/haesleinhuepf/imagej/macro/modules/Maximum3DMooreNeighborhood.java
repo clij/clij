@@ -22,13 +22,7 @@ public class Maximum3DMooreNeighborhood extends AbstractCLIJPlugin implements CL
         int radiusZ = asInteger(args[4]);
 
         if (containsCLBufferArguments()) {
-            // convert all arguments to CLImages
-            Object[] args = openCLImageArgs();
-            boolean result = Kernels.maximumSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), radiusX, radiusY, radiusZ);
-            // copy result back to the bufffer
-            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
-            // cleanup
-            releaseImages(args);
+            boolean result = Kernels.maximumSeparable(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
             return result;
         } else {
             return Kernels.maximumSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);

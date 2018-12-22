@@ -27,6 +27,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
     protected Object[] args;
     protected String name;
     public AbstractCLIJPlugin() {
+        System.out.println("init " + this);
         String name = this.getClass().getSimpleName();
         this.name = "CLIJ_" + name.substring(0, 1).toLowerCase() + name.substring(1, name.length());
     }
@@ -218,21 +219,23 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         gd.addChoice("CL_Device", deviceArray, deviceArray[0]);
 
         String[] parameters = getParameterHelpText().split(",");
-        args = new Object[parameters.length];
-        for (int i = 0; i < parameters.length; i++) {
-            String[] parameterParts = parameters[i].trim().split(" ");
-            String parameterType = parameterParts[0];
-            String parameterName = parameterParts[1];
-            if (parameterType.compareTo("Image") == 0) {
-                if (!parameterName.contains("destination")) {
-                    gd.addImageChoice(parameterName, IJ.getImage().getTitle());
+        if (parameters.length > 0 && parameters[0].length() > 0) {
+            args = new Object[parameters.length];
+            for (int i = 0; i < parameters.length; i++) {
+                String[] parameterParts = parameters[i].trim().split(" ");
+                String parameterType = parameterParts[0];
+                String parameterName = parameterParts[1];
+                if (parameterType.compareTo("Image") == 0) {
+                    if (!parameterName.contains("destination")) {
+                        gd.addImageChoice(parameterName, IJ.getImage().getTitle());
+                    }
+                } else if (parameterType.compareTo("String") == 0) {
+                    gd.addStringField(parameterName, "");
+                } else if (parameterType.compareTo("Boolean") == 0) {
+                    gd.addCheckbox(parameterName, true);
+                } else { // Number
+                    gd.addNumericField(parameterName, 2, 2);
                 }
-            } else if (parameterType.compareTo("String") == 0) {
-                gd.addStringField(parameterName, "");
-            } else if (parameterType.compareTo("Boolean") == 0) {
-                gd.addCheckbox(parameterName, true);
-            } else { // Number
-                gd.addNumericField(parameterName, 2, 2);
             }
         }
         // gd.addNumericField("Radius (in pixels)", 2, 0);
@@ -250,41 +253,43 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         String imageTitle = "";
         String calledParameters = "";
 
-        for (int i = 0; i < parameters.length; i++) {
-            String[] parameterParts = parameters[i].trim().split(" ");
-            String parameterType = parameterParts[0];
-            String parameterName = parameterParts[1];
-            if (parameterType.compareTo("Image") == 0) {
-                if (parameterName.contains("destination")) {
-                    if (allBuffers.size() > 0) {
-                        ClearCLBuffer destination = createOutputBufferFromSource(allBuffers.get(0));
-                        args[i] = destination;
-                        allBuffers.add(destination);
-                        String destinationName = name + "_" + parameterName + "_" + imageTitle;
-                        calledParameters = calledParameters + "\"" + destinationName + "\"";
+        if (parameters.length > 0 && parameters[0].length() > 0) {
+            for (int i = 0; i < parameters.length; i++) {
+                String[] parameterParts = parameters[i].trim().split(" ");
+                String parameterType = parameterParts[0];
+                String parameterName = parameterParts[1];
+                if (parameterType.compareTo("Image") == 0) {
+                    if (parameterName.contains("destination")) {
+                        if (allBuffers.size() > 0) {
+                            ClearCLBuffer destination = createOutputBufferFromSource(allBuffers.get(0));
+                            args[i] = destination;
+                            allBuffers.add(destination);
+                            String destinationName = name + "_" + parameterName + "_" + imageTitle;
+                            calledParameters = calledParameters + "\"" + destinationName + "\"";
 
-                        destinations.put(destinationName, destination);
+                            destinations.put(destinationName, destination);
+                        }
+                    } else {
+                        ImagePlus imp = gd.getNextImage();
+                        recordIfNotRecorded("Ext.CLIJ_push", imp.getTitle());
+                        args[i] = clij.convert(imp, ClearCLBuffer.class);
+                        allBuffers.add((ClearCLBuffer) args[i]);
+                        calledParameters = calledParameters + "\"" + imp.getTitle() + "\"";
                     }
-                } else {
-                    ImagePlus imp = gd.getNextImage();
-                    recordIfNotRecorded("Ext.CLIJ_push", imp.getTitle());
-                    args[i] = clij.convert(imp, ClearCLBuffer.class);
-                    allBuffers.add((ClearCLBuffer)args[i]);
-                    calledParameters = calledParameters + "\"" + imp.getTitle() + "\"";
+                } else if (parameterType.compareTo("String") == 0) {
+                    args[i] = gd.getNextString();
+                    calledParameters = calledParameters + "\"" + args[i] + "\"";
+                } else if (parameterType.compareTo("Boolean") == 0) {
+                    boolean value = gd.getNextBoolean();
+                    args[i] = value ? 1.0 : 0.0;
+                    calledParameters = calledParameters + (value ? "true" : "false");
+                } else { // Number
+                    args[i] = gd.getNextNumber();
+                    calledParameters = calledParameters + args[i];
                 }
-            } else if (parameterType.compareTo("String") == 0) {
-                args[i] = gd.getNextString();
-                calledParameters = calledParameters + "\"" + args[i] + "\"";
-            } else if (parameterType.compareTo("Boolean") == 0) {
-                boolean value = gd.getNextBoolean();
-                args[i] = value?1.0:0.0;
-                calledParameters = calledParameters + (value?"true":"false");
-            } else { // Number
-                args[i] = gd.getNextNumber();
-                calledParameters = calledParameters + args[i];
-            }
-            if (calledParameters.length() > 0 && i < parameters.length - 1) {
-                calledParameters = calledParameters + ", ";
+                if (calledParameters.length() > 0 && i < parameters.length - 1) {
+                    calledParameters = calledParameters + ", ";
+                }
             }
         }
 
