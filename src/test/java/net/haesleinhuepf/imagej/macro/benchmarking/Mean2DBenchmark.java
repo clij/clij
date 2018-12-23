@@ -7,9 +7,9 @@ import ij.gui.NewImage;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.AbstractMacroPluginTest;
-import net.haesleinhuepf.imagej.macro.modules.Mean2D;
+import net.haesleinhuepf.imagej.macro.modules.Mean2DSphere;
 import net.haesleinhuepf.imagej.macro.modules.Mean2DIJ;
-import net.haesleinhuepf.imagej.macro.modules.Mean2DMooreNeighborhood;
+import net.haesleinhuepf.imagej.macro.modules.Mean2DBox;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -41,12 +41,12 @@ public class Mean2DBenchmark extends AbstractMacroPluginTest {
 
             time = System.currentTimeMillis();
             Object[] argsMeanEllipse = {bufferIn, bufferOutIJ, new Double(radius), new Double(radius)};
-            initPlugin(clij, new Mean2D(), argsMeanEllipse).executeCL();
+            initPlugin(clij, new Mean2DSphere(), argsMeanEllipse).executeCL();
             long clMean2DEllipseDuration = System.currentTimeMillis() - time;
 
             time = System.currentTimeMillis();
             Object[] argsMeanBox = {bufferIn, bufferOutIJ, new Double(radius), new Double(radius)};
-            initPlugin(clij, new Mean2DMooreNeighborhood(), argsMeanBox).executeCL();
+            initPlugin(clij, new Mean2DBox(), argsMeanBox).executeCL();
             long clMean2DBoxDuration = System.currentTimeMillis() - time;
 
             System.out.println("Radius " + radius);
