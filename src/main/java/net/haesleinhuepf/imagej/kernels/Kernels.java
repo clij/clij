@@ -164,6 +164,27 @@ public class Kernels {
         return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_and_" + src1.getDimension() + "d", parameters);
     }
 
+
+    public static boolean binaryXOr(ClearCLIJ clij, ClearCLImage src1, ClearCLImage src2, ClearCLImage dst) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src1", src1);
+        parameters.put("src2", src2);
+        parameters.put("dst", dst);
+
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_xor_" + src1.getDimension() + "d", parameters);
+    }
+
+    public static boolean binaryXOr(ClearCLIJ clij, ClearCLBuffer src1, ClearCLBuffer src2, ClearCLBuffer dst) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src1", src1);
+        parameters.put("src2", src2);
+        parameters.put("dst", dst);
+
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_xor_" + src1.getDimension() + "d", parameters);
+    }
+
+
+
     public static boolean binaryNot(ClearCLIJ clij, ClearCLImage src1, ClearCLImage dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src1", src1);
