@@ -166,7 +166,7 @@ __kernel void mean_image2d_ij
     // centers
     const int4   e = (int4)  { radius, radius, 0, 0 };
 
-    float rSquared = pow((float)radius + 0.33, 2);
+    float rSquared = pow((float)radius, 2) + 1;
 
     int count = 0;
 
