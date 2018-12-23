@@ -19,7 +19,6 @@ public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJ
     public boolean executeCL() {
         int kernelSizeX = radiusToKernelSize(asInteger(args[2]));
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
-        int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
             return Kernels.medianSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
