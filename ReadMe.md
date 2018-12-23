@@ -52,7 +52,7 @@ Ext.CLIJ_meanSliceBySlice(Image source, Image destination, Number radiusX, Numbe
 The full list of supported kernels can be retrieved by calling `help("");`
 
 ```java
-Found 79 method(s) containing the pattern "":
+Found 80 method(s) containing the pattern "":
 Ext.CLIJ_absolute(Image source, Image destination);
 Ext.CLIJ_addImageAndScalar(Image source, Image destination, Number scalar);
 Ext.CLIJ_addImages(Image summand1, Image summand2, Image destination);
@@ -61,6 +61,7 @@ Ext.CLIJ_argMaximumZProjection(Image source, Image destination_max, Image destin
 Ext.CLIJ_binaryAnd(Image operand1, Image operand2, Image destination);
 Ext.CLIJ_binaryNot(Image source, Image destination);
 Ext.CLIJ_binaryOr(Image operand1, Image operand2, Image destination);
+Ext.CLIJ_binaryXOr(Image operand1, Image operand2, Image destination);
 Ext.CLIJ_blur2D(Image source, Image destination, Number sigmaX, Number sigmaY);
 Ext.CLIJ_blur2DFast(Image source, Image destination, Number sigmaX, Number sigmaY);
 Ext.CLIJ_blur3D(Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ);
