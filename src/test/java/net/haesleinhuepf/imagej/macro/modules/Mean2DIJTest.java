@@ -22,15 +22,14 @@ public class Mean2DIJTest extends AbstractMacroPluginTest {
         new ImageJ();
 
         ClearCLIJ clij = ClearCLIJ.getInstance();
-        for (int radius = 1; radius < 10; radius++) {
-            ImagePlus testImage = NewImage.createImage("", 20, 20, 1, 8, NewImage.FILL_BLACK);
+        for (int radius = 1; radius < 50; radius++) {
+            ImagePlus testImage = NewImage.createImage("", 200, 200, 1, 8, NewImage.FILL_BLACK);
 
-            testImage.getProcessor().set(10, 10, 255);
+            testImage.getProcessor().set(100, 100, 255);
 
             ClearCLBuffer bufferIn = clij.convert(testImage, ClearCLBuffer.class);
             ClearCLBuffer bufferOutCL = clij.createCLBuffer(bufferIn);
             ClearCLBuffer bufferOutIJ = clij.createCLBuffer(bufferIn);
-
 
             Object[] argsCL = {bufferIn, bufferOutCL, new Double(radius)};
             makeMean2DIJ(clij, argsCL).executeCL();
