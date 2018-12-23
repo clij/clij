@@ -15,7 +15,7 @@ Ext.CLIJ_clear();
 Ext.CLIJ_push(input);
 
 // Blur in GPU
-Ext.CLIJ_blur3d(input, output, 10, 10, 1);
+Ext.CLIJ_blur3D(input, output, 10, 10, 1);
 
 // Get results back from GPU
 Ext.CLIJ_pull(output);
@@ -32,7 +32,7 @@ There are five methods for memory transfer between RAM and GPU:
 
 * `Ext.CLIJ_push(image)` sends an image with the given name to the GPU.
 * `Ext.CLIJ_pull(image)` retrieves a given image from the GPU and shows it.
-* `Ext.CLIJ_releas(image)` frees the memory in the GPU which is reserved for a given image.
+* `Ext.CLIJ_release(image)` frees the memory in the GPU which is reserved for a given image.
 * `Ext.CLIJ_clear()` releases the memory for all stored images in the GPU.
 
 Furthermore, there is a `help("")` method to assist you in finding the right OpenCL kernel call for your workflow. Just enter the name of the desired operation:
@@ -54,70 +54,70 @@ The full list of supported kernels can be retrieved by calling `help("");`
 ```java
 Found 79 method(s) containing the pattern "":
 Ext.CLIJ_absolute(Image source, Image destination);
-Ext.CLIJ_addPixelwise(Image summand1, Image summand2, Image destination);
-Ext.CLIJ_addScalar(Image source, Image destination, Number scalar);
-Ext.CLIJ_addWeightedPixelwise(Image summand1, Image summand2, Image destination, Number factor1, Number factor2);
-Ext.CLIJ_argMaxProjection(Image source, Image destination_max, Image destination_arg_max);
+Ext.CLIJ_addImageAndScalar(Image source, Image destination, Number scalar);
+Ext.CLIJ_addImages(Image summand1, Image summand2, Image destination);
+Ext.CLIJ_addImagesWeighted(Image summand1, Image summand2, Image destination, Number factor1, Number factor2);
+Ext.CLIJ_argMaximumZProjection(Image source, Image destination_max, Image destination_arg_max);
 Ext.CLIJ_binaryAnd(Image operand1, Image operand2, Image destination);
 Ext.CLIJ_binaryNot(Image source, Image destination);
 Ext.CLIJ_binaryOr(Image operand1, Image operand2, Image destination);
-Ext.CLIJ_blur2d(Image source, Image destination, Number sigmaX, Number sigmaY);
-Ext.CLIJ_blur2dSeparable(Image source, Image destination, Number sigmaX, Number sigmaY);
-Ext.CLIJ_blur3d(Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ);
-Ext.CLIJ_blur3dSeparable(Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ);
-Ext.CLIJ_blur3dSliceBySlice(Image source, Image destination, Number sigmaX, Number sigmaY);
+Ext.CLIJ_blur2D(Image source, Image destination, Number sigmaX, Number sigmaY);
+Ext.CLIJ_blur2DFast(Image source, Image destination, Number sigmaX, Number sigmaY);
+Ext.CLIJ_blur3D(Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ);
+Ext.CLIJ_blur3DFast(Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ);
+Ext.CLIJ_blur3DSliceBySlice(Image source, Image destination, Number sigmaX, Number sigmaY);
 Ext.CLIJ_clear();
 Ext.CLIJ_copy(Image source, Image destination);
 Ext.CLIJ_copySlice(Image source, Image destination, Number sliceIndex);
-Ext.CLIJ_crop2d(Image source, Image destination, Number startX, Number startY, Number startZ);
-Ext.CLIJ_detectMaxima(Image source, Image destination, Number radius);
-Ext.CLIJ_detectMaximaSliceBySlice(Image source, Image destination, Number radius);
-Ext.CLIJ_detectMinima(Image source, Image destination, Number radius);
-Ext.CLIJ_dilate(Image source, Image destination);
-Ext.CLIJ_dividePixelwise(Image divident, Image divisor, Image destination);
-Ext.CLIJ_downsample2d(Image source, Image destination, Number factorX, Number factorY);
-Ext.CLIJ_downsample3d(Image source, Image destination, Number factorX, Number factorY, Number factorZ);
+Ext.CLIJ_crop2D(Image source, Image destination, Number startX, Number startY);
+Ext.CLIJ_crop3D(Image source, Image destination, Number startX, Number startY, Number startZ);
+Ext.CLIJ_detectMaximaBox(Image source, Image destination, Number radius);
+Ext.CLIJ_detectMaximaSliceBySliceBox(Image source, Image destination, Number radius);
+Ext.CLIJ_detectMinimaBox(Image source, Image destination, Number radius);
+Ext.CLIJ_detectMinimaSliceBySliceBox(Image source, Image destination, Number radius);
+Ext.CLIJ_dilateBox(Image source, Image destination);
+Ext.CLIJ_divideImages(Image divident, Image divisor, Image destination);
+Ext.CLIJ_downsample2D(Image source, Image destination, Number factorX, Number factorY);
+Ext.CLIJ_downsample3D(Image source, Image destination, Number factorX, Number factorY, Number factorZ);
 Ext.CLIJ_downsampleSliceBySliceHalfMedian(Image source, Image destination);
-Ext.CLIJ_erode(Image source, Image destination);
-Ext.CLIJ_flip2d(Image source, Image destination, Boolean flipX, Boolean flipY);
-Ext.CLIJ_flip3d(Image source, Image destination, Boolean flipX, Boolean flipY, Boolean flipZ);
+Ext.CLIJ_erodeBox(Image source, Image destination);
+Ext.CLIJ_flip2D(Image source, Image destination, Boolean flipX, Boolean flipY);
+Ext.CLIJ_flip3D(Image source, Image destination, Boolean flipX, Boolean flipY, Boolean flipZ);
 Ext.CLIJ_help(String searchFor);
 Ext.CLIJ_invert(Image source, Image destination);
 Ext.CLIJ_invertBinary(Image source, Image destination);
 Ext.CLIJ_localThreshold(Image source, Image localThreshold, Image destination);
 Ext.CLIJ_mask(Image source, Image mask, Image destination);
 Ext.CLIJ_maskStackWithPlane(Image source, Image mask, Image destination);
-Ext.CLIJ_maxPixelwise(Image source1, Image source2, Image destination);
-Ext.CLIJ_maxPixelwiseScalar(Image source, Image destination, Number scalar);
-Ext.CLIJ_maxProjection(Image source, Image destination_max);
-Ext.CLIJ_maximum2d(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_maximum2dMooreNeighborhood(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_maximum2dSeparable(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_maximum3d(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_maximum3dMooreNeighborhood(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_maximum3dSeparable(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_maximumSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_mean2d(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_mean2dMooreNeighborhood(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_mean2dSeparable(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_mean3d(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_mean3dMooreNeighborhood(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_mean3dSeparable(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_meanSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_median2d(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_medianSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_minPixelwise(Image source1, Image source2, Image destination);
-Ext.CLIJ_minPixelwiseScalar(Image source, Image destination, Number scalar);
-Ext.CLIJ_minimum2d(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_minimum2dMooreNeighborhood(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_minimum2dSeparable(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_minimum3d(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_minimum3dMooreNeighborhood(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_minimum3dSeparable(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_minimumSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_multiplyPixelwise(Image factor1, Image factor2, Image destination);
-Ext.CLIJ_multiplyScalar(Image source, Image destination, Number scalar);
+Ext.CLIJ_maximum2DBox(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_maximum2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_maximum3DBox(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_maximum3DSPhere(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_maximumImageAndScalar(Image source, Image destination, Number scalar);
+Ext.CLIJ_maximumImages(Image source1, Image source2, Image destination);
+Ext.CLIJ_maximumSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_maximumXYZProjection(Image source, Image destination_max, Number dimensionX, Number dimensionY, Number projectedDimension);
+Ext.CLIJ_maximumZProjection(Image source, Image destination_max);
+Ext.CLIJ_mean2DBox(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_mean2DIJ(Image source, Image destination, Number radius);
+Ext.CLIJ_mean2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_mean3DBox(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_mean3DSphere(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_meanSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_median2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_median3DSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_medianSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_minimum2DBox(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_minimum2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_minimum3DBox(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_minimum3DSphere(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_minimumImageAndScalar(Image source, Image destination, Number scalar);
+Ext.CLIJ_minimumImages(Image source1, Image source2, Image destination);
+Ext.CLIJ_minimumSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_multiplyImageAndScalar(Image source, Image destination, Number scalar);
+Ext.CLIJ_multiplyImages(Image factor1, Image factor2, Image destination);
 Ext.CLIJ_multiplyStackWithPlane(Image sourceStack, Image sourcePlane, Image destination);
+Ext.CLIJ_pluginTemplate(Image source, Image destination, Number scalar);
 Ext.CLIJ_power(Image source, Image destination, Number exponent);
 Ext.CLIJ_pull(String image);
 Ext.CLIJ_push(String image);
@@ -146,7 +146,7 @@ clij = ClearCLIJ.getInstance();
 Afterwards, you can convert `ImagePlus` objects to ClearCL objects wich makes them accessible on the OpenCL device:
 
 ```python
-imageInput = clij.converter(imp).getClearCLImage();
+imageInput = clij.convert(imp, ClearCLImage);
 ```
 
 Furthermore, you can create images, for example with the same size as a given one:
@@ -177,7 +177,7 @@ clij.show(imageOutput, "output");
 You can also get the result image as ImagePlus:
 
 ```python
-result = clij.converter(imageOutput).getImagePlus();
+result = clij.convert(imageOutput, ImagePlus);
 ```
 
 ## Low level API
@@ -189,14 +189,14 @@ In order to call your own `kernel.cl` files, use the `clij.execute()` method. Ex
 clij = ClearCLIJ.getInstance();
 
 # convert ImageJ image to CL images (ready for the GPU)
-lInputCLImage = clij.converter(imp).getClearCLImage();
-lOutputCLImage = clij.converter(imp).getClearCLImage(); # copy again to allocate memory for result image
+lInputCLImage = clij.convert(imp, ClearCLImage);
+lOutputCLImage = clij.convert(imp, ClearCLImage); # copy again to allocate memory for result image
 
 # downsample the image stack using ClearCL / OpenCL
 resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
 
 # convert the result back to imglib2 and show it
-resultRAI = clij.converter(resultStack).getRandomAccessibleInterval();
+resultRAI = clij.convert(resultStack, RandomAccessibleInterval);
 ImageJFunctions.show(resultRAI);
 ```
 Complete jython examples can be found in the [src/main/jython](https://github.com/haesleinhuepf/clearclij/blob/master/src/main/jython/) directory. More Java example code can be found in the package net.haesleinhuepf.imagej.demo
