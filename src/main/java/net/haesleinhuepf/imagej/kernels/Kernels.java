@@ -978,9 +978,6 @@ public class Kernels {
     }
 
     public static boolean maximum(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -991,9 +988,6 @@ public class Kernels {
     }
 
     public static boolean maximum(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1004,9 +998,6 @@ public class Kernels {
     }
 
     public static boolean maximum(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
-        if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1018,9 +1009,6 @@ public class Kernels {
     }
 
     public static boolean maximum(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
-        if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1032,9 +1020,6 @@ public class Kernels {
     }
 
     public static boolean maximumSliceBySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1053,9 +1038,6 @@ public class Kernels {
     }
 
     public static boolean maximumSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1209,9 +1191,6 @@ public class Kernels {
     }
 
     public static boolean mean(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1222,9 +1201,6 @@ public class Kernels {
     }
 
     public static boolean mean(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1253,9 +1229,6 @@ public class Kernels {
     }
 
     public static boolean mean(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
-        if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1267,9 +1240,6 @@ public class Kernels {
     }
 
     public static boolean mean(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
-        if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1290,9 +1260,6 @@ public class Kernels {
 
 
     public static boolean meanSliceBySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1303,9 +1270,6 @@ public class Kernels {
     }
 
     public static boolean meanSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1396,9 +1360,6 @@ public class Kernels {
     }
 
     public static boolean minimum(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1409,9 +1370,6 @@ public class Kernels {
     }
 
     public static boolean minimum(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1422,9 +1380,6 @@ public class Kernels {
     }
 
     public static boolean minimum(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
-        if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1436,9 +1391,6 @@ public class Kernels {
     }
 
     public static boolean minimum(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
-        if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1459,9 +1411,6 @@ public class Kernels {
     }
 
     public static boolean minimumSliceBySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1472,9 +1421,6 @@ public class Kernels {
     }
 
     public static boolean minimumSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
-        if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-        }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
