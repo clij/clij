@@ -244,7 +244,12 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         if (gd.wasCanceled()) {
             return;
         }
-        clij = ClearCLIJ.getInstance(gd.getNextChoice());
+
+        String deviceName = gd.getNextChoice();
+
+        clij = ClearCLIJ.getInstance(deviceName);
+
+        recordIfNotRecorded("run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
 
         ArrayList<ClearCLBuffer> allBuffers = new ArrayList<ClearCLBuffer>();
 
@@ -274,7 +279,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                         if (imageTitle.length() == 0) {
                             imageTitle = imp.getTitle();
                         }
-                        recordIfNotRecorded("// Ext.CLIJ_push", imp.getTitle());
+                        recordIfNotRecorded("// Ext.CLIJ_push", "\"" + imp.getTitle() + "\"");
                         args[i] = clij.convert(imp, ClearCLBuffer.class);
                         allBuffers.add((ClearCLBuffer) args[i]);
                         calledParameters = calledParameters + "\"" + imp.getTitle() + "\"";
@@ -305,7 +310,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         record("// Ext." + name, calledParameters);
 
         for (String destinationName : destinations.keySet()) {
-            record("// Ext.CLIJ_pull", destinationName);
+            record("// Ext.CLIJ_pull", "\"" + destinationName + "\"");
             clij.show(destinations.get(destinationName), destinationName);
         }
 
@@ -325,8 +330,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
     }
 
     private void record(String recordMethod, String recordParameters) {
-        Recorder.record(recordMethod, recordParameters);
+        if (Recorder.getInstance() == null) {
+            return;
+        }
+        Recorder.recordString(recordMethod + "(" + recordParameters + ");\n");
         Recorder.record = true;
-
     }
 }
