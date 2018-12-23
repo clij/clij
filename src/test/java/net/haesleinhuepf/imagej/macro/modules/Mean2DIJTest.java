@@ -21,18 +21,20 @@ public class Mean2DIJTest extends AbstractMacroPluginTest {
         new ImageJ();
 
         ClearCLIJ clij = ClearCLIJ.getInstance();
+        
         ImagePlus testImage = NewImage.createImage("", 20, 20, 1, 8, NewImage.FILL_BLACK);
 
         testImage.getProcessor().set(10,10,255);
 
-        ClearCLImage bufferIn = clij.convert(testImage, ClearCLImage.class);
-        ClearCLImage bufferOutCL = clij.createCLImage(bufferIn);
-        ClearCLImage bufferOutIJ = clij.createCLImage(bufferIn);
+        ClearCLBuffer bufferIn = clij.convert(testImage, ClearCLBuffer.class);
+        ClearCLBuffer bufferOutCL = clij.createCLBuffer(bufferIn);
+        ClearCLBuffer bufferOutIJ = clij.createCLBuffer(bufferIn);
 
 
-        Object[] argsCL = {bufferIn, bufferOutCL, new Double(2)};
+        Object[] argsCL = {bufferIn, bufferOutCL, new Double(5)};
         makeMean2DIJ(clij, argsCL).executeCL();
-        Object[] argsIJ = {bufferIn, bufferOutIJ, new Double(2)};
+
+        Object[] argsIJ = {bufferIn, bufferOutIJ, new Double(5)};
         makeMean2DIJ(clij, argsIJ).executeIJ();
 
         clij.show(bufferOutCL, "cl " + bufferOutCL);
@@ -40,7 +42,7 @@ public class Mean2DIJTest extends AbstractMacroPluginTest {
 
         new WaitForUserDialog("wait").show();
 
-        //assertTrue(clBuffersEqual(clij, bufferOutIJ, bufferOutCL));
+        assertTrue(clBuffersEqual(clij, bufferOutIJ, bufferOutCL));
         bufferIn.close();
         bufferOutCL.close();
         bufferOutIJ.close();

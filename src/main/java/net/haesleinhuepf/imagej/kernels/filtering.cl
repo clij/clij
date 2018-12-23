@@ -166,7 +166,7 @@ __kernel void mean_image2d_ij
     // centers
     const int4   e = (int4)  { radius, radius, 0, 0 };
 
-    float rSquared = radius * radius;
+    float rSquared = pow((float)radius + 0.33, 2);
 
     int count = 0;
 
@@ -175,15 +175,15 @@ __kernel void mean_image2d_ij
         float xSquared = x * x;
         for (int y = -e.y; y <= e.y; y++) {
             float ySquared = y * y;
-            if (xSquared + ySquared < rSquared) {
-                sum = (float)(READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x);
+            if (xSquared + ySquared <= rSquared) {
+                sum += (float)(READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x);
                 count++;
             }
         }
     }
 
 
-    DTYPE_OUT res = sum / count;
+    DTYPE_OUT res = (sum / count + 0.5);
     WRITE_IMAGE_2D(dst, coord, res);
 }
 

@@ -35,6 +35,7 @@ public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
         } else {
             Object[] args = openCLBufferArgs();
             boolean result = Kernels.meanIJ(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), radiusX);
+            //boolean result = Kernels.meanIJ(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), radiusX);
             releaseBuffers(args);
             return result;
         }
@@ -53,11 +54,11 @@ public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
         IJ.run(input, "Mean...", "radius=" + radius);
         input = new Duplicator().run(input);
-        input.show();
+        //input.show();
         System.out.println("input: " + input.getTitle());
 
         ClearCLBuffer result = clij.convert(input, ClearCLBuffer.class);
-        clij.show(result, "result");
+        //clij.show(result, "result");
 
         if (this.args[1] instanceof ClearCLImage) {
             Kernels.copy(clij, result, (ClearCLImage) this.args[1]);
@@ -68,7 +69,7 @@ public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
             throw new IllegalArgumentException("argument[1] must be cl_buffer or cl_image!");
         }
 
-        clij.show((ClearCLImage)(this.args[1]), "args[1] " + this.args[1]);
+        //clij.show((ClearCLBuffer)(this.args[1]), "args[1] " + this.args[1]);
 
         result.close();
         return true;
