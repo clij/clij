@@ -192,13 +192,6 @@ public class ClearCLIJ {
         }
     }
 
-    /**
-     * Deprecated because it should not be neccessary to get the context.
-     * The context should be shadowed inside.
-     *
-     * @return
-     */
-    @Deprecated
     public ClearCLContext getClearCLContext() {
         return mClearCLContext;
     }
