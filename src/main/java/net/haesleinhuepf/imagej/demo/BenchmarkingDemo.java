@@ -79,8 +79,8 @@ public class BenchmarkingDemo {
         IJ.run(copy, "Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
         IJ.setRawThreshold(copy, 100, 255, null);
         IJ.run(copy, "Convert to Mask", "method=Default background=Dark");
-        IJ.run(copy, "Erode", "stack");
-        IJ.run(copy, "Dilate", "stack");
+        IJ.run(copy, "ErodeBox", "stack");
+        IJ.run(copy, "DilateBox", "stack");
         IJ.run(copy, "Divide...", "value=255 stack");
         ImageCalculator calculator = new ImageCalculator();
 
