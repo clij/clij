@@ -100,12 +100,7 @@ public class Kernels {
         return clij.execute(Kernels.class, "math.cl", "addScalar_" + src.getDimension() + "d", parameters);
     }
 
-    public static boolean addWeightedPixelwise(ClearCLIJ clij,
-                                               ClearCLImage src,
-                                               ClearCLImage src1,
-                                               ClearCLImage dst,
-                                               Float factor,
-                                               Float factor1) {
+    public static boolean addWeightedPixelwise(ClearCLIJ clij, ClearCLImage src, ClearCLImage src1, ClearCLImage dst, Float factor, Float factor1) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("src1", src1);
@@ -113,27 +108,13 @@ public class Kernels {
         parameters.put("factor1", factor1);
         parameters.put("dst", dst);
 
-        if (!checkDimensions(src.getDimension(),
-                src1.getDimension(),
-                dst.getDimension())) {
+        if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
             throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
-
         }
-
-        return clij.execute(Kernels.class,
-                "math.cl",
-                "addWeightedPixelwise_"
-                        + src.getDimension()
-                        + "d",
-                parameters);
+        return clij.execute(Kernels.class, "math.cl", "addWeightedPixelwise_" + src.getDimension() + "d", parameters);
     }
 
-    public static boolean addWeightedPixelwise(ClearCLIJ clij,
-                                               ClearCLBuffer src,
-                                               ClearCLBuffer src1,
-                                               ClearCLBuffer dst,
-                                               Float factor,
-                                               Float factor1) {
+    public static boolean addWeightedPixelwise(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer src1, ClearCLBuffer dst, Float factor, Float factor1) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("src1", src1);
@@ -141,161 +122,84 @@ public class Kernels {
         parameters.put("factor1", factor1);
         parameters.put("dst", dst);
 
-        if (!checkDimensions(src.getDimension(),
-                src1.getDimension(),
-                dst.getDimension())) {
+        if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
             throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
-
-        return clij.execute(Kernels.class,
-                "math.cl",
-                "addWeightedPixelwise_"
-                        + src.getDimension()
-                        + "d",
-                parameters);
+        return clij.execute(Kernels.class, "math.cl", "addWeightedPixelwise_" + src.getDimension() + "d", parameters);
     }
 
-    public static boolean argMaxProjection(ClearCLIJ clij,
-                                           ClearCLImage src,
-                                           ClearCLImage dst_max,
-                                           ClearCLImage dst_arg) {
+    public static boolean argMaxProjection(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst_max, ClearCLImage dst_arg) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst_max", dst_max);
         parameters.put("dst_arg", dst_arg);
 
-        clij.execute(Kernels.class,
-                "projections.cl",
-                "arg_max_project_3d_2d",
-                parameters);
-
-        return true;
+        return clij.execute(Kernels.class, "projections.cl", "arg_max_project_3d_2d", parameters);
     }
 
-    public static boolean argMaxProjection(ClearCLIJ clij,
-                                           ClearCLBuffer src,
-                                           ClearCLBuffer dst_max,
-                                           ClearCLBuffer dst_arg) {
+    public static boolean argMaxProjection(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst_max, ClearCLBuffer dst_arg) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst_max", dst_max);
         parameters.put("dst_arg", dst_arg);
 
-        clij.execute(Kernels.class,
-                "projections.cl",
-                "arg_max_project_3d_2d",
-                parameters);
-
-        return true;
+        return clij.execute(Kernels.class, "projections.cl", "arg_max_project_3d_2d", parameters);
     }
 
-    public static boolean binaryAnd(ClearCLIJ clij,
-                                    ClearCLImage src1,
-                                    ClearCLImage src2,
-                                    ClearCLImage dst) {
+    public static boolean binaryAnd(ClearCLIJ clij, ClearCLImage src1, ClearCLImage src2, ClearCLImage dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src1", src1);
         parameters.put("src2", src2);
         parameters.put("dst", dst);
 
-        clij.execute(Kernels.class,
-                "binaryProcessing.cl",
-                "binary_and_" + src1.getDimension() + "d",
-                parameters);
-
-        return true;
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_and_" + src1.getDimension() + "d", parameters);
     }
 
-    public static boolean binaryAnd(ClearCLIJ clij,
-                                    ClearCLBuffer src1,
-                                    ClearCLBuffer src2,
-                                    ClearCLBuffer dst) {
+    public static boolean binaryAnd(ClearCLIJ clij, ClearCLBuffer src1, ClearCLBuffer src2, ClearCLBuffer dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src1", src1);
         parameters.put("src2", src2);
         parameters.put("dst", dst);
 
-        clij.execute(Kernels.class,
-                "binaryProcessing.cl",
-                "binary_and_" + src1.getDimension() + "d",
-                parameters);
-
-        return true;
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_and_" + src1.getDimension() + "d", parameters);
     }
 
-    public static boolean binaryNot(ClearCLIJ clij,
-                                    ClearCLImage src1,
-                                    ClearCLImage dst) {
+    public static boolean binaryNot(ClearCLIJ clij, ClearCLImage src1, ClearCLImage dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src1", src1);
         parameters.put("dst", dst);
 
-        clij.execute(Kernels.class,
-                "binaryProcessing.cl",
-                "binary_not_" + src1.getDimension() + "d",
-                parameters);
-
-        return true;
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_not_" + src1.getDimension() + "d", parameters);
     }
 
-    public static boolean binaryNot(ClearCLIJ clij,
-                                    ClearCLBuffer src1,
-                                    ClearCLBuffer dst) {
+    public static boolean binaryNot(ClearCLIJ clij, ClearCLBuffer src1, ClearCLBuffer dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src1", src1);
         parameters.put("dst", dst);
 
-        clij.execute(Kernels.class,
-                "binaryProcessing.cl",
-                "binary_not_" + src1.getDimension() + "d",
-                parameters);
-
-        return true;
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_not_" + src1.getDimension() + "d", parameters);
     }
 
-    public static boolean binaryOr(ClearCLIJ clij,
-                                   ClearCLImage src1,
-                                   ClearCLImage src2,
-                                   ClearCLImage dst) {
+    public static boolean binaryOr(ClearCLIJ clij, ClearCLImage src1, ClearCLImage src2, ClearCLImage dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src1", src1);
         parameters.put("src2", src2);
         parameters.put("dst", dst);
 
-        clij.execute(Kernels.class,
-                "binaryProcessing.cl",
-                "binary_or_" + src1.getDimension() + "d",
-                parameters);
-
-        return true;
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_or_" + src1.getDimension() + "d", parameters);
     }
 
-    public static boolean binaryOr(ClearCLIJ clij,
-                                   ClearCLBuffer src1,
-                                   ClearCLBuffer src2,
-                                   ClearCLBuffer dst) {
+    public static boolean binaryOr(ClearCLIJ clij, ClearCLBuffer src1, ClearCLBuffer src2, ClearCLBuffer dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src1", src1);
         parameters.put("src2", src2);
         parameters.put("dst", dst);
 
-        clij.execute(Kernels.class,
-                "binaryProcessing.cl",
-                "binary_or_" + src1.getDimension() + "d",
-                parameters);
-
-        return true;
+        return clij.execute(Kernels.class, "binaryProcessing.cl", "binary_or_" + src1.getDimension() + "d", parameters);
     }
 
 
-    public static boolean blur(ClearCLIJ clij,
-                               ClearCLImage src,
-                               ClearCLImage dst,
-                               Integer nX,
-                               Integer nY,
-                               Float sigmaX,
-                               Float sigmaY) {
-
+    public static boolean blur(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer nX, Integer nY, Float sigmaX, Float sigmaY) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("Nx", nX);
         parameters.put("Ny", nY);
@@ -303,20 +207,10 @@ public class Kernels {
         parameters.put("sy", sigmaY);
         parameters.put("src", src);
         parameters.put("dst", dst);
-        return clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_image2d",
-                parameters);
+        return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image2d", parameters);
     }
 
-    public static boolean blur(ClearCLIJ clij,
-                               ClearCLBuffer src,
-                               ClearCLBuffer dst,
-                               Integer nX,
-                               Integer nY,
-                               Float sigmaX,
-                               Float sigmaY) {
-
+    public static boolean blur(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer nX, Integer nY, Float sigmaX, Float sigmaY) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("Nx", nX);
         parameters.put("Ny", nY);
@@ -324,22 +218,10 @@ public class Kernels {
         parameters.put("sy", sigmaY);
         parameters.put("src", src);
         parameters.put("dst", dst);
-        return clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_image2d",
-                parameters);
+        return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image2d", parameters);
     }
 
-    public static boolean blur(ClearCLIJ clij,
-                               ClearCLImage src,
-                               ClearCLImage dst,
-                               Integer nX,
-                               Integer nY,
-                               Integer nZ,
-                               Float sigmaX,
-                               Float sigmaY,
-                               Float sigmaZ) {
-
+    public static boolean blur(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer nX, Integer nY, Integer nZ, Float sigmaX, Float sigmaY, Float sigmaZ) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("Nx", nX);
         parameters.put("Ny", nY);
@@ -349,22 +231,10 @@ public class Kernels {
         parameters.put("sz", sigmaZ);
         parameters.put("src", src);
         parameters.put("dst", dst);
-        return clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_image3d",
-                parameters);
+        return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image3d", parameters);
     }
 
-    public static boolean blur(ClearCLIJ clij,
-                               ClearCLBuffer src,
-                               ClearCLBuffer dst,
-                               Integer nX,
-                               Integer nY,
-                               Integer nZ,
-                               Float sigmaX,
-                               Float sigmaY,
-                               Float sigmaZ) {
-
+    public static boolean blur(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer nX, Integer nY, Integer nZ, Float sigmaX, Float sigmaY, Float sigmaZ) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("Nx", nX);
         parameters.put("Ny", nY);
@@ -374,10 +244,7 @@ public class Kernels {
         parameters.put("sz", sigmaZ);
         parameters.put("src", src);
         parameters.put("dst", dst);
-        return clij.execute(Kernels.class,
-                "blur.cl",
-                "gaussian_blur_image3d",
-                parameters);
+        return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image3d", parameters);
     }
 
     public static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
@@ -426,10 +293,7 @@ public class Kernels {
         } else {
             parameters.put("dst", dst);
         }
-        clij.execute(Kernels.class,
-                clFilename,
-                kernelname,
-                parameters);
+        clij.execute(Kernels.class, clFilename, kernelname, parameters);
 
         parameters.clear();
         parameters.put("N", n[1]);
@@ -442,10 +306,7 @@ public class Kernels {
             parameters.put("src", dst);
             parameters.put("dst", temp);
         }
-        clij.execute(Kernels.class,
-                clFilename,
-                kernelname,
-                parameters);
+        clij.execute(Kernels.class, clFilename, kernelname, parameters);
 
         if (dimensions == 3) {
             parameters.clear();
@@ -479,13 +340,7 @@ public class Kernels {
         return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_slicewise_image3d", parameters);
     }
 
-//  public static boolean blurSliceBySlice(ClearCLIJ clij,
-//                                         ClearCLBuffer src,
-//                                         ClearCLBuffer dst,
-//                                         int nX,
-//                                         int nY,
-//                                         float sigmaX,
-//                                         float sigmaY) {
+//  public static boolean blurSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int nX, int nY, float sigmaX, float sigmaY) {
 //    HashMap<String, Object> parameters = new HashMap<>();
 //    parameters.put("Nx", nX);
 //    parameters.put("Ny", nY);
@@ -493,38 +348,8 @@ public class Kernels {
 //    parameters.put("sy", sigmaY);
 //    parameters.put("src", src);
 //    parameters.put("dst", dst);
-//    return clij.execute(Kernels.class,
-//            "blur.cl",
-//            "gaussian_blur_slicewise_image3d",
-//            parameters);
+//    return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_slicewise_image3d", parameters);
 //  }
-
-    /**
-     * Deprecated: Will be replaced by blurSliceBySlice()
-     *
-     * @param clij
-     * @param src
-     * @param dst
-     * @param nX
-     * @param nY
-     * @param sigmaX
-     * @param sigmaY
-     * @return
-     */
-    @Deprecated
-    public static boolean blurSlicewise(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer nX, Integer nY, Float sigmaX, Float sigmaY) {
-        return blurSliceBySlice(clij, src, dst, nX, nY, sigmaX, sigmaY);
-    }
-
-    @Deprecated
-    public static boolean convert(ClearCLIJ clij, ClearCLBuffer src, ClearCLImage dst) {
-        return copy(clij, src, dst);
-    }
-
-    @Deprecated
-    public static boolean convert(ClearCLIJ clij, ClearCLImage src, ClearCLBuffer dst) {
-        return copy(clij, src, dst);
-    }
 
     public static boolean copy(ClearCLIJ clij, ClearCLImage src, ClearCLBuffer dst) {
         return copyInternal(clij, src, dst, src.getDimension(), dst.getDimension());
@@ -1556,10 +1381,7 @@ public class Kernels {
         parameters.put("dst", dst);
         parameters.put("exponent", exponent);
 
-        return clij.execute(Kernels.class,
-                "math.cl",
-                "power_" + src.getDimension() + "d",
-                parameters);
+        return clij.execute(Kernels.class, "math.cl", "power_" + src.getDimension() + "d", parameters);
     }
 
     public static boolean resliceBottom(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
@@ -1802,15 +1624,13 @@ public class Kernels {
     }
 
     public static boolean sumProjection(ClearCLIJ clij, ClearCLImage clImage, ClearCLImage clReducedImage) {
-
-            HashMap<String, Object> parameters = new HashMap<>();
-            parameters.put("src", clImage);
-            parameters.put("dst", clReducedImage);
-            return clij.execute(Kernels.class, "projections.cl", "sum_project_3d_2d", parameters);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", clImage);
+        parameters.put("dst", clReducedImage);
+        return clij.execute(Kernels.class, "projections.cl", "sum_project_3d_2d", parameters);
     }
 
     public static boolean sumProjection(ClearCLIJ clij, ClearCLBuffer clImage, ClearCLBuffer clReducedImage) {
-
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", clImage);
         parameters.put("dst", clReducedImage);
@@ -1821,7 +1641,6 @@ public class Kernels {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", clImageIn);
         parameters.put("dst", clImageOut);
-
         return clij.execute(Kernels.class,"tenengradFusion.cl", "tenengrad_weight_unnormalized_slice_wise", parameters);
     }
 
@@ -1884,8 +1703,6 @@ public class Kernels {
         if (temporaryImage2 != null) {
             temporaryImage2.close();
         }
-
-        System.out.println("clij " + clImagesIn.length);
 
         return success;
     }
