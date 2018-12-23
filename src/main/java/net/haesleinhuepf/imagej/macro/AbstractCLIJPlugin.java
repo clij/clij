@@ -271,7 +271,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                         }
                     } else {
                         ImagePlus imp = gd.getNextImage();
-                        recordIfNotRecorded("Ext.CLIJ_push", imp.getTitle());
+                        if (imageTitle.length() == 0) {
+                            imageTitle = imp.getTitle();
+                        }
+                        recordIfNotRecorded("// Ext.CLIJ_push", imp.getTitle());
                         args[i] = clij.convert(imp, ClearCLBuffer.class);
                         allBuffers.add((ClearCLBuffer) args[i]);
                         calledParameters = calledParameters + "\"" + imp.getTitle() + "\"";
@@ -299,14 +302,12 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             ((CLIJImageJProcessor)this).executeIJ();
         }
 
-        record("Ext." + name, calledParameters);
-
+        record("// Ext." + name, calledParameters);
 
         for (String destinationName : destinations.keySet()) {
-            record("Ext.CLIJ_pull", destinationName);
+            record("// Ext.CLIJ_pull", destinationName);
             clij.show(destinations.get(destinationName), destinationName);
         }
-        //record("// Or:", "");
 
         for (ClearCLBuffer buffer : allBuffers) {
             buffer.close();
@@ -325,6 +326,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
     private void record(String recordMethod, String recordParameters) {
         Recorder.record(recordMethod, recordParameters);
+        Recorder.record = true;
 
     }
 }
