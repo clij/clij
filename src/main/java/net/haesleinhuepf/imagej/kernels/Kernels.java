@@ -28,8 +28,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class,"math.cl", "absolute_" + src.getDimension() + "d", parameters);
@@ -43,8 +42,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "math.cl", "absolute_" + src.getDimension() + "d", parameters);
@@ -58,8 +56,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addPixelwise)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addPixelwise)");
         }
         return clij.execute(Kernels.class, "math.cl", "addPixelwise_" + src.getDimension() + "d", parameters);
     }
@@ -71,8 +68,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addPixelwise)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addPixelwise)");
         }
         return clij.execute(Kernels.class, "math.cl", "addPixelwise_" + src.getDimension() + "d", parameters);
     }
@@ -84,8 +80,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "math.cl", "addScalar_" + src.getDimension() + "d", parameters);
@@ -99,8 +94,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "math.cl", "addScalar_" + src.getDimension() + "d", parameters);
@@ -122,9 +116,8 @@ public class Kernels {
         if (!checkDimensions(src.getDimension(),
                 src1.getDimension(),
                 dst.getDimension())) {
-            System.out.println(
-                    "Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
+
         }
 
         return clij.execute(Kernels.class,
@@ -151,9 +144,7 @@ public class Kernels {
         if (!checkDimensions(src.getDimension(),
                 src1.getDimension(),
                 dst.getDimension())) {
-            System.out.println(
-                    "Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class,
@@ -420,8 +411,7 @@ public class Kernels {
         } else if (src instanceof ClearCLImage) {
             temp = clij.createCLImage((ClearCLImage) src);
         } else {
-            System.out.println("Error: Wrong type of images in blurSeparable");
-            return false;
+            throw new IllegalArgumentException("Error: Wrong type of images in blurSeparable");
         }
 
         HashMap<String, Object> parameters = new HashMap<>();
@@ -545,8 +535,7 @@ public class Kernels {
         parameters.put("src", src);
         parameters.put("dst", dst);
         if (!checkDimensions(srcNumberOfDimensions, dstNumberOfDimensions)) {
-            System.out.println("Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
         return clij.execute(Kernels.class, "duplication.cl", "copy_" + srcNumberOfDimensions + "d", parameters);
     }
@@ -664,8 +653,7 @@ public class Kernels {
         parameters.put("radius", radius);
         parameters.put("detect_maxima", detectMaxima ? 1 : 0);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (detectOptima)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (detectOptima)");
         }
         return clij.execute(Kernels.class, "detection.cl", "detect_local_optima_" + src.getDimension() + "d", parameters);
     }
@@ -677,8 +665,7 @@ public class Kernels {
         parameters.put("radius", radius);
         parameters.put("detect_maxima", detectMaxima ? 1 : 0);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (detectOptima)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (detectOptima)");
         }
         return clij.execute(Kernels.class, "detection.cl", "detect_local_optima_" + src.getDimension() + "d", parameters);
     }
@@ -690,8 +677,7 @@ public class Kernels {
         parameters.put("radius", radius);
         parameters.put("detect_maxima", detectMaxima ? 1 : 0);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (detectOptima)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (detectOptima)");
         }
         return clij.execute(Kernels.class, "detection.cl", "detect_local_optima_" + src.getDimension() + "d_slice_by_slice", parameters);
     }
@@ -703,8 +689,7 @@ public class Kernels {
         parameters.put("radius", radius);
         parameters.put("detect_maxima", detectMaxima ? 1 : 0);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (detectOptima)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (detectOptima)");
         }
         return clij.execute(Kernels.class, "detection.cl", "detect_local_optima_" + src.getDimension() + "d_slice_by_slice", parameters);
     }
@@ -717,8 +702,7 @@ public class Kernels {
         parameters.put("sigma_minuend", sigmaMinuend);
         parameters.put("sigma_subtrahend", sigmaSubtrahend);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
         return clij.execute(Kernels.class, "differenceOfGaussian.cl", "subtract_convolved_images_" + src.getDimension() + "d_fast", parameters);
     }
@@ -731,8 +715,7 @@ public class Kernels {
         parameters.put("sigma_minuend", sigmaMinuend);
         parameters.put("sigma_subtrahend", sigmaSubtrahend);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
         return clij.execute(Kernels.class, "differenceOfGaussian.cl", "subtract_convolved_images_" + src.getDimension() + "d_slice_by_slice", parameters);
     }
@@ -742,9 +725,7 @@ public class Kernels {
         parameters.put("src", src);
         parameters.put("dst", dst);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println(
-                    "Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
         return clij.execute(Kernels.class, "binaryProcessing.cl", "dilate_diamond_neighborhood_" + src.getDimension() + "d", parameters);
     }
@@ -754,8 +735,7 @@ public class Kernels {
         parameters.put("src", src);
         parameters.put("dst", dst);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
         return clij.execute(Kernels.class, "binaryProcessing.cl", "dilate_diamond_neighborhood_" + src.getDimension() + "d", parameters);
     }
@@ -767,8 +747,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "math.cl", "dividePixelwise_" + src.getDimension() + "d", parameters);
@@ -781,8 +760,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "math.cl", "dividePixelwise_" + src.getDimension() + "d", parameters);
@@ -845,8 +823,7 @@ public class Kernels {
         parameters.put("src", src);
         parameters.put("dst", dst);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
 
         return clij.execute(Kernels.class, "binaryProcessing.cl", "erode_diamond_neighborhood_" + src.getDimension() + "d", parameters);
@@ -857,8 +834,7 @@ public class Kernels {
         parameters.put("src", src);
         parameters.put("dst", dst);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
 
         return clij.execute(Kernels.class, "binaryProcessing.cl", "erode_diamond_neighborhood_" + src.getDimension() + "d", parameters);
@@ -911,8 +887,7 @@ public class Kernels {
         parameters.put("src", src);
         parameters.put("dst", dst);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
 
         return clij.execute(Kernels.class, "binaryProcessing.cl", "invert_" + src.getDimension() + "d", parameters);
@@ -923,8 +898,7 @@ public class Kernels {
         parameters.put("src", src);
         parameters.put("dst", dst);
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (copy)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
         }
 
         return clij.execute(Kernels.class, "binaryProcessing.cl", "invert_" + src.getDimension() + "d", parameters);
@@ -939,8 +913,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "thresholding.cl", "apply_local_threshold_" + src.getDimension() + "d", parameters);
@@ -956,8 +929,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "thresholding.cl", "apply_local_threshold_" + src.getDimension() + "d", parameters);
@@ -970,8 +942,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (mask)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (mask)");
         }
         return clij.execute(Kernels.class, "mask.cl", "mask_" + src.getDimension() + "d", parameters);
     }
@@ -983,8 +954,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (mask)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (mask)");
         }
         return clij.execute(Kernels.class, "mask.cl", "mask_" + src.getDimension() + "d", parameters);
     }
@@ -1009,8 +979,7 @@ public class Kernels {
 
     public static boolean maximum(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1023,8 +992,7 @@ public class Kernels {
 
     public static boolean maximum(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1037,8 +1005,7 @@ public class Kernels {
 
     public static boolean maximum(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
         if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1052,8 +1019,7 @@ public class Kernels {
 
     public static boolean maximum(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
         if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1067,8 +1033,7 @@ public class Kernels {
 
     public static boolean maximumSliceBySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1089,8 +1054,7 @@ public class Kernels {
 
     public static boolean maximumSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the maximum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1108,8 +1072,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (maxPixelwise)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (maxPixelwise)");
         }
         return clij.execute(Kernels.class, "math.cl", "maxPixelwise_" + src.getDimension() + "d", parameters);
     }
@@ -1121,8 +1084,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (maxPixelwise)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (maxPixelwise)");
         }
         return clij.execute(Kernels.class, "math.cl", "maxPixelwise_" + src.getDimension() + "d", parameters);
     }
@@ -1134,8 +1096,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (maxPixelwise)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (maxPixelwise)");
         }
         return clij.execute(Kernels.class, "math.cl", "maxPixelwiseScalar_" + src.getDimension() + "d", parameters);
     }
@@ -1147,8 +1108,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (maxPixelwise)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (maxPixelwise)");
         }
         return clij.execute(Kernels.class, "math.cl", "maxPixelwiseScalar_" + src.getDimension() + "d", parameters);
     }
@@ -1160,8 +1120,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (minPixelwise)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (minPixelwise)");
         }
         return clij.execute(Kernels.class, "math.cl", "minPixelwise_" + src.getDimension() + "d", parameters);
     }
@@ -1173,8 +1132,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (minPixelwise)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (minPixelwise)");
         }
         return clij.execute(Kernels.class, "math.cl", "minPixelwise_" + src.getDimension() + "d", parameters);
     }
@@ -1186,8 +1144,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (minPixelwiseScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (minPixelwiseScalar)");
         }
         return clij.execute(Kernels.class, "math.cl", "minPixelwiseScalar_" + src.getDimension() + "d", parameters);
     }
@@ -1199,8 +1156,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (minPixelwiseScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (minPixelwiseScalar)");
         }
         return clij.execute(Kernels.class, "math.cl", "minPixelwiseScalar_" + src.getDimension() + "d", parameters);
     }
@@ -1254,8 +1210,7 @@ public class Kernels {
 
     public static boolean mean(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1268,8 +1223,7 @@ public class Kernels {
 
     public static boolean mean(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1300,8 +1254,7 @@ public class Kernels {
 
     public static boolean mean(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
         if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1315,8 +1268,7 @@ public class Kernels {
 
     public static boolean mean(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
         if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1339,8 +1291,7 @@ public class Kernels {
 
     public static boolean meanSliceBySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1353,8 +1304,7 @@ public class Kernels {
 
     public static boolean meanSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the mean filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1367,8 +1317,7 @@ public class Kernels {
 
     public static boolean median(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1381,8 +1330,7 @@ public class Kernels {
 
     public static boolean median(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1395,8 +1343,7 @@ public class Kernels {
 
     public static boolean median(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
         if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1410,8 +1357,7 @@ public class Kernels {
 
     public static boolean median(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
         if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1425,8 +1371,7 @@ public class Kernels {
 
     public static boolean medianSliceBySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1439,8 +1384,7 @@ public class Kernels {
 
     public static boolean medianSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the median filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1453,8 +1397,7 @@ public class Kernels {
 
     public static boolean minimum(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1467,8 +1410,7 @@ public class Kernels {
 
     public static boolean minimum(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1481,8 +1423,7 @@ public class Kernels {
 
     public static boolean minimum(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
         if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1496,8 +1437,7 @@ public class Kernels {
 
     public static boolean minimum(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ) {
         if (kernelSizeX * kernelSizeY * kernelSizeZ > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1520,8 +1460,7 @@ public class Kernels {
 
     public static boolean minimumSliceBySlice(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1534,8 +1473,7 @@ public class Kernels {
 
     public static boolean minimumSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
         if (kernelSizeX * kernelSizeY > CLKernelExecutor.MAX_ARRAY_SIZE) {
-            System.out.println("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
-            return false;
+            throw new IllegalArgumentException("Error: kernels of the minimum filter is too big. Consider increasing MAX_ARRAY_SIZE.");
         }
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
@@ -1553,8 +1491,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "math.cl", "multiplyPixelwise_" + src.getDimension() + "d", parameters);
@@ -1567,8 +1504,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), src1.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
         return clij.execute(Kernels.class, "math.cl", "multiplyPixelwise_" + src.getDimension() + "d", parameters);
     }
@@ -1580,8 +1516,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
         return clij.execute(Kernels.class, "math.cl", "multiplyScalar_" + src.getDimension() + "d", parameters);
     }
@@ -1593,16 +1528,14 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
         return clij.execute(Kernels.class, "math.cl", "multiplyScalar_" + src.getDimension() + "d", parameters);
     }
 
     public static boolean multiplySliceBySliceWithScalars(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float[] scalars) {
         if (dst.getDimensions()[2] != scalars.length) {
-            System.out.println("Wrong number of scalars in array.");
-            return false;
+            throw new IllegalArgumentException("Error: Wrong number of scalars in array.");
         }
 
         FloatBuffer buffer = FloatBuffer.allocate(scalars.length);
@@ -1625,8 +1558,7 @@ public class Kernels {
 
     public static boolean multiplySliceBySliceWithScalars(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, float[] scalars) {
         if (dst.getDimensions()[2] != scalars.length) {
-            System.out.println("Wrong number of scalars in array.");
-            return false;
+            throw new IllegalArgumentException("Error: Wrong number of scalars in array.");
         }
 
         FloatBuffer buffer = FloatBuffer.allocate(scalars.length);
@@ -1803,15 +1735,13 @@ public class Kernels {
 
     public static boolean splitStack(ClearCLIJ clij, ClearCLImage clImageIn, ClearCLImage... clImagesOut) {
         if (clImagesOut.length > 12) {
-            System.out.println("Error: splitStack does not support more than 5 stacks.");
-            return false;
+            throw new IllegalArgumentException("Error: splitStack does not support more than 12 stacks.");
         }
         if (clImagesOut.length == 1) {
             return copy(clij, clImageIn, clImagesOut[0]);
         }
         if (clImagesOut.length == 0) {
-            System.out.println("Error: splitstack didn't get any output images.");
-            return false;
+            throw new IllegalArgumentException("Error: splitstack didn't get any output images.");
         }
 
         HashMap<String, Object> parameters = new HashMap<>();
@@ -1825,15 +1755,13 @@ public class Kernels {
 
     public static boolean splitStack(ClearCLIJ clij, ClearCLBuffer clImageIn, ClearCLBuffer... clImagesOut) {
         if (clImagesOut.length > 12) {
-            System.out.println("Error: splitStack does not support more than 5 stacks.");
-            return false;
+            throw new IllegalArgumentException("Error: splitStack does not support more than 12 stacks.");
         }
         if (clImagesOut.length == 1) {
             return copy(clij, clImageIn, clImagesOut[0]);
         }
         if (clImagesOut.length == 0) {
-            System.out.println("Error: splitstack didn't get any output images.");
-            return false;
+            throw new IllegalArgumentException("Error: splitstack didn't get any output images.");
         }
 
         HashMap<String, Object> parameters = new HashMap<>();
@@ -1957,15 +1885,13 @@ public class Kernels {
 
     public static boolean tenengradFusion(ClearCLIJ clij, ClearCLImage clImageOut, float[] blurSigmas, float exponent, ClearCLImage... clImagesIn) {
         if (clImagesIn.length > 12) {
-            System.out.println("Error: tenengradFusion does not support more than 5 stacks.");
-            return false;
+            throw new IllegalArgumentException("Error: tenengradFusion does not support more than 12 stacks.");
         }
         if (clImagesIn.length == 1) {
             return copy(clij, clImagesIn[0], clImageOut);
         }
         if (clImagesIn.length == 0) {
-            System.out.println("Error: tenengradFusion didn't get any output images.");
-            return false;
+            throw new IllegalArgumentException("Error: tenengradFusion didn't get any output images.");
         }
         if (!clImagesIn[0].isFloat()) {
             System.out.println("Warning: tenengradFusion may only work on float images!");
@@ -2027,8 +1953,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "thresholding.cl", "apply_threshold_" + src.getDimension() + "d", parameters);
@@ -2043,8 +1968,7 @@ public class Kernels {
         parameters.put("dst", dst);
 
         if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            System.out.println("Error: number of dimensions don't match! (addScalar)");
-            return false;
+            throw new IllegalArgumentException("Error: number of dimensions don't match! (addScalar)");
         }
 
         return clij.execute(Kernels.class, "thresholding.cl", "apply_threshold_" + src.getDimension() + "d", parameters);
