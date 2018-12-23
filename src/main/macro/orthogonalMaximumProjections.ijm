@@ -34,9 +34,9 @@ run("Close All");
 // process
 Ext.CLIJ_downsample3D(input, downscaled, downScalingFactorInXY, downScalingFactorInXY, downScalingFactorInZ);
 
-Ext.CLIJ_maxProjectionDimSelect(downscaled, maximumProjectionX, 2, 1, 0);
-Ext.CLIJ_maxProjectionDimSelect(downscaled, maximumProjectionY, 2, 0, 1);
-Ext.CLIJ_maxProjectionDimSelect(downscaled, maximumProjectionZ, 0, 1, 2);
+Ext.CLIJ_maximumXYZProjection(downscaled, maximumProjectionX, 2, 1, 0);
+Ext.CLIJ_maximumXYZProjection(downscaled, maximumProjectionY, 0, 2, 1);
+Ext.CLIJ_maximumXYZProjection(downscaled, maximumProjectionZ, 0, 1, 2);
 
 // show results
 Ext.CLIJ_pull(maximumProjectionX);

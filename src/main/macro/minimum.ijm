@@ -28,7 +28,7 @@ Ext.CLIJ_push(input);
 run("Close All");
 
 // reslice
-Ext.CLIJ_minimum3DMooreNeighborhood(input, minimum, 3, 3, 3);
+Ext.CLIJ_minimum3DBox(input, minimum, 3, 3, 3);
 
 // show results
 Ext.CLIJ_pull(input);

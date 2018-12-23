@@ -29,7 +29,7 @@ run("Mean 3D...", "x=3 y=3 z=3");
 
 
 // Local mean filter in GPU
-Ext.CLIJ_mean3D(input, blurred, 3, 3, 3);
+Ext.CLIJ_mean3DBox(input, blurred, 3, 3, 3);
 
 // Get results back from GPU
 Ext.CLIJ_pull(blurred);

@@ -35,7 +35,7 @@ run("Close All");
 // Local mean filter in GPU
 for (i = 1; i <= 10; i++) {
 	time = getTime();
-	Ext.CLIJ_mean3DMooreNeighborhood(input, blurred, 3, 3, 3);
+	Ext.CLIJ_mean3DBox(input, blurred, 3, 3, 3);
 	print("GPU mean filter no " + i + " took " + (getTime() - time) + " msec");
 }
 
