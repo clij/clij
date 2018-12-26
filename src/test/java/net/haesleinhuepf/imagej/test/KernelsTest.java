@@ -4154,22 +4154,65 @@ public class KernelsTest {
 
     @Test
     public void sumPixels2d() {
-        ClearCLImage maskCL = clij.convert(testImp2, ClearCLImage.class);;
+        ImagePlus imp = NewImage.createByteImage("test", 10, 10, 1, NewImage.FILL_BLACK);
+        imp.getProcessor().set(5,5, 1);
+        imp.getProcessor().set(5,6, 2);
+        imp.getProcessor().set(5,7, 3);
+
+        ClearCLImage maskCL = clij.convert(imp, ClearCLImage.class);
 
         double sum = Kernels.sumPixels(clij, maskCL);
 
-        assertTrue(sum == 9);
+        assertTrue(sum == 6);
 
         maskCL.close();
     }
 
     @Test
     public void sumPixels2d_Buffers() {
-        ClearCLBuffer maskCL = clij.convert(testImp2, ClearCLBuffer.class);;
+        ImagePlus imp = NewImage.createByteImage("test", 10, 10, 1, NewImage.FILL_BLACK);
+        imp.getProcessor().set(5,5, 1);
+        imp.getProcessor().set(5,6, 2);
+        imp.getProcessor().set(5,7, 3);
+
+        ClearCLBuffer maskCL = clij.convert(imp, ClearCLBuffer.class);
 
         double sum = Kernels.sumPixels(clij, maskCL);
 
-        assertTrue(sum == 9);
+        assertTrue(sum == 6);
+
+        maskCL.close();
+    }
+
+
+    @Test
+    public void maxPixels2d() {
+        ImagePlus imp = NewImage.createByteImage("test", 10, 10, 1, NewImage.FILL_BLACK);
+        imp.getProcessor().set(5,5, 1);
+        imp.getProcessor().set(5,6, 2);
+        imp.getProcessor().set(5,7, 3);
+
+        ClearCLImage maskCL = clij.convert(imp, ClearCLImage.class);
+
+        double sum = Kernels.maximumOfAllPixels(clij, maskCL);
+
+        assertTrue(sum == 3);
+
+        maskCL.close();
+    }
+
+    @Test
+    public void maxPixels2d_Buffers() {
+        ImagePlus imp = NewImage.createByteImage("test", 10, 10, 1, NewImage.FILL_BLACK);
+        imp.getProcessor().set(5,5, 1);
+        imp.getProcessor().set(5,6, 2);
+        imp.getProcessor().set(5,7, 3);
+
+        ClearCLBuffer maskCL = clij.convert(imp, ClearCLBuffer.class);
+
+        double sum = Kernels.maximumOfAllPixels(clij, maskCL);
+
+        assertTrue(sum == 3);
 
         maskCL.close();
     }
