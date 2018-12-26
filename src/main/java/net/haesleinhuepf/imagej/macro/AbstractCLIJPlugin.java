@@ -266,6 +266,8 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination")) {
                         // Creation of output buffers needs to be done after all other parameters have been read.
+                        String destinationName = name + "_" + parameterName + "_" + imageTitle;
+                        calledParameters = calledParameters + "\"" + destinationName + "\"";
                     } else {
                         ImagePlus imp = gd.getNextImage();
                         if (imageTitle.length() == 0) {
@@ -302,8 +304,6 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                             args[i] = destination;
                             allBuffers.add(destination);
                             String destinationName = name + "_" + parameterName + "_" + imageTitle;
-                            calledParameters = calledParameters + "\"" + destinationName + "\"";
-
                             destinations.put(destinationName, destination);
                         }
                     }
