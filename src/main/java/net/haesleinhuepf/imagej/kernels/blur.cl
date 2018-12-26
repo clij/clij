@@ -101,6 +101,37 @@ __kernel void gaussian_blur_image2d
   WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)res);
 }
 
+__kernel void gaussian_blur_image2d_ij
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int Nx, const int Ny,
+  const float sx, const float sy
+)
+{
+  const int i = get_global_id(0), j = get_global_id(1);
+  const int2 coord = (int2)(i,j);
+
+  // centers
+  const int2   c = (int2)  ( (Nx-1)/2, (Ny-1)/2 );
+  // normalizations
+  const float2 n = (float2)( -2*sx*sx, -2*sy*sy);
+
+  float res = 0, hsum = 0;
+
+  for (int x = -c.x; x <= c.x; x++) {
+    const float wx = (x*x) / n.x;
+    for (int y = -c.y; y <= c.y; y++) {
+      const float wy = (y*y) / n.y;
+      const float h = exp(wx + wy);
+      res += h * (float)READ_IMAGE_2D(src,sampler,coord+(int2)(x,y)).x;
+      hsum += h;
+    }
+  }
+
+  res /= hsum;
+  WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)res);
+}
+
 __kernel void gaussian_blur_sep_image3d
 (
   DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
@@ -149,7 +180,7 @@ __kernel void gaussian_blur_sep_image2d
     hsum += h;
   }
   res /= hsum;
-  WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)res);
+  WRITE_IMAGE_2D(dst,coord,(DTYPE_OUT)(res));
 }
 
 

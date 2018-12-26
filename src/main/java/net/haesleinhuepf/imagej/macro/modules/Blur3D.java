@@ -8,6 +8,8 @@ import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
 
+import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.sigmaToKernelSize;
+
 /**
  * Author: @haesleinhuepf
  * 12 2018
@@ -20,9 +22,9 @@ public class Blur3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         float sigmaX = asFloat(args[2]);
         float sigmaY = asFloat(args[3]);
         float sigmaZ = asFloat(args[4]);
-        int nX = radiusToKernelSize((int)sigmaX);
-        int nY = radiusToKernelSize((int)sigmaY);
-        int nZ = radiusToKernelSize((int)sigmaZ);
+        int nX = sigmaToKernelSize(sigmaX);
+        int nY = sigmaToKernelSize(sigmaY);
+        int nZ = sigmaToKernelSize(sigmaZ);
 
         if (containsCLImageArguments()) {
             return Kernels.blur(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), nX, nY, nZ, sigmaX, sigmaY, sigmaZ);

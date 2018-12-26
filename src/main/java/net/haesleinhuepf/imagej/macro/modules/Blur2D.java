@@ -2,11 +2,17 @@ package net.haesleinhuepf.imagej.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.plugin.Duplicator;
 import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
+import net.haesleinhuepf.imagej.macro.CLIJImageJProcessor;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
+
+import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.sigmaToKernelSize;
 
 /**
  * Author: @haesleinhuepf
@@ -19,8 +25,8 @@ public class Blur2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
     public boolean executeCL() {
         float sigmaX = asFloat(args[2]);
         float sigmaY = asFloat(args[3]);
-        int nX = radiusToKernelSize((int)sigmaX);
-        int nY = radiusToKernelSize((int)sigmaY);
+        int nX = sigmaToKernelSize(sigmaX);
+        int nY = sigmaToKernelSize(sigmaY);
 
         if (containsCLImageArguments()) {
             return Kernels.blur(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), nX, nY, sigmaX, sigmaY);

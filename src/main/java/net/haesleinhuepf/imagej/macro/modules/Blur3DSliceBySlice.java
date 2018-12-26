@@ -8,6 +8,8 @@ import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
 
+import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.sigmaToKernelSize;
+
 /**
  * Author: @haesleinhuepf
  * 12 2018
@@ -19,8 +21,8 @@ public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroP
     public boolean executeCL() {
         float sigmaX = asFloat(args[2]);
         float sigmaY = asFloat(args[3]);
-        int nX = radiusToKernelSize((int)sigmaX);
-        int nY = radiusToKernelSize((int)sigmaY);
+        int nX = sigmaToKernelSize(sigmaX);
+        int nY = sigmaToKernelSize(sigmaY);
 
         if (containsCLBufferArguments()) {
             // convert all arguments to CLImages
