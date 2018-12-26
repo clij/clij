@@ -14,15 +14,15 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_dilateBox")
-public class DilateBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class DilateSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.dilate(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
+            return Kernels.dilateSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.dilate(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
+            boolean result = Kernels.dilateSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
             releaseBuffers(args);
             return result;
         }

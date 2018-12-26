@@ -1,7 +1,6 @@
 package net.haesleinhuepf.imagej.demo;
 
 import clearcl.ClearCLBuffer;
-import clearcl.ClearCLImage;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.kernels.Kernels;
 import ij.IJ;
@@ -79,8 +78,8 @@ public class BenchmarkingDemo {
         IJ.run(copy, "Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
         IJ.setRawThreshold(copy, 100, 255, null);
         IJ.run(copy, "Convert to Mask", "method=Default background=Dark");
-        IJ.run(copy, "ErodeBox", "stack");
-        IJ.run(copy, "DilateBox", "stack");
+        IJ.run(copy, "ErodeBoxIJ", "stack");
+        IJ.run(copy, "DilateBoxIJ", "stack");
         IJ.run(copy, "Divide...", "value=255 stack");
         ImageCalculator calculator = new ImageCalculator();
 
@@ -100,11 +99,11 @@ public class BenchmarkingDemo {
         IterableInterval blurredIi = ij.op().threshold().apply(Views.iterable(gauss), threshold);
         RandomAccessibleInterval blurredImg = makeRai(blurredIi);
 
-        // erode
+        // erodeSphere
         IterableInterval erodedIi = ij.op().morphology().erode(blurredImg, new DiamondShape(1));
         RandomAccessibleInterval erodedImg = makeRai(erodedIi);
 
-        // dilate
+        // dilateSphere
         IterableInterval dilatedIi = ij.op().morphology().dilate(erodedImg, new DiamondShape(1));
         RandomAccessibleInterval dilatedImg = makeRai(dilatedIi);
 
@@ -140,8 +139,8 @@ public class BenchmarkingDemo {
 
         Kernels.threshold(clij, flop, flip, 100.0f);
 
-        Kernels.erode(clij, flip, flop);
-        Kernels.dilate(clij, flop, flip);
+        Kernels.erodeSphere(clij, flip, flop);
+        Kernels.dilateSphere(clij, flop, flip);
 
         Kernels.multiplyPixelwise(clij, flop, input, flip);
 

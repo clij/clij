@@ -1,24 +1,18 @@
 package net.haesleinhuepf.imagej.macro.modules;
 
-import clearcl.ClearCL;
 import clearcl.ClearCLBuffer;
-import clearcl.ClearCLImage;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
-import ij.gui.WaitForUserDialog;
-import ij.plugin.Duplicator;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.macro.AbstractMacroPluginTest;
-import net.haesleinhuepf.imagej.test.KernelsTest;
-import org.jruby.RubyProcess;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-public class Mean2DIJTest extends AbstractMacroPluginTest {
+public class Maximum2DIJTest extends AbstractMacroPluginTest {
     @Test
-    public void testIfIdenticalWithImageJ(){
+    public void testIfIdentialWithImageJ(){
         new ImageJ();
 
         ClearCLIJ clij = ClearCLIJ.getInstance();
@@ -32,10 +26,10 @@ public class Mean2DIJTest extends AbstractMacroPluginTest {
             ClearCLBuffer bufferOutIJ = clij.createCLBuffer(bufferIn);
 
             Object[] argsCL = {bufferIn, bufferOutCL, new Double(radius)};
-            makeMean2DIJ(clij, argsCL).executeCL();
+            makeMaximum2DIJ(clij, argsCL).executeCL();
 
             Object[] argsIJ = {bufferIn, bufferOutIJ, new Double(radius)};
-            makeMean2DIJ(clij, argsIJ).executeIJ();
+            makeMaximum2DIJ(clij, argsIJ).executeIJ();
 
             //clij.show(bufferOutCL, "cl " + bufferOutCL);
             //clij.show(bufferOutIJ, "ij");
@@ -49,10 +43,10 @@ public class Mean2DIJTest extends AbstractMacroPluginTest {
         }
     }
 
-    private Mean2DIJ makeMean2DIJ(ClearCLIJ clij, Object[] args) {
-        Mean2DIJ mean2DIJ = new Mean2DIJ();
-        mean2DIJ.setClij(clij);
-        mean2DIJ.setArgs(args);
-        return mean2DIJ;
+    private Maximum2DIJ makeMaximum2DIJ(ClearCLIJ clij, Object[] args) {
+        Maximum2DIJ maximum2DIJ = new Maximum2DIJ();
+        maximum2DIJ.setClij(clij);
+        maximum2DIJ.setArgs(args);
+        return maximum2DIJ;
     }
 }

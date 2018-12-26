@@ -3,8 +3,6 @@ package net.haesleinhuepf.imagej.test;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
-import ij.gui.WaitForUserDialog;
-import ij.plugin.filter.Transformer;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.kernels.Kernels;
 import clearcl.util.ElapsedTime;
@@ -18,7 +16,6 @@ import ij.plugin.ImageCalculator;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
-import net.imagej.patcher.LegacyInjector;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgs;
@@ -1558,7 +1555,7 @@ public class KernelsTest {
                 maskCLafter =
                 clij.createCLImage(maskCL);
 
-        Kernels.dilate(clij, maskCL, maskCLafter);
+        Kernels.dilateSphere(clij, maskCL, maskCLafter);
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
@@ -1575,7 +1572,7 @@ public class KernelsTest {
                 maskCLafter =
                 clij.createCLBuffer(maskCL);
 
-        Kernels.dilate(clij, maskCL, maskCLafter);
+        Kernels.dilateSphere(clij, maskCL, maskCLafter);
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
@@ -1591,7 +1588,7 @@ public class KernelsTest {
         ClearCLImage
                 maskCLafter = clij.createCLImage(maskCL);
 
-        Kernels.dilate(clij, maskCL, maskCLafter);
+        Kernels.dilateSphere(clij, maskCL, maskCLafter);
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
@@ -1607,7 +1604,7 @@ public class KernelsTest {
         ClearCLBuffer
                 maskCLafter = clij.createCLBuffer(maskCL);
 
-        Kernels.dilate(clij, maskCL, maskCLafter);
+        Kernels.dilateSphere(clij, maskCL, maskCLafter);
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
@@ -1874,7 +1871,7 @@ public class KernelsTest {
         ClearCLImage
                 maskCLafter = clij.createCLImage(maskCL);
 
-        Kernels.erode(clij, maskCL, maskCLafter);
+        Kernels.erodeSphere(clij, maskCL, maskCLafter);
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
@@ -1890,7 +1887,7 @@ public class KernelsTest {
         ClearCLBuffer
                 maskCLafter = clij.createCLBuffer(maskCL);
 
-        Kernels.erode(clij, maskCL, maskCLafter);
+        Kernels.erodeSphere(clij, maskCL, maskCLafter);
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
@@ -1906,7 +1903,7 @@ public class KernelsTest {
         ClearCLImage
                 maskCLafter = clij.createCLImage(maskCL);
 
-        Kernels.erode(clij, maskCL, maskCLafter);
+        Kernels.erodeSphere(clij, maskCL, maskCLafter);
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
@@ -1922,7 +1919,7 @@ public class KernelsTest {
         ClearCLBuffer
                 maskCLafter = clij.createCLBuffer(maskCL);
 
-        Kernels.erode(clij, maskCL, maskCLafter);
+        Kernels.erodeSphere(clij, maskCL, maskCLafter);
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 

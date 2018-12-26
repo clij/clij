@@ -31,8 +31,8 @@ public class LocalThresholdDemo {
         // local threshold
         Kernels.localThreshold(clij, input, output, temp);
 
-        Kernels.erode(clij, output, temp);
-        Kernels.erode(clij, temp, output);
+        Kernels.erodeSphere(clij, output, temp);
+        Kernels.erodeSphere(clij, temp, output);
 
         // show results
         clij.show(input, "original");

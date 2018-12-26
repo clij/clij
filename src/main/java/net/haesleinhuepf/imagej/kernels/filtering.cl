@@ -372,6 +372,39 @@ __kernel void minimum_image2d
   WRITE_IMAGE_2D(dst, coord, res);
 }
 
+__kernel void minimum_image2d_ij
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int radius
+)
+{
+    const int i = get_global_id(0), j = get_global_id(1);
+    const int2 coord = (int2){i,j};
+
+    // centers
+    const int4   e = (int4)  { radius, radius, 0, 0 };
+
+    float rSquared = pow((float)radius, 2) + 1;
+
+    float minimumValue = (float)(READ_IMAGE_2D(src,sampler,coord).x);
+    for (int x = -e.x; x <= e.x; x++) {
+        float xSquared = x * x;
+        for (int y = -e.y; y <= e.y; y++) {
+            float ySquared = y * y;
+            if (xSquared + ySquared <= rSquared) {
+                float value = (float)(READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x);
+                if (value < minimumValue) {
+                    minimumValue = value;
+                }
+            }
+        }
+    }
+
+    DTYPE_OUT res = minimumValue;
+    WRITE_IMAGE_2D(dst, coord, res);
+}
+
+
 __kernel void minimum_image3d
 (
   DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src,
@@ -478,6 +511,39 @@ __kernel void maximum_image2d
 
   WRITE_IMAGE_2D(dst, coord, res);
 }
+
+__kernel void maximum_image2d_ij
+(
+  DTYPE_IMAGE_OUT_2D dst, DTYPE_IMAGE_IN_2D src,
+  const int radius
+)
+{
+    const int i = get_global_id(0), j = get_global_id(1);
+    const int2 coord = (int2){i,j};
+
+    // centers
+    const int4   e = (int4)  { radius, radius, 0, 0 };
+
+    float rSquared = pow((float)radius, 2) + 1;
+
+    float maximumValue = (float)(READ_IMAGE_2D(src,sampler,coord).x);
+    for (int x = -e.x; x <= e.x; x++) {
+        float xSquared = x * x;
+        for (int y = -e.y; y <= e.y; y++) {
+            float ySquared = y * y;
+            if (xSquared + ySquared <= rSquared) {
+                float value = (float)(READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x);
+                if (value > maximumValue) {
+                    maximumValue = value;
+                }
+            }
+        }
+    }
+
+    DTYPE_OUT res = maximumValue;
+    WRITE_IMAGE_2D(dst, coord, res);
+}
+
 
 __kernel void maximum_image3d
 (
