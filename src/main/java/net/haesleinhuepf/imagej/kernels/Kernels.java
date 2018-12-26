@@ -1486,6 +1486,28 @@ public class Kernels {
         return clij.execute(Kernels.class, "math.cl", "power_" + src.getDimension() + "d", parameters);
     }
 
+    public static boolean radialProjection(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Float deltaAngle) {
+        HashMap<String, Object> parameters = new HashMap<>();
+
+        parameters.clear();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        parameters.put("deltaAngle", deltaAngle);
+
+        return clij.execute(Kernels.class, "projections.cl", "radialProjection3d", parameters);
+    }
+
+    public static boolean radialProjection(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Float deltaAngle) {
+        HashMap<String, Object> parameters = new HashMap<>();
+
+        parameters.clear();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        parameters.put("deltaAngle", deltaAngle);
+
+        return clij.execute(Kernels.class, "projections.cl", "radialProjection3d", parameters);
+    }
+
     public static boolean resliceBottom(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
         HashMap<String, Object> parameters = new HashMap<>();
 

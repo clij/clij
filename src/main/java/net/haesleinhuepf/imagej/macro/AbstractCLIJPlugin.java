@@ -265,15 +265,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 String parameterName = parameterParts[1];
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination")) {
-                        if (allBuffers.size() > 0) {
-                            ClearCLBuffer destination = createOutputBufferFromSource(allBuffers.get(0));
-                            args[i] = destination;
-                            allBuffers.add(destination);
-                            String destinationName = name + "_" + parameterName + "_" + imageTitle;
-                            calledParameters = calledParameters + "\"" + destinationName + "\"";
-
-                            destinations.put(destinationName, destination);
-                        }
+                        // Creation of output buffers needs to be done after all other parameters have been read.
                     } else {
                         ImagePlus imp = gd.getNextImage();
                         if (imageTitle.length() == 0) {
@@ -297,6 +289,24 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 }
                 if (calledParameters.length() > 0 && i < parameters.length - 1) {
                     calledParameters = calledParameters + ", ";
+                }
+            }
+            for (int i = 0; i < parameters.length; i++) {
+                String[] parameterParts = parameters[i].trim().split(" ");
+                String parameterType = parameterParts[0];
+                String parameterName = parameterParts[1];
+                if (parameterType.compareTo("Image") == 0) {
+                    if (parameterName.contains("destination")) {
+                        if (allBuffers.size() > 0) {
+                            ClearCLBuffer destination = createOutputBufferFromSource(allBuffers.get(0));
+                            args[i] = destination;
+                            allBuffers.add(destination);
+                            String destinationName = name + "_" + parameterName + "_" + imageTitle;
+                            calledParameters = calledParameters + "\"" + destinationName + "\"";
+
+                            destinations.put(destinationName, destination);
+                        }
+                    }
                 }
             }
         }
