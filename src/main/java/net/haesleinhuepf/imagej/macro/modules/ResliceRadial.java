@@ -9,15 +9,15 @@ import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
 
 /**
- * RadialProjection
+ * ResliceRadial
  * <p>
  * <p>
  * <p>
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_radialProjection")
-public class RadialProjection  extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_resliceRadial")
+public class ResliceRadial extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 
     @Override
     public boolean executeCL() {
