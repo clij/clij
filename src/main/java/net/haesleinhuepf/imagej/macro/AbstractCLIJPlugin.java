@@ -11,6 +11,7 @@ import ij.plugin.filter.PlugInFilter;
 import ij.plugin.frame.Recorder;
 import ij.process.ImageProcessor;
 import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.imglib2.RandomAccessibleInterval;
 
 import java.util.ArrayList;
@@ -187,11 +188,6 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         } else {
             return new Integer((int)Double.parseDouble(new String("" + number)));
         }
-    }
-
-    protected static int radiusToKernelSize(int radius) {
-        int kernelSize = radius * 2 + 1;
-        return kernelSize;
     }
 
     @Override

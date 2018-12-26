@@ -8,6 +8,8 @@ import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
 
+import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.radiusToKernelSize;
+
 /**
  * Author: @haesleinhuepf
  * 12 2018
@@ -19,7 +21,6 @@ public class MeanSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJMa
     public boolean executeCL() {
         int kernelSizeX = radiusToKernelSize(asInteger(args[2]));
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
-        int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
             return Kernels.meanSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);

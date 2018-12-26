@@ -13,6 +13,9 @@ import net.imglib2.view.Views;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
+import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.radiusToKernelSize;
+import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.sigmaToKernelSize;
+
 
 /**
  * This class contains convenience access functions for OpenCL based
@@ -268,6 +271,30 @@ public class Kernels {
         return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image3d", parameters);
     }
 
+    public static boolean blurIJ(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, Float sigma) {
+        int kernelSize = sigmaToKernelSize(sigma);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("Nx", kernelSize);
+        parameters.put("Ny", kernelSize);
+        parameters.put("sx", sigma);
+        parameters.put("sy", sigma);
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image2d_ij", parameters);
+    }
+
+    public static boolean blurIJ(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Float sigma) {
+        int kernelSize = sigmaToKernelSize(sigma);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("Nx", kernelSize);
+        parameters.put("Ny", kernelSize);
+        parameters.put("sx", sigma);
+        parameters.put("sy", sigma);
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image2d_ij", parameters);
+    }
+
     public static boolean blurSeparable(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
         return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
     }
@@ -276,18 +303,6 @@ public class Kernels {
         return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
     }
 
-    private static int radiusToKernelSize(int radius) {
-        int kernelSize = radius * 2 + 1;
-        return kernelSize;
-    }
-
-    private static int sigmaToKernelSize(float sigma) {
-        int n = (int)(sigma * 3.5);
-        if (n % 2 == 0) {
-            n++;
-        }
-        return n;
-    }
 
     private static boolean executeSeparableKernel(ClearCLIJ clij, Object src, Object dst, String clFilename, String kernelname, int nX, int nY, int nZ, float blurSigmaX, float blurSigmaY, float blurSigmaZ, long dimensions) {
         int[] n = new int[]{nX, nY, nZ};
@@ -1678,10 +1693,10 @@ public class Kernels {
 
         RandomAccessibleInterval rai = clij.convert(clReducedImage, RandomAccessibleInterval.class);
         Cursor cursor = Views.iterable(rai).cursor();
-        float maximumGreyValue = Float.MAX_VALUE;
+        float maximumGreyValue = -Float.MAX_VALUE;
         while (cursor.hasNext()) {
             float greyValue = ((RealType) cursor.next()).getRealFloat();
-            if (maximumGreyValue > greyValue) {
+            if (maximumGreyValue < greyValue) {
                 maximumGreyValue = greyValue;
             }
         }

@@ -10,6 +10,8 @@ import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
 
+import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.radiusToKernelSize;
+
 /**
  * Author: @haesleinhuepf
  * December 2018
