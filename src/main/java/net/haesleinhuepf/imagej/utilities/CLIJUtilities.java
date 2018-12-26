@@ -13,7 +13,7 @@ public class CLIJUtilities {
     }
 
     public static int sigmaToKernelSize(float sigma) {
-        int n = (int)(sigma * 4.5);
+        int n = (int)(sigma * 4.0);
         if (n % 2 == 0) {
             n++;
         }
