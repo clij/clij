@@ -16,7 +16,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur2D")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur2DIJ")
 public class Blur2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor {
 
     @Override
