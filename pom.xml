@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>net.clearcontrol</groupId>
 		<artifactId>ClearParentPom</artifactId>
-		<version>0.6.35</version>
+		<version>0.6.36</version>
 		<relativePath />
 	</parent>
 
@@ -91,7 +91,6 @@
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
 			<artifactId>clearcl</artifactId>
-            <version>0.6.7-m</version>
 		</dependency>
 		<dependency>
 			<groupId>org.scijava</groupId>
