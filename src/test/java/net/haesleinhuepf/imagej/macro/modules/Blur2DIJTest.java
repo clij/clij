@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class Blur2DIJTest extends AbstractMacroPluginTest {
 
-    private final static double tolerance = 1.0; 
+    private final static double tolerance = 0.5;
 
     @Test
     public void testIfIdentialWithImageJ(){
