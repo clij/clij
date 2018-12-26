@@ -1643,6 +1643,114 @@ public class Kernels {
         return clij.execute(Kernels.class, "stacksplitting.cl", "split_" + clImagesOut.length + "_stacks", parameters);
     }
 
+    public static double maximumOfAllPixels(ClearCLIJ clij, ClearCLImage clImage) {
+        ClearCLImage clReducedImage = clImage;
+        if (clImage.getDimension() == 3) {
+            clReducedImage = clij.createCLImage(new long[]{clImage.getWidth(), clImage.getHeight()}, clImage.getChannelDataType());
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("src", clImage);
+            parameters.put("dst", clReducedImage);
+            clij.execute(Kernels.class, "projections.cl", "max_project_3d_2d", parameters);
+        }
+
+        RandomAccessibleInterval rai = clij.convert(clReducedImage, RandomAccessibleInterval.class);
+        Cursor cursor = Views.iterable(rai).cursor();
+        float maximumGreyValue = Float.MAX_VALUE;
+        while (cursor.hasNext()) {
+            float greyValue = ((RealType) cursor.next()).getRealFloat();
+            if (maximumGreyValue > greyValue) {
+                maximumGreyValue = greyValue;
+            }
+        }
+
+        if (clImage != clReducedImage) {
+            clReducedImage.close();
+        }
+        return maximumGreyValue;
+    }
+
+    public static double maximumOfAllPixels(ClearCLIJ clij, ClearCLBuffer clImage) {
+        ClearCLBuffer clReducedImage = clImage;
+        if (clImage.getDimension() == 3) {
+            clReducedImage = clij.createCLBuffer(new long[]{clImage.getWidth(), clImage.getHeight()}, clImage.getNativeType());
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("src", clImage);
+            parameters.put("dst", clReducedImage);
+            clij.execute(Kernels.class, "projections.cl", "max_project_3d_2d", parameters);
+        }
+
+        RandomAccessibleInterval rai = clij.convert(clReducedImage, RandomAccessibleInterval.class);
+        Cursor cursor = Views.iterable(rai).cursor();
+        float maximumGreyValue = -Float.MAX_VALUE;
+        while (cursor.hasNext()) {
+            float greyValue = ((RealType) cursor.next()).getRealFloat();
+            if (maximumGreyValue < greyValue) {
+                maximumGreyValue = greyValue;
+            }
+        }
+
+        if (clImage != clReducedImage) {
+            clReducedImage.close();
+        }
+        return maximumGreyValue;
+    }
+
+    public static double minimumOfAllPixels(ClearCLIJ clij, ClearCLImage clImage) {
+        ClearCLImage clReducedImage = clImage;
+        if (clImage.getDimension() == 3) {
+            clReducedImage = clij.createCLImage(new long[]{clImage.getWidth(), clImage.getHeight()}, clImage.getChannelDataType());
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("src", clImage);
+            parameters.put("dst", clReducedImage);
+            clij.execute(Kernels.class, "projections.cl", "min_project_3d_2d", parameters);
+        }
+
+        RandomAccessibleInterval rai = clij.convert(clReducedImage, RandomAccessibleInterval.class);
+        Cursor cursor = Views.iterable(rai).cursor();
+        float minimumGreyValue = Float.MAX_VALUE;
+        while (cursor.hasNext()) {
+            float greyValue = ((RealType) cursor.next()).getRealFloat();
+            if (minimumGreyValue > greyValue) {
+                minimumGreyValue = greyValue;
+            }
+        }
+
+        if (clImage != clReducedImage) {
+            clReducedImage.close();
+        }
+        return minimumGreyValue;
+    }
+
+    public static double minimumOfAllPixels(ClearCLIJ clij, ClearCLBuffer clImage) {
+        ClearCLBuffer clReducedImage = clImage;
+        if (clImage.getDimension() == 3) {
+            clReducedImage = clij.createCLBuffer(new long[]{clImage.getWidth(), clImage.getHeight()}, clImage.getNativeType());
+
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("src", clImage);
+            parameters.put("dst", clReducedImage);
+            clij.execute(Kernels.class, "projections.cl", "min_project_3d_2d", parameters);
+        }
+
+        RandomAccessibleInterval rai = clij.convert(clReducedImage, RandomAccessibleInterval.class);
+        Cursor cursor = Views.iterable(rai).cursor();
+        float minimumGreyValue = Float.MAX_VALUE;
+        while (cursor.hasNext()) {
+            float greyValue = ((RealType) cursor.next()).getRealFloat();
+            if (minimumGreyValue > greyValue) {
+                minimumGreyValue = greyValue;
+            }
+        }
+
+        if (clImage != clReducedImage) {
+            clReducedImage.close();
+        }
+        return minimumGreyValue;
+    }
+
     public static double sumPixels(ClearCLIJ clij, ClearCLImage clImage) {
         ClearCLImage clReducedImage = clImage;
         if (clImage.getDimension() == 3) {
