@@ -16,7 +16,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_threshold")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_thresholdIJ")
 public class ThresholdIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor {
 
     @Override
