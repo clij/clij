@@ -319,43 +319,64 @@ public class Kernels {
 
         HashMap<String, Object> parameters = new HashMap<>();
 
-        parameters.clear();
-        parameters.put("N", n[0]);
-        parameters.put("s", blurSigma[0]);
-        parameters.put("dim", 0);
-        parameters.put("src", src);
-        if (dimensions == 2) {
-            parameters.put("dst", temp);
+        if (blurSigma[0] > 0) {
+            parameters.clear();
+            parameters.put("N", n[0]);
+            parameters.put("s", blurSigma[0]);
+            parameters.put("dim", 0);
+            parameters.put("src", src);
+            if (dimensions == 2) {
+                parameters.put("dst", temp);
+            } else {
+                parameters.put("dst", dst);
+            }
+            clij.execute(Kernels.class, clFilename, kernelname, parameters);
         } else {
-            parameters.put("dst", dst);
+            if (dimensions == 2) {
+                Kernels.copyInternal(clij, src, temp, 2, 2);
+            } else {
+                Kernels.copyInternal(clij, src, dst, 3, 3);
+            }
         }
-        clij.execute(Kernels.class, clFilename, kernelname, parameters);
 
-        parameters.clear();
-        parameters.put("N", n[1]);
-        parameters.put("s", blurSigma[1]);
-        parameters.put("dim", 1);
-        if (dimensions == 2) {
-            parameters.put("src", temp);
-            parameters.put("dst", dst);
+        if (blurSigma[1] > 0) {
+            parameters.clear();
+            parameters.put("N", n[1]);
+            parameters.put("s", blurSigma[1]);
+            parameters.put("dim", 1);
+            if (dimensions == 2) {
+                parameters.put("src", temp);
+                parameters.put("dst", dst);
+            } else {
+                parameters.put("src", dst);
+                parameters.put("dst", temp);
+            }
+            clij.execute(Kernels.class, clFilename, kernelname, parameters);
         } else {
-            parameters.put("src", dst);
-            parameters.put("dst", temp);
+            if (dimensions == 2) {
+                Kernels.copyInternal(clij, temp, dst, 2, 2);
+            } else {
+                Kernels.copyInternal(clij, dst, temp, 3, 3);
+            }
         }
-        clij.execute(Kernels.class, clFilename, kernelname, parameters);
 
         if (dimensions == 3) {
-            parameters.clear();
-            parameters.put("N", n[2]);
-            parameters.put("s", blurSigma[2]);
-            parameters.put("dim", 2);
-            parameters.put("src", temp);
-            parameters.put("dst", dst);
-            clij.execute(Kernels.class,
-                    clFilename,
-                    kernelname,
-                    parameters);
+            if (blurSigma[2] > 0) {
+                parameters.clear();
+                parameters.put("N", n[2]);
+                parameters.put("s", blurSigma[2]);
+                parameters.put("dim", 2);
+                parameters.put("src", temp);
+                parameters.put("dst", dst);
+                clij.execute(Kernels.class,
+                        clFilename,
+                        kernelname,
+                        parameters);
+            } else {
+                Kernels.copyInternal(clij, temp, dst,3, 3);
+            }
         }
+
         if (temp instanceof ClearCLBuffer) {
             ((ClearCLBuffer) temp).close();
         } else if (temp instanceof ClearCLImage) {
