@@ -43,16 +43,20 @@ Ext.CLIJ_help("mean");
 ```
 
 ```java
-Found 3 method(s) containing the pattern "mean":
-Ext.CLIJ_mean2d(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_mean3d(Image source, Image destination, Number radiusX, Number radiusY, Number radius Z);
-Ext.CLIJ_meanSliceBySlice(Image source, Image destination, Number radiusX, Number radiusY);
+Found 7 method(s) containing the pattern "mean":
+Ext.CLIJ_mean2DBox(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_mean2DIJ(Image source, Image destination, Number radius);
+Ext.CLIJ_mean2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_mean3DBox(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_mean3DSphere(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_meanOfAllPixels(Image source);
+Ext.CLIJ_meanSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
 ```
 
 The full list of supported kernels can be retrieved by calling `help("");`
 
 ```java
-Found 80 method(s) containing the pattern "":
+Found 89 method(s) containing the pattern "":
 Ext.CLIJ_absolute(Image source, Image destination);
 Ext.CLIJ_addImageAndScalar(Image source, Image destination, Number scalar);
 Ext.CLIJ_addImages(Image summand1, Image summand2, Image destination);
@@ -64,6 +68,7 @@ Ext.CLIJ_binaryOr(Image operand1, Image operand2, Image destination);
 Ext.CLIJ_binaryXOr(Image operand1, Image operand2, Image destination);
 Ext.CLIJ_blur2D(Image source, Image destination, Number sigmaX, Number sigmaY);
 Ext.CLIJ_blur2DFast(Image source, Image destination, Number sigmaX, Number sigmaY);
+Ext.CLIJ_blur2DIJ(Image source, Image destination, Number sigma);
 Ext.CLIJ_blur3D(Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ);
 Ext.CLIJ_blur3DFast(Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ);
 Ext.CLIJ_blur3DSliceBySlice(Image source, Image destination, Number sigmaX, Number sigmaY);
@@ -82,6 +87,7 @@ Ext.CLIJ_downsample2D(Image source, Image destination, Number factorX, Number fa
 Ext.CLIJ_downsample3D(Image source, Image destination, Number factorX, Number factorY, Number factorZ);
 Ext.CLIJ_downsampleSliceBySliceHalfMedian(Image source, Image destination);
 Ext.CLIJ_erodeBox(Image source, Image destination);
+Ext.CLIJ_erodeSphereIJ(Image source, Image destination);
 Ext.CLIJ_flip2D(Image source, Image destination, Boolean flipX, Boolean flipY);
 Ext.CLIJ_flip3D(Image source, Image destination, Boolean flipX, Boolean flipY, Boolean flipZ);
 Ext.CLIJ_help(String searchFor);
@@ -91,11 +97,13 @@ Ext.CLIJ_localThreshold(Image source, Image localThreshold, Image destination);
 Ext.CLIJ_mask(Image source, Image mask, Image destination);
 Ext.CLIJ_maskStackWithPlane(Image source, Image mask, Image destination);
 Ext.CLIJ_maximum2DBox(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_maximum2DIJ(Image source, Image destination, Number radius);
 Ext.CLIJ_maximum2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_maximum3DBox(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
 Ext.CLIJ_maximum3DSPhere(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
 Ext.CLIJ_maximumImageAndScalar(Image source, Image destination, Number scalar);
 Ext.CLIJ_maximumImages(Image source1, Image source2, Image destination);
+Ext.CLIJ_maximumOfAllPixels(Image source);
 Ext.CLIJ_maximumSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_maximumXYZProjection(Image source, Image destination_max, Number dimensionX, Number dimensionY, Number projectedDimension);
 Ext.CLIJ_maximumZProjection(Image source, Image destination_max);
@@ -104,16 +112,19 @@ Ext.CLIJ_mean2DIJ(Image source, Image destination, Number radius);
 Ext.CLIJ_mean2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_mean3DBox(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
 Ext.CLIJ_mean3DSphere(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
+Ext.CLIJ_meanOfAllPixels(Image source);
 Ext.CLIJ_meanSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_median2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_median3DSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_medianSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_minimum2DBox(Image source, Image destination, Number radiusX, Number radiusY);
+Ext.CLIJ_minimum2DIJ(Image source, Image destination, Number radius);
 Ext.CLIJ_minimum2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_minimum3DBox(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
 Ext.CLIJ_minimum3DSphere(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
 Ext.CLIJ_minimumImageAndScalar(Image source, Image destination, Number scalar);
 Ext.CLIJ_minimumImages(Image source1, Image source2, Image destination);
+Ext.CLIJ_minimumOfAllPixels(Image source);
 Ext.CLIJ_minimumSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
 Ext.CLIJ_multiplyImageAndScalar(Image source, Image destination, Number scalar);
 Ext.CLIJ_multiplyImages(Image factor1, Image factor2, Image destination);
@@ -126,13 +137,15 @@ Ext.CLIJ_release(Image image);
 Ext.CLIJ_reportMemory();
 Ext.CLIJ_resliceBottom(Image source, Image destination);
 Ext.CLIJ_resliceLeft(Image source, Image destination);
+Ext.CLIJ_resliceRadial(Image source, Image destination, Number numberOfAngles, Number angleStepSize);
 Ext.CLIJ_resliceRight(Image source, Image destination);
 Ext.CLIJ_resliceTop(Image source, Image destination);
 Ext.CLIJ_rotateLeft(Image source, Image destination);
 Ext.CLIJ_rotateRight(Image source, Image destination);
 Ext.CLIJ_set(Image source, Number value);
+Ext.CLIJ_sumOfAllPixels(Image source);
 Ext.CLIJ_sumProjection(Image source, Image destination_sum);
-Ext.CLIJ_threshold(Image source, Image destination, Number threshold);
+Ext.CLIJ_thresholdIJ(Image source, Image destination, Number threshold);
 ```
 
 ## High level API (Java, Jython, Groovy)
@@ -152,7 +165,7 @@ imageInput = clij.convert(imp, ClearCLImage);
 
 Furthermore, you can create images, for example with the same size as a given one:
 ```python
-imageOutput = clij.createClearCLImage(imageOutput);
+imageOutput = clij.createCLImage(imageOutput);
 ```
 
 Alternatively, create an image with a given size and a given type:
