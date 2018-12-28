@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_downsampleSliceBySliceHalfMedian")
-public class DownsampleSliceBySliceHalfMedian extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class DownsampleSliceBySliceHalfMedian extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -37,5 +38,18 @@ public class DownsampleSliceBySliceHalfMedian extends AbstractCLIJPlugin impleme
     public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
     {
         return clij.createCLBuffer(new long[]{input.getWidth() / 2, input.getHeight() / 2, input.getDepth()}, input.getNativeType());
+    }
+
+
+    @Override
+    public String getDescription() {
+        return "Scales an image using scaling factors 0.5 for X and Y dimensions. The Z dimension stays untouched.\n" +
+                "The median method is applied. Thus, each pixel value in the destination image equals to the median of\n" +
+                "four corresponding pixels in the source image.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
     }
 }

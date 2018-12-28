@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur2DFast")
-public class Blur2DFast extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Blur2DFast extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -39,4 +40,18 @@ public class Blur2DFast extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
     public String getParameterHelpText() {
         return "Image source, Image destination, Number sigmaX, Number sigmaY";
     }
+
+    @Override
+    public String getDescription() {
+        return "Computes the Gaussian blurred image of an image given two sigma values in X and Y. Thus, the filter" +
+                "kernel can have non-isotropic shape.\n\n" +
+                "" +
+                "The 'fast' implementation is done separable. In case a sigma equals zero, the direction is not blurred.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D";
+    }
+
 }

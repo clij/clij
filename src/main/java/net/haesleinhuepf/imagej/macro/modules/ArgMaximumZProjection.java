@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_argMaximumZProjection")
-public class ArgMaximumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class ArgMaximumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -36,5 +37,16 @@ public class ArgMaximumZProjection extends AbstractCLIJPlugin implements CLIJMac
     public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
     {
         return clij.createCLBuffer(new long[]{input.getWidth(), input.getHeight()}, input.getNativeType());
+    }
+
+    @Override
+    public String getDescription() {
+        return "Determines the maximum projection of an image along Z." +
+                "\nFurthermore, another image is generated containing the z-index where the maximum was found (zero based).";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
     }
 }

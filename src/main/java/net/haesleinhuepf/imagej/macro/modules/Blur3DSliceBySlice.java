@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.sigmaToKernelSize;
@@ -15,7 +16,7 @@ import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.sigmaToKernelSize
  * 12 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur3DSliceBySlice")
-public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -41,5 +42,19 @@ public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroP
     @Override
     public String getParameterHelpText() {
         return "Image source, Image destination, Number sigmaX, Number sigmaY";
+    }
+
+
+    @Override
+    public String getDescription() {
+        return "Computes the Gaussian blurred image of an image given two sigma values in X and Y. Thus, the filter" +
+                "kernel can have non-isotropic shape.\n\n" +
+                "" +
+                "The Gaussian blur is applied slice by slice in 2D.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
     }
 }

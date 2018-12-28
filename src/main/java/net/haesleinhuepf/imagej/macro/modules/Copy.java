@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_copy")
-public class Copy extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Copy extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -31,5 +32,15 @@ public class Copy extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
     @Override
     public String getParameterHelpText() {
         return "Image source, Image destination";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Copies an image.\n\nf(x) = x";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }

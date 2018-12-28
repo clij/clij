@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_addImagesWeighted")
-public class AddImagesWeighted extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class AddImagesWeighted extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -30,5 +31,16 @@ public class AddImagesWeighted extends AbstractCLIJPlugin implements CLIJMacroPl
     @Override
     public String getParameterHelpText() {
         return "Image summand1, Image summand2, Image destination, Number factor1, Number factor2";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Calculates the sum of pairs of pixels x and y from images X and Y weighted with factors a and b." +
+                "\n\nf(x, y, a, b) = x * a + y * b";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }

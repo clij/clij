@@ -12,8 +12,12 @@ import ij.plugin.frame.Recorder;
 import ij.process.ImageProcessor;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.kernels.Kernels;
+import net.haesleinhuepf.imagej.macro.documentation.HTMLDocumentationTemplate;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
+import net.haesleinhuepf.imagej.utilities.CLIJUtilities;
 import net.imglib2.RandomAccessibleInterval;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,9 +32,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
     protected Object[] args;
     protected String name;
     public AbstractCLIJPlugin() {
-        //System.out.println("init " + this);
-        String name = this.getClass().getSimpleName();
-        this.name = "CLIJ_" + name.substring(0, 1).toLowerCase() + name.substring(1, name.length());
+        this.name = CLIJUtilities.classToName(this.getClass());
     }
 
     public void setClij(ClearCLIJ clij) {
@@ -235,6 +237,12 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             }
         }
         // gd.addNumericField("Radius (in pixels)", 2, 0);
+        if (this instanceof OffersDocumentation) {
+            gd.addComponent(new JLabel("<html><body>" +
+                    new HTMLDocumentationTemplate(((OffersDocumentation) this).getDescription(), ((OffersDocumentation) this).getAvailableForDimensions(), this).toString() +
+                    "</body></html>"
+            ));
+        }
 
         gd.showDialog();
         if (gd.wasCanceled()) {

@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_binaryXOr")
-public class BinaryXOr extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class BinaryXOr extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -32,4 +33,18 @@ public class BinaryXOr extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
     public String getParameterHelpText() {
         return "Image operand1, Image operand2, Image destination";
     }
+
+    @Override
+    public String getDescription() {
+        return "Computes a binary image (containing pixel values 0 and 1) from two images X and Y by connecting pairs of\n" +
+                "pixels x and y with the binary operators AND &, OR | and NOT !\n" +
+                "All pixel values except 0 in the input images are interpreted as 1.\n\n" +
+                "f(x, y) = (x & !y) | (!x & y)";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
+    }
+
 }

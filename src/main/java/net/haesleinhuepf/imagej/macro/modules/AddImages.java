@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_addImages")
-public class AddImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class AddImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -31,5 +32,15 @@ public class AddImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
     @Override
     public String getParameterHelpText() {
         return "Image summand1, Image summand2, Image destination";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Calculates the sum of pairs of pixels x and y of two images X and Y.\n\nf(x, y) = x + y";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }

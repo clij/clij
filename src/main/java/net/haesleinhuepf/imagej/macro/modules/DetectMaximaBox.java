@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_detectMaximaBox")
-public class DetectMaximaBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class DetectMaximaBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -30,5 +31,16 @@ public class DetectMaximaBox extends AbstractCLIJPlugin implements CLIJMacroPlug
     @Override
     public String getParameterHelpText() {
         return "Image source, Image destination, Number radius";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Detects local maxima in a given square/cubic neighborhood. Pixels in the resulting image are set to 1 if\n" +
+                "there is no other pixel in a given radius which has a higher intensity, and to 0 otherwise.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }

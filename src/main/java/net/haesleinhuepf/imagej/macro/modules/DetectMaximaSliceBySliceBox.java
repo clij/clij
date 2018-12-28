@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_detectMaximaSliceBySliceBox")
-public class DetectMaximaSliceBySliceBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class DetectMaximaSliceBySliceBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -31,4 +32,17 @@ public class DetectMaximaSliceBySliceBox extends AbstractCLIJPlugin implements C
     public String getParameterHelpText() {
         return "Image source, Image destination, Number radius";
     }
+
+    @Override
+    public String getDescription() {
+        return "Detects local maxima in a given square neighborhood of an input image stack. The input image stack is \n" +
+                "processed slice by slice. Pixels in the resulting image are set to 1 if there is no other pixel in a \n" +
+                "given radius which has a higher intensity, and to 0 otherwise.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
+    }
+
 }

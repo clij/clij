@@ -10,6 +10,7 @@ import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJImageJProcessor;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -18,7 +19,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeBox")
-public class ErodeBoxIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor {
+public class ErodeBoxIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -60,4 +61,20 @@ public class ErodeBoxIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
         result.close();
         return true;
     }
+
+
+    @Override
+    public String getDescription() {
+        return "Computes a binary image with pixel values 0 and 1 containing the binary erosion of a given input image.\n" +
+                "The erosion takes the Moore-neighborhood (8 pixels in 2D and 26 pixels in 3d) into account.\n" +
+                "The pixels in the input image with pixel value not equal to 0 will be interpreted as 1.\n\n" +
+                "This method is comparable to the 'Erode' menu in ImageJ in case it is applied to a 2D image. The only\n" +
+                "difference is that the output image contains values 0 and 1 instead of 0 and 255.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
+    }
+
 }

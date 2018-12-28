@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_divideImages")
-public class DivideImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class DivideImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -32,4 +33,15 @@ public class DivideImages extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     public String getParameterHelpText() {
         return "Image divident, Image divisor, Image destination";
     }
+
+    @Override
+    public String getDescription() {
+        return "Divides two images X and Y by each other pixel wise.\n\nf(x, y) = x / y";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
+    }
+
 }

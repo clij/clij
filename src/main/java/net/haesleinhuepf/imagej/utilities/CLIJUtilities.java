@@ -1,5 +1,7 @@
 package net.haesleinhuepf.imagej.utilities;
 
+import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
+
 /**
  * CLIJUtilities
  * <p>
@@ -20,4 +22,8 @@ public class CLIJUtilities {
         return n;
     }
 
+    public static String classToName(Class aClass) {
+        String name = aClass.getSimpleName();
+        return "CLIJ_" + name.substring(0, 1).toLowerCase() + name.substring(1, name.length());
+    }
 }

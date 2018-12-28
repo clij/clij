@@ -10,6 +10,7 @@ import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJImageJProcessor;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -17,7 +18,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur2DIJ")
-public class Blur2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor {
+public class Blur2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -60,5 +61,18 @@ public class Blur2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
         result.close();
         return true;
+    }
+
+
+    @Override
+    public String getDescription() {
+        return "Computes the Gaussian blurred image of an image given a sigma.\n\n" +
+                "The implementation is close to ImageJs Gaussian blur filter. Differences in pixel values compared to \n" +
+                "ImageJ of up to 0.5% need to be tolerated.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D";
     }
 }

@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_flip3D")
-public class Flip3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Flip3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -34,5 +35,15 @@ public class Flip3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
     @Override
     public String getParameterHelpText() {
         return "Image source, Image destination, Boolean flipX, Boolean flipY, Boolean flipZ";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Flips an image in X, Y and/or Z direction depending on boolean flags.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
     }
 }
