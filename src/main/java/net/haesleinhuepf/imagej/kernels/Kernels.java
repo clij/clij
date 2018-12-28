@@ -820,17 +820,6 @@ public class Kernels {
         return clij.execute(Kernels.class, "binaryProcessing.cl", "invert_" + src.getDimension() + "d", parameters);
     }
 
-    public static boolean invertBinary(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst) {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("src", src);
-        parameters.put("dst", dst);
-        if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
-        }
-
-        return clij.execute(Kernels.class, "binaryProcessing.cl", "invert_" + src.getDimension() + "d", parameters);
-    }
-
     public static boolean localThreshold(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, ClearCLImage threshold) {
         HashMap<String, Object> parameters = new HashMap<>();
 

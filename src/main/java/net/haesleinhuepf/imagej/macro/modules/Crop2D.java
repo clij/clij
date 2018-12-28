@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_crop2D")
-public class Crop2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Crop2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -29,16 +30,27 @@ public class Crop2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number startX, Number startY";
+        return "Image source, Image destination, Number startX, Number startY, Number width, Number height";
     }
 
     @Override
     public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
     {
-        int startX = asInteger(args[2]);
-        int startY = asInteger(args[3]);
+        int width = asInteger(args[4]);
+        int height = asInteger(args[5]);
 
-        return clij.createCLBuffer(new long[]{(long)(input.getWidth() - startX), (long)(input.getHeight() - startY)}, input.getNativeType());
+        return clij.createCLBuffer(new long[]{width, height}, input.getNativeType());
+    }
+
+    @Override
+    public String getDescription() {
+        return "Crops a given rectangle out of a given image stack.\n\n" +
+                "Note: If the destination image pre-exists already, it will be overwritten and keep it's dimensions.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
     }
 
 }
