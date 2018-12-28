@@ -14,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_sumProjection")
-public class SumProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
+public class SumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -41,7 +41,7 @@ public class SumProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin
 
     @Override
     public String getDescription() {
-        return "Determines the maximum projection of an image along Z.";
+        return "Determines the sum projection of an image along Z.";
     }
 
     @Override

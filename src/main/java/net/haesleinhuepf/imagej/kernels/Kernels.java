@@ -1109,6 +1109,47 @@ public class Kernels {
         return true;
     }
 
+    public static boolean minProjection(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst_min) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst_min", dst_min);
+
+        clij.execute(Kernels.class, "projections.cl", "min_project_3d_2d", parameters);
+
+        return true;
+    }
+
+    public static boolean minProjection(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst_min) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst_min", dst_min);
+
+        clij.execute(Kernels.class, "projections.cl", "min_project_3d_2d", parameters);
+
+        return true;
+    }
+
+    public static boolean meanProjection(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+
+        clij.execute(Kernels.class, "projections.cl", "mean_project_3d_2d", parameters);
+
+        return true;
+    }
+
+    public static boolean meanProjection(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+
+        clij.execute(Kernels.class, "projections.cl", "mean_project_3d_2d", parameters);
+
+        return true;
+    }
+
+
     public static boolean maxProjection(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst_max, Integer projectedDimensionX, Integer projectedDimensionY, Integer projectedDimension) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
