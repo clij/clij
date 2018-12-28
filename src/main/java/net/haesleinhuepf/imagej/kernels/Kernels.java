@@ -397,16 +397,16 @@ public class Kernels {
         return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_slicewise_image3d", parameters);
     }
 
-//  public static boolean blurSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int nX, int nY, float sigmaX, float sigmaY) {
-//    HashMap<String, Object> parameters = new HashMap<>();
-//    parameters.put("Nx", nX);
-//    parameters.put("Ny", nY);
-//    parameters.put("sx", sigmaX);
-//    parameters.put("sy", sigmaY);
-//    parameters.put("src", src);
-//    parameters.put("dst", dst);
-//    return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_slicewise_image3d", parameters);
-//  }
+    public static boolean blurSliceBySlice(ClearCLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int nX, int nY, float sigmaX, float sigmaY) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("Nx", nX);
+        parameters.put("Ny", nY);
+        parameters.put("sx", sigmaX);
+        parameters.put("sy", sigmaY);
+        parameters.put("src", src);
+        parameters.put("dst", dst);
+        return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_slicewise_image3d", parameters);
+    }
 
     public static boolean copy(ClearCLIJ clij, ClearCLImage src, ClearCLBuffer dst) {
         return copyInternal(clij, src, dst, src.getDimension(), dst.getDimension());
@@ -809,15 +809,8 @@ public class Kernels {
         return multiplyScalar(clij, input3d, output3d, -1f);
     }
 
-    public static boolean invertBinary(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst) {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("src", src);
-        parameters.put("dst", dst);
-        if (!checkDimensions(src.getDimension(), dst.getDimension())) {
-            throw new IllegalArgumentException("Error: number of dimensions don't match! (copy)");
-        }
-
-        return clij.execute(Kernels.class, "binaryProcessing.cl", "invert_" + src.getDimension() + "d", parameters);
+    public static boolean invert(ClearCLIJ clij, ClearCLBuffer input3d, ClearCLBuffer output3d) {
+        return multiplyScalar(clij, input3d, output3d, -1f);
     }
 
     public static boolean localThreshold(ClearCLIJ clij, ClearCLImage src, ClearCLImage dst, ClearCLImage threshold) {
