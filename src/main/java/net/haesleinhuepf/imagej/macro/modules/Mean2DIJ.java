@@ -15,6 +15,7 @@ import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJImageJProcessor;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2DIJ")
-public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor {
+public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -69,4 +70,15 @@ public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
         return true;
     }
 
+    @Override
+    public String getDescription() {
+        return "Computes the local mean average of a pixels circle-like neighborhood. The circle size is specified by \n" +
+                "its radius.\n\n" +
+                "This operation is equal to ImageJs 'Mean...' menu.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D";
+    }
 }

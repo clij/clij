@@ -10,6 +10,7 @@ import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJImageJProcessor;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -17,7 +18,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_thresholdIJ")
-public class ThresholdIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor {
+public class ThresholdIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -63,5 +64,18 @@ public class ThresholdIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
 
         result.close();
         return true;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Computes a binary image with pixel values 0 and 1. All pixel values x of a given input image with \n" +
+                "value larger or equal to a given threshold t will be set to 1.\n\n" +
+                "f(x,t) = (1 if (x >= t); (0 otherwise))\n\n" +
+                "This plugin is comparable to setting a raw threshold in ImageJ and using the 'Convert to Mask' menu.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }

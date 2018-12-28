@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_resliceBottom")
-public class ResliceBottom extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class ResliceBottom extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -37,5 +38,17 @@ public class ResliceBottom extends AbstractCLIJPlugin implements CLIJMacroPlugin
     public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
     {
         return clij.createCLBuffer(new long[]{input.getWidth(), input.getDepth(), input.getHeight()}, input.getNativeType());
+    }
+
+
+    @Override
+    public String getDescription() {
+        return "Flippes Y and Z axis of an image stack. This operation is similar to ImageJs 'Reslice [/]' method but\n" +
+                "offers less flexibility such as interpolation.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
     }
 }

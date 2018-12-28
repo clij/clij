@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -17,7 +18,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_resliceRadial")
-public class ResliceRadial extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class ResliceRadial extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -44,6 +45,18 @@ public class ResliceRadial extends AbstractCLIJPlugin implements CLIJMacroPlugin
         int effectiveNumberOfAngles = (int)((float)numberOfAngles / angleStepSize);
         int maximumRadius = (int)Math.sqrt(Math.pow(input.getWidth() / 2, 2) + Math.pow(input.getHeight() / 2, 2));
         return clij.createCLBuffer(new long[]{maximumRadius, input.getDepth(), effectiveNumberOfAngles}, input.getNativeType());
+    }
+
+    @Override
+    public String getDescription() {
+        return "Computes a radial projection of an image stack. Starting point for the line is the center in any \n" +
+                "X/Y-plane of a given input image stack. " +
+                "This operation is similar to ImageJs 'Radial Reslice' method but offers less flexibility.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
     }
 
 }

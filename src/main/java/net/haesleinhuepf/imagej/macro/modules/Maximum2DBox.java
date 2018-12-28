@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximum2DBox")
-public class Maximum2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Maximum2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -31,5 +32,16 @@ public class Maximum2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     @Override
     public String getParameterHelpText() {
         return "Image source, Image destination, Number radiusX, Number radiusY";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Computes the local maximum of a pixels rectangular neighborhood. The rectangles size is specified by \n" +
+                "its half-width and half-height (radius).";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D";
     }
 }

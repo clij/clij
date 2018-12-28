@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximumXYZProjection")
-public class MaximumXYZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class MaximumXYZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -38,4 +39,18 @@ public class MaximumXYZProjection extends AbstractCLIJPlugin implements CLIJMacr
         return clij.createCLBuffer(new long[]{input.getWidth(), input.getHeight()}, input.getNativeType());
     }
 
+
+    @Override
+    public String getDescription() {
+        return "Determines the maximum projection of an image along a given dimension. Furthermore, the X and Y\n" +
+                " dimesions of the resulting image must be specified by the user according to its definition:\n" +
+                "X = 0\n" +
+                "Y = 1\n" +
+                "Z = 2\n";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "3D";
+    }
 }

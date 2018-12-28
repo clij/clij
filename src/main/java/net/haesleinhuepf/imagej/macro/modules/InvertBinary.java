@@ -9,10 +9,12 @@ import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
 import org.scijava.plugin.Plugin;
 
 /**
+ * Depracted: use BinaryNot instead
+ *
  * Author: @haesleinhuepf
  * 12 2018
  */
-
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_invertBinary")
 public class InvertBinary extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
 

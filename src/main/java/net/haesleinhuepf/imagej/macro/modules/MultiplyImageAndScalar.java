@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_multiplyImageAndScalar")
-public class MultiplyImageAndScalar extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class MultiplyImageAndScalar extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -30,5 +31,15 @@ public class MultiplyImageAndScalar extends AbstractCLIJPlugin implements CLIJMa
     @Override
     public String getParameterHelpText() {
         return "Image source, Image destination, Number scalar";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Multiplies all pixels value x in a given image X with a constant scalar s.\n\nf(x, s) = x * s";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }

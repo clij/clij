@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_localThreshold")
-public class LocalThreshold extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class LocalThreshold extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -31,5 +32,17 @@ public class LocalThreshold extends AbstractCLIJPlugin implements CLIJMacroPlugi
     @Override
     public String getParameterHelpText() {
         return "Image source, Image localThreshold, Image destination";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Computes a binary image with pixel values 0 and 1 depending on if a pixel value x in image X \n" +
+                "was above of equal to the pixel value m in mask image M.\n\n" +
+                "f(x) = (1 if (x >=  m)); (0 otherwise)";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }

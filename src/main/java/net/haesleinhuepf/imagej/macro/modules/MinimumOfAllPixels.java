@@ -7,6 +7,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_minimumOfAllPixels")
-public class MinimumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class MinimumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -38,4 +39,16 @@ public class MinimumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroP
     public String getParameterHelpText() {
         return "Image source";
     }
+
+    @Override
+    public String getDescription() {
+        return "Determines the minimum of all pixels in a given image. It will be stored in a new row of ImageJs\n" +
+                "Results table in the column 'Min'.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
+    }
+
 }

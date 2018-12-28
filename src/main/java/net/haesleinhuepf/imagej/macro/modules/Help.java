@@ -2,6 +2,7 @@ package net.haesleinhuepf.imagej.macro.modules;
 
 import ij.IJ;
 import net.haesleinhuepf.imagej.macro.*;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Collections;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_help")
-public class Help extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Help extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -43,5 +44,16 @@ public class Help extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
     @Override
     public String getParameterHelpText() {
         return "String searchFor";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Searches in the list of CLIJ commands for a given pattern. Lists all commands in case\"\" is handed\n" +
+                "over as parameter.";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "-";
     }
 }

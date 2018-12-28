@@ -8,6 +8,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.radiusToKernelSize;
@@ -17,7 +18,7 @@ import static net.haesleinhuepf.imagej.utilities.CLIJUtilities.radiusToKernelSiz
  * December 2018
  */
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2DSphere")
-public class Mean2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Mean2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -38,4 +39,16 @@ public class Mean2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     public String getParameterHelpText() {
         return "Image source, Image destination, Number radiusX, Number radiusY";
     }
+
+    @Override
+    public String getDescription() {
+        return "Computes the local mean average of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
+                "its half-width and half-height (radius).";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D";
+    }
+
 }

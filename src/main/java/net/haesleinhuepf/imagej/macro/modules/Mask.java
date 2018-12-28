@@ -6,6 +6,7 @@ import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.haesleinhuepf.imagej.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.imagej.macro.CLIJOpenCLProcessor;
+import net.haesleinhuepf.imagej.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mask")
-public class Mask extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor {
+public class Mask extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -31,5 +32,18 @@ public class Mask extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
     @Override
     public String getParameterHelpText() {
         return "Image source, Image mask, Image destination";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Computes a masked image by applying a mask to an image. All pixel values x of image X will be copied\n" +
+                "to the destination image in case pixel value m at the same position in the mask image is not equal to \n" +
+                "zero.\n\n" +
+                "f(x,m) = (x if (m != 0); (0 otherwise))";
+    }
+
+    @Override
+    public String getAvailableForDimensions() {
+        return "2D, 3D";
     }
 }
