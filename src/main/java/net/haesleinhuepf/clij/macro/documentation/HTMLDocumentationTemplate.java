@@ -19,8 +19,7 @@ public class HTMLDocumentationTemplate {
     }
 
     public String toString() {
-        String output = "<a name=\"" + headline + "\"></a>" +
-                "<b>" + headline + "</b><br/>" +
+        String output =
                 description.replace("\n", "<br/>") + "<br/><br/>" +
                 "Parameters: " + parameterHelpText + "<br/>" +
                 "Available for: " + availableForDimensions + "<br/><br/>";
