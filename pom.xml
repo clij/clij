@@ -107,6 +107,7 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
+			<version>0.35.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
@@ -137,7 +138,7 @@
 
 	<repositories>
 		<repository>
-			<id>hslh</id>
+			<id>clij</id>
 			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
 		</repository>
 	</repositories>

@@ -1,5 +1,7 @@
-package net.haesleinhuepf.imagej.macro;
+package net.haesleinhuepf.clij.macro;
 
+import net.haesleinhuepf.clij.macro.documentation.HTMLDocumentationTemplate;
+import net.haesleinhuepf.clij.macro.documentation.OffersDocumentation;
 import net.imagej.legacy.plugin.MacroExtensionAutoCompletionPlugin;
 import org.fife.ui.autocomplete.BasicCompletion;
 import org.fife.ui.autocomplete.CompletionProvider;
@@ -27,12 +29,21 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
         ArrayList<BasicCompletion> completions = new ArrayList<BasicCompletion>();
         for (String key : pluginService.getCLIJMethodNames()) {
             System.out.println("parsing " + key);
+
+            CLIJMacroPlugin plugin = pluginService.getCLIJMacroPlugin(key);
             String headline =
                     "Ext." + key + "(" +
-                    pluginService.clijMacroPlugin(key).getParameterHelpText() +
+                    plugin.getParameterHelpText() +
                     ");";
 
             String description = headline;
+
+            if (plugin instanceof OffersDocumentation) {
+                description = "<html><body>" +
+                        new HTMLDocumentationTemplate(((OffersDocumentation) plugin).getDescription(), ((OffersDocumentation) plugin).getAvailableForDimensions(), plugin).toString() +
+                        "</body></html>";
+
+            }
 
             BasicCompletion basicCompletion = new BasicCompletion(completionProvider, headline, null, description);
             completions.add(basicCompletion);
