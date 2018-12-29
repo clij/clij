@@ -14,7 +14,7 @@
 
 	<groupId>net.haesleinhuepf</groupId>
 	<artifactId>clij_</artifactId>
-	<version>0.8.0</version>
+	<version>0.9.0</version>
 
 	<name>clij</name>
 	<description>clij</description>
@@ -80,7 +80,7 @@
 		<license.licenseName>bsd_3</license.licenseName>
 		<license.copyrightOwners>Robert Haase, MPI CBG</license.copyrightOwners>
 		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
-		<!--<imagej.app.directory>/home/rhaase/programs/fiji/Fiji.app/</imagej.app.directory>-->
+		<!--<clij.app.directory>/home/rhaase/programs/fiji/Fiji.app/</clij.app.directory>-->
 	</properties>
 
 	<dependencies>

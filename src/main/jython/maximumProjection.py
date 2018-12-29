@@ -6,7 +6,7 @@ from net.haesleinhuepf.imagej.kernels import Kernels;
 clij = ClearCLIJ.getInstance();
 
 # get some example data
-imp = IJ.openImage("http://imagej.nih.gov/ij/images/t1-head.zip");
+imp = IJ.openImage("http://clij.nih.gov/ij/images/t1-head.zip");
 
 # create and fill memory in GPU
 imageInput = clij.converter(imp).getClearCLImage();

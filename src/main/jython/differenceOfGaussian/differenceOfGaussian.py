@@ -20,7 +20,7 @@ import inspect
 filesPath = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda:0))) + "/"
 
 # take the current image which is open in ImageJ
-imp = IJ.openImage("http://imagej.nih.gov/ij/images/t1-head.zip");
+imp = IJ.openImage("http://clij.nih.gov/ij/images/t1-head.zip");
 
 # initialize ClearCL context and convenience layer
 clij = ClearCLIJ.getInstance();
