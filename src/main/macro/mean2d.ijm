@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: mean.ijm
+// CLIJ example macro: mean.ijm
 //
 // This macro shows how the mean average filter works in the GPU.
 //
@@ -28,7 +28,7 @@ selectWindow(input);
 run("Mean...", "radius=3");
 
 // Local mean filter in GPU
-Ext.CLIJ_mean2dMooreNeighborhood(input, blurred, 3, 3);
+Ext.CLIJ_mean2DIJ(input, blurred, 3);
 
 // Get results back from GPU
 Ext.CLIJ_pull(blurred);

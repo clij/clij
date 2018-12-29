@@ -1,11 +1,12 @@
-// ClearCLIJ example macro: mean.ijm
+// CLIJ example macro: mean.ijm
 //
 // This macro shows how the mean average filter works in the GPU.
 //
 // Author: Robert Haase
 // December 2018
 // ---------------------------------------------
-run("Close All");
+
+run("Close All");
 
 // Get test data
 run("T1 Head (2.4M, 16-bits)");
@@ -25,9 +26,10 @@ Ext.CLIJ_push(input);
 // Local mean filter in CPU
 selectWindow(input);
 run("Mean 3D...", "x=3 y=3 z=3");
-
+
+
 // Local mean filter in GPU
-Ext.CLIJ_mean3d(input, blurred, 3, 3, 3);
+Ext.CLIJ_mean3DSphere(input, blurred, 3, 3, 3);
 
 // Get results back from GPU
 Ext.CLIJ_pull(blurred);

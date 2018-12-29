@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: thresholding,ijm
+// CLIJ example macro: thresholding,ijm
 //
 // This macro shows how to apply a threshold to an image in the GPU.
 //
@@ -31,7 +31,7 @@ Ext.CLIJ_push(mask);
 run("Close All");
 
 // create a mask using a fixed threshold
-Ext.CLIJ_threshold(input, mask, threshold);
+Ext.CLIJ_thresholdIJ(input, mask, threshold);
 
 // show result
 Ext.CLIJ_pull(mask);

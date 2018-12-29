@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: rotate.ijm
+// CLIJ example macro: rotate.ijm
 //
 // This macro shows how stacks can be rotated in the GPU
 //
@@ -26,7 +26,7 @@ Ext.CLIJ_push(input);
 run("Close All");
 
 // flip along x axis
-Ext.CLIJ_flip3d(input, flipped, true, false, false);
+Ext.CLIJ_flip3D(input, flipped, true, false, false);
 
 // show results
 Ext.CLIJ_pull(flipped);

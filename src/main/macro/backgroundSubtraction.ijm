@@ -1,11 +1,12 @@
-// ClearCLIJ example macro: backgroundSubtraction.ijm
+// CLIJ example macro: backgroundSubtraction.ijm
 //
 // This macro shows how background subtraction can be done in the GPU.
 //
 // Author: Robert Haase
 // December 2018
 // ---------------------------------------------
-run ("Close All");
+
+run ("Close All");
 
 // Get test data
 //open("C:/structure/data/t1-head.tif");
@@ -26,13 +27,13 @@ Ext.CLIJ_push(input);
 close();
 
 // Blur in GPU
-Ext.CLIJ_blur3d(input, background, 10, 10, 1);
+Ext.CLIJ_blur3DFast(input, background, 10, 10, 1);
 
 // subtraction from original
-Ext.CLIJ_addWeightedPixelwise(input, background, background_subtracted, 1, -1);
+Ext.CLIJ_addImagesWeighted(input, background, background_subtracted, 1, -1);
 
 // maximum projection
-Ext.CLIJ_maxProjection(background_subtracted, maximum_projected);
+Ext.CLIJ_maximumZProjection(background_subtracted, maximum_projected);
 
 // Get results back from GPU
 Ext.CLIJ_pull(maximum_projected);

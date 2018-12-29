@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: push.ijm
+// CLIJ example macro: push.ijm
 //
 // This macro shows how an image is pushed to the GPU.
 //

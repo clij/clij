@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: orthogonalMaximumProjections.ijm
+// CLIJ example macro: orthogonalMaximumProjections.ijm
 //
 // This macro shows how maximum-X, -Y and -Z projections can be created using the GPU.
 //
@@ -15,7 +15,8 @@ input = getTitle();
 downScalingFactorInXY = 0.666; // because the image has slice distance 1.5
 downScalingFactorInZ = 1;
 
-downscaled = "Downscaled";
+downscaled = "Downscaled";
+
 maximumProjectionX = "Maximum projection in X";
 maximumProjectionY = "Maximum projection in Y";
 maximumProjectionZ = "Maximum projection in Z";
@@ -31,11 +32,11 @@ Ext.CLIJ_push(input);
 run("Close All");
 
 // process
-Ext.CLIJ_downsample3d(input, downscaled, downScalingFactorInXY, downScalingFactorInXY, downScalingFactorInZ);
+Ext.CLIJ_downsample3D(input, downscaled, downScalingFactorInXY, downScalingFactorInXY, downScalingFactorInZ);
 
-Ext.CLIJ_maxProjectionDimSelect(downscaled, maximumProjectionX, 2, 1, 0);
-Ext.CLIJ_maxProjectionDimSelect(downscaled, maximumProjectionY, 2, 0, 1);
-Ext.CLIJ_maxProjectionDimSelect(downscaled, maximumProjectionZ, 0, 1, 2);
+Ext.CLIJ_maximumXYZProjection(downscaled, maximumProjectionX, 2, 1, 0);
+Ext.CLIJ_maximumXYZProjection(downscaled, maximumProjectionY, 2, 0, 1);
+Ext.CLIJ_maximumXYZProjection(downscaled, maximumProjectionZ, 0, 1, 2);
 
 // show results
 Ext.CLIJ_pull(maximumProjectionX);

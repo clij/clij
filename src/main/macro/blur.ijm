@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: blur.ijm
+// CLIJ example macro: blur.ijm
 //
 // This macro shows how to blur an image in the GPU.
 //
@@ -26,7 +26,7 @@ Ext.CLIJ_push(input);
 run("Close All");
 
 // Blur in GPU
-Ext.CLIJ_blur3dSeparable(input, blurred, 5, 5, 1);
+Ext.CLIJ_blur3DFast(input, blurred, 5, 5, 1);
 
 // Get results back from GPU
 Ext.CLIJ_pull(blurred);
