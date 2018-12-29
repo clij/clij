@@ -120,11 +120,11 @@ In order to call your own `kernel.cl` files, use the `clij.execute()` method. Ex
 clij = CLIJ.getInstance();
 
 # convert ImageJ image to CL images (ready for the GPU)
-lInputCLImage = clij.convert(imp, ClearCLImage);
-lOutputCLImage = clij.convert(imp, ClearCLImage); # copy again to allocate memory for result image
+inputCLImage = clij.convert(imp, ClearCLImage);
+outputCLImage = clij.create(lInputCLImage); # allocate memory for result image
 
 # downsample the image stack using ClearCL / OpenCL
-resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":lInputCLImage, "dst":lOutputCLImage});
+resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":inputCLImage, "dst":outputCLImage});
 
 # convert the result back to imglib2 and show it
 resultRAI = clij.convert(resultStack, RandomAccessibleInterval);
