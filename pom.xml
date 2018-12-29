@@ -16,9 +16,9 @@
 	<artifactId>clij_</artifactId>
 	<version>0.8.0</version>
 
-	<name>CLIJ</name>
-	<description>CLIJ</description>
-	<url>https://github.com/clij/clij_</url>
+	<name>clij</name>
+	<description>clij</description>
+	<url>https://github.com/clij/clij</url>
 	<inceptionYear>2018</inceptionYear>
 	<organization>
 		<name>MPI CBG</name>
@@ -62,14 +62,14 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/clij/clij_</connection>
-        <developerConnection>scm:git:git@github.com/clij/clij_</developerConnection>
+		<connection>scm:git:git://github.com/clij/clij</connection>
+        <developerConnection>scm:git:git@github.com/clij/clij</developerConnection>
         <tag>HEAD</tag>
-		<url>https://github.com/clij/clij_</url>
+		<url>https://github.com/clij/clij</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/clij/clij_/issues</url>
+		<url>https://github.com/clij/clij/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
@@ -147,7 +147,7 @@
 		<repository>
 			<id>bintray-haesleinhuepf-snapshots</id>
 			<name>bintray-snapshots</name>
-			<url>https://api.bintray.com/maven/haesleinhuepf/clij/clij_/;publish=1</url>
+			<url>https://api.bintray.com/maven/haesleinhuepf/clij/clij/;publish=1</url>
 		</repository>
 
 	</distributionManagement>
