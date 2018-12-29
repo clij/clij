@@ -347,4 +347,8 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         Recorder.recordString(recordMethod + "(" + recordParameters + ");\n");
         Recorder.record = true;
     }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -23,8 +23,7 @@ public class HTMLDocumentationTemplate {
                 "<b>" + headline + "</b><br/>" +
                 description.replace("\n", "<br/>") + "<br/><br/>" +
                 "Parameters: " + parameterHelpText + "<br/>" +
-                "Available for: " + availableForDimensions + "<br/>" +
-                "<a href=\"" + sourceUrl + "\">Source</a><br/><br/>";
+                "Available for: " + availableForDimensions + "<br/><br/>";
 
         return output;
     }

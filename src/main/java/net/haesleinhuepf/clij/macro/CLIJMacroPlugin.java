@@ -13,4 +13,6 @@ public interface CLIJMacroPlugin extends SciJavaPlugin {
     String getParameterHelpText();
 
     ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input);
+
+    String getName();
 }
