@@ -6,8 +6,8 @@ import clearcl.enums.ImageChannelDataType;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.converters.implementations.RandomAccessibleIntervalToClearCLImageConverter;
 import net.haesleinhuepf.imagej.kernels.Kernels;
-import net.haesleinhuepf.imagej.utilities.ImageTypeConverter;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;
@@ -34,7 +34,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class ImageConverterTest
 {
-  ClearCLIJ mCLIJ = null;
+
+  ClearCLIJ clij = null;
 
   @Test
   public void testSimpleCopyBackAndForth() {
@@ -43,7 +44,8 @@ public class ImageConverterTest
       ClearCLIJ clij = ClearCLIJ.getInstance();
 
       long time = System.currentTimeMillis();
-      ClearCLBuffer buffer1 = clij.converter(imp).getClearCLBuffer();
+      ClearCLBuffer buffer1 = clij.convert(imp, ClearCLBuffer.class);
+              //converter(imp).getClearCLBuffer();
       System.out.println("Forth took " + (System.currentTimeMillis() - time) + " msec");
       ClearCLBuffer buffer2 = clij.createCLBuffer(buffer1.getDimensions(), buffer1.getNativeType());
 
@@ -51,7 +53,8 @@ public class ImageConverterTest
 
 
       time = System.currentTimeMillis();
-      ImagePlus result = clij.converter(buffer2).getImagePlus();
+      ImagePlus result = clij.convert(buffer2, ImagePlus.class);
+              //converter(buffer2).getImagePlus();
       System.out.println("Back took " + (System.currentTimeMillis() - time) + " msec");
       result.show();
     }
@@ -59,10 +62,10 @@ public class ImageConverterTest
 
   @Test public void testImgClearCLImageConverter()
   {
-    for (String lDeviceName : ClearCLIJ.getAvailableDeviceNames())
+    for (String deviceName : ClearCLIJ.getAvailableDeviceNames())
     {
-      mCLIJ = new ClearCLIJ(lDeviceName);
-      System.out.println("Testing device " + lDeviceName);
+      clij = ClearCLIJ.getInstance(deviceName);
+      System.out.println("Testing device " + deviceName);
 
       RandomAccessibleInterval<FloatType>
           lFloatImg =
@@ -98,21 +101,21 @@ public class ImageConverterTest
 
   @Test public void testBufferConversion()
   {
-    mCLIJ = new ClearCLIJ("HD");
+    clij = ClearCLIJ.getInstance("HD");
 
     RandomAccessibleInterval<FloatType>
         lFloatImg =
         ArrayImgs.floats(new long[] { 5, 6, 7 });
     fillTestImage(lFloatImg);
 
-    ClearCLIJ lCLIJ = mCLIJ;
+    ClearCLIJ lCLIJ = clij;
 
     ClearCLBuffer
         lClearCLBuffer =
-        lCLIJ.converter(lFloatImg).getClearCLBuffer();
+        lCLIJ.convert(lFloatImg, ClearCLBuffer.class);
     RandomAccessibleInterval
         lRAIconvertedTwice =
-        lCLIJ.converter(lClearCLBuffer).getRandomAccessibleInterval();
+        lCLIJ.convert(lFloatImg, RandomAccessibleInterval.class);
 
     assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
         lFloatImg), Views.iterable(lRAIconvertedTwice)));
@@ -138,16 +141,14 @@ public class ImageConverterTest
   private <T extends RealType<T>> void testBackAndForthConversionViaCLImage(
       RandomAccessibleInterval<T> lRAI)
   {
-    ClearCLIJ lCLIJ = mCLIJ;
-
     ClearCLImage
         lClearCLImage =
-        lCLIJ.converter(lRAI).getClearCLImage();
+        clij.convert(lRAI, ClearCLImage.class);
+                //converter(lRAI).getClearCLImage();
 
     RandomAccessibleInterval<T>
         lRAIconvertedTwice =
-        (RandomAccessibleInterval<T>) lCLIJ.converter(lClearCLImage)
-                                           .getRandomAccessibleInterval();
+        (RandomAccessibleInterval<T>) clij.convert(lClearCLImage, RandomAccessibleInterval.class);
 
     assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(
         lRAI), Views.iterable(lRAIconvertedTwice)));
@@ -158,7 +159,7 @@ public class ImageConverterTest
 
   @Test public void convertHugeUnsignedShortImageTest()
   {
-    mCLIJ = new ClearCLIJ("CPU");
+    clij = ClearCLIJ.getInstance("CPU");
     RandomAccessibleInterval<UnsignedShortType>
         lRAI =
         ArrayImgs.unsignedShorts(new long[] { 10, 10 });
@@ -173,7 +174,7 @@ public class ImageConverterTest
 
   @Test public void convertHugeSignedShortImageTest()
   {
-    mCLIJ = new ClearCLIJ("CPU");
+    clij = ClearCLIJ.getInstance("CPU");
     RandomAccessibleInterval<ShortType>
         lRAI =
         ArrayImgs.shorts(new long[] { 1, 1 });
@@ -188,7 +189,7 @@ public class ImageConverterTest
 
   @Test public void convertHugeFloatImageTest()
   {
-    mCLIJ = new ClearCLIJ("CPU");
+    clij = ClearCLIJ.getInstance("CPU");
     RandomAccessibleInterval<FloatType>
         lRAI =
         ArrayImgs.floats(new long[] { 1, 1 });
@@ -202,7 +203,7 @@ public class ImageConverterTest
 
     @Test
     public void testConversionUnsignedShortStackToFloatCLImage() {
-        mCLIJ = ClearCLIJ.getInstance();
+        clij = ClearCLIJ.getInstance();
 
         RandomAccessibleInterval<UnsignedShortType>
             rai =
@@ -212,20 +213,24 @@ public class ImageConverterTest
         ra.setPosition(new int[] {1,1});
         ra.get().set(4);
 
-        ClearCLImage stack = mCLIJ.converter(rai).getClearCLImage();
+        ClearCLImage stack = clij.convert(rai, ClearCLImage.class);
+                //converter(rai).getClearCLImage();
 
         // test starts here
 
-        RandomAccessibleInterval rai2 = mCLIJ.converter(stack).getRandomAccessibleInterval();
+        RandomAccessibleInterval rai2 = clij.convert(stack, RandomAccessibleInterval.class);
+                //converter(stack).getRandomAccessibleInterval();
 
-        ClearCLImage clImage = mCLIJ.createCLImage(stack.getDimensions(), ImageChannelDataType.Float);
-        ImageTypeConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);
+        ClearCLImage clImage = clij.createCLImage(stack.getDimensions(), ImageChannelDataType.Float);
+        RandomAccessibleIntervalToClearCLImageConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);
+        //ImageTypeConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);
 
-        ClearCLImage clImage2 = mCLIJ.createCLImage(stack.getDimensions(), ImageChannelDataType.UnsignedInt16);
+        ClearCLImage clImage2 = clij.createCLImage(stack.getDimensions(), ImageChannelDataType.UnsignedInt16);
 
-        Kernels.copy(mCLIJ, clImage, clImage2);
+        Kernels.copy(clij, clImage, clImage2);
 
-        RandomAccessibleInterval<UnsignedShortType> rai3 = (RandomAccessibleInterval<UnsignedShortType>) mCLIJ.converter(clImage2).getRandomAccessibleInterval();
+        RandomAccessibleInterval<UnsignedShortType> rai3 = (RandomAccessibleInterval<UnsignedShortType>) clij.convert(clImage2, RandomAccessibleInterval.class);
+                //converter(clImage2).getRandomAccessibleInterval();
 
         assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(rai2), Views.iterable(rai3)));
 

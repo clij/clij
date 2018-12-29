@@ -1,7 +1,12 @@
 package net.haesleinhuepf.imagej.test;
 
+import clearcl.ClearCLBuffer;
+import coremem.enums.NativeTypeEnum;
 import ij.ImagePlus;
+import ij.gui.NewImage;
 import ij.process.ImageProcessor;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 import net.imglib2.Cursor;
 import net.imglib2.IterableInterval;
 import net.imglib2.type.numeric.RealType;
@@ -142,6 +147,29 @@ public class TestUtilities
       }
     }
     return true;
+  }
+
+  public static ImagePlus getRandomImage(int width, int height, int depth, int bitDepth, float minimum, float maximum) {
+    ClearCLIJ clij = ClearCLIJ.getInstance();
+    ImagePlus randomImage = NewImage.createFloatImage("rand", width, height, depth, NewImage.FILL_RANDOM);
+
+    ClearCLBuffer buffer = clij.convert(randomImage, ClearCLBuffer.class);
+    ClearCLBuffer temp = clij.createCLBuffer(buffer);
+    NativeTypeEnum type = NativeTypeEnum.Float;
+    if (bitDepth == 8) {
+        type = NativeTypeEnum.UnsignedByte;
+    } else if (bitDepth == 16) {
+        type = NativeTypeEnum.UnsignedShort;
+    }
+    ClearCLBuffer result = clij.createCLBuffer(buffer.getDimensions(), type);
+
+    Kernels.multiplyScalar(clij, buffer, temp, maximum - minimum);
+    Kernels.addScalar(clij, temp, buffer, minimum);
+    Kernels.maxPixelwiseScalar(clij, buffer, temp, minimum);
+    Kernels.minPixelwiseScalar(clij, temp, buffer, maximum);
+    Kernels.copy(clij, buffer, result);
+
+    return clij.convert(result, ImagePlus.class);
   }
 
 }

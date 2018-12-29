@@ -6,19 +6,15 @@
 // December 2018
 // ---------------------------------------------
 
-
 // Get test data
 run("T1 Head (2.4M, 16-bits)");
 input = getTitle();
 getDimensions(width, height, channels, slices, frames);
 
-// create an emtpy image to put the blurred pixels in
-newImage("Untitled", "16-bit black", width, height, slices);
-rename("Blurred");
-blurred = getTitle();
+blurred = "Blurred";
 
 // Init GPU
-run("CLIJ Macro Extensions", "cl_device=");
+run("CLIJ Macro Extensions", "cl_device=geforce");
 Ext.CLIJ_clear();
 
 // Local mean filter in CPU
@@ -31,9 +27,7 @@ for (i = 1; i <= 10; i++) {
 // push images to GPU
 time = getTime();
 Ext.CLIJ_push(input);
-Ext.CLIJ_push(blurred);
-print("Pushing two images to the GPU took " + (getTime() - time) + " msec");
-
+print("Pushing one image to the GPU took " + (getTime() - time) + " msec");
 
 // cleanup ImageJ
 run("Close All");
@@ -41,13 +35,14 @@ run("Close All");
 // Local mean filter in GPU
 for (i = 1; i <= 10; i++) {
 	time = getTime();
-	Ext.CLIJ_mean3d(input, blurred, 3, 3, 3);
+	Ext.CLIJ_mean3DBox(input, blurred, 3, 3, 3);
 	print("GPU mean filter no " + i + " took " + (getTime() - time) + " msec");
 }
 
 // Get results back from GPU
 time = getTime();
 Ext.CLIJ_pull(blurred);
+
 print("Pulling one image from the GPU took " + (getTime() - time) + " msec");
 
 // Cleanup GPU 

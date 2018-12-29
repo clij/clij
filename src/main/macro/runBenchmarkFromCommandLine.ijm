@@ -1,0 +1,2 @@
+setBatchMode(true);
+run("BenchmarkExecutor");

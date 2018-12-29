@@ -1,10 +1,10 @@
 package net.haesleinhuepf.imagej.demo;
 
 import clearcl.ClearCLImage;
-import net.haesleinhuepf.imagej.ClearCLIJ;
-import net.haesleinhuepf.imagej.kernels.Kernels;
 import ij.IJ;
 import ij.ImagePlus;
+import net.haesleinhuepf.imagej.ClearCLIJ;
+import net.haesleinhuepf.imagej.kernels.Kernels;
 
 /**
  * LocalThresholdDemo
@@ -21,18 +21,18 @@ public class LocalThresholdDemo {
         ClearCLIJ clij = ClearCLIJ.getInstance();
 
         // conversion
-        ClearCLImage input = clij.converter(imp).getClearCLImage();
+        ClearCLImage input = clij.convert(imp, ClearCLImage.class);
         ClearCLImage output = clij.createCLImage(input);
         ClearCLImage temp = clij.createCLImage(input);
 
         // blur
-        Kernels.blurSeparable(clij, input, temp, new float[]{2, 2, 2});
+        Kernels.blurSeparable(clij, input, temp, 2, 2, 2);
 
         // local threshold
         Kernels.localThreshold(clij, input, output, temp);
 
-        Kernels.erode(clij, output, temp);
-        Kernels.erode(clij, temp, output);
+        Kernels.erodeSphere(clij, output, temp);
+        Kernels.erodeSphere(clij, temp, output);
 
         // show results
         clij.show(input, "original");

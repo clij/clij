@@ -1,6 +1,6 @@
 package net.haesleinhuepf.imagej.demo;
 
-import clearcl.ClearCLImage;
+import clearcl.ClearCLBuffer;
 import net.haesleinhuepf.imagej.ClearCLIJ;
 import net.haesleinhuepf.imagej.kernels.Kernels;
 import ij.IJ;
@@ -28,14 +28,14 @@ import java.io.IOException;
  * thresholding, does some erosion and dilatation to make the edges smoother and finally sets all background pixels in
  * the original image to zero. This pipeline is executed in the ImageJ1 way and in OpenCL to compare performance and
  * results.
- *
+ * <p>
  * Author: Robert Haase (http://haesleinhuepf.net) at MPI CBG (http://mpi-cbg.de)
  * March 2018
  */
 public class BenchmarkingDemo {
 
     private static ImageJ ij;
-    private static ClearCLIJ lCLIJ;
+    private static ClearCLIJ clij;
     private static double sigma = 3;
 
     public static void main(String... args) throws IOException {
@@ -44,14 +44,14 @@ public class BenchmarkingDemo {
         // Initialize ImageJ, ClearCLIJ and test image
         ij = new ImageJ();
         ij.ui().showUI();
-        lCLIJ = new ClearCLIJ("TITAN");
+        clij = ClearCLIJ.getInstance("TITAN");
 
         input = IJ.openImage("src/main/resources/flybrain.tif");
         input.show();
-        IJ.run(input, "8-bit","");
+        IJ.run(input, "8-bit", "");
         img = ImageJFunctions.wrapReal(input);
 
-        for (int i=0; i<100; i++) {
+        for (int i = 0; i < 100; i++) {
             // ---------------------------------------
             // three test scenarios
             long timestamp = System.currentTimeMillis();
@@ -75,11 +75,11 @@ public class BenchmarkingDemo {
     private static void demoImageJ1() {
         ImagePlus copy = new Duplicator().run(input, 1, input.getNSlices());
         Prefs.blackBackground = false;
-        IJ.run(copy,"Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
+        IJ.run(copy, "Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
         IJ.setRawThreshold(copy, 100, 255, null);
         IJ.run(copy, "Convert to Mask", "method=Default background=Dark");
-        IJ.run(copy, "Erode", "stack");
-        IJ.run(copy, "Dilate", "stack");
+        IJ.run(copy, "ErodeBoxIJ", "stack");
+        IJ.run(copy, "DilateBoxIJ", "stack");
         IJ.run(copy, "Divide...", "value=255 stack");
         ImageCalculator calculator = new ImageCalculator();
 
@@ -99,11 +99,11 @@ public class BenchmarkingDemo {
         IterableInterval blurredIi = ij.op().threshold().apply(Views.iterable(gauss), threshold);
         RandomAccessibleInterval blurredImg = makeRai(blurredIi);
 
-        // erode
+        // erodeSphere
         IterableInterval erodedIi = ij.op().morphology().erode(blurredImg, new DiamondShape(1));
         RandomAccessibleInterval erodedImg = makeRai(erodedIi);
 
-        // dilate
+        // dilateSphere
         IterableInterval dilatedIi = ij.op().morphology().dilate(erodedImg, new DiamondShape(1));
         RandomAccessibleInterval dilatedImg = makeRai(dilatedIi);
 
@@ -113,7 +113,7 @@ public class BenchmarkingDemo {
                 Regions.iterable(dilatedImg),
                 Views.pair(output, img)
         );
-        sample.forEach(pair -> pair.getA().set(pair.getB()) );
+        sample.forEach(pair -> pair.getA().set(pair.getB()));
 
         ImageJFunctions.show(output);
 
@@ -122,7 +122,7 @@ public class BenchmarkingDemo {
     private static RandomAccessibleInterval makeRai(IterableInterval ii) {
         RandomAccessibleInterval rai;
         if (ii instanceof RandomAccessibleInterval) {
-            rai = (RandomAccessibleInterval)ii;
+            rai = (RandomAccessibleInterval) ii;
         } else {
             rai = ij.op().create().img(ii);
             ij.op().copy().iterableInterval((Img) rai, ii);
@@ -131,20 +131,20 @@ public class BenchmarkingDemo {
     }
 
     private static void demoClearCLIJ() throws IOException {
-        ClearCLImage input = lCLIJ.converter(img).getClearCLImage();
-        ClearCLImage flip = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
-        ClearCLImage flop = lCLIJ.createCLImage(input.getDimensions(), input.getChannelDataType());
+        ClearCLBuffer input = clij.convert(img, ClearCLBuffer.class);
+        ClearCLBuffer flip = clij.createCLBuffer(input.getDimensions(), input.getNativeType());
+        ClearCLBuffer flop = clij.createCLBuffer(input.getDimensions(), input.getNativeType());
 
-        Kernels.blurSeparable(lCLIJ, input, flop, (float)sigma, (float)sigma, (float)sigma);
+        Kernels.blurSeparable(clij, input, flop, (float) sigma, (float) sigma, (float) sigma);
 
-        Kernels.threshold(lCLIJ, flop, flip, 100.0f);
+        Kernels.threshold(clij, flop, flip, 100.0f);
 
-        Kernels.erode(lCLIJ, flip, flop);
-        Kernels.dilate(lCLIJ, flop, flip);
+        Kernels.erodeSphere(clij, flip, flop);
+        Kernels.dilateSphere(clij, flop, flip);
 
-        Kernels.multiplyPixelwise(lCLIJ, flop, input, flip);
+        Kernels.multiplyPixelwise(clij, flop, input, flip);
 
-        lCLIJ.converter(flip).getImagePlus().show();
+        clij.convert(flip, ImagePlus.class).show();
 
         flip.close();
         flop.close();
