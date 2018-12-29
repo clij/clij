@@ -6,9 +6,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>net.clearcontrol</groupId>
-		<artifactId>ClearParentPom</artifactId>
-		<version>0.6.36</version>
+		<groupId>net.haesleinhuepf</groupId>
+		<artifactId>clij-parent-pom</artifactId>
+		<version>0.1.1</version>
 		<relativePath />
 	</parent>
 
@@ -18,11 +18,11 @@
 
 	<name>CLIJ</name>
 	<description>CLIJ</description>
-	<url>https://github.com/haesleinhuepf/ClearCLIJ</url>
+	<url>https://github.com/clij/clij_</url>
 	<inceptionYear>2018</inceptionYear>
 	<organization>
-		<name>ClearControl</name>
-		<url>http://clearcontrol.net</url>
+		<name>MPI CBG</name>
+		<url>http://www.mpi-cbg.de</url>
 	</organization>
 	<licenses>
 		<license>
@@ -56,20 +56,20 @@
 
 	<mailingLists>
 		<mailingList>
-			<name>ImageJ Forum</name>
-			<archive>http://forum.imagej.net/</archive>
+			<name>ImageSc Forum</name>
+			<archive>http://image.sc/</archive>
 		</mailingList>
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/haesleinhuepf/ClearCLIJ</connection>
-        <developerConnection>scm:git:git@github.com/haesleinhuepf/ClearCLIJ</developerConnection>
+		<connection>scm:git:git://github.com/clij/clij_</connection>
+        <developerConnection>scm:git:git@github.com/clij/clij_</developerConnection>
         <tag>HEAD</tag>
-		<url>https://github.com/haesleinhuepf/ClearCLIJ</url>
+		<url>https://github.com/clij/clij_</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/haesleinhuepf/ClearCLIJ/issues</url>
+		<url>https://github.com/clij/clij_/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
@@ -79,8 +79,8 @@
 		<package-name>net.haesleinhuepf</package-name>
 		<license.licenseName>bsd_3</license.licenseName>
 		<license.copyrightOwners>Robert Haase, MPI CBG</license.copyrightOwners>
-		<!--<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>-->
-		<imagej.app.directory>/home/rhaase/programs/fiji/Fiji.app/</imagej.app.directory>
+		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
+		<!--<imagej.app.directory>/home/rhaase/programs/fiji/Fiji.app/</imagej.app.directory>-->
 	</properties>
 
 	<dependencies>
@@ -124,12 +124,10 @@
 		<dependency>
 			<groupId>org.jocl</groupId>
 			<artifactId>jocl</artifactId>
-			<version>2.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.nativelibs4java</groupId>
 			<artifactId>javacl</artifactId>
-			<version>1.0.0-RC4</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
@@ -140,7 +138,7 @@
 	<repositories>
 		<repository>
 			<id>hslh</id>
-			<url>http://dl.bintray.com/haesleinhuepf/snapshots</url>
+			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
 		</repository>
 	</repositories>
 
@@ -149,7 +147,7 @@
 		<repository>
 			<id>bintray-haesleinhuepf-snapshots</id>
 			<name>bintray-snapshots</name>
-			<url>https://api.bintray.com/maven/haesleinhuepf/snapshots/clij_/;publish=1</url>
+			<url>https://api.bintray.com/maven/haesleinhuepf/clij/clij_/;publish=1</url>
 		</repository>
 
 	</distributionManagement>
