@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: blur.ijm
+// CLIJ example macro: blur.ijm
 //
 // This macro shows how to blur an image in the GPU.
 //

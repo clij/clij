@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: backgroundSubtraction.ijm
+// CLIJ example macro: backgroundSubtraction.ijm
 //
 // This macro shows how background subtraction can be done in the GPU.
 //

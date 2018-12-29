@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: binaryProcessing.ijm
+// CLIJ example macro: binaryProcessing.ijm
 //
 // This macro shows how to deal with binary images, e.g. thresholding, dilation, erosion, in the GPU.
 //
@@ -32,7 +32,7 @@ Ext.CLIJ_push(input);
 run("Close All");
 
 // create a mask using a fixed threshold
-Ext.CLIJ_threshold(input, mask, threshold);
+Ext.CLIJ_thresholdIJ(input, mask, threshold);
 
 // binary opening: erosion + dilation, twice each
 Ext.CLIJ_erodeBox(mask, temp);

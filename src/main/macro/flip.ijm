@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: rotate.ijm
+// CLIJ example macro: rotate.ijm
 //
 // This macro shows how stacks can be rotated in the GPU
 //

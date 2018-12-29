@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: reslicing.ijm
+// CLIJ example macro: reslicing.ijm
 //
 // This macro shows how stacks can be resliced in the GPU
 //

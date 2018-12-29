@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: benchmarking.ijm
+// CLIJ example macro: benchmarking.ijm
 //
 // This macro shows how to measure performance of GPU and CPU based ImageJ macro code.
 //

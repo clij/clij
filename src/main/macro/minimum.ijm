@@ -1,4 +1,4 @@
-// ClearCLIJ example macro: minimum.ijm
+// CLIJ example macro: minimum.ijm
 //
 // This macro shows how apply a minimum filter in the GPU
 //
