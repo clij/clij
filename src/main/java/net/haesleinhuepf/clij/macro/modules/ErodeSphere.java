@@ -14,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeSphereIJ")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeSphere")
 public class ErodeSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
