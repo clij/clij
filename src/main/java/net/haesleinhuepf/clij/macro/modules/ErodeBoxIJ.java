@@ -18,7 +18,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeBox")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeBoxIJ")
 public class ErodeBoxIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
     @Override
