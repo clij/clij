@@ -147,7 +147,7 @@
 		<repository>
 			<id>bintray-haesleinhuepf-clij</id>
 			<name>bintray-snapshots</name>
-			<url>https://api.bintray.com/maven/haesleinhuepf/clij/clij/;publish=1</url>
+			<url>https://api.bintray.com/maven/haesleinhuepf/clij/clij_/;publish=1</url>
 		</repository>
 
 	</distributionManagement>
