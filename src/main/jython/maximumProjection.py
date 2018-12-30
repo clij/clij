@@ -1,22 +1,31 @@
+# This script shows how generate a maximum Z projection using CLIJ and jython.
+#
+# Author: Robert Haase (@haesleinhuepf)
+# March 2018
+#
+
+
 from ij import IJ;
-from net.haesleinhuepf.imagej import ClearCLIJ;
-from net.haesleinhuepf.imagej.kernels import Kernels;
+from ij import ImagePlus;
+from net.haesleinhuepf.clij import CLIJ;
+from net.haesleinhuepf.clij.kernels import Kernels;
+from clearcl import ClearCLImage
 
 # Init GPU
-clij = ClearCLIJ.getInstance();
+clij = CLIJ.getInstance();
 
 # get some example data
-imp = IJ.openImage("http://clij.nih.gov/ij/images/t1-head.zip");
+imp = IJ.openImage("http://imagej.nih.gov/ij/images/t1-head.zip");
 
 # create and fill memory in GPU
-imageInput = clij.converter(imp).getClearCLImage();
+imageInput = clij.convert(imp, ClearCLImage);
 imageOutput = clij.createCLImage([imageInput.getWidth(), imageInput.getHeight()], imageInput.getChannelDataType());
 
 # process the image
-Kernels.maxProjection(clij, imageInput, imageOutput);
+Kernels.maximumZProjection(clij, imageInput, imageOutput);
 
 # show the result
 clij.show(imageOutput, "output");
 
 # get the result back as variable
-result = clij.converter(imageOutput).getImagePlus();
+result = clij.convert(imageOutput, ImagePlus);
