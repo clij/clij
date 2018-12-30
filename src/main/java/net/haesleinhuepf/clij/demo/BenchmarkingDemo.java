@@ -135,14 +135,14 @@ public class BenchmarkingDemo {
         ClearCLBuffer flip = clij.createCLBuffer(input.getDimensions(), input.getNativeType());
         ClearCLBuffer flop = clij.createCLBuffer(input.getDimensions(), input.getNativeType());
 
-        Kernels.blurSeparable(clij, input, flop, (float) sigma, (float) sigma, (float) sigma);
+        Kernels.blurFast(clij, input, flop, (float) sigma, (float) sigma, (float) sigma);
 
         Kernels.threshold(clij, flop, flip, 100.0f);
 
         Kernels.erodeSphere(clij, flip, flop);
         Kernels.dilateSphere(clij, flop, flip);
 
-        Kernels.multiplyPixelwise(clij, flop, input, flip);
+        Kernels.multiplyImages(clij, flop, input, flip);
 
         clij.convert(flip, ImagePlus.class).show();
 

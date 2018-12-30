@@ -32,11 +32,11 @@ public class LocalThresholdTest {
         ClearCLImage temp = clij.createCLImage(input);
         ClearCLImage blurred = clij.createCLImage(input);
 
-        Kernels.blurSeparable(clij, input, blurred, 2, 2, 2);
+        Kernels.blurFast(clij, input, blurred, 2, 2, 2);
 
         // usual way: blur, subtract, threshold
         ElapsedTime.measureForceOutput("traditional thresholding", () -> {
-            Kernels.addWeightedPixelwise(clij, input, blurred, temp, 1f, -1f);
+            Kernels.addImagesWeighted(clij, input, blurred, temp, 1f, -1f);
             Kernels.threshold(clij, temp, output1, 0f);
         });
 
@@ -51,7 +51,7 @@ public class LocalThresholdTest {
         assertTrue(Kernels.sumPixels(clij, output1) > 0);
         assertTrue(Kernels.sumPixels(clij, output1) == Kernels.sumPixels(clij, output2));
 
-        Kernels.addWeightedPixelwise(clij, output1, output2, temp, 1f, -1f);
+        Kernels.addImagesWeighted(clij, output1, output2, temp, 1f, -1f);
 
         assertTrue(Kernels.sumPixels(clij, temp) == 0);
 

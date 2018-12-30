@@ -30,7 +30,7 @@ public class Minimum2DSphereTest {
         ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.minimum(clij, inputCL, outputCL, 3, 3);
+        Kernels.minimumSphere(clij, inputCL, outputCL, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
@@ -59,7 +59,7 @@ public class Minimum2DSphereTest {
         ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.minimum(clij, inputCL, outputCL, 3, 3);
+        Kernels.minimumSphere(clij, inputCL, outputCL, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 

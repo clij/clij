@@ -25,10 +25,10 @@ public class Mean3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin,
         int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
-            return Kernels.mean(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
+            return Kernels.meanSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.mean(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
+            boolean result = Kernels.meanSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
             releaseBuffers(args);
             return result;
         }
@@ -41,7 +41,7 @@ public class Mean3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getDescription() {
-        return "Computes the local mean average of a pixels spherical neighborhood. The spheres size is specified by \n" +
+        return "Computes the local meanSphere average of a pixels spherical neighborhood. The spheres size is specified by \n" +
                 "its half-width, half-height and half-depth (radius).";
     }
 

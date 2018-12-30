@@ -49,7 +49,7 @@ public class SumZProjectionTest {
                                 src.getHeight()},
                         src.getChannelDataType());
 
-        Kernels.sumProjection(clij, src, dst);
+        Kernels.sumZProjection(clij, src, dst);
 
         ImagePlus sumProjectionCL = clij.convert(dst, ImagePlus.class);
 

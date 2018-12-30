@@ -19,10 +19,10 @@ public class MinimumZProjection extends AbstractCLIJPlugin implements CLIJMacroP
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.minProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
+            return Kernels.minimumZProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.minProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
+            boolean result = Kernels.minimumZProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
             releaseBuffers(args);
             return result;
         }
@@ -41,7 +41,7 @@ public class MinimumZProjection extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getDescription() {
-        return "Determines the minimum projection of an image along Z.";
+        return "Determines the minimumSphere projection of an image along Z.";
     }
 
     @Override

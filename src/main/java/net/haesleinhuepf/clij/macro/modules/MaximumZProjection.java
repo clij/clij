@@ -19,10 +19,10 @@ public class MaximumZProjection extends AbstractCLIJPlugin implements CLIJMacroP
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.maxProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
+            return Kernels.maximumZProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.maxProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
+            boolean result = Kernels.maximumZProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
             releaseBuffers(args);
             return result;
         }
@@ -41,7 +41,7 @@ public class MaximumZProjection extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getDescription() {
-        return "Determines the maximum projection of an image along Z.";
+        return "Determines the maximumSphere projection of an image along Z.";
     }
 
     @Override

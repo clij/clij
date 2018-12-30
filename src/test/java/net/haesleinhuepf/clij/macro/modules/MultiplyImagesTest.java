@@ -31,7 +31,7 @@ public class MultiplyImagesTest {
         ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
         ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
-        Kernels.multiplyPixelwise(clij, src, src1, dst);
+        Kernels.multiplyImages(clij, src, src1, dst);
 
         ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
@@ -62,7 +62,7 @@ public class MultiplyImagesTest {
             ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
             ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
-            Kernels.multiplyPixelwise(clij, src, src1, dst);
+            Kernels.multiplyImages(clij, src, src1, dst);
 
             ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
@@ -92,7 +92,7 @@ public class MultiplyImagesTest {
         ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.convert(testImp1, ClearCLBuffer.class);
 
-        Kernels.multiplyPixelwise(clij, src, src1, dst);
+        Kernels.multiplyImages(clij, src, src1, dst);
 
         ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
@@ -123,7 +123,7 @@ public class MultiplyImagesTest {
             ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
             ClearCLBuffer dst = clij.convert(testImp1, ClearCLBuffer.class);
 
-            Kernels.multiplyPixelwise(clij, src, src1, dst);
+            Kernels.multiplyImages(clij, src, src1, dst);
 
             ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
@@ -155,7 +155,7 @@ public class MultiplyImagesTest {
         ClearCLImage src1 = clij.convert(testImp2D2, ClearCLImage.class);
         ClearCLImage dst = clij.convert(testImp2D1, ClearCLImage.class);
 
-        Kernels.multiplyPixelwise(clij, src, src1, dst);
+        Kernels.multiplyImages(clij, src, src1, dst);
 
         ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 
@@ -183,7 +183,7 @@ public class MultiplyImagesTest {
         ClearCLBuffer src1 = clij.convert(testImp2D2, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.convert(testImp2D1, ClearCLBuffer.class);
 
-        Kernels.multiplyPixelwise(clij, src, src1, dst);
+        Kernels.multiplyImages(clij, src, src1, dst);
 
         ImagePlus multipliedCL = clij.convert(dst, ImagePlus.class);
 

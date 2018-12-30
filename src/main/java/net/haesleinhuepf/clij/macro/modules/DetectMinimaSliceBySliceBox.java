@@ -19,10 +19,10 @@ public class DetectMinimaSliceBySliceBox extends AbstractCLIJPlugin implements C
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.detectMinimaSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]));
+            return Kernels.detectMinimaSliceBySliceBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.detectMinimaSliceBySlice(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]));
+            boolean result = Kernels.detectMinimaSliceBySliceBox(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]));
             releaseBuffers(args);
             return result;
         }

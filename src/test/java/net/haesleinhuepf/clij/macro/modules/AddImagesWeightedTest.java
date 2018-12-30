@@ -44,7 +44,7 @@ public class AddImagesWeightedTest {
         ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
         ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
-        Kernels.addWeightedPixelwise(clij,
+        Kernels.addImagesWeighted(clij,
                 src,
                 src1,
                 dst,
@@ -88,7 +88,7 @@ public class AddImagesWeightedTest {
         ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.convert(testImp1, ClearCLBuffer.class);
 
-        Kernels.addWeightedPixelwise(clij,
+        Kernels.addImagesWeighted(clij,
                 src,
                 src1,
                 dst,
@@ -128,7 +128,7 @@ public class AddImagesWeightedTest {
         ClearCLImage src1 = clij.convert(testImp2D2, ClearCLImage.class);
         ClearCLImage dst = clij.convert(testImp2D1, ClearCLImage.class);
 
-        Kernels.addWeightedPixelwise(clij,
+        Kernels.addImagesWeighted(clij,
                 src,
                 src1,
                 dst,
@@ -168,7 +168,7 @@ public class AddImagesWeightedTest {
         ClearCLBuffer src1 = clij.convert(testImp2D2, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.convert(testImp2D1, ClearCLBuffer.class);
 
-        Kernels.addWeightedPixelwise(clij,
+        Kernels.addImagesWeighted(clij,
                 src,
                 src1,
                 dst,

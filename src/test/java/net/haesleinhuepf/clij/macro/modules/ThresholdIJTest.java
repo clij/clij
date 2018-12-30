@@ -81,7 +81,7 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
         ClearCLImage dst = clij.createCLImage(src);
 
         Kernels.threshold(clij, src, dst, 2f);
-        Kernels.multiplyScalar(clij, dst, src, 255f);
+        Kernels.multiplyImageAndScalar(clij, dst, src, 255f);
 
         ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
@@ -111,7 +111,7 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
         Kernels.threshold(clij, src, dst, 2f);
-        Kernels.multiplyScalar(clij, dst, src, 255f);
+        Kernels.multiplyImageAndScalar(clij, dst, src, 255f);
 
         ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
@@ -139,7 +139,7 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
         ClearCLImage dst = clij.convert(testImp2D2, ClearCLImage.class);
 
         Kernels.threshold(clij, src, dst, 2f);
-        Kernels.multiplyScalar(clij, dst, src, 255f);
+        Kernels.multiplyImageAndScalar(clij, dst, src, 255f);
 
         ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
@@ -168,7 +168,7 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
         ClearCLBuffer dst = clij.convert(testImp2D2, ClearCLBuffer.class);
 
         Kernels.threshold(clij, src, dst, 2f);
-        Kernels.multiplyScalar(clij, dst, src, 255f);
+        Kernels.multiplyImageAndScalar(clij, dst, src, 255f);
 
         ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
@@ -206,7 +206,7 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
 
         Kernels.threshold(clij, src, dst, 128f);
         Kernels.copy(clij, dst, src);
-        //Kernels.multiplyScalar(clij, dst, src, 255f);
+        //Kernels.multiplyImageAndScalar(clij, dst, src, 255f);
 
         src.writeTo(buffer, true);
         System.out.println("src " + Arrays.toString(buffer.array()));

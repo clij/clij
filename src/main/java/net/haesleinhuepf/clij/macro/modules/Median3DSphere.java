@@ -25,10 +25,10 @@ public class Median3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugi
         int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
-            return Kernels.median(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
+            return Kernels.medianSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.median(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
+            boolean result = Kernels.medianSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
             releaseBuffers(args);
             return result;
         }
@@ -41,7 +41,7 @@ public class Median3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getDescription() {
-        return "Computes the local median of a pixels spherical neighborhood. The spheres size is specified by \n" +
+        return "Computes the local medianSphere of a pixels spherical neighborhood. The spheres size is specified by \n" +
                 "its half-width, half-height and half-depth (radius).\n\n" +
                 "For technical reasons, the volume of the sphere must contain less than 1000 voxels.";
     }

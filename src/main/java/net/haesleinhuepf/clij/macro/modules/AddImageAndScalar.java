@@ -19,10 +19,10 @@ public class AddImageAndScalar extends AbstractCLIJPlugin implements CLIJMacroPl
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.addScalar(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asFloat(args[2]));
+            return Kernels.addImageAndScalar(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asFloat(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.addScalar(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asFloat(args[2]));
+            boolean result = Kernels.addImageAndScalar(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asFloat(args[2]));
             releaseBuffers(args);
             return result;
         }

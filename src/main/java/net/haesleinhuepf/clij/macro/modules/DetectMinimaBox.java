@@ -19,10 +19,10 @@ public class DetectMinimaBox extends AbstractCLIJPlugin implements CLIJMacroPlug
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.detectMinima(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]));
+            return Kernels.detectMinimaBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.detectMinima(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]));
+            boolean result = Kernels.detectMinimaBox(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]));
             releaseBuffers(args);
             return result;
         }

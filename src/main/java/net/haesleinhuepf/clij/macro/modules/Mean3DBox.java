@@ -33,10 +33,10 @@ public class Mean3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
         int radiusZ = asInteger(args[4]);
 
         if (containsCLBufferArguments()) {
-            boolean result = Kernels.meanSeparable(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
+            boolean result = Kernels.meanBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
             return result;
         } else {
-            return Kernels.meanSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
+            return Kernels.meanBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
         }
     }
 
@@ -47,7 +47,7 @@ public class Mean3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
 
     @Override
     public String getDescription() {
-        return "Computes the local mean average of a pixels cube neighborhood. The cubes size is specified by \n" +
+        return "Computes the local meanSphere average of a pixels cube neighborhood. The cubes size is specified by \n" +
                 "its half-width, half-height and half-depth (radius).";
     }
 

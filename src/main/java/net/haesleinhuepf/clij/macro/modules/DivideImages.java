@@ -20,10 +20,10 @@ public class DivideImages extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.dividePixelwise(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
+            return Kernels.divideImages(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.dividePixelwise(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
+            boolean result = Kernels.divideImages(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
             releaseBuffers(args);
             return result;
         }

@@ -25,10 +25,10 @@ public class MinimumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
         int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
-            return Kernels.minimumSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
+            return Kernels.minimumSliceBySliceSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.minimumSliceBySlice(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
+            boolean result = Kernels.minimumSliceBySliceSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }
@@ -41,7 +41,7 @@ public class MinimumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
 
     @Override
     public String getDescription() {
-        return "Computes the local minimum of a pixels elllipsoidal 2D neighborhood in an image stack \n" +
+        return "Computes the local minimumSphere of a pixels elllipsoidal 2D neighborhood in an image stack \n" +
                 "slice by slice. The ellipses size is specified by its half-width and half-height (radius).";
     }
 

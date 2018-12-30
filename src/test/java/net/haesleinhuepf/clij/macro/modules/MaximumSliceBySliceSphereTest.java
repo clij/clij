@@ -31,7 +31,7 @@ public class MaximumSliceBySliceSphereTest {
         ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.maximumSliceBySlice(clij, inputCL, outputCL, 3, 3);
+        Kernels.maximumSliceBySliceSphere(clij, inputCL, outputCL, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
@@ -59,7 +59,7 @@ public class MaximumSliceBySliceSphereTest {
         ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.maximumSliceBySlice(clij, inputCL, outputCL, 3, 3);
+        Kernels.maximumSliceBySliceSphere(clij, inputCL, outputCL, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 

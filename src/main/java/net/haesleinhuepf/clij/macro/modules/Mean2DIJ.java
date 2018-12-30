@@ -65,7 +65,7 @@ public class Mean2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public String getDescription() {
-        return "Computes the local mean average of a pixels circle-like neighborhood. The circle size is specified by \n" +
+        return "Computes the local meanSphere average of a pixels circle-like neighborhood. The circle size is specified by \n" +
                 "its radius.\n\n" +
                 "This operation is equal to ImageJs 'Mean...' menu.";
     }

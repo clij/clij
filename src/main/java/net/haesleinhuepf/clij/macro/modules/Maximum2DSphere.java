@@ -24,10 +24,10 @@ public class Maximum2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlug
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
 
         if (containsCLImageArguments()) {
-            return Kernels.maximum(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
+            return Kernels.maximumSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.maximum(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
+            boolean result = Kernels.maximumSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }
@@ -40,7 +40,7 @@ public class Maximum2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlug
 
     @Override
     public String getDescription() {
-        return "Computes the local maximum of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
+        return "Computes the local maximumSphere of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
                 "its half-width and half-height (radius).";
     }
 

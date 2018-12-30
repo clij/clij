@@ -20,10 +20,10 @@ public class MaximumImages extends AbstractCLIJPlugin implements CLIJMacroPlugin
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.maxPixelwise(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
+            return Kernels.maximumImages(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.maxPixelwise(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
+            boolean result = Kernels.maximumImages(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
             releaseBuffers(args);
             return result;
         }
@@ -36,7 +36,7 @@ public class MaximumImages extends AbstractCLIJPlugin implements CLIJMacroPlugin
 
     @Override
     public String getDescription() {
-        return "Computes the maximum of a pair of pixel values x, y from two given images X and Y.\n\nf(x, s) = max(x, y)";
+        return "Computes the maximumSphere of a pair of pixel values x, y from two given images X and Y.\n\nf(x, s) = max(x, y)";
     }
 
     @Override

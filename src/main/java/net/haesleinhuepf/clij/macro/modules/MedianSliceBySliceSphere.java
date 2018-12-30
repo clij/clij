@@ -24,10 +24,10 @@ public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJ
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
 
         if (containsCLImageArguments()) {
-            return Kernels.medianSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
+            return Kernels.medianSliceBySliceSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.medianSliceBySlice(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
+            boolean result = Kernels.medianSliceBySliceSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }
@@ -40,7 +40,7 @@ public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJ
 
     @Override
     public String getDescription() {
-        return "Computes the local median of a pixels ellipsoidal neighborhood. This is done slice-by-slice in a 3D \n" +
+        return "Computes the local medianSphere of a pixels ellipsoidal neighborhood. This is done slice-by-slice in a 3D \n" +
                 "image stack. The ellipses size is specified by its half-width and half-height (radius).\n\n" +
                 "For technical reasons, the area of the ellipse must have less than 1000 pixels.";
     }

@@ -20,10 +20,10 @@ public class MinimumImageAndScalar extends AbstractCLIJPlugin implements CLIJMac
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.minPixelwiseScalar(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asFloat(args[2]));
+            return Kernels.minimumImageAndScalar(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asFloat(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.minPixelwiseScalar(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asFloat(args[2]));
+            boolean result = Kernels.minimumImageAndScalar(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asFloat(args[2]));
             releaseBuffers(args);
             return result;
         }
@@ -36,7 +36,7 @@ public class MinimumImageAndScalar extends AbstractCLIJPlugin implements CLIJMac
 
     @Override
     public String getDescription() {
-        return "Computes the maximum of a constant scalar s and each pixel value x in a given image X.\n\nf(x, s) = min(x, s)";
+        return "Computes the maximumSphere of a constant scalar s and each pixel value x in a given image X.\n\nf(x, s) = min(x, s)";
     }
 
     @Override

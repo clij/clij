@@ -22,7 +22,7 @@ public class MaximumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroP
         double maximumGreyValue = 0;
         if (containsCLImageArguments()) {
             maximumGreyValue = Kernels.maximumOfAllPixels(clij, (ClearCLImage)( args[0]));
-            } else {
+        } else {
             Object[] args = openCLBufferArgs();
             maximumGreyValue = Kernels.maximumOfAllPixels(clij, (ClearCLBuffer)( args[0]));
             releaseBuffers(args);
@@ -42,7 +42,7 @@ public class MaximumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getDescription() {
-        return "Determines the maximum of all pixels in a given image. It will be stored in a new row of ImageJs\n" +
+        return "Determines the maximumSphere of all pixels in a given image. It will be stored in a new row of ImageJs\n" +
                 "Results table in the column 'Max'.";
     }
 

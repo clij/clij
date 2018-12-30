@@ -22,10 +22,10 @@ public class Mean2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
         int radiusY = asInteger(args[3]);
 
         if (containsCLBufferArguments()) {
-            boolean result = Kernels.meanSeparable(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, 0);
+            boolean result = Kernels.meanBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, 0);
             return result;
         } else {
-            return Kernels.meanSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, 0);
+            return Kernels.meanBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, 0);
         }
     }
 
@@ -36,7 +36,7 @@ public class Mean2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
 
     @Override
     public String getDescription() {
-        return "Computes the local mean average of a pixels rectangular neighborhood. The rectangles size is specified by \n" +
+        return "Computes the local meanSphere average of a pixels rectangular neighborhood. The rectangles size is specified by \n" +
                 "its half-width and half-height (radius).";
     }
 

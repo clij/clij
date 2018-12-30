@@ -19,10 +19,10 @@ public class MultiplyImageAndScalar extends AbstractCLIJPlugin implements CLIJMa
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.multiplyScalar(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asFloat(args[2]));
+            return Kernels.multiplyImageAndScalar(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asFloat(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.multiplyScalar(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asFloat(args[2]));
+            boolean result = Kernels.multiplyImageAndScalar(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asFloat(args[2]));
             releaseBuffers(args);
             return result;
         }

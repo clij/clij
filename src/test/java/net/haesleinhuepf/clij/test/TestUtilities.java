@@ -163,10 +163,10 @@ public class TestUtilities
     }
     ClearCLBuffer result = clij.createCLBuffer(buffer.getDimensions(), type);
 
-    Kernels.multiplyScalar(clij, buffer, temp, maximum - minimum);
-    Kernels.addScalar(clij, temp, buffer, minimum);
-    Kernels.maxPixelwiseScalar(clij, buffer, temp, minimum);
-    Kernels.minPixelwiseScalar(clij, temp, buffer, maximum);
+    Kernels.multiplyImageAndScalar(clij, buffer, temp, maximum - minimum);
+    Kernels.addImageAndScalar(clij, temp, buffer, minimum);
+    Kernels.maximumImageAndScalar(clij, buffer, temp, minimum);
+    Kernels.minimumImageAndScalar(clij, temp, buffer, maximum);
     Kernels.copy(clij, buffer, result);
 
     return clij.convert(result, ImagePlus.class);

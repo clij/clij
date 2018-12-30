@@ -24,10 +24,10 @@ public class Mean2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin,
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
 
         if (containsCLImageArguments()) {
-            return Kernels.mean(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
+            return Kernels.meanSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.mean(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
+            boolean result = Kernels.meanSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }
@@ -40,7 +40,7 @@ public class Mean2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getDescription() {
-        return "Computes the local mean average of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
+        return "Computes the local meanSphere average of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
                 "its half-width and half-height (radius).";
     }
 

@@ -30,7 +30,7 @@ public class Maximum2DSphereTest {
         ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.maximum(clij, inputCL, outputCL, 3, 3);
+        Kernels.maximumSphere(clij, inputCL, outputCL, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
@@ -58,7 +58,7 @@ public class Maximum2DSphereTest {
         ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.maximum(clij, inputCL, outputCL, 3, 3);
+        Kernels.maximumSphere(clij, inputCL, outputCL, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 

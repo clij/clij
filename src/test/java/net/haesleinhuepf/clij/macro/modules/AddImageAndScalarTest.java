@@ -26,7 +26,7 @@ public class AddImageAndScalarTest {
         ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage dst = clij.convert(testImp1, ClearCLImage.class);
 
-        Kernels.addScalar(clij, src, dst, 1f);
+        Kernels.addImageAndScalar(clij, src, dst, 1f);
         ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
@@ -49,7 +49,7 @@ public class AddImageAndScalarTest {
         ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.convert(testImp1, ClearCLBuffer.class);
 
-        Kernels.addScalar(clij, src, dst, 1f);
+        Kernels.addImageAndScalar(clij, src, dst, 1f);
         ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
@@ -71,7 +71,7 @@ public class AddImageAndScalarTest {
         ClearCLImage src = clij.convert(testImp2D1, ClearCLImage.class);
         ClearCLImage dst = clij.convert(testImp2D1, ClearCLImage.class);
 
-        Kernels.addScalar(clij, src, dst, 1f);
+        Kernels.addImageAndScalar(clij, src, dst, 1f);
         ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));
@@ -92,7 +92,7 @@ public class AddImageAndScalarTest {
         ClearCLBuffer src = clij.convert(testImp2D1, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.convert(testImp2D1, ClearCLBuffer.class);
 
-        Kernels.addScalar(clij, src, dst, 1f);
+        Kernels.addImageAndScalar(clij, src, dst, 1f);
         ImagePlus addedFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(added, addedFromCL));

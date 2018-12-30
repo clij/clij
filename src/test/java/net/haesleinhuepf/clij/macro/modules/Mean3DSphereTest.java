@@ -30,7 +30,7 @@ public class Mean3DSphereTest {
         ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.mean(clij, inputCL, outputCL, 3, 3, 3);
+        Kernels.meanSphere(clij, inputCL, outputCL, 3, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
@@ -66,8 +66,8 @@ public class Mean3DSphereTest {
 
         //Kernels.copy(clij, inputCL, outputCL);
 
-        Kernels.mean(clij, inputCL, outputCL, 3, 3, 3);
-        //Kernels.mean(clij, inputCL, outputCL, 3, 3, 3);
+        Kernels.meanSphere(clij, inputCL, outputCL, 3, 3, 3);
+        //Kernels.meanSphere(clij, inputCL, outputCL, 3, 3, 3);
 
         //if (true) return;
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);

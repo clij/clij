@@ -33,7 +33,7 @@ public class AbstractMacroPluginTest {
         //}
 
         ClearCLBuffer diffBuffer = clij.createCLBuffer(buffer1);
-        Kernels.addWeightedPixelwise(clij, buffer1, buffer2, diffBuffer, 1f, -1f);
+        Kernels.addImagesWeighted(clij, buffer1, buffer2, diffBuffer, 1f, -1f);
 
         double maxDifference = Kernels.maximumOfAllPixels(clij, diffBuffer);
         double minDifference = Kernels.minimumOfAllPixels(clij, diffBuffer);

@@ -19,10 +19,10 @@ public class MeanZProjection extends AbstractCLIJPlugin implements CLIJMacroPlug
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.meanProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
+            return Kernels.meanZProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.meanProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
+            boolean result = Kernels.meanZProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
             releaseBuffers(args);
             return result;
         }
@@ -41,7 +41,7 @@ public class MeanZProjection extends AbstractCLIJPlugin implements CLIJMacroPlug
 
     @Override
     public String getDescription() {
-        return "Determines the mean average projection of an image along Z.";
+        return "Determines the meanSphere average projection of an image along Z.";
     }
 
     @Override

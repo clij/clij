@@ -22,10 +22,10 @@ public class Minimum2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin,
         int radiusY = asInteger(args[3]);
 
         if (containsCLBufferArguments()) {
-            boolean result = Kernels.minimumSeparable(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, 0);
+            boolean result = Kernels.minimumBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, 0);
             return result;
         } else {
-            return Kernels.minimumSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, 0);
+            return Kernels.minimumBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, 0);
         }
     }
 
@@ -36,7 +36,7 @@ public class Minimum2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getDescription() {
-        return "Computes the local minimum of a pixels rectangular neighborhood. The rectangles size is specified by \n" +
+        return "Computes the local minimumSphere of a pixels rectangular neighborhood. The rectangles size is specified by \n" +
                 "its half-width and half-height (radius).";
     }
 

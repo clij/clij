@@ -30,7 +30,7 @@ public class AddImagesTest {
         ClearCLImage dst = clij.createCLImage(src);
         //convert(testImp1, ClearCLImage.class);
 
-        Kernels.addPixelwise(clij, src, src1, dst);
+        Kernels.addImages(clij, src, src1, dst);
         ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
         //clij.convert(dst, ImagePlus.class);
 
@@ -60,7 +60,7 @@ public class AddImagesTest {
         ClearCLBuffer dst = clij.createCLBuffer(src);
         //convert(testImp1, ClearCLBuffer.class);
 
-        Kernels.addPixelwise(clij, src, src1, dst);
+        Kernels.addImages(clij, src, src1, dst);
         ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
         //clij.convert(dst, ImagePlus.class);
 
@@ -89,7 +89,7 @@ public class AddImagesTest {
         ClearCLImage dst = clij.createCLImage(src);
         //convert(testImp2D1, ClearCLImage.class);
 
-        Kernels.addPixelwise(clij, src, src1, dst);
+        Kernels.addImages(clij, src, src1, dst);
         ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
         //clij.convert(dst, ImagePlus.class);
 
@@ -118,7 +118,7 @@ public class AddImagesTest {
         ClearCLBuffer dst = clij.createCLBuffer(src);
         //convert(testImp2D1, ClearCLBuffer.class);
 
-        Kernels.addPixelwise(clij, src, src1, dst);
+        Kernels.addImages(clij, src, src1, dst);
         ImagePlus sumImpFromCL = clij.convert(dst, ImagePlus.class);
         //clij.convert(dst, ImagePlus.class);
 

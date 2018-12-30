@@ -20,10 +20,10 @@ public class AddImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.addPixelwise(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
+            return Kernels.addImages(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.addPixelwise(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
+            boolean result = Kernels.addImages(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
             releaseBuffers(args);
             return result;
         }

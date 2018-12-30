@@ -24,14 +24,14 @@ public class Blur2DFast extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
         if (containsCLBufferArguments()) {
             // convert all arguments to CLImages
             Object[] args = openCLImageArgs();
-            boolean result = Kernels.blurSeparable(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), sigmaX, sigmaY, 0);
+            boolean result = Kernels.blurFast(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), sigmaX, sigmaY, 0);
             // copy result back to the bufffer
             Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
             // cleanup
             releaseImages(args);
             return result;
         } else {
-            return Kernels.blurSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), sigmaX, sigmaY, 0);
+            return Kernels.blurFast(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), sigmaX, sigmaY, 0);
         }
     }
 

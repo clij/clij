@@ -20,10 +20,10 @@ public class MinimumImages extends AbstractCLIJPlugin implements CLIJMacroPlugin
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.minPixelwise(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
+            return Kernels.minimumImages(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.minPixelwise(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
+            boolean result = Kernels.minimumImages(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
             releaseBuffers(args);
             return result;
         }
@@ -36,7 +36,7 @@ public class MinimumImages extends AbstractCLIJPlugin implements CLIJMacroPlugin
 
     @Override
     public String getDescription() {
-        return "Computes the minimum of a pair of pixel values x, y from two given images X and Y.\n\nf(x, s) = min(x, y)";
+        return "Computes the minimumSphere of a pair of pixel values x, y from two given images X and Y.\n\nf(x, s) = min(x, y)";
     }
 
     @Override

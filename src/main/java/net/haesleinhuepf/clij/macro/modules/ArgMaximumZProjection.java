@@ -19,10 +19,10 @@ public class ArgMaximumZProjection extends AbstractCLIJPlugin implements CLIJMac
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.argMaxProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
+            return Kernels.argMaximumZProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.argMaxProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
+            boolean result = Kernels.argMaximumZProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]));
             releaseBuffers(args);
             return result;
         }
@@ -41,8 +41,8 @@ public class ArgMaximumZProjection extends AbstractCLIJPlugin implements CLIJMac
 
     @Override
     public String getDescription() {
-        return "Determines the maximum projection of an image along Z." +
-                "\nFurthermore, another image is generated containing the z-index where the maximum was found (zero based).";
+        return "Determines the maximumSphere projection of an image along Z." +
+                "\nFurthermore, another image is generated containing the z-index where the maximumSphere was found (zero based).";
     }
 
     @Override

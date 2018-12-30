@@ -31,7 +31,7 @@ public class Median3DSphereTest {
         ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.median(clij, inputCL, outputCL, 3, 3, 3);
+        Kernels.medianSphere(clij, inputCL, outputCL, 3, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
@@ -65,7 +65,7 @@ public class Median3DSphereTest {
         ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.median(clij, inputCL, outputCL, 3, 3, 3);
+        Kernels.medianSphere(clij, inputCL, outputCL, 3, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 

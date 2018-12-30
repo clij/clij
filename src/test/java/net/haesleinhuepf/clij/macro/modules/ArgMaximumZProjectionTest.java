@@ -66,7 +66,7 @@ public class ArgMaximumZProjectionTest {
                                 src.getHeight()},
                         src.getChannelDataType());
 
-        Kernels.argMaxProjection(clij, src, dst, dst_arg);
+        Kernels.argMaximumZProjection(clij, src, dst, dst_arg);
 
         ImagePlus maxProjectionCL = clij.convert(dst, ImagePlus.class);
         ImagePlus
@@ -134,7 +134,7 @@ public class ArgMaximumZProjectionTest {
                                 src.getHeight()},
                         src.getNativeType());
 
-        Kernels.argMaxProjection(clij, src, dst, dst_arg);
+        Kernels.argMaximumZProjection(clij, src, dst, dst_arg);
 
         ImagePlus maxProjectionCL = clij.convert(dst, ImagePlus.class);
         ImagePlus

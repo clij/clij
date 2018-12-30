@@ -27,7 +27,7 @@ public class DivideImagesTest {
         ClearCLImage src1 = clij.convert(testImp2, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
-        Kernels.dividePixelwise(clij, src, src1, dst);
+        Kernels.divideImages(clij, src, src1, dst);
 
         ImagePlus dividedCL = clij.convert(dst, ImagePlus.class);
 
@@ -57,7 +57,7 @@ public class DivideImagesTest {
         ClearCLBuffer src1 = clij.convert(testImp2, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
-        Kernels.dividePixelwise(clij, src, src1, dst);
+        Kernels.divideImages(clij, src, src1, dst);
 
         ImagePlus dividedCL = clij.convert(dst, ImagePlus.class);
 
@@ -86,7 +86,7 @@ public class DivideImagesTest {
         ClearCLImage src1 = clij.convert(testImp2D2, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
-        Kernels.dividePixelwise(clij, src, src1, dst);
+        Kernels.divideImages(clij, src, src1, dst);
 
         ImagePlus dividedCL = clij.convert(dst, ImagePlus.class);
 
@@ -111,7 +111,7 @@ public class DivideImagesTest {
         ClearCLBuffer src1 = clij.convert(testImp2D2, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
-        Kernels.dividePixelwise(clij, src, src1, dst);
+        Kernels.divideImages(clij, src, src1, dst);
 
         ImagePlus dividedCL = clij.convert(dst, ImagePlus.class);
 

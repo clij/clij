@@ -25,8 +25,8 @@ public class Minimum2DBoxTest {
         ClearCLImage minimumCL = clij.createCLImage(src);
         ClearCLImage minimumSepCL = clij.createCLImage(src);
 
-        Kernels.minimum(clij, src, minimumCL, 7,7);
-        Kernels.minimumSeparable(clij, src, minimumSepCL, 3, 3, 3);
+        Kernels.minimumSphere(clij, src, minimumCL, 7,7);
+        Kernels.minimumBox(clij, src, minimumSepCL, 3, 3, 3);
 
         ImagePlus minimumImp = clij.convert(minimumCL, ImagePlus.class);
         ImagePlus minimumSepImp = clij.convert(minimumSepCL, ImagePlus.class);
@@ -54,8 +54,8 @@ public class Minimum2DBoxTest {
         ClearCLBuffer minimumCL = clij.createCLBuffer(src);
         ClearCLBuffer minimumSepCL = clij.createCLBuffer(src);
 
-        Kernels.minimum(clij, src, minimumCL, 3,3);
-        Kernels.minimumSeparable(clij, src, minimumSepCL, 1, 1, 1);
+        Kernels.minimumSphere(clij, src, minimumCL, 3,3);
+        Kernels.minimumBox(clij, src, minimumSepCL, 1, 1, 1);
 
         ImagePlus minimumImp = clij.convert(minimumCL, ImagePlus.class);
         ImagePlus minimumSepImp = clij.convert(minimumSepCL, ImagePlus.class);

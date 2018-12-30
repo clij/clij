@@ -50,7 +50,7 @@ public class Mean2DBenchmark extends AbstractMacroPluginTest {
             long clMean2DBoxDuration = System.currentTimeMillis() - time;
 
             System.out.println("Radius " + radius);
-            System.out.println("IJ mean   duration " + ijDuration + " msec");
+            System.out.println("IJ meanSphere   duration " + ijDuration + " msec");
             System.out.println("CL mean2DIJ duration " + clMean2DIJDuration + " msec");
             System.out.println("CL mean2DEllipse duration " + clMean2DEllipseDuration + " msec");
             System.out.println("CL mean2DBox duration " + clMean2DBoxDuration + " msec");

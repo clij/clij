@@ -24,10 +24,10 @@ public class MaximumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
 
         if (containsCLImageArguments()) {
-            return Kernels.maximumSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
+            return Kernels.maximumSliceBySliceSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.maximumSliceBySlice(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
+            boolean result = Kernels.maximumSliceBySliceSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }
@@ -40,7 +40,7 @@ public class MaximumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
 
     @Override
     public String getDescription() {
-        return "Computes the local maximum of a pixels ellipsoidal 2D neighborhood in an image stack \n" +
+        return "Computes the local maximumSphere of a pixels ellipsoidal 2D neighborhood in an image stack \n" +
                 "slice by slice. The ellipses size is specified by its half-width and half-height (radius).";
     }
 

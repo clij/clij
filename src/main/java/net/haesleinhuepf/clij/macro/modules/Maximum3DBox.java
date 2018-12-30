@@ -23,10 +23,10 @@ public class Maximum3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin,
         int radiusZ = asInteger(args[4]);
 
         if (containsCLBufferArguments()) {
-            boolean result = Kernels.maximumSeparable(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
+            boolean result = Kernels.maximumBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
             return result;
         } else {
-            return Kernels.maximumSeparable(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
+            return Kernels.maximumBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
         }
     }
 
@@ -37,7 +37,7 @@ public class Maximum3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getDescription() {
-        return "Computes the local maximum of a pixels cube neighborhood. The cubes size is specified by \n" +
+        return "Computes the local maximumSphere of a pixels cube neighborhood. The cubes size is specified by \n" +
                 "its half-width, half-height and half-depth (radius).";
     }
 

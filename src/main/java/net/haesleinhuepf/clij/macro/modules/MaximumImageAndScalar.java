@@ -20,10 +20,10 @@ public class MaximumImageAndScalar extends AbstractCLIJPlugin implements CLIJMac
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.maxPixelwiseScalar(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asFloat(args[2]));
+            return Kernels.maximumImageAndScalar(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asFloat(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.maxPixelwiseScalar(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asFloat(args[2]));
+            boolean result = Kernels.maximumImageAndScalar(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asFloat(args[2]));
             releaseBuffers(args);
             return result;
         }
@@ -37,7 +37,7 @@ public class MaximumImageAndScalar extends AbstractCLIJPlugin implements CLIJMac
 
     @Override
     public String getDescription() {
-        return "Computes the maximum of a constant scalar s and each pixel value x in a given image X.\n\nf(x, s) = max(x, s)";
+        return "Computes the maximumSphere of a constant scalar s and each pixel value x in a given image X.\n\nf(x, s) = max(x, s)";
     }
 
     @Override

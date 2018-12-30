@@ -24,10 +24,10 @@ public class Median2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugi
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
 
         if (containsCLImageArguments()) {
-            return Kernels.median(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
+            return Kernels.medianSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.median(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
+            boolean result = Kernels.medianSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }
@@ -40,7 +40,7 @@ public class Median2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getDescription() {
-        return "Computes the local median of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
+        return "Computes the local medianSphere of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
                 "its half-width and half-height (radius).\n\n" +
                 "For technical reasons, the area of the ellipse must have less than 1000 pixels.";
     }

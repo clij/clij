@@ -30,7 +30,7 @@ public class MinimumSliceBySliceSphereTest {
         ClearCLImage inputCL = clij.convert(testImage, ClearCLImage.class);
         ClearCLImage outputCL = clij.createCLImage(inputCL);
 
-        Kernels.minimumSliceBySlice(clij, inputCL, outputCL, 3, 3);
+        Kernels.minimumSliceBySliceSphere(clij, inputCL, outputCL, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 
@@ -58,7 +58,7 @@ public class MinimumSliceBySliceSphereTest {
         ClearCLBuffer inputCL = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer outputCL = clij.createCLBuffer(inputCL);
 
-        Kernels.minimumSliceBySlice(clij, inputCL, outputCL, 3, 3);
+        Kernels.minimumSliceBySliceSphere(clij, inputCL, outputCL, 3, 3);
 
         ImagePlus result = clij.convert(outputCL, ImagePlus.class);
 

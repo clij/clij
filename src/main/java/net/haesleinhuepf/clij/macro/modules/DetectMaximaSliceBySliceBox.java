@@ -19,10 +19,10 @@ public class DetectMaximaSliceBySliceBox extends AbstractCLIJPlugin implements C
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.detectMaximaSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]));
+            return Kernels.detectMaximaSliceBySliceBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.detectMaximaSliceBySlice(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]));
+            boolean result = Kernels.detectMaximaSliceBySliceBox(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]));
             releaseBuffers(args);
             return result;
         }

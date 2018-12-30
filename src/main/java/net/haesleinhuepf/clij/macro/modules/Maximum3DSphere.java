@@ -25,10 +25,10 @@ public class Maximum3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlug
         int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
-            return Kernels.maximum(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
+            return Kernels.maximumSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.maximum(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
+            boolean result = Kernels.maximumSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
             releaseBuffers(args);
             return result;
         }
@@ -41,7 +41,7 @@ public class Maximum3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlug
 
     @Override
     public String getDescription() {
-        return "Computes the local maximum of a pixels spherical neighborhood. The spheres size is specified by \n" +
+        return "Computes the local maximumSphere of a pixels spherical neighborhood. The spheres size is specified by \n" +
                 "its half-width, half-height and half-depth (radius).";
     }
 

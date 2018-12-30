@@ -26,7 +26,7 @@ public class LocalThresholdDemo {
         ClearCLImage temp = clij.createCLImage(input);
 
         // blur
-        Kernels.blurSeparable(clij, input, temp, 2, 2, 2);
+        Kernels.blurFast(clij, input, temp, 2, 2, 2);
 
         // local threshold
         Kernels.localThreshold(clij, input, output, temp);

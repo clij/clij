@@ -19,10 +19,10 @@ public class MaximumXYZProjection extends AbstractCLIJPlugin implements CLIJMacr
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.maxProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]), asInteger(args[3]), asInteger(args[4]));
+            return Kernels.maximumXYZProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]), asInteger(args[3]), asInteger(args[4]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.maxProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]), asInteger(args[3]), asInteger(args[4]));
+            boolean result = Kernels.maximumXYZProjection(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), asInteger(args[2]), asInteger(args[3]), asInteger(args[4]));
             releaseBuffers(args);
             return result;
         }
@@ -42,7 +42,7 @@ public class MaximumXYZProjection extends AbstractCLIJPlugin implements CLIJMacr
 
     @Override
     public String getDescription() {
-        return "Determines the maximum projection of an image along a given dimension. Furthermore, the X and Y\n" +
+        return "Determines the maximumSphere projection of an image along a given dimension. Furthermore, the X and Y\n" +
                 " dimesions of the resulting image must be specified by the user according to its definition:\n" +
                 "X = 0\n" +
                 "Y = 1\n" +
