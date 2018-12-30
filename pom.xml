@@ -137,7 +137,7 @@
 
 	<repositories>
 		<repository>
-			<id>hslh</id>
+			<id>clij</id>
 			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
 		</repository>
 	</repositories>
@@ -145,7 +145,7 @@
 	<distributionManagement>
 
 		<repository>
-			<id>bintray-haesleinhuepf-snapshots</id>
+			<id>bintray-haesleinhuepf-clij</id>
 			<name>bintray-snapshots</name>
 			<url>https://api.bintray.com/maven/haesleinhuepf/clij/clij/;publish=1</url>
 		</repository>
