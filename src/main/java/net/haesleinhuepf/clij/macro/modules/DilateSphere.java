@@ -14,7 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_dilateBox")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_dilateSphere")
 public class DilateSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
