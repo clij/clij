@@ -4,7 +4,9 @@ import clearcl.ClearCLBuffer;
 import clearcl.util.ElapsedTime;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.Macro;
 import ij.WindowManager;
+import ij.gui.GenericDialog;
 import ij.macro.ExtensionDescriptor;
 import ij.macro.MacroExtension;
 import net.haesleinhuepf.clij.CLIJ;
@@ -58,6 +60,8 @@ public class CLIJHandler implements MacroExtension {
         ElapsedTime.measureForceOutput("Whole extension handling", () -> {
             ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
             HashMap<Integer, String> missingImageIndices = new HashMap<Integer, String>();
+            HashMap<Integer, String> missingImageIndicesDescriptions = new HashMap<Integer, String>();
+
             CLIJMacroPlugin plugin = null;
             //System.out.println("Handle Ext " + name);
             try {
@@ -88,6 +92,7 @@ public class CLIJHandler implements MacroExtension {
                                     //IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
                                     //IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
                                     missingImageIndices.put(i, (String) args[i]);
+                                    missingImageIndicesDescriptions.put(i, pluginParameters[i]);
                                     parsedArguments[i] = (String) args[i];
                                 } else {
                                     existingImageIndices.add(i);
@@ -120,13 +125,16 @@ public class CLIJHandler implements MacroExtension {
                 if (existingImageIndices.size() > 0) {
                     for (int i : missingImageIndices.keySet()) {
                         String nameInCache = missingImageIndices.get(i);
-                        if (bufferMap.keySet().contains(nameInCache)) {
-                            parsedArguments[i] = bufferMap.get(nameInCache);
-                        } else {
-                            // copy first to hand over all parameters as they came
-                            plugin.setArgs(parsedArguments);
-                            parsedArguments[i] = plugin.createOutputBufferFromSource((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
-                            bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
+                        String parameterDescription = missingImageIndicesDescriptions.get(i);
+                        if (parameterDescription.toLowerCase().contains("destination")) { // only generate destination images
+                            if (bufferMap.keySet().contains(nameInCache)) {
+                                parsedArguments[i] = bufferMap.get(nameInCache);
+                            } else {
+                                // copy first to hand over all parameters as they came
+                                plugin.setArgs(parsedArguments);
+                                parsedArguments[i] = plugin.createOutputBufferFromSource((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
+                                bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
+                            }
                         }
                     }
                 }
@@ -134,11 +142,33 @@ public class CLIJHandler implements MacroExtension {
                 // hand over complete parameters again
                 plugin.setArgs(parsedArguments);
 
+                // check if all requested images are set.
+                boolean allImagesSet = true;
+                int i = 0;
+                for(String parameter : pluginParameters) {
+                    if (parameter.startsWith("Image")) {
+                        if (!(parsedArguments[i] instanceof ClearCLBuffer)) {
+                            String parameterName = parameter.split(" ")[1];
+                            GenericDialog gd = new GenericDialog(plugin.getName() + " Error");
+                            gd.addMessage("Error when calling " + plugin.getName() + ": " +
+                                    "The image parameter " + parameterName+ "('" + parsedArguments[i] + "') doesn't exist in GPUs memory. Consider calling\n\n" +
+                                    "Ext.CLIJ_push(\"" + parsedArguments[i] + "\");");
+                            gd.showDialog();
+                            System.out.println("Couldn't execute CLIJ plugin: Image '" + parameterName+ "' not found in GPU memory!");
+                            Macro.abort();
+                            allImagesSet = false;
+                            break;
+                        }
+                    }
+                    i++;
+                }
 
-                if (plugin instanceof CLIJOpenCLProcessor) {
-                    ((CLIJOpenCLProcessor) plugin).executeCL();
-                } else {
-                    System.out.println("Couldn't execute CLIJ plugin!");
+                if (allImagesSet) {
+                    if (plugin instanceof CLIJOpenCLProcessor) {
+                        ((CLIJOpenCLProcessor) plugin).executeCL();
+                    } else {
+                        System.out.println("Couldn't execute CLIJ plugin!");
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -173,6 +203,7 @@ public class CLIJHandler implements MacroExtension {
     public void pushToGPU(String arg) {
         ImagePlus imp = WindowManager.getImage(arg);
         bufferMap.put(arg, clij.convert(imp, ClearCLBuffer.class));
+        imp.changes = false;
     }
 
     @Override
