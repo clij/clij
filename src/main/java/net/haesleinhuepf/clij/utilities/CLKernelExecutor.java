@@ -3,9 +3,11 @@ package net.haesleinhuepf.clij.utilities;
 import clearcl.*;
 import clearcl.enums.ImageChannelDataType;
 import clearcl.util.ElapsedTime;
+import com.sun.org.apache.xalan.internal.xsltc.dom.SimpleResultTreeImpl;
 import coremem.enums.NativeTypeEnum;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -31,6 +33,7 @@ public class CLKernelExecutor {
     private String mSourceFile;
 
     private HashMap<String, ClearCLProgram> mProgramCacheMap = new HashMap();
+    ClearCLProgram currentProgram = null;
 
     public CLKernelExecutor(ClearCLContext pContext,
                             Class pAnchorClass,
@@ -94,8 +97,8 @@ public class CLKernelExecutor {
             lDefines.put("DTYPE_IN", typeName);
             lDefines.put("DTYPE_IMAGE_IN_3D", "__global " + typeName + "*");
             lDefines.put("DTYPE_IMAGE_IN_2D", "__global " + typeName + "*");
-            lDefines.put("READ_IMAGE_2D(a,b,c)", "read_buffer2d" + typeId + "(" + width + "," + height + "," + depth + ",a,b,c)");
-            lDefines.put("READ_IMAGE_3D(a,b,c)", "read_buffer3d" + typeId + "(" + width + "," + height + "," + depth + ",a,b,c)");
+            lDefines.put("READ_IMAGE_2D(a,b,c)", "read_buffer2d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
+            lDefines.put("READ_IMAGE_3D(a,b,c)", "read_buffer3d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
             //lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
             //lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
             //lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
@@ -103,8 +106,8 @@ public class CLKernelExecutor {
             lDefines.put("DTYPE_OUT", typeName);
             lDefines.put("DTYPE_IMAGE_OUT_3D", "__global " + typeName + "*");
             lDefines.put("DTYPE_IMAGE_OUT_2D", "__global " + typeName + "*");
-            lDefines.put("WRITE_IMAGE_2D(a,b,c)", "write_buffer2d" + typeId + "(" + width + "," + height + "," + depth + ",a,b,c)");
-            lDefines.put("WRITE_IMAGE_3D(a,b,c)", "write_buffer3d" + typeId + "(" + width + "," + height + "," + depth + ",a,b,c)");
+            lDefines.put("WRITE_IMAGE_2D(a,b,c)", "write_buffer2d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
+            lDefines.put("WRITE_IMAGE_3D(a,b,c)", "write_buffer3d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
             //lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
             //lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
             //lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
@@ -209,34 +212,58 @@ public class CLKernelExecutor {
         }
 
         // deal with image width/height/depth for all images and buffers
-
+        ArrayList<String> definedParameterKeys = new ArrayList<String>();
         for (String key : mParameterMap.keySet()) {
             if (mParameterMap.get(key) instanceof ClearCLImage) {
                 ClearCLImage image = (ClearCLImage) mParameterMap.get(key);
-                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_WIDTH", image.getWidth());
-                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_HEIGHT", image.getHeight());
-                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_DEPTH", image.getDepth());
+                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_WIDTH", image.getWidth());
+                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_HEIGHT", image.getHeight());
+                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_DEPTH", image.getDepth());
             } else if (mParameterMap.get(key) instanceof ClearCLBuffer) {
                 ClearCLBuffer image = (ClearCLBuffer) mParameterMap.get(key);
-                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_WIDTH", image.getWidth());
-                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_HEIGHT", image.getHeight());
-                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_DEPTH", image.getDepth());
+                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_WIDTH", image.getWidth());
+                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_HEIGHT", image.getHeight());
+                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_DEPTH", image.getDepth());
             }
+            definedParameterKeys.add(key);
         }
 
-        lOpenCLDefines.put("GET_IMAGE_IN_WIDTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _WIDTH");
-        lOpenCLDefines.put("GET_IMAGE_IN_HEIGHT(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _HEIGHT");
-        lOpenCLDefines.put("GET_IMAGE_IN_DEPTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _DEPTH");
-        lOpenCLDefines.put("GET_IMAGE_OUT_WIDTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _WIDTH");
-        lOpenCLDefines.put("GET_IMAGE_OUT_HEIGHT(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _HEIGHT");
-        lOpenCLDefines.put("GET_IMAGE_OUT_DEPTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _DEPTH");
-        lOpenCLDefines.put("GET_IMAGE_WIDTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _WIDTH");
-        lOpenCLDefines.put("GET_IMAGE_HEIGHT(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _HEIGHT");
-        lOpenCLDefines.put("GET_IMAGE_DEPTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _DEPTH");
+
+        lOpenCLDefines.put("GET_IMAGE_IN_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
+        lOpenCLDefines.put("GET_IMAGE_IN_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
+        lOpenCLDefines.put("GET_IMAGE_IN_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
+        lOpenCLDefines.put("GET_IMAGE_OUT_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
+        lOpenCLDefines.put("GET_IMAGE_OUT_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
+        lOpenCLDefines.put("GET_IMAGE_OUT_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
+        lOpenCLDefines.put("GET_IMAGE_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
+        lOpenCLDefines.put("GET_IMAGE_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
+        lOpenCLDefines.put("GET_IMAGE_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
 
         //for (String define : lOpenCLDefines.keySet()) {
         //  System.out.println(define + " = " + lOpenCLDefines.get(define));
         //}
+
+
+        // add undefined parameters to define list
+        ArrayList<String> variableNames = getImageVariablesFromSource();
+        for (String variableName : variableNames) {
+
+            boolean existsAlready = false;
+            for (String key : definedParameterKeys) {
+                if(key.compareTo(variableName) == 0) {
+                    existsAlready = true;
+                    break;
+                }
+            }
+            if (!existsAlready) {
+                lOpenCLDefines.put("IMAGE_SIZE_" + variableName + "_WIDTH", 0);
+                lOpenCLDefines.put("IMAGE_SIZE_" + variableName + "_HEIGHT", 0);
+                lOpenCLDefines.put("IMAGE_SIZE_" + variableName + "_DEPTH", 0);
+            }
+        }
+
+
+
 
         ClearCLKernel lClearCLKernel = null;
 
@@ -293,6 +320,67 @@ public class CLKernelExecutor {
         return true;
     }
 
+    private HashMap<String, ArrayList<String>> variableListMap = new HashMap<String, ArrayList<String>>();
+    private ArrayList<String> getImageVariablesFromSource() {
+        String key = mAnchorClass.getName() + "_" + mProgramFilename;
+
+        if (variableListMap.containsKey(key)) {
+            return variableListMap.get(key);
+        }
+        ArrayList<String> variableList = new ArrayList<String>();
+
+        String sourceCode = getProgramSource();
+        String[] kernels = sourceCode.split("__kernel");
+
+        kernels[0] = "";
+        for (String kernel : kernels) {
+            if (kernel.length() > 0 ) {
+                //System.out.println("Parsing " + kernel.split("\\(")[0]);
+                String temp1 = kernel.split("\\(")[1];
+                if (temp1.length() > 0) {
+                    String parameterText = temp1.split("\\)")[0];
+                    parameterText = parameterText.replace("\n", " ");
+                    parameterText = parameterText.replace("\t", " ");
+                    parameterText = parameterText.replace("\r", " ");
+
+                    //System.out.println("Parsing parameters " + parameterText);
+
+                    String[] parameters = parameterText.split(",");
+                    for (String parameter : parameters) {
+                        if (parameter.contains("IMAGE")) {
+                            String[] temp2 = parameter.trim().split(" ");
+                            String variableName = temp2[temp2.length - 1];
+
+                            variableList.add(variableName);
+
+                        }
+                    }
+                }
+            }
+        }
+
+        variableListMap.put(key, variableList);
+        return variableList;
+    }
+
+    private HashMap<String, String> sourceCodeCache = new HashMap<String, String>();
+    protected String getProgramSource() {
+        String key = mAnchorClass.getName() + "_" + mProgramFilename;
+
+        if (sourceCodeCache.containsKey(key)) {
+            return sourceCodeCache.get(key);
+        }
+        try {
+            ClearCLProgram program = mContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
+            String source = program.getSourceCode();
+            sourceCodeCache.put(key, source);
+            return source;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public void setAnchorClass(Class mAnchorClass) {
         this.mAnchorClass = mAnchorClass;
     }
@@ -322,6 +410,7 @@ public class CLKernelExecutor {
 
         //System.out.println("Cache key:" + lProgramCacheKey);
         ClearCLProgram clProgram = this.mProgramCacheMap.get(lProgramCacheKey);
+        currentProgram = clProgram;
         if (clProgram == null) {
             clProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
             if (pDefines != null) {
