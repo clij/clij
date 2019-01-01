@@ -19,6 +19,15 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
 
     @Override
     public void initialize() {
+        CLIJHandler.getInstance().setPluginService(this);
+    }
+
+    private boolean initialized = false;
+    private void initializeService() {
+        if (initialized) {
+            return;
+        }
+
         for (final PluginInfo<CLIJMacroPlugin> info : getPlugins()) {
             String name = info.getName();
             if (name == null || name.isEmpty()) {
@@ -26,15 +35,17 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
             }
             clijPlugins.put(name, info);
         }
-        CLIJHandler.getInstance().setPluginService(this);
+        initialized = true;
     }
 
-
     public Set<String> getCLIJMethodNames() {
+        initializeService();
         return clijPlugins.keySet();
     }
 
     public CLIJMacroPlugin getCLIJMacroPlugin(final String name) {
+        initializeService();
+
         final PluginInfo<CLIJMacroPlugin> info = clijPlugins.get(name);
 
         if (info == null) {
@@ -48,6 +59,8 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
     }
 
     public ExtensionDescriptor getPluginExtensionDescriptor(String name){
+        initializeService();
+
         final PluginInfo<CLIJMacroPlugin> info = clijPlugins.get(name);
 
         if (info == null) {
@@ -82,6 +95,8 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
     }
 
     public String getNameByClass(Class<? extends AbstractCLIJPlugin> aClass) {
+        initializeService();
+
         for (String name : getCLIJMethodNames()) {
             if (getCLIJMacroPlugin(name).getClass() == aClass) {
                 return name;
