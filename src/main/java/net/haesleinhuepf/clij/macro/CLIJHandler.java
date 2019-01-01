@@ -116,9 +116,6 @@ public class CLIJHandler implements MacroExtension {
                 System.out.println("Invoking plugin " + name + " " + Arrays.toString(args));
                 plugin.setClij(clij);
 
-                // copy first to hand over all parameters as they came
-                plugin.setArgs(parsedArguments);
-
                 // fill missing images
                 if (existingImageIndices.size() > 0) {
                     for (int i : missingImageIndices.keySet()) {
@@ -126,6 +123,8 @@ public class CLIJHandler implements MacroExtension {
                         if (bufferMap.keySet().contains(nameInCache)) {
                             parsedArguments[i] = bufferMap.get(nameInCache);
                         } else {
+                            // copy first to hand over all parameters as they came
+                            plugin.setArgs(parsedArguments);
                             parsedArguments[i] = plugin.createOutputBufferFromSource((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
                             bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
                         }
