@@ -61,9 +61,9 @@ public class CLKernelExecutor {
             }
             lDefines.put("READ_IMAGE_2D", pDType.isInteger() ? "read_imageui" : "read_imagef");
             lDefines.put("READ_IMAGE_3D", pDType.isInteger() ? "read_imageui" : "read_imagef");
-            lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_image_width(a)");
-            lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_image_height(a)");
-            lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_image_depth(a)");
+            //lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_image_width(a)");
+            //lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_image_height(a)");
+            //lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_image_depth(a)");
         } else {
             lDefines.put("DTYPE_IMAGE_OUT_3D", "__write_only image3d_t");
             lDefines.put("DTYPE_IMAGE_OUT_2D", "__write_only image2d_t");
@@ -79,9 +79,9 @@ public class CLKernelExecutor {
             }
             lDefines.put("WRITE_IMAGE_2D", pDType.isInteger() ? "write_imageui" : "write_imagef");
             lDefines.put("WRITE_IMAGE_3D", pDType.isInteger() ? "write_imageui" : "write_imagef");
-            lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_image_width(a)");
-            lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_image_height(a)");
-            lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_image_depth(a)");
+            //lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_image_width(a)");
+            //lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_image_height(a)");
+            //lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_image_depth(a)");
         }
     }
 
@@ -96,18 +96,18 @@ public class CLKernelExecutor {
             lDefines.put("DTYPE_IMAGE_IN_2D", "__global " + typeName + "*");
             lDefines.put("READ_IMAGE_2D(a,b,c)", "read_buffer2d" + typeId + "(" + width + "," + height + "," + depth + ",a,b,c)");
             lDefines.put("READ_IMAGE_3D(a,b,c)", "read_buffer3d" + typeId + "(" + width + "," + height + "," + depth + ",a,b,c)");
-            lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
-            lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
-            lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
+            //lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
+            //lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
+            //lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
         } else {
             lDefines.put("DTYPE_OUT", typeName);
             lDefines.put("DTYPE_IMAGE_OUT_3D", "__global " + typeName + "*");
             lDefines.put("DTYPE_IMAGE_OUT_2D", "__global " + typeName + "*");
             lDefines.put("WRITE_IMAGE_2D(a,b,c)", "write_buffer2d" + typeId + "(" + width + "," + height + "," + depth + ",a,b,c)");
             lDefines.put("WRITE_IMAGE_3D(a,b,c)", "write_buffer3d" + typeId + "(" + width + "," + height + "," + depth + ",a,b,c)");
-            lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
-            lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
-            lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
+            //lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
+            //lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
+            //lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
         }
     }
 
@@ -208,6 +208,31 @@ public class CLKernelExecutor {
             getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), lDstBuffer.getDepth(), lDstBuffer.getDimension(), false);
         }
 
+        // deal with image width/height/depth for all images and buffers
+
+        for (String key : mParameterMap.keySet()) {
+            if (mParameterMap.get(key) instanceof ClearCLImage) {
+                ClearCLImage image = (ClearCLImage) mParameterMap.get(key);
+                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_WIDTH", image.getWidth());
+                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_HEIGHT", image.getHeight());
+                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_DEPTH", image.getDepth());
+            } else if (mParameterMap.get(key) instanceof ClearCLBuffer) {
+                ClearCLBuffer image = (ClearCLBuffer) mParameterMap.get(key);
+                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_WIDTH", image.getWidth());
+                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_HEIGHT", image.getHeight());
+                lOpenCLDefines.put("IMAGE_SIZE_" + mKernelName + "_" + key + "_DEPTH", image.getDepth());
+            }
+        }
+
+        lOpenCLDefines.put("GET_IMAGE_IN_WIDTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _WIDTH");
+        lOpenCLDefines.put("GET_IMAGE_IN_HEIGHT(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _HEIGHT");
+        lOpenCLDefines.put("GET_IMAGE_IN_DEPTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _DEPTH");
+        lOpenCLDefines.put("GET_IMAGE_OUT_WIDTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _WIDTH");
+        lOpenCLDefines.put("GET_IMAGE_OUT_HEIGHT(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _HEIGHT");
+        lOpenCLDefines.put("GET_IMAGE_OUT_DEPTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _DEPTH");
+        lOpenCLDefines.put("GET_IMAGE_WIDTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _WIDTH");
+        lOpenCLDefines.put("GET_IMAGE_HEIGHT(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _HEIGHT");
+        lOpenCLDefines.put("GET_IMAGE_DEPTH(image_key)", "IMAGE_SIZE_" + mKernelName + "_ ## image_key ## _DEPTH");
 
         //for (String define : lOpenCLDefines.keySet()) {
         //  System.out.println(define + " = " + lOpenCLDefines.get(define));
