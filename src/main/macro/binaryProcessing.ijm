@@ -35,11 +35,11 @@ run("Close All");
 Ext.CLIJ_thresholdIJ(input, mask, threshold);
 
 // binary opening: erosion + dilation, twice each
-Ext.CLIJ_erodeBox(mask, temp);
-Ext.CLIJ_erodeBox(temp, mask);
+Ext.CLIJ_erodeBoxIJ(mask, temp);
+Ext.CLIJ_erodeBoxIJ(temp, mask);
 
-Ext.CLIJ_dilateBox(mask, temp);
-Ext.CLIJ_dilateBox(temp, mask);
+Ext.CLIJ_dilateBoxIJ(mask, temp);
+Ext.CLIJ_dilateBoxIJ(temp, mask);
 
 
 // show result
