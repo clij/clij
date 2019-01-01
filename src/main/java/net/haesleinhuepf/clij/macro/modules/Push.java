@@ -1,5 +1,10 @@
 package net.haesleinhuepf.clij.macro.modules;
 
+import fiji.util.gui.GenericDialogPlus;
+import ij.IJ;
+import ij.Macro;
+import ij.WindowManager;
+import ij.gui.GenericDialog;
 import net.haesleinhuepf.clij.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.clij.macro.CLIJHandler;
 import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;
@@ -21,7 +26,22 @@ public class Push extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
 
     @Override
     public boolean executeCL() {
-        CLIJHandler.getInstance().pushToGPU((String)args[0]);
+        if (WindowManager.getImage((String)args[0]) == null) {
+            GenericDialogPlus gd = new GenericDialogPlus("CLIJ_push() Error");
+            gd.addMessage("You tried to push the image '" + args[0] + "' to the GPU.\n" +
+                    "However, this image doesn't exist. Please choose another one.");
+
+            gd.addImageChoice("Image", IJ.getImage().getTitle());
+            gd.showDialog();
+
+            if (gd.wasCanceled()) {
+                Macro.abort();
+            } else {
+                CLIJHandler.getInstance().pushToGPU(gd.getNextImage().getTitle());
+            }
+        } else {
+            CLIJHandler.getInstance().pushToGPU((String) args[0]);
+        }
         return true;
     }
 
