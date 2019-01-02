@@ -1731,7 +1731,7 @@ public class Kernels {
 
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put("src", clImage);
-            parameters.put("dst", clReducedImage);
+            parameters.put("dst_max", clReducedImage);
             clij.execute(Kernels.class, "projections.cl", "max_project_3d_2d", parameters);
         }
 
@@ -1758,7 +1758,7 @@ public class Kernels {
 
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put("src", clImage);
-            parameters.put("dst", clReducedImage);
+            parameters.put("dst_max", clReducedImage);
             clij.execute(Kernels.class, "projections.cl", "max_project_3d_2d", parameters);
         }
 
