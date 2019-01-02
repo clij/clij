@@ -104,7 +104,7 @@ public class ArgMaximumZProjectionTest {
                         testImp1.getHeight(),
                         1,
                         NewImage.FILL_BLACK);
-        ImageProcessor ipArgMax = maxProjection.getProcessor();
+        ImageProcessor ipArgMax = argMaxProjection.getProcessor();
 
         ImagePlus testImp1copy = new Duplicator().run(testImp1);
         for (int z = 0; z < testImp1copy.getNSlices(); z++) {
