@@ -89,7 +89,7 @@ public class BenchmarkingDemo {
 
     private static <T extends RealType<T>, B extends BooleanType<B>> void demoImageJ2() {
 
-        // Thanks to @imagejan, @tpietzsch and @Awalter from forum.clij.net
+        // Thanks to @imagejan, @tpietzsch and @Awalter from forum.imagej.net
 
         UnsignedByteType threshold = new UnsignedByteType();
         threshold.setReal(100);
@@ -99,11 +99,11 @@ public class BenchmarkingDemo {
         IterableInterval blurredIi = ij.op().threshold().apply(Views.iterable(gauss), threshold);
         RandomAccessibleInterval blurredImg = makeRai(blurredIi);
 
-        // erodeSphere
+        // erode
         IterableInterval erodedIi = ij.op().morphology().erode(blurredImg, new DiamondShape(1));
         RandomAccessibleInterval erodedImg = makeRai(erodedIi);
 
-        // dilateSphere
+        // dilate
         IterableInterval dilatedIi = ij.op().morphology().dilate(erodedImg, new DiamondShape(1));
         RandomAccessibleInterval dilatedImg = makeRai(dilatedIi);
 
