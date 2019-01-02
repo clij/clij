@@ -44,7 +44,7 @@ public class DownsampleSliceBySliceHalfMedian extends AbstractCLIJPlugin impleme
     @Override
     public String getDescription() {
         return "Scales an image using scaling factors 0.5 for X and Y dimensions. The Z dimension stays untouched.\n" +
-                "The medianSphere method is applied. Thus, each pixel value in the destination image equals to the medianSphere of\n" +
+                "The median method is applied. Thus, each pixel value in the destination image equals to the median of\n" +
                 "four corresponding pixels in the source image.";
     }
 

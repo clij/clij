@@ -42,7 +42,7 @@ public class MaximumXYZProjection extends AbstractCLIJPlugin implements CLIJMacr
 
     @Override
     public String getDescription() {
-        return "Determines the maximumSphere projection of an image along a given dimension. Furthermore, the X and Y\n" +
+        return "Determines the maximum projection of an image along a given dimension. Furthermore, the X and Y\n" +
                 " dimesions of the resulting image must be specified by the user according to its definition:\n" +
                 "X = 0\n" +
                 "Y = 1\n" +

@@ -37,7 +37,7 @@ public class MaximumImageAndScalar extends AbstractCLIJPlugin implements CLIJMac
 
     @Override
     public String getDescription() {
-        return "Computes the maximumSphere of a constant scalar s and each pixel value x in a given image X.\n\nf(x, s) = max(x, s)";
+        return "Computes the maximum of a constant scalar s and each pixel value x in a given image X.\n\nf(x, s) = max(x, s)";
     }
 
     @Override

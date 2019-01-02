@@ -66,7 +66,7 @@ public class Minimum2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
 
     @Override
     public String getDescription() {
-        return "Computes the local minimumSphere of a pixels circle-like neighborhood. The circle size is specified by \n" +
+        return "Computes the local minimum of a pixels circle-like neighborhood. The circle size is specified by \n" +
                 "its radius.\n\n" +
                 "This operation is equal to ImageJs 'Minimum...' menu.";
     }

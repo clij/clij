@@ -66,7 +66,7 @@ public class Maximum2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
 
     @Override
     public String getDescription() {
-        return "Computes the local maximumSphere of a pixels circle-like neighborhood. The circle size is specified by \n" +
+        return "Computes the local maximum of a pixels circle-like neighborhood. The circle size is specified by \n" +
                 "its radius.\n\n" +
                 "This operation is equal to ImageJs 'Maximum...' menu.";
     }

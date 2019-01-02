@@ -41,7 +41,7 @@ public class MinimumZProjection extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getDescription() {
-        return "Determines the minimumSphere projection of an image along Z.";
+        return "Determines the minimum projection of an image along Z.";
     }
 
     @Override

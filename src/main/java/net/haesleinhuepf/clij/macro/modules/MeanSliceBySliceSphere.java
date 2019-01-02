@@ -40,7 +40,7 @@ public class MeanSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJMa
 
     @Override
     public String getDescription() {
-        return "Computes the local meanSphere average of a pixels ellipsoidal 2D neighborhood in an image stack \n" +
+        return "Computes the local mean average of a pixels ellipsoidal 2D neighborhood in an image stack \n" +
                 "slice by slice. The ellipses size is specified by its half-width and half-height (radius).";
     }
 

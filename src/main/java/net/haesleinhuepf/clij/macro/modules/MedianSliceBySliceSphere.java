@@ -40,7 +40,7 @@ public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJ
 
     @Override
     public String getDescription() {
-        return "Computes the local medianSphere of a pixels ellipsoidal neighborhood. This is done slice-by-slice in a 3D \n" +
+        return "Computes the local median of a pixels ellipsoidal neighborhood. This is done slice-by-slice in a 3D \n" +
                 "image stack. The ellipses size is specified by its half-width and half-height (radius).\n\n" +
                 "For technical reasons, the area of the ellipse must have less than 1000 pixels.";
     }

@@ -41,7 +41,7 @@ public class MaximumZProjection extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getDescription() {
-        return "Determines the maximumSphere projection of an image along Z.";
+        return "Determines the maximum projection of an image along Z.";
     }
 
     @Override

@@ -37,7 +37,7 @@ public class Maximum3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getDescription() {
-        return "Computes the local maximumSphere of a pixels cube neighborhood. The cubes size is specified by \n" +
+        return "Computes the local maximum of a pixels cube neighborhood. The cubes size is specified by \n" +
                 "its half-width, half-height and half-depth (radius).";
     }
 

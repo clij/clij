@@ -36,7 +36,7 @@ public class MaximumImages extends AbstractCLIJPlugin implements CLIJMacroPlugin
 
     @Override
     public String getDescription() {
-        return "Computes the maximumSphere of a pair of pixel values x, y from two given images X and Y.\n\nf(x, s) = max(x, y)";
+        return "Computes the maximum of a pair of pixel values x, y from two given images X and Y.\n\nf(x, s) = max(x, y)";
     }
 
     @Override

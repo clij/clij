@@ -40,7 +40,7 @@ public class MaximumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
 
     @Override
     public String getDescription() {
-        return "Computes the local maximumSphere of a pixels ellipsoidal 2D neighborhood in an image stack \n" +
+        return "Computes the local maximum of a pixels ellipsoidal 2D neighborhood in an image stack \n" +
                 "slice by slice. The ellipses size is specified by its half-width and half-height (radius).";
     }
 

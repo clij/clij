@@ -40,7 +40,7 @@ public class Minimum2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlug
 
     @Override
     public String getDescription() {
-        return "Computes the local minimumSphere of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
+        return "Computes the local minimum of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
                 "its half-width and half-height (radius).";
     }
 

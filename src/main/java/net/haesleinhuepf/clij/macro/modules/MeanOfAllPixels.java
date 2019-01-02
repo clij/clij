@@ -47,7 +47,7 @@ public class MeanOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlug
 
     @Override
     public String getDescription() {
-        return "Determines the meanSphere average of all pixels in a given image. It will be stored in a new row of ImageJs\n" +
+        return "Determines the mean average of all pixels in a given image. It will be stored in a new row of ImageJs\n" +
                 "Results table in the column 'Mean'.";
     }
 

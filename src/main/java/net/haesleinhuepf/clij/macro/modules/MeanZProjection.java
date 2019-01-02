@@ -41,7 +41,7 @@ public class MeanZProjection extends AbstractCLIJPlugin implements CLIJMacroPlug
 
     @Override
     public String getDescription() {
-        return "Determines the meanSphere average projection of an image along Z.";
+        return "Determines the mean average projection of an image along Z.";
     }
 
     @Override

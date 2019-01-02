@@ -40,7 +40,7 @@ public class Maximum2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlug
 
     @Override
     public String getDescription() {
-        return "Computes the local maximumSphere of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
+        return "Computes the local maximum of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
                 "its half-width and half-height (radius).";
     }
 
