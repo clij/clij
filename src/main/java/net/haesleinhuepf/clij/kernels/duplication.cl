@@ -58,16 +58,16 @@ __kernel void crop_3d(DTYPE_IMAGE_OUT_3D dst, DTYPE_IMAGE_IN_3D src, int start_x
   const int dy = get_global_id(1);
   const int dz = get_global_id(2);
 
-  const int4 dpos = (int4){dx,dy,dz,0};
 
   const int sx = start_x + dx;
   const int sy = start_y + dy;
   const int sz = start_z + dz;
 
-  const int4 spos = (int4){dx,dy,dz,0};
+  const int4 dpos = (int4){dx,dy,dz,0};
+  const int4 spos = (int4){sx,sy,sz,0};
 
-  const DTYPE_IN out = READ_IMAGE_3D(src,sampler,dpos).x;
-  WRITE_IMAGE_3D(dst,spos,(DTYPE_OUT)out);
+  const DTYPE_IN out = READ_IMAGE_3D(src,sampler,spos).x;
+  WRITE_IMAGE_3D(dst,dpos,(DTYPE_OUT)out);
 }
 
 
