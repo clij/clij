@@ -466,7 +466,7 @@ __kernel void maximum_slicewise_image3d
             float ySquared = y * y;
             if (xSquared / aSquared + ySquared / bSquared <= 1.0) {
                 DTYPE_OUT value = (DTYPE_OUT)READ_IMAGE_3D(src,sampler,coord+((int4){x,y,0,0})).x;
-                if (value < maximumValue) {
+                if (value > maximumValue) {
                     maximumValue = value;
                 }
             }
@@ -500,7 +500,7 @@ __kernel void maximum_image2d
             float ySquared = y * y;
             if (xSquared / aSquared + ySquared / bSquared <= 1.0) {
                 DTYPE_OUT value = (DTYPE_OUT)READ_IMAGE_2D(src,sampler,coord+((int2){x,y})).x;
-                if (value < maximumValue) {
+                if (value > maximumValue) {
                     maximumValue = value;
                 }
             }
