@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class PowerTest {
     private final static double tolerance = 0.01;
-    
+
     @Test
     public void power() {
         CLIJ clij = CLIJ.getInstance();
