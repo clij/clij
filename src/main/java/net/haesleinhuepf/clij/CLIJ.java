@@ -17,7 +17,9 @@ import net.haesleinhuepf.clij.utilities.CLKernelExecutor;
 import net.imglib2.RandomAccessibleInterval;
 import org.scijava.Context;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +44,9 @@ import java.util.Map;
  * February 2018
  */
 public class CLIJ {
+    static {
+        forwardStdErr();
+    };
 
     private static CLIJ sInstance = null;
     protected ClearCLContext mClearCLContext;
@@ -53,7 +58,7 @@ public class CLIJ {
 
     @Deprecated
     public CLIJ(int deviceIndex) {
-
+        System.out.println("start");
         ClearCLBackendInterface
                 lClearCLBackend = new ClearCLBackendJOCL();
 
@@ -69,6 +74,10 @@ public class CLIJ {
 
 
         mClearCLContext = mClearCLDevice.createContext();
+
+        resetStdErrForwarding();
+        System.out.println("end");
+        System.err.println("hello world");
     }
 
     /**
@@ -78,6 +87,7 @@ public class CLIJ {
      */
     @Deprecated
     public CLIJ(String pDeviceNameMustContain) {
+        System.out.println("start");
         ClearCLBackendInterface
                 lClearCLBackend = new ClearCLBackendJOCL();
 
@@ -103,7 +113,11 @@ public class CLIJ {
         System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
 
         mClearCLContext = mClearCLDevice.createContext();
+
+        resetStdErrForwarding();
     }
+
+
 
     public static CLIJ getInstance() {
         return getInstance(null);
@@ -278,5 +292,18 @@ public class CLIJ {
         }
         CLIJConverterPlugin<S, T> converter = (CLIJConverterPlugin<S, T>) converterService.getConverter(source.getClass(), targetClass);
         return converter.convert(source);
+    }
+
+    private static PrintStream stdErrStreamBackup;
+    private static void forwardStdErr() {
+        // forwarding stdErr temporarily is necessary to prevent a window popping up with error message from BridJ.
+        // The library runs even though BridJ throws that error.
+        stdErrStreamBackup = System.err;
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(baos));
+    }
+    private static void resetStdErrForwarding() {
+        System.setErr(stdErrStreamBackup);
     }
 }
