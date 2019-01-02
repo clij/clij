@@ -1,1 +1,1 @@
-mvn -Denforcer.skip deploy
+mvn -Denforcer.skip clean deploy
