@@ -184,6 +184,9 @@ __kernel void erode_box_neighborhood_3d(DTYPE_IMAGE_IN_3D  src,
           break;
         }
       }
+      if (value == 0) {
+        break;
+      }
     }
   }
 
@@ -289,7 +292,7 @@ __kernel void dilate_box_neighborhood_3d(DTYPE_IMAGE_IN_3D  src,
   const int4 pos = (int4){x,y,z,0};
 
   DTYPE_OUT value = READ_IMAGE_3D(src, sampler, pos).x;
-  if (value < 0) {
+  if (value < 1) {
     for (int x = -1; x <= 1; x++) {
       for (int y = -1; y <= 1; y++) {
         for (int z = -1; z <= 1; z++) {
@@ -301,6 +304,9 @@ __kernel void dilate_box_neighborhood_3d(DTYPE_IMAGE_IN_3D  src,
         if (value > 0) {
           break;
         }
+      }
+      if (value > 0) {
+        break;
       }
     }
   }

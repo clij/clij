@@ -4,11 +4,14 @@ import clearcl.ClearCLBuffer;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
+import ij.gui.WaitForUserDialog;
+import ij.process.ImageProcessor;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
 import net.haesleinhuepf.clij.macro.AbstractMacroPluginTest;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class DilateBoxIJTest extends AbstractMacroPluginTest {
@@ -74,5 +77,37 @@ public class DilateBoxIJTest extends AbstractMacroPluginTest {
         dilateBoxIJ.setClij(clij);
         dilateBoxIJ.setArgs(args);
         return dilateBoxIJ;
+    }
+
+    @Test
+    public void test_dilateBox_3d() {
+        CLIJ clij = CLIJ.getInstance();
+        ImagePlus mask3d = NewImage.createByteImage("Test", 10, 10, 10, NewImage.FILL_BLACK);
+        mask3d.setZ(5);
+        ImageProcessor ip = mask3d.getProcessor();
+        ip.set(5,5, 1);
+
+        ClearCLBuffer maskCL = clij.convert(mask3d, ClearCLBuffer.class);
+        double sum = Kernels.sumPixels(clij, maskCL);
+        assertEquals(1, sum, 0.0);
+
+        ClearCLBuffer maskCL2 = clij.createCLBuffer(maskCL);
+        Kernels.dilateBox(clij, maskCL, maskCL2);
+
+
+        double sum2 = Kernels.sumPixels(clij, maskCL2);
+
+        assertEquals(27, sum2, 0.0);
+
+        ClearCLBuffer maskCL3 = clij.createCLBuffer(maskCL);
+        Kernels.dilateBox(clij, maskCL2, maskCL3);
+        double sum3 = Kernels.sumPixels(clij, maskCL3);
+        assertEquals(125, sum3, 0.0);
+
+
+        maskCL.close();
+        maskCL2.close();
+        maskCL3.close();
+
     }
 }
