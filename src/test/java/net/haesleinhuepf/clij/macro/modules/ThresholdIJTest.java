@@ -199,23 +199,12 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
         ClearCLBuffer src = clij.convert(testImage, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
-
-        ByteBuffer buffer = ByteBuffer.allocate((int) src.getSizeInBytes());
-        //src.writeTo(buffer, true);
-        //System.out.println("src " + Arrays.toString(buffer.array()));
-
         Kernels.threshold(clij, src, dst, 128f);
         Kernels.copy(clij, dst, src);
-        //Kernels.multiplyImageAndScalar(clij, dst, src, 255f);
-
-        src.writeTo(buffer, true);
-        System.out.println("src " + Arrays.toString(buffer.array()));
+        Kernels.multiplyImageAndScalar(clij, dst, src, 255f);
 
         ImagePlus thresholdedCL = clij.convert(src, ImagePlus.class);
 
-        clij.show(thresholded, "thresholded");
-        clij.show(thresholdedCL, "thresholded_cl");
-        Thread.sleep(5000);
         assertTrue(TestUtilities.compareImages(thresholded,
                 thresholdedCL));
 
