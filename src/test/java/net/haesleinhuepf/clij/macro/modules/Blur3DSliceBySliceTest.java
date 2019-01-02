@@ -4,6 +4,7 @@ import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.gui.Roi;
 import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
@@ -51,6 +52,12 @@ public class Blur3DSliceBySliceTest {
 
         Kernels.blurSliceBySlice(clij, src, dst, 15, 15, 2, 2);
         ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
+
+        // ignore borders
+        gauss.setRoi(new Roi(2, 2, gauss.getWidth() - 4, gauss.getHeight() - 4));
+        gaussFromCL.setRoi(new Roi(2, 2, gaussFromCL.getWidth() - 4, gaussFromCL.getHeight() - 4));
+        gauss = new Duplicator().run(gauss);
+        gaussFromCL = new Duplicator().run(gaussFromCL);
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
 
