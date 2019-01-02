@@ -12,6 +12,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class PowerTest {
+    private final static double tolerance = 0.01;
+    
     @Test
     public void power() {
         CLIJ clij = CLIJ.getInstance();
@@ -32,7 +34,7 @@ public class PowerTest {
 
         ImagePlus squaredCL = clij.convert(dst, ImagePlus.class);
 
-        assertTrue(TestUtilities.compareImages(squared, squaredCL));
+        assertTrue(TestUtilities.compareImages(squared, squaredCL, tolerance));
 
         src.close();
         dst.close();
@@ -60,7 +62,7 @@ public class PowerTest {
 
         ImagePlus squaredCL = clij.convert(dst, ImagePlus.class);
 
-        assertTrue(TestUtilities.compareImages(squared, squaredCL));
+        assertTrue(TestUtilities.compareImages(squared, squaredCL, tolerance));
 
         src.close();
         dst.close();
