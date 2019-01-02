@@ -23,7 +23,7 @@ public class Downsample3DTest {
         // do operation with ImageJ
         new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
         testImp1.show();
-        IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 width=512 height=1024 depth=5 interpolation=None process create");
+        IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 interpolation=None process create");
         ImagePlus downsampled = IJ.getImage();
 
 
@@ -53,7 +53,8 @@ public class Downsample3DTest {
         // do operation with ImageJ
         new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
         testImp1.show();
-        IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 width=512 height=1024 depth=5 interpolation=None process create");
+        IJ.run(testImp1, "Scale...", "x=0.5 y=0.5 z=0.5 interpolation=None process create");
+        //Thread.sleep(1000);
         ImagePlus downsampled = IJ.getImage();
 
 
