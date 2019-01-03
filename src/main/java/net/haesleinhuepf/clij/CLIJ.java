@@ -55,29 +55,31 @@ public class CLIJ {
     private CLKernelExecutor
             mCLKernelExecutor = null;
 
+    public static boolean debug = false;
+
 
     @Deprecated
     public CLIJ(int deviceIndex) {
-        System.out.println("start");
         ClearCLBackendInterface
                 lClearCLBackend = new ClearCLBackendJOCL();
 
         mClearCL = new ClearCL(lClearCLBackend);
 
         ArrayList<ClearCLDevice> allDevices = mClearCL.getAllDevices();
-        for (int i = 0; i < allDevices.size(); i++) {
-            System.out.println(allDevices.get(i).getName());
+        if (debug) {
+            for (int i = 0; i < allDevices.size(); i++) {
+                System.out.println(allDevices.get(i).getName());
+            }
         }
 
         mClearCLDevice = allDevices.get(deviceIndex);
-        System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
-
+        if (debug) {
+            System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
+        }
 
         mClearCLContext = mClearCLDevice.createContext();
 
         resetStdErrForwarding();
-        System.out.println("end");
-        System.err.println("hello world");
     }
 
     /**
@@ -87,7 +89,6 @@ public class CLIJ {
      */
     @Deprecated
     public CLIJ(String pDeviceNameMustContain) {
-        System.out.println("start");
         ClearCLBackendInterface
                 lClearCLBackend = new ClearCLBackendJOCL();
 
@@ -99,7 +100,9 @@ public class CLIJ {
         }
 
         if (mClearCLDevice == null) {
-            System.out.println("No GPU name specified. Using first GPU device found.");
+            if (debug) {
+                System.out.println("No GPU name specified. Using first GPU device found.");
+            }
             for (ClearCLDevice device : mClearCL.getAllDevices()) {
                 if (!device.getName().contains("CPU")) {
                     mClearCLDevice = device;
@@ -107,10 +110,14 @@ public class CLIJ {
             }
         }
         if (mClearCLDevice == null) {
-            System.out.println("Warning: GPU device determination failed. Retrying using first device found.");
+            if (debug) {
+                System.out.println("Warning: GPU device determination failed. Retrying using first device found.");
+            }
             mClearCLDevice = mClearCL.getAllDevices().get(0);
         }
-        System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
+        if (debug) {
+            System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
+        }
 
         mClearCLContext = mClearCLDevice.createContext();
 
@@ -175,8 +182,10 @@ public class CLIJ {
                            Map<String, Object> pParameterMap) {
         final boolean[] result = new boolean[1];
 
-        for (String key : pParameterMap.keySet()) {
-            System.out.println(key + " = " + pParameterMap.get(key));
+        if (debug) {
+            for (String key : pParameterMap.keySet()) {
+                System.out.println(key + " = " + pParameterMap.get(key));
+            }
         }
 
         ElapsedTime.measure("kernel + build " + pKernelname, () -> {

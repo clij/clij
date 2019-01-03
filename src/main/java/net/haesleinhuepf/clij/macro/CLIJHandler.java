@@ -70,6 +70,7 @@ public class CLIJHandler implements MacroExtension {
                 //System.out.println("plugins " + CLIJHandler.getInstance().pluginService.getCLIJMethodNames().size());
 
                 if (plugin == null) {
+                    // this should never happen, because Macro extensions do a similar check before calling this method
                     System.out.println("Method not found: " + name);
                     return;
                 }
@@ -118,7 +119,9 @@ public class CLIJHandler implements MacroExtension {
                 }
             }*/
 
-                System.out.println("Invoking plugin " + name + " " + Arrays.toString(args));
+                if (CLIJ.debug) {
+                    System.out.println("Invoking plugin " + name + " " + Arrays.toString(args));
+                }
                 plugin.setClij(clij);
 
                 // fill missing images
@@ -154,7 +157,10 @@ public class CLIJHandler implements MacroExtension {
                                     "The image parameter " + parameterName+ "('" + parsedArguments[i] + "') doesn't exist in GPUs memory. Consider calling\n\n" +
                                     "Ext.CLIJ_push(\"" + parsedArguments[i] + "\");");
                             gd.showDialog();
-                            System.out.println("Couldn't execute CLIJ plugin: Image '" + parameterName+ "' not found in GPU memory!");
+
+                            if (CLIJ.debug) {
+                                System.out.println("Couldn't execute CLIJ plugin: Image '" + parameterName+ "' not found in GPU memory!");
+                            }
                             Macro.abort();
                             allImagesSet = false;
                             break;
@@ -167,7 +173,10 @@ public class CLIJHandler implements MacroExtension {
                     if (plugin instanceof CLIJOpenCLProcessor) {
                         ((CLIJOpenCLProcessor) plugin).executeCL();
                     } else {
-                        System.out.println("Couldn't execute CLIJ plugin!");
+
+                        if (CLIJ.debug) {
+                            System.out.println("Couldn't execute CLIJ plugin!");
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -178,7 +187,10 @@ public class CLIJHandler implements MacroExtension {
     }
 
     public void releaseBufferInGPU(String arg) {
-        System.out.println("Releasing " + arg);
+
+        if (CLIJ.debug) {
+            System.out.println("Releasing " + arg);
+        }
         ClearCLBuffer buffer = bufferMap.get(arg);
         buffer.close();
         bufferMap.remove(arg);

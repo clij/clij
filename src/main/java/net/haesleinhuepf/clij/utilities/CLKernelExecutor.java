@@ -5,6 +5,7 @@ import clearcl.enums.ImageChannelDataType;
 import clearcl.util.ElapsedTime;
 import com.sun.org.apache.xalan.internal.xsltc.dom.SimpleResultTreeImpl;
 import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.CLIJ;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -239,11 +240,6 @@ public class CLKernelExecutor {
         lOpenCLDefines.put("GET_IMAGE_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
         lOpenCLDefines.put("GET_IMAGE_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
 
-        //for (String define : lOpenCLDefines.keySet()) {
-        //  System.out.println(define + " = " + lOpenCLDefines.get(define));
-        //}
-
-
         // add undefined parameters to define list
         ArrayList<String> variableNames = getImageVariablesFromSource();
         for (String variableName : variableNames) {
@@ -262,6 +258,11 @@ public class CLKernelExecutor {
             }
         }
 
+        if (CLIJ.debug) {
+            for (String define : lOpenCLDefines.keySet()) {
+                System.out.println(define + " = " + lOpenCLDefines.get(define));
+            }
+        }
 
 
 
@@ -295,10 +296,12 @@ public class CLKernelExecutor {
                     lClearCLKernel.setArgument(key, mParameterMap.get(key));
                 }
             }
-            //System.out.println("Exec " + mProgramCacheMap.size());
+            if (CLIJ.debug) {
+                System.out.println("Executing " + mKernelName);
+            }
 
             final ClearCLKernel kernel = lClearCLKernel;
-            ElapsedTime.measureForceOutput("Pure kernel execution", () -> {
+            double duration = ElapsedTime.measure("Pure kernel execution", () -> {
                 try {
                     kernel.run(pWaitToFinish);
                 } catch (Exception e) {
@@ -307,8 +310,9 @@ public class CLKernelExecutor {
                     System.out.println(kernel.getSourceCode());
                 }
             });
-
-            //System.out.println("Ret");
+            if (CLIJ.debug) {
+                System.out.println("Returned from " + mKernelName + " after " + duration + " msec" );
+            }
             lClearCLKernel.close();
         }
 
@@ -407,8 +411,9 @@ public class CLKernelExecutor {
         for (String key : pDefines.keySet()) {
             lProgramCacheKey = lProgramCacheKey + " " + (key + " = " + pDefines.get(key));
         }
-
-        //System.out.println("Cache key:" + lProgramCacheKey);
+        if (CLIJ.debug) {
+            System.out.println("Program cache hash:" + lProgramCacheKey);
+        }
         ClearCLProgram clProgram = this.mProgramCacheMap.get(lProgramCacheKey);
         currentProgram = clProgram;
         if (clProgram == null) {

@@ -53,9 +53,7 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
             return null;
         }
 
-        final CLIJMacroPlugin animal = pluginService().createInstance(info);
-
-        return animal;
+        return pluginService().createInstance(info);
     }
 
     public ExtensionDescriptor getPluginExtensionDescriptor(String name){
@@ -64,7 +62,7 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
         final PluginInfo<CLIJMacroPlugin> info = clijPlugins.get(name);
 
         if (info == null) {
-            throw new IllegalArgumentException("No animal of that name");
+            throw new IllegalArgumentException("No plugin of that name");
         }
 
         final CLIJMacroPlugin plugin = pluginService().createInstance(info);
