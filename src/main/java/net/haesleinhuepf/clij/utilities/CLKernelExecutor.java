@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.utilities;
 
 import clearcl.*;
 import clearcl.enums.ImageChannelDataType;
+import clearcl.exceptions.OpenCLException;
 import clearcl.util.ElapsedTime;
 import com.sun.org.apache.xalan.internal.xsltc.dom.SimpleResultTreeImpl;
 import coremem.enums.NativeTypeEnum;
@@ -158,6 +159,11 @@ public class CLKernelExecutor {
     }
 
     public boolean enqueue(boolean pWaitToFinish) {
+
+
+        if (CLIJ.debug) {
+            System.out.println("Loading " + mKernelName);
+        }
 
         ClearCLImage lSrcImage = null;
         ClearCLImage lDstImage = null;
@@ -442,7 +448,15 @@ public class CLKernelExecutor {
         }
         //System.out.println(clProgram.getSourceCode());
         //System.out.println(pKernelName);
-        ClearCLKernel lKernel = clProgram.createKernel(pKernelName);
-        return lKernel;
+
+
+        try {
+            ClearCLKernel lKernel = clProgram.createKernel(pKernelName);
+            return lKernel;
+        } catch (OpenCLException e) {
+            System.out.println("Error when trying to create kernel " + pKernelName);
+            e.printStackTrace();
+            return null;
+        }
     }
 }
