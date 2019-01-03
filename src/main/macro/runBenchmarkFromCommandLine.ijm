@@ -1,2 +1,0 @@
-setBatchMode(true);
-run("BenchmarkExecutor");
