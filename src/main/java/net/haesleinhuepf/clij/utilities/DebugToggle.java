@@ -17,6 +17,6 @@ public class DebugToggle implements PlugIn {
     @Override
     public void run(String s) {
         CLIJ.debug = !CLIJ.debug;
-        IJ.log("CLIJ debug is " + (CLIJ.debug?"ON":"OFF") + " now.");
+        System.out.println("CLIJ debug is " + (CLIJ.debug?"ON":"OFF") + " now.");
     }
 }
