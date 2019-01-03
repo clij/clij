@@ -27,5 +27,6 @@ public class CLDeviceSwitchTest {
             assertTrue(clij != fromBefore);
             fromBefore = clij;
         }
+        CLIJ.getInstance().close();
     }
 }

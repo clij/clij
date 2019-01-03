@@ -11,6 +11,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.view.Views;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -32,7 +33,9 @@ public class DoubleFlipTest
     new DoubleFlipTest().testFlipImageTwiceOnAllDevices();
   }
 
-  @Test public void testFlipImageTwiceOnAllDevices() throws
+  @Ignore // ignored; clij does currently not work on recent Intel Core I7 8th generation CPU Windows.
+  @Test
+  public void testFlipImageTwiceOnAllDevices() throws
                                                      IOException
   {
     for (String deviceName : CLIJ.getAvailableDeviceNames())
