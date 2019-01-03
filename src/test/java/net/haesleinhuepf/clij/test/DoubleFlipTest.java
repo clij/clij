@@ -41,19 +41,15 @@ public class DoubleFlipTest
     for (String deviceName : CLIJ.getAvailableDeviceNames())
     {
       CLIJ clij = CLIJ.getInstance(deviceName);
-
       System.out.println("Testing " + deviceName);
 
-      ImagePlus
-          inputImagePlus =
-          IJ.openImage("src/main/resources/flybrain.tif");
+      ImagePlus inputImagePlus = IJ.openImage("src/main/resources/flybrain.tif");
 
       ClearCLImage clImage = clij.convert(inputImagePlus, ClearCLImage.class);
 
       RandomAccessibleInterval inputImagePlus2 = clij.convert(clImage, RandomAccessibleInterval.class);
 
-      assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(inputImagePlus2),
-                 ImageJFunctions.<UnsignedShortType>wrap(inputImagePlus)));
+      assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(inputImagePlus2), ImageJFunctions.<UnsignedShortType>wrap(inputImagePlus)));
 
       RandomAccessibleInterval<UnsignedShortType> inputImg = ImageJFunctions.wrap(inputImagePlus);
 

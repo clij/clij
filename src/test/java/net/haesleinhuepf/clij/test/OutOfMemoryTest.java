@@ -27,7 +27,6 @@ public class OutOfMemoryTest {
             ClearCLImage image3 = clij.createCLImage(new long[]{1024, 1024, 300}, ImageChannelDataType.Float);
 
             for (int j = 0; j < 1000; j++) {
-
                 System.out.println(">" + j);
                 Kernels.tenengradFusion(clij, image1, new float[]{15, 15, 5}, image2, image3);
             }

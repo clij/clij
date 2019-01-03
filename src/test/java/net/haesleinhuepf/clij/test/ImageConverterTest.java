@@ -208,32 +208,25 @@ public class ImageConverterTest
         CLIJ.debug = true;
         clij = CLIJ.getInstance();
 
-        RandomAccessibleInterval<UnsignedShortType>
-            rai =
-            ArrayImgs.unsignedShorts(new long[] { 3, 3 });
+        RandomAccessibleInterval<UnsignedShortType> rai = ArrayImgs.unsignedShorts(new long[] { 3, 3 });
 
         RandomAccess<UnsignedShortType> ra = rai.randomAccess();
         ra.setPosition(new int[] {1,1});
         ra.get().set(4);
 
         ClearCLImage stack = clij.convert(rai, ClearCLImage.class);
-                //converter(rai).getClearCLImage();
 
         // test starts here
-
         RandomAccessibleInterval rai2 = clij.convert(stack, RandomAccessibleInterval.class);
-                //converter(stack).getRandomAccessibleInterval();
 
         ClearCLImage clImage = clij.createCLImage(stack.getDimensions(), ImageChannelDataType.Float);
         RandomAccessibleIntervalToClearCLImageConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);
-        //ImageTypeConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);
 
         ClearCLImage clImage2 = clij.createCLImage(stack.getDimensions(), ImageChannelDataType.UnsignedInt16);
 
         Kernels.copy(clij, clImage, clImage2);
 
         RandomAccessibleInterval<UnsignedShortType> rai3 = (RandomAccessibleInterval<UnsignedShortType>) clij.convert(clImage2, RandomAccessibleInterval.class);
-                //converter(clImage2).getRandomAccessibleInterval();
 
         assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(rai2), Views.iterable(rai3)));
 
