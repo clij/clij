@@ -134,7 +134,7 @@ public class CLIJ {
         if (sInstance == null) {
             sInstance = new CLIJ(pDeviceNameMustContain);
         } else {
-            if (sInstance.getClearCLContext().getDevice().getName().compareTo(pDeviceNameMustContain) != 0) {
+            if (pDeviceNameMustContain != null && sInstance.getClearCLContext().getDevice().getName().compareTo(pDeviceNameMustContain) != 0) {
                 // switch device requested
                 if (debug) {
                     System.out.println("Switching CL device! New: " +  pDeviceNameMustContain);
