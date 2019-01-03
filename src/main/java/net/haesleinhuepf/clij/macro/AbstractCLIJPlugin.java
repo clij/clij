@@ -209,9 +209,12 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         GenericDialogPlus gd = new GenericDialogPlus(name);
 
         ArrayList<String> deviceList = CLIJ.getAvailableDeviceNames();
+        if (clij == null) {
+            clij = CLIJ.getInstance();
+        }
         String[] deviceArray = new String[deviceList.size()];
         deviceList.toArray(deviceArray);
-        gd.addChoice("CL_Device", deviceArray, deviceArray[0]);
+        gd.addChoice("CL_Device", deviceArray, clij.getClearCLContext().getDevice().getName());
 
         String[] parameters = getParameterHelpText().split(",");
         if (parameters.length > 0 && parameters[0].length() > 0) {
@@ -334,7 +337,8 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         if (Recorder.getInstance() == null) {
             return;
         }
-        if (Recorder.getInstance().getText().contains(recordMethod)) {
+        String text = Recorder.getInstance().getText();
+        if (text.contains(recordMethod) && text.contains(recordParameters)) {
             return;
         }
         record(recordMethod, recordParameters);
