@@ -29,63 +29,63 @@ public class CLInfo {
         try {
             output.append("Available CL backends:\n");
 
-            for (ClearCLBackendInterface lBackend : ClearCLBackends.getBackendList()) {
-                output.append("  * " + lBackend + "\n");
+            for (ClearCLBackendInterface backend : ClearCLBackends.getBackendList()) {
+                output.append("  * " + backend + "\n");
             }
 
             output.append("    Functional backend:" + ClearCLBackends.getFunctionalBackend() + "\n");
             output.append("    Best backend:" + ClearCLBackends.getBestBackend() + "\n");
 
-            ClearCLBackendInterface lClearCLBackend = ClearCLBackends.getBestBackend();
+            ClearCLBackendInterface clearCLBackend = ClearCLBackends.getBestBackend();
             //new ClearCLBackendJavaCL();
 
-            output.append("Used CL backend: " + lClearCLBackend + "\n");
+            output.append("Used CL backend: " + clearCLBackend + "\n");
 
-            ClearCL lClearCL = new ClearCL(lClearCLBackend);
+            ClearCL clearCL = new ClearCL(clearCLBackend);
 
-            output.append("ClearCL: " + lClearCL + "\n");
-            output.append("  Number of platforms:" + lClearCL.getNumberOfPlatforms() + "\n");
-            for (int p = 0; p < lClearCL.getNumberOfPlatforms(); p++) {
-                ClearCLPlatform lClearCLPlatform = lClearCL.getPlatform(p);
-                output.append("  [" + p + "] " + lClearCLPlatform.getName() + "\n");
-                output.append("     Number of devices: " + lClearCLPlatform.getNumberOfDevices() + "\n");
+            output.append("ClearCL: " + clearCL + "\n");
+            output.append("  Number of platforms:" + clearCL.getNumberOfPlatforms() + "\n");
+            for (int p = 0; p < clearCL.getNumberOfPlatforms(); p++) {
+                ClearCLPlatform clearCLPlatform = clearCL.getPlatform(p);
+                output.append("  [" + p + "] " + clearCLPlatform.getName() + "\n");
+                output.append("     Number of devices: " + clearCLPlatform.getNumberOfDevices() + "\n");
 
                 output.append("     Available devices: \n");
-                for (int d = 0; d < lClearCLPlatform.getNumberOfDevices(); d++) {
-                    ClearCLDevice lDevice = lClearCLPlatform.getDevice(d);
-                    output.append("     [" + d + "] " + lDevice.getName() + " \n");
+                for (int d = 0; d < clearCLPlatform.getNumberOfDevices(); d++) {
+                    ClearCLDevice device = clearCLPlatform.getDevice(d);
+                    output.append("     [" + d + "] " + device.getName() + " \n");
                     output.append("        NumberOfComputeUnits: "
-                            + lDevice.getNumberOfComputeUnits()
+                            + device.getNumberOfComputeUnits()
                             + " \n");
                     output.append("        Clock frequency: "
-                            + lDevice.getClockFrequency()
+                            + device.getClockFrequency()
                             + " \n");
-                    output.append("        Version: " + lDevice.getVersion() + " \n");
-                    output.append("        Extensions: " + lDevice.getExtensions() + " \n");
+                    output.append("        Version: " + device.getVersion() + " \n");
+                    output.append("        Extensions: " + device.getExtensions() + " \n");
                     output.append("        GlobalMemorySizeInBytes: "
-                            + lDevice.getGlobalMemorySizeInBytes()
+                            + device.getGlobalMemorySizeInBytes()
                             + " \n");
                     output.append("        LocalMemorySizeInBytes: "
-                            + lDevice.getLocalMemorySizeInBytes()
+                            + device.getLocalMemorySizeInBytes()
                             + " \n");
                     output.append("        MaxMemoryAllocationSizeInBytes: "
-                            + lDevice.getMaxMemoryAllocationSizeInBytes()
+                            + device.getMaxMemoryAllocationSizeInBytes()
                             + " \n");
                     output.append("        MaxWorkGroupSize: "
-                            + lDevice.getMaxWorkGroupSize()
+                            + device.getMaxWorkGroupSize()
                             + " \n");
 
-                    ClearCLContext lContext = lDevice.createContext();
-                    ArrayList<ImageChannelDataType> lListAvailableTypes = listSupportedTypes(lContext);
-                    ImageChannelDataType[] lArrayTypes = new ImageChannelDataType[lListAvailableTypes.size()];
-                    lListAvailableTypes.toArray(lArrayTypes);
-                    output.append("        Compatible image types: " + Arrays.toString(lArrayTypes) + "\n");
+                    ClearCLContext context = device.createContext();
+                    ArrayList<ImageChannelDataType> listAvailableTypes = listSupportedTypes(context);
+                    ImageChannelDataType[] arrayTypes = new ImageChannelDataType[listAvailableTypes.size()];
+                    listAvailableTypes.toArray(arrayTypes);
+                    output.append("        Compatible image types: " + Arrays.toString(arrayTypes) + "\n");
                 }
             }
 
-            output.append("Best GPU device for images: " + lClearCL.getFastestGPUDeviceForImages().getName() + "\n");
-            output.append("Best largest GPU device: " + lClearCL.getLargestGPUDevice().getName() + "\n");
-            output.append("Best CPU device: " + lClearCL.getBestCPUDevice().getName() + "\n");
+            output.append("Best GPU device for images: " + clearCL.getFastestGPUDeviceForImages().getName() + "\n");
+            output.append("Best largest GPU device: " + clearCL.getLargestGPUDevice().getName() + "\n");
+            output.append("Best CPU device: " + clearCL.getBestCPUDevice().getName() + "\n");
         } catch (Exception e) {
             output.append("\n\nException: " + e.toString());
             return output.toString();
@@ -104,23 +104,21 @@ public class CLInfo {
     public static ArrayList<ImageChannelDataType> listSupportedTypes(ClearCLContext lContext) {
         ArrayList<ImageChannelDataType> lTypeNameList = new ArrayList<ImageChannelDataType>();
 
-        for (ImageChannelDataType lType : ImageChannelDataType.values()) {
+        for (ImageChannelDataType type : ImageChannelDataType.values()) {
             try {
-                ClearCLImage
-                        lImage =
                         lContext.createImage(
                                 MemAllocMode.Best,
                                 HostAccessType.ReadWrite,
                                 KernelAccessType.ReadWrite,
                                 ImageChannelOrder.R,
-                                lType,
+                                type,
                                 new long[]{16, 16, 16});
 
             } catch (Exception e) {
-                System.out.println("Type " + lType + " didn't work because " + e.toString());
+                System.out.println("Type " + type + " didn't work because " + e.toString());
                 continue;
             }
-            lTypeNameList.add(lType);
+            lTypeNameList.add(type);
         }
         return lTypeNameList;
     }
