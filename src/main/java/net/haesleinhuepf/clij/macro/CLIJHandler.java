@@ -236,6 +236,7 @@ public class CLIJHandler implements MacroExtension {
                             temp.getNativeType() == preExistingBuffer.getNativeType()
             ) {
                 Kernels.copy(clij, temp, preExistingBuffer);
+                temp.close();
             } else {
                 bufferMap.remove(arg);
             }
