@@ -223,8 +223,28 @@ public class CLIJHandler implements MacroExtension {
 
     public void pushToGPU(String arg) {
         ImagePlus imp = WindowManager.getImage(arg);
-        bufferMap.put(arg, clij.convert(imp, ClearCLBuffer.class));
         imp.changes = false;
+
+        ClearCLBuffer temp = clij.convert(imp, ClearCLBuffer.class);
+        if (bufferMap.containsKey(arg)) {
+            ClearCLBuffer preExistingBuffer = bufferMap.get(arg);
+
+            if (
+                    temp.getWidth() == preExistingBuffer.getWidth() &&
+                            temp.getHeight() == preExistingBuffer.getHeight() &&
+                            temp.getDepth() == preExistingBuffer.getDepth() &&
+                            temp.getNativeType() == preExistingBuffer.getNativeType()
+            ) {
+                Kernels.copy(clij, temp, preExistingBuffer);
+            } else {
+                bufferMap.remove(arg);
+            }
+        }
+        if (!bufferMap.containsKey(arg)) {
+            bufferMap.put(arg, temp);
+        }
+
+
     }
 
     @Override
@@ -281,8 +301,8 @@ public class CLIJHandler implements MacroExtension {
     //}
     public ClearCLImage getChachedImageByBuffer(ClearCLBuffer buffer) {
         if (bufferAsImageMap.containsKey(buffer)) {
-
             ClearCLImage image = bufferAsImageMap.get(buffer);
+            System.out.println("Found the buffer, return its image");
             Kernels.copy(clij, buffer, image);
             return image;
         }
