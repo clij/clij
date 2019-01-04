@@ -1,6 +1,7 @@
 package net.haesleinhuepf.clij.macro;
 
 import clearcl.ClearCLBuffer;
+import clearcl.ClearCLImage;
 import clearcl.util.ElapsedTime;
 import ij.IJ;
 import ij.ImagePlus;
@@ -10,6 +11,7 @@ import ij.gui.GenericDialog;
 import ij.macro.ExtensionDescriptor;
 import ij.macro.MacroExtension;
 import net.haesleinhuepf.clij.CLIJ;
+import net.haesleinhuepf.clij.kernels.Kernels;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -192,6 +194,13 @@ public class CLIJHandler implements MacroExtension {
             System.out.println("Releasing " + arg);
         }
         ClearCLBuffer buffer = bufferMap.get(arg);
+        if (bufferAsImageMap.containsKey(buffer)) {
+            ClearCLImage image = bufferAsImageMap.get(buffer);
+            image.close();
+            bufferAsImageMap.remove(buffer);
+        }
+
+
         buffer.close();
         bufferMap.remove(arg);
     }
@@ -264,5 +273,21 @@ public class CLIJHandler implements MacroExtension {
             }
         }
         return bytesSum + " b";
+    }
+
+    HashMap<ClearCLBuffer, ClearCLImage> bufferAsImageMap = new HashMap<ClearCLBuffer, ClearCLImage>();
+    //public void cacheImageWithBuffer(ClearCLBuffer buffer, ClearCLImage image) {
+    //
+    //}
+    public ClearCLImage getChachedImageByBuffer(ClearCLBuffer buffer) {
+        if (bufferAsImageMap.containsKey(buffer)) {
+
+            ClearCLImage image = bufferAsImageMap.get(buffer);
+            Kernels.copy(clij, buffer, image);
+            return image;
+        }
+        ClearCLImage image = clij.convert(buffer, ClearCLImage.class);
+        bufferAsImageMap.put(buffer, image);
+        return image;
     }
 }

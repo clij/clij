@@ -91,7 +91,9 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             } else if(item instanceof ClearCLImage) {
                 result[i] = (ClearCLImage)item;
             } else if(item instanceof ClearCLBuffer) {
-                result[i] = clij.convert((ClearCLBuffer)item, ClearCLImage.class);
+                ClearCLBuffer buffer = (ClearCLBuffer)item;
+                ClearCLImage image = CLIJHandler.getInstance().getChachedImageByBuffer(buffer);
+                result[i] = image;
             } else {
                 result[i] = item;
             }
@@ -129,10 +131,15 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return false;
     }
 
+    @Deprecated // no longer needed as images are cached, release and managed with their corresponding buffers
     protected void releaseImages(Object[] args) {
+        if (true) return;
         for (int i = 0; i < args.length; i ++) {
             Object item = args[i];
             if (item instanceof ClearCLImage && args[i] != this.args[i]) {
+                //if (CLIJ.debug) {
+                System.out.println("Releasing " + item);
+                //}
                 ((ClearCLImage) item).close();
             }
         }
