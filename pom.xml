@@ -14,7 +14,7 @@
 
 	<groupId>net.haesleinhuepf</groupId>
 	<artifactId>clij_</artifactId>
-	<version>0.10.4</version>
+	<version>0.10.5</version>
 
 	<name>clij</name>
 	<description>clij</description>
