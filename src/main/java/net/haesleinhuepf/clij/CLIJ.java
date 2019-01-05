@@ -155,13 +155,22 @@ public class CLIJ {
         return CLInfo.clinfo();
     }
 
+    private static ArrayList<String> cachedAvailableDeviceNames = null;
     public static ArrayList<String> getAvailableDeviceNames() {
+        if (cachedAvailableDeviceNames != null) {
+            return cachedAvailableDeviceNames;
+        }
         ArrayList<String> lResultList = new ArrayList<>();
 
         ClearCLBackendInterface lClearCLBackend = ClearCLBackends.getBestBackend();
         ClearCL lClearCL = new ClearCL(lClearCLBackend);
         for (ClearCLDevice lDevice : lClearCL.getAllDevices()) {
             lResultList.add(lDevice.getName());
+        }
+        lClearCL.close();
+        if (cachedAvailableDeviceNames == null) {
+            cachedAvailableDeviceNames = new ArrayList<String>();
+            cachedAvailableDeviceNames.addAll(lResultList);
         }
         return lResultList;
     }
