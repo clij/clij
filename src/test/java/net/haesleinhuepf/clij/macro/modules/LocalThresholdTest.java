@@ -13,7 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class LocalThresholdTest {
-    @Ignore // because it makes the JVM crash
+    //@Ignore // because it makes the JVM crash
     @Test
     public void localThreshold3D() {
         CLIJ clij = CLIJ.getInstance();

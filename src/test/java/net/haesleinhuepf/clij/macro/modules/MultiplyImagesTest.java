@@ -42,7 +42,7 @@ public class MultiplyImagesTest {
         dst.close();
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void multiplyPixelwise3dathousandtimes() {
         CLIJ clij = CLIJ.getInstance();
@@ -103,7 +103,7 @@ public class MultiplyImagesTest {
         dst.close();
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void multiplyPixelwise3d_Buffers_athousandtimes() {
         CLIJ clij = CLIJ.getInstance();
