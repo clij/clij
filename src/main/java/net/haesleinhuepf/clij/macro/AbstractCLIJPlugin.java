@@ -260,7 +260,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
         clij = CLIJ.getInstance(deviceName);
 
-        recordIfNotRecorded("run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
+        recordIfNotRecorded("// run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
 
         ArrayList<ClearCLBuffer> allBuffers = new ArrayList<ClearCLBuffer>();
 
