@@ -1,5 +1,6 @@
 package net.haesleinhuepf.clij.macro.modules;
 
+import ij.IJ;
 import net.haesleinhuepf.clij.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.clij.macro.CLIJHandler;
 import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;
@@ -17,7 +18,7 @@ public class ReportMemory extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public boolean executeCL() {
-        CLIJHandler.getInstance().reportGPUMemory();
+        IJ.log(CLIJHandler.getInstance().reportGPUMemory());
         return true;
     }
 
