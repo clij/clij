@@ -321,10 +321,11 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination")) {
                         if (allBuffers.size() > 0) {
-                            ClearCLBuffer destination = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(imageTitle, this, allBuffers.get(0));
+                            System.out.println("D " + imageTitle);
+                            String destinationName = name + "_" + parameterName + "_" + imageTitle;
+                            ClearCLBuffer destination = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(destinationName, this, allBuffers.get(0));
                             args[i] = destination;
                             allBuffers.add(destination);
-                            String destinationName = name + "_" + parameterName + "_" + imageTitle;
                             destinations.put(destinationName, destination);
                         }
                     }
