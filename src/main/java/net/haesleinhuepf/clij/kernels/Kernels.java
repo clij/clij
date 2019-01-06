@@ -1789,7 +1789,7 @@ public class Kernels {
 
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put("src", clImage);
-            parameters.put("dst", clReducedImage);
+            parameters.put("dst_min", clReducedImage);
             clij.execute(Kernels.class, "projections.cl", "min_project_3d_2d", parameters);
         }
 
@@ -1816,7 +1816,7 @@ public class Kernels {
 
             HashMap<String, Object> parameters = new HashMap<>();
             parameters.put("src", clImage);
-            parameters.put("dst", clReducedImage);
+            parameters.put("dst_min", clReducedImage);
             clij.execute(Kernels.class, "projections.cl", "min_project_3d_2d", parameters);
         }
 
