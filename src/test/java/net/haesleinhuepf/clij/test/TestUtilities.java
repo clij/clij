@@ -65,22 +65,10 @@ public class TestUtilities
     {
       System.out.println("sizes different");
       System.out.println("w " + a.getWidth() + " != " + b.getWidth());
-      System.out.println("h "
-                         + a.getHeight()
-                         + " != "
-                         + b.getHeight());
-      System.out.println("c "
-                         + a.getNChannels()
-                         + " != "
-                         + b.getNChannels());
-      System.out.println("f "
-                         + a.getNFrames()
-                         + " != "
-                         + b.getNFrames());
-      System.out.println("s "
-                         + a.getNSlices()
-                         + " != "
-                         + b.getNSlices());
+      System.out.println("h " + a.getHeight() + " != " + b.getHeight());
+      System.out.println("c " + a.getNChannels() + " != " + b.getNChannels());
+      System.out.println("f " + a.getNFrames() + " != " + b.getNFrames());
+      System.out.println("s " + a.getNSlices() + " != " + b.getNSlices());
       return false;
     }
 
@@ -104,11 +92,7 @@ public class TestUtilities
             {
               if (Math.abs(aIP.getPixelValue(x, y) - bIP.getPixelValue(x, y)) > tolerance)
               {
-                System.out.println("pixels different "
-                                   + "| " + aIP.getPixelValue(x, y)
-                                   + " - "
-                                   + bIP.getPixelValue(x, y)
-                                   + " | > " + tolerance);
+                System.out.println("pixels different | " + aIP.getPixelValue(x, y) + " - " + bIP.getPixelValue(x, y) + " | > " + tolerance);
                 return false;
               }
             }

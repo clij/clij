@@ -11,6 +11,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.view.Views;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -32,25 +33,23 @@ public class DoubleFlipTest
     new DoubleFlipTest().testFlipImageTwiceOnAllDevices();
   }
 
-  @Test public void testFlipImageTwiceOnAllDevices() throws
+  @Ignore // ignored; clij does currently not work on recent Intel Core I7 8th generation CPU Windows.
+  @Test
+  public void testFlipImageTwiceOnAllDevices() throws
                                                      IOException
   {
     for (String deviceName : CLIJ.getAvailableDeviceNames())
     {
       CLIJ clij = CLIJ.getInstance(deviceName);
-
       System.out.println("Testing " + deviceName);
 
-      ImagePlus
-          inputImagePlus =
-          IJ.openImage("src/main/resources/flybrain.tif");
+      ImagePlus inputImagePlus = IJ.openImage("src/main/resources/flybrain.tif");
 
       ClearCLImage clImage = clij.convert(inputImagePlus, ClearCLImage.class);
 
       RandomAccessibleInterval inputImagePlus2 = clij.convert(clImage, RandomAccessibleInterval.class);
 
-      assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(inputImagePlus2),
-                 ImageJFunctions.<UnsignedShortType>wrap(inputImagePlus)));
+      assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(inputImagePlus2), ImageJFunctions.<UnsignedShortType>wrap(inputImagePlus)));
 
       RandomAccessibleInterval<UnsignedShortType> inputImg = ImageJFunctions.wrap(inputImagePlus);
 

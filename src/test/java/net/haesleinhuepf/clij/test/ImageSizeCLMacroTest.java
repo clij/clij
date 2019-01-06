@@ -44,7 +44,6 @@ public class ImageSizeCLMacroTest {
 
         assertEquals(referenceWidth, width);
 
-
         src1.close();
         src2.close();
         dst.close();
@@ -72,7 +71,6 @@ public class ImageSizeCLMacroTest {
         int width = imp.getProcessor().get(0,0);
 
         assertEquals(referenceWidth, width);
-
 
         src1.close();
         src2.close();

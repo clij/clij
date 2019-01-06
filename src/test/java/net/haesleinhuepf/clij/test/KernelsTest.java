@@ -29,9 +29,6 @@ import static org.junit.Assert.assertTrue;
  * March 2018
  */
 public class KernelsTest {
-    //static {
-    //    LegacyInjector.preinit();
-    //}
 
     ImagePlus testFlyBrain3D;
     ImagePlus testFlyBrain2D;
@@ -157,16 +154,6 @@ public class KernelsTest {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     @Test
     public void splitStack() {
         ClearCLImage clearCLImage = clij.convert(testFlyBrain3D, ClearCLImage.class);;
@@ -190,9 +177,6 @@ public class KernelsTest {
         assertTrue(Kernels.sumPixels(clij, split1) > 0);
         assertTrue(Kernels.sumPixels(clij, split2) > 0);
     }
-
-
-
 
     @Test
     public void tenengradWeights() {

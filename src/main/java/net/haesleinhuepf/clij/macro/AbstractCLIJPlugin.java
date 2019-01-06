@@ -91,7 +91,9 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             } else if(item instanceof ClearCLImage) {
                 result[i] = (ClearCLImage)item;
             } else if(item instanceof ClearCLBuffer) {
-                result[i] = clij.convert((ClearCLBuffer)item, ClearCLImage.class);
+                ClearCLBuffer buffer = (ClearCLBuffer)item;
+                ClearCLImage image = CLIJHandler.getInstance().getChachedImageByBuffer(buffer);
+                result[i] = image;
             } else {
                 result[i] = item;
             }
@@ -129,10 +131,15 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return false;
     }
 
+    @Deprecated // no longer needed as images are cached, release and managed with their corresponding buffers
     protected void releaseImages(Object[] args) {
+        if (true) return;
         for (int i = 0; i < args.length; i ++) {
             Object item = args[i];
             if (item instanceof ClearCLImage && args[i] != this.args[i]) {
+                //if (CLIJ.debug) {
+                System.out.println("Releasing " + item);
+                //}
                 ((ClearCLImage) item).close();
             }
         }
@@ -249,17 +256,26 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             return;
         }
 
+        // find out if a macro is running
+        String threadName = Thread.currentThread().getName();
+        boolean isMacro = threadName.startsWith("Run$_");
+
+        if (!isMacro) {
+            // Before we start: Empty the cache:
+            CLIJHandler.getInstance().clearGPU();
+        }
         String deviceName = gd.getNextChoice();
 
         clij = CLIJ.getInstance(deviceName);
+        CLIJHandler.getInstance().setCLIJ(clij);
 
-        recordIfNotRecorded("run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
+        recordIfNotRecorded("// run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
 
         ArrayList<ClearCLBuffer> allBuffers = new ArrayList<ClearCLBuffer>();
 
         HashMap<String, ClearCLBuffer> destinations = new HashMap<String, ClearCLBuffer>();
 
-        String imageTitle = "";
+        String firstImageTitle = "";
         String calledParameters = "";
 
         if (parameters.length > 0 && parameters[0].length() > 0) {
@@ -270,15 +286,16 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination")) {
                         // Creation of output buffers needs to be done after all other parameters have been read.
-                        String destinationName = name + "_" + parameterName + "_" + imageTitle;
+                        String destinationName = name + "_" + parameterName + "_" + firstImageTitle;
                         calledParameters = calledParameters + "\"" + destinationName + "\"";
                     } else {
                         ImagePlus imp = gd.getNextImage();
-                        if (imageTitle.length() == 0) {
-                            imageTitle = imp.getTitle();
+                        if (firstImageTitle.length() == 0) {
+                            firstImageTitle = imp.getTitle();
                         }
                         recordIfNotRecorded("// Ext.CLIJ_push", "\"" + imp.getTitle() + "\"");
-                        args[i] = clij.convert(imp, ClearCLBuffer.class);
+                        args[i] = CLIJHandler.getInstance().pushToGPU(imp.getTitle());
+                                //clij.convert(imp, ClearCLBuffer.class);
                         allBuffers.add((ClearCLBuffer) args[i]);
                         calledParameters = calledParameters + "\"" + imp.getTitle() + "\"";
                     }
@@ -304,10 +321,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination")) {
                         if (allBuffers.size() > 0) {
-                            ClearCLBuffer destination = createOutputBufferFromSource(allBuffers.get(0));
+                            String destinationName = name + "_" + parameterName + "_" + firstImageTitle;
+                            ClearCLBuffer destination = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(destinationName, this, allBuffers.get(0));
                             args[i] = destination;
                             allBuffers.add(destination);
-                            String destinationName = name + "_" + parameterName + "_" + imageTitle;
                             destinations.put(destinationName, destination);
                         }
                     }
@@ -327,9 +344,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             record("// Ext.CLIJ_pull", "\"" + destinationName + "\"");
             clij.show(destinations.get(destinationName), destinationName);
         }
-
-        for (ClearCLBuffer buffer : allBuffers) {
-            buffer.close();
+        
+        allBuffers.clear();
+        if (!isMacro) {
+            CLIJHandler.getInstance().clearGPU();
         }
     }
 

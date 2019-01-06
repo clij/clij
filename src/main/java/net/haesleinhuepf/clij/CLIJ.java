@@ -134,7 +134,7 @@ public class CLIJ {
         if (sInstance == null) {
             sInstance = new CLIJ(pDeviceNameMustContain);
         } else {
-            if (pDeviceNameMustContain != null && sInstance.getClearCLContext().getDevice().getName().compareTo(pDeviceNameMustContain) != 0) {
+            if (pDeviceNameMustContain != null && sInstance.getGPUName().compareTo(pDeviceNameMustContain) != 0) {
                 // switch device requested
                 if (debug) {
                     System.out.println("Switching CL device! New: " +  pDeviceNameMustContain);
@@ -147,17 +147,30 @@ public class CLIJ {
         return sInstance;
     }
 
+    public String getGPUName() {
+        return getClearCLContext().getDevice().getName();
+    }
+
     public static String clinfo() {
         return CLInfo.clinfo();
     }
 
+    private static ArrayList<String> cachedAvailableDeviceNames = null;
     public static ArrayList<String> getAvailableDeviceNames() {
+        if (cachedAvailableDeviceNames != null) {
+            return cachedAvailableDeviceNames;
+        }
         ArrayList<String> lResultList = new ArrayList<>();
 
         ClearCLBackendInterface lClearCLBackend = ClearCLBackends.getBestBackend();
         ClearCL lClearCL = new ClearCL(lClearCLBackend);
         for (ClearCLDevice lDevice : lClearCL.getAllDevices()) {
             lResultList.add(lDevice.getName());
+        }
+        lClearCL.close();
+        if (cachedAvailableDeviceNames == null) {
+            cachedAvailableDeviceNames = new ArrayList<String>();
+            cachedAvailableDeviceNames.addAll(lResultList);
         }
         return lResultList;
     }
@@ -226,7 +239,7 @@ public class CLIJ {
         return mClearCLContext;
     }
 
-    public Map<String, Object> parameters(Object... pParameterList) {
+    public static Map<String, Object> parameters(Object... pParameterList) {
         Map<String, Object> lResultMap = new HashMap<String, Object>();
         for (int i = 0; i < pParameterList.length; i += 2) {
             lResultMap.put((String) pParameterList[i], pParameterList[i + 1]);

@@ -18,6 +18,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.view.Views;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -60,12 +61,13 @@ public class ImageConverterTest
     }
   }
 
-  @Test public void testImgClearCLImageConverter()
+  @Test
+  public void testImgClearCLImageConverter()
   {
-    for (String deviceName : CLIJ.getAvailableDeviceNames())
-    {
-      clij = CLIJ.getInstance(deviceName);
-      System.out.println("Testing device " + deviceName);
+    //for (String deviceName : CLIJ.getAvailableDeviceNames())
+    //{
+      clij = CLIJ.getInstance();
+      //System.out.println("Testing device " + deviceName);
 
       RandomAccessibleInterval<FloatType>
           lFloatImg =
@@ -96,12 +98,12 @@ public class ImageConverterTest
           ArrayImgs.shorts(new long[] { 5, 6, 7 });
       fillTestImage(lShortImg);
       testBackAndForthConversionViaCLImage(lShortImg);
-    }
+    //}
   }
 
   @Test public void testBufferConversion()
   {
-    clij = CLIJ.getInstance("HD");
+    clij = CLIJ.getInstance();
 
     RandomAccessibleInterval<FloatType>
         lFloatImg =
@@ -159,7 +161,7 @@ public class ImageConverterTest
 
   @Test public void convertHugeUnsignedShortImageTest()
   {
-    clij = CLIJ.getInstance("CPU");
+    clij = CLIJ.getInstance();
     RandomAccessibleInterval<UnsignedShortType>
         lRAI =
         ArrayImgs.unsignedShorts(new long[] { 10, 10 });
@@ -174,7 +176,7 @@ public class ImageConverterTest
 
   @Test public void convertHugeSignedShortImageTest()
   {
-    clij = CLIJ.getInstance("CPU");
+    clij = CLIJ.getInstance();
     RandomAccessibleInterval<ShortType>
         lRAI =
         ArrayImgs.shorts(new long[] { 1, 1 });
@@ -189,7 +191,7 @@ public class ImageConverterTest
 
   @Test public void convertHugeFloatImageTest()
   {
-    clij = CLIJ.getInstance("CPU");
+    clij = CLIJ.getInstance();
     RandomAccessibleInterval<FloatType>
         lRAI =
         ArrayImgs.floats(new long[] { 1, 1 });
@@ -203,34 +205,28 @@ public class ImageConverterTest
 
     @Test
     public void testConversionUnsignedShortStackToFloatCLImage() {
+        CLIJ.debug = true;
         clij = CLIJ.getInstance();
 
-        RandomAccessibleInterval<UnsignedShortType>
-            rai =
-            ArrayImgs.unsignedShorts(new long[] { 3, 3 });
+        RandomAccessibleInterval<UnsignedShortType> rai = ArrayImgs.unsignedShorts(new long[] { 3, 3 });
 
         RandomAccess<UnsignedShortType> ra = rai.randomAccess();
         ra.setPosition(new int[] {1,1});
         ra.get().set(4);
 
         ClearCLImage stack = clij.convert(rai, ClearCLImage.class);
-                //converter(rai).getClearCLImage();
 
         // test starts here
-
         RandomAccessibleInterval rai2 = clij.convert(stack, RandomAccessibleInterval.class);
-                //converter(stack).getRandomAccessibleInterval();
 
         ClearCLImage clImage = clij.createCLImage(stack.getDimensions(), ImageChannelDataType.Float);
         RandomAccessibleIntervalToClearCLImageConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);
-        //ImageTypeConverter.copyRandomAccessibleIntervalToClearCLImage(rai2, clImage);
 
         ClearCLImage clImage2 = clij.createCLImage(stack.getDimensions(), ImageChannelDataType.UnsignedInt16);
 
         Kernels.copy(clij, clImage, clImage2);
 
         RandomAccessibleInterval<UnsignedShortType> rai3 = (RandomAccessibleInterval<UnsignedShortType>) clij.convert(clImage2, RandomAccessibleInterval.class);
-                //converter(clImage2).getRandomAccessibleInterval();
 
         assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(rai2), Views.iterable(rai3)));
 

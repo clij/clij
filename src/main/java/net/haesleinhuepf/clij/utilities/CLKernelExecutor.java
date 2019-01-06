@@ -4,7 +4,6 @@ import clearcl.*;
 import clearcl.enums.ImageChannelDataType;
 import clearcl.exceptions.OpenCLException;
 import clearcl.util.ElapsedTime;
-import com.sun.org.apache.xalan.internal.xsltc.dom.SimpleResultTreeImpl;
 import coremem.enums.NativeTypeEnum;
 import net.haesleinhuepf.clij.CLIJ;
 
@@ -26,93 +25,78 @@ import java.util.Map;
  */
 public class CLKernelExecutor {
     public static int MAX_ARRAY_SIZE = 1000;
-    ClearCLContext mContext;
-    Class mAnchorClass;
-    String mProgramFilename;
-    String mKernelName;
-    Map<String, Object> mParameterMap;
-    long[] mGlobalSizes;
-    private String mSourceFile;
+    ClearCLContext context;
+    Class anchorClass;
+    String programFilename;
+    String kernelName;
+    Map<String, Object> parameterMap;
+    long[] globalSizes;
 
-    private HashMap<String, ClearCLProgram> mProgramCacheMap = new HashMap();
+    private HashMap<String, ClearCLProgram> programCacheMap = new HashMap();
     ClearCLProgram currentProgram = null;
 
-    public CLKernelExecutor(ClearCLContext pContext,
-                            Class pAnchorClass,
-                            String pProgramFilename,
-                            String pKernelName,
-                            long[] pGlobalSizes) throws
+    public CLKernelExecutor(ClearCLContext context,
+                            Class anchorClass,
+                            String programFilename,
+                            String kernelName,
+                            long[] globalSizes) throws
             IOException {
         super();
-        mProgramFilename = pProgramFilename;
-        mAnchorClass = pAnchorClass;
-        mKernelName = pKernelName;
-        mContext = pContext;
-        mGlobalSizes = pGlobalSizes;
+        this.programFilename = programFilename;
+        this.anchorClass = anchorClass;
+        this.kernelName = kernelName;
+        this.context = context;
+        this.globalSizes = globalSizes;
     }
 
-    public static void getOpenCLDefines(Map<String, Object> lDefines, ImageChannelDataType pDType, boolean pInput) {
-        if (pInput) {
-            lDefines.put("DTYPE_IMAGE_IN_3D", "__read_only image3d_t");
-            lDefines.put("DTYPE_IMAGE_IN_2D", "__read_only image2d_t");
-            if (pDType.isInteger()) {
-                if (pDType == ImageChannelDataType.UnsignedInt8 || pDType == ImageChannelDataType.SignedInt8) {
-                    lDefines.put("DTYPE_IN", "char");
+    public static void getOpenCLDefines(Map<String, Object> defines, ImageChannelDataType imageChannelDataType, boolean isInputImage) {
+        if (isInputImage) {
+            defines.put("DTYPE_IMAGE_IN_3D", "__read_only image3d_t");
+            defines.put("DTYPE_IMAGE_IN_2D", "__read_only image2d_t");
+            if (imageChannelDataType.isInteger()) {
+                if (imageChannelDataType == ImageChannelDataType.UnsignedInt8 || imageChannelDataType == ImageChannelDataType.SignedInt8) {
+                    defines.put("DTYPE_IN", "char");
                 } else {
-                    lDefines.put("DTYPE_IN", "ushort");
+                    defines.put("DTYPE_IN", "ushort");
                 }
             } else {
-                lDefines.put("DTYPE_IN", "float");
+                defines.put("DTYPE_IN", "float");
             }
-            lDefines.put("READ_IMAGE_2D", pDType.isInteger() ? "read_imageui" : "read_imagef");
-            lDefines.put("READ_IMAGE_3D", pDType.isInteger() ? "read_imageui" : "read_imagef");
-            //lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_image_width(a)");
-            //lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_image_height(a)");
-            //lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_image_depth(a)");
+            defines.put("READ_IMAGE_2D", imageChannelDataType.isInteger() ? "read_imageui" : "read_imagef");
+            defines.put("READ_IMAGE_3D", imageChannelDataType.isInteger() ? "read_imageui" : "read_imagef");
         } else {
-            lDefines.put("DTYPE_IMAGE_OUT_3D", "__write_only image3d_t");
-            lDefines.put("DTYPE_IMAGE_OUT_2D", "__write_only image2d_t");
-            //lDefines.put("DTYPE_OUT", pDType.isInteger() ? "ushort" : "float");
-            if (pDType.isInteger()) {
-                if (pDType == ImageChannelDataType.UnsignedInt8 || pDType == ImageChannelDataType.SignedInt8) {
-                    lDefines.put("DTYPE_OUT", "char");
+            defines.put("DTYPE_IMAGE_OUT_3D", "__write_only image3d_t");
+            defines.put("DTYPE_IMAGE_OUT_2D", "__write_only image2d_t");
+            if (imageChannelDataType.isInteger()) {
+                if (imageChannelDataType == ImageChannelDataType.UnsignedInt8 || imageChannelDataType == ImageChannelDataType.SignedInt8) {
+                    defines.put("DTYPE_OUT", "char");
                 } else {
-                    lDefines.put("DTYPE_OUT", "ushort");
+                    defines.put("DTYPE_OUT", "ushort");
                 }
             } else {
-                lDefines.put("DTYPE_OUT", "float");
+                defines.put("DTYPE_OUT", "float");
             }
-            lDefines.put("WRITE_IMAGE_2D", pDType.isInteger() ? "write_imageui" : "write_imagef");
-            lDefines.put("WRITE_IMAGE_3D", pDType.isInteger() ? "write_imageui" : "write_imagef");
-            //lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_image_width(a)");
-            //lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_image_height(a)");
-            //lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_image_depth(a)");
+            defines.put("WRITE_IMAGE_2D", imageChannelDataType.isInteger() ? "write_imageui" : "write_imagef");
+            defines.put("WRITE_IMAGE_3D", imageChannelDataType.isInteger() ? "write_imageui" : "write_imagef");
         }
     }
 
-    public static void getOpenCLDefines(Map<String, Object> lDefines, NativeTypeEnum pDType, long width, long height, long depth, long dimension, boolean pInput) {
-        String typeName = nativeTypeToOpenCLTypeName(pDType);
-        String typeId = nativeTypeToOpenCLTypeShortName(pDType);
+    public static void getOpenCLDefines(Map<String, Object> defines, NativeTypeEnum nativeTypeEnum, boolean isInputImage) {
+        String typeName = nativeTypeToOpenCLTypeName(nativeTypeEnum);
+        String typeId = nativeTypeToOpenCLTypeShortName(nativeTypeEnum);
 
-        if (pInput) {
-
-            lDefines.put("DTYPE_IN", typeName);
-            lDefines.put("DTYPE_IMAGE_IN_3D", "__global " + typeName + "*");
-            lDefines.put("DTYPE_IMAGE_IN_2D", "__global " + typeName + "*");
-            lDefines.put("READ_IMAGE_2D(a,b,c)", "read_buffer2d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
-            lDefines.put("READ_IMAGE_3D(a,b,c)", "read_buffer3d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
-            //lDefines.put("GET_IMAGE_IN_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
-            //lDefines.put("GET_IMAGE_IN_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
-            //lDefines.put("GET_IMAGE_IN_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
+        if (isInputImage) {
+            defines.put("DTYPE_IN", typeName);
+            defines.put("DTYPE_IMAGE_IN_3D", "__global " + typeName + "*");
+            defines.put("DTYPE_IMAGE_IN_2D", "__global " + typeName + "*");
+            defines.put("READ_IMAGE_2D(a,b,c)", "read_buffer2d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
+            defines.put("READ_IMAGE_3D(a,b,c)", "read_buffer3d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
         } else {
-            lDefines.put("DTYPE_OUT", typeName);
-            lDefines.put("DTYPE_IMAGE_OUT_3D", "__global " + typeName + "*");
-            lDefines.put("DTYPE_IMAGE_OUT_2D", "__global " + typeName + "*");
-            lDefines.put("WRITE_IMAGE_2D(a,b,c)", "write_buffer2d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
-            lDefines.put("WRITE_IMAGE_3D(a,b,c)", "write_buffer3d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
-            //lDefines.put("GET_IMAGE_OUT_WIDTH(a)", "get_buffer" + typeId + "_width(" + width + ",a)");
-            //lDefines.put("GET_IMAGE_OUT_HEIGHT(a)", "get_buffer" + typeId + "_height(" + height + ",a)");
-            //lDefines.put("GET_IMAGE_OUT_DEPTH(a)", "get_buffer" + typeId + "_depth(" + depth + ",a)");
+            defines.put("DTYPE_OUT", typeName);
+            defines.put("DTYPE_IMAGE_OUT_3D", "__global " + typeName + "*");
+            defines.put("DTYPE_IMAGE_OUT_2D", "__global " + typeName + "*");
+            defines.put("WRITE_IMAGE_2D(a,b,c)", "write_buffer2d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
+            defines.put("WRITE_IMAGE_3D(a,b,c)", "write_buffer3d" + typeId + "(GET_IMAGE_WIDTH(a),GET_IMAGE_HEIGHT(a),GET_IMAGE_DEPTH(a),a,b,c)");
         }
     }
 
@@ -152,99 +136,98 @@ public class CLKernelExecutor {
      * Map of all parameters. It is recommended that input and output
      * images are given with the names "src" and "dst", respectively.
      *
-     * @param pParameterMap
+     * @param parameterMap
      */
-    public void setParameterMap(Map<String, Object> pParameterMap) {
-        mParameterMap = pParameterMap;
+    public void setParameterMap(Map<String, Object> parameterMap) {
+        this.parameterMap = parameterMap;
     }
 
-    public boolean enqueue(boolean pWaitToFinish) {
+    public boolean enqueue(boolean waitToFinish) {
 
 
         if (CLIJ.debug) {
-            System.out.println("Loading " + mKernelName);
+            System.out.println("Loading " + kernelName);
         }
 
-        ClearCLImage lSrcImage = null;
-        ClearCLImage lDstImage = null;
-        ClearCLBuffer lSrcBuffer = null;
-        ClearCLBuffer lDstBuffer = null;
+        ClearCLImage srcImage = null;
+        ClearCLImage dstImage = null;
+        ClearCLBuffer srcBuffer = null;
+        ClearCLBuffer dstBuffer = null;
 
-        if (mParameterMap != null) {
-            for (String key : mParameterMap.keySet()) {
-                if (mParameterMap.get(key) instanceof ClearCLImage) {
+        if (parameterMap != null) {
+            for (String key : parameterMap.keySet()) {
+                if (parameterMap.get(key) instanceof ClearCLImage) {
                     if (key.contains("src") || key.contains("input")) {
-                        lSrcImage = (ClearCLImage) mParameterMap.get(key);
+                        srcImage = (ClearCLImage) parameterMap.get(key);
                     } else if (key.contains("dst") || key.contains("output")) {
-                        lDstImage = (ClearCLImage) mParameterMap.get(key);
+                        dstImage = (ClearCLImage) parameterMap.get(key);
                     }
-                } else if (mParameterMap.get(key) instanceof ClearCLBuffer) {
+                } else if (parameterMap.get(key) instanceof ClearCLBuffer) {
                     if (key.contains("src") || key.contains("input")) {
-                        lSrcBuffer = (ClearCLBuffer) mParameterMap.get(key);
+                        srcBuffer = (ClearCLBuffer) parameterMap.get(key);
                     } else if (key.contains("dst") || key.contains("output")) {
-                        lDstBuffer = (ClearCLBuffer) mParameterMap.get(key);
+                        dstBuffer = (ClearCLBuffer) parameterMap.get(key);
                     }
                 }
             }
         }
 
-        if (lDstImage == null && lDstBuffer == null) {
-            if (lSrcImage != null) {
-                lDstImage = lSrcImage;
-            } else if (lSrcBuffer != null) {
-                lDstBuffer = lSrcBuffer;
+        if (dstImage == null && dstBuffer == null) {
+            if (srcImage != null) {
+                dstImage = srcImage;
+            } else if (srcBuffer != null) {
+                dstBuffer = srcBuffer;
             }
-        } else if (lSrcImage == null && lSrcBuffer == null) {
-            if (lDstImage != null) {
-                lSrcImage = lDstImage;
-            } else if (lDstBuffer != null) {
-                lSrcBuffer = lDstBuffer;
+        } else if (srcImage == null && srcBuffer == null) {
+            if (dstImage != null) {
+                srcImage = dstImage;
+            } else if (dstBuffer != null) {
+                srcBuffer = dstBuffer;
             }
         }
 
 
-        Map<String, Object> lOpenCLDefines = new HashMap();
-        lOpenCLDefines.put("MAX_ARRAY_SIZE", MAX_ARRAY_SIZE);
-        if (lSrcImage != null) {
-            getOpenCLDefines(lOpenCLDefines, lSrcImage.getChannelDataType(), true);
+        Map<String, Object> openCLDefines = new HashMap();
+        openCLDefines.put("MAX_ARRAY_SIZE", MAX_ARRAY_SIZE); // needed for median. Median is limited to a given array length to be sorted
+        if (srcImage != null) {
+            getOpenCLDefines(openCLDefines, srcImage.getChannelDataType(), true);
         }
-        if (lDstImage != null) {
-            getOpenCLDefines(lOpenCLDefines, lDstImage.getChannelDataType(), false);
+        if (dstImage != null) {
+            getOpenCLDefines(openCLDefines, dstImage.getChannelDataType(), false);
         }
-        if (lSrcBuffer != null) {
-            getOpenCLDefines(lOpenCLDefines, lSrcBuffer.getNativeType(), lSrcBuffer.getWidth(), lSrcBuffer.getHeight(), lSrcBuffer.getDepth(), lSrcBuffer.getDimension(), true);
+        if (srcBuffer != null) {
+            getOpenCLDefines(openCLDefines, srcBuffer.getNativeType(), true);
         }
-        if (lDstBuffer != null) {
-            getOpenCLDefines(lOpenCLDefines, lDstBuffer.getNativeType(), lDstBuffer.getWidth(), lDstBuffer.getHeight(), lDstBuffer.getDepth(), lDstBuffer.getDimension(), false);
+        if (dstBuffer != null) {
+            getOpenCLDefines(openCLDefines, dstBuffer.getNativeType(), false);
         }
 
         // deal with image width/height/depth for all images and buffers
         ArrayList<String> definedParameterKeys = new ArrayList<String>();
-        for (String key : mParameterMap.keySet()) {
-            if (mParameterMap.get(key) instanceof ClearCLImage) {
-                ClearCLImage image = (ClearCLImage) mParameterMap.get(key);
-                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_WIDTH", image.getWidth());
-                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_HEIGHT", image.getHeight());
-                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_DEPTH", image.getDepth());
-            } else if (mParameterMap.get(key) instanceof ClearCLBuffer) {
-                ClearCLBuffer image = (ClearCLBuffer) mParameterMap.get(key);
-                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_WIDTH", image.getWidth());
-                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_HEIGHT", image.getHeight());
-                lOpenCLDefines.put("IMAGE_SIZE_" + key + "_DEPTH", image.getDepth());
+        for (String key : parameterMap.keySet()) {
+            if (parameterMap.get(key) instanceof ClearCLImage) {
+                ClearCLImage image = (ClearCLImage) parameterMap.get(key);
+                openCLDefines.put("IMAGE_SIZE_" + key + "_WIDTH", image.getWidth());
+                openCLDefines.put("IMAGE_SIZE_" + key + "_HEIGHT", image.getHeight());
+                openCLDefines.put("IMAGE_SIZE_" + key + "_DEPTH", image.getDepth());
+            } else if (parameterMap.get(key) instanceof ClearCLBuffer) {
+                ClearCLBuffer image = (ClearCLBuffer) parameterMap.get(key);
+                openCLDefines.put("IMAGE_SIZE_" + key + "_WIDTH", image.getWidth());
+                openCLDefines.put("IMAGE_SIZE_" + key + "_HEIGHT", image.getHeight());
+                openCLDefines.put("IMAGE_SIZE_" + key + "_DEPTH", image.getDepth());
             }
             definedParameterKeys.add(key);
         }
 
-
-        lOpenCLDefines.put("GET_IMAGE_IN_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
-        lOpenCLDefines.put("GET_IMAGE_IN_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
-        lOpenCLDefines.put("GET_IMAGE_IN_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
-        lOpenCLDefines.put("GET_IMAGE_OUT_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
-        lOpenCLDefines.put("GET_IMAGE_OUT_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
-        lOpenCLDefines.put("GET_IMAGE_OUT_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
-        lOpenCLDefines.put("GET_IMAGE_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
-        lOpenCLDefines.put("GET_IMAGE_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
-        lOpenCLDefines.put("GET_IMAGE_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
+        openCLDefines.put("GET_IMAGE_IN_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
+        openCLDefines.put("GET_IMAGE_IN_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
+        openCLDefines.put("GET_IMAGE_IN_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
+        openCLDefines.put("GET_IMAGE_OUT_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
+        openCLDefines.put("GET_IMAGE_OUT_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
+        openCLDefines.put("GET_IMAGE_OUT_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
+        openCLDefines.put("GET_IMAGE_WIDTH(image_key)", "IMAGE_SIZE_ ## image_key ## _WIDTH");
+        openCLDefines.put("GET_IMAGE_HEIGHT(image_key)", "IMAGE_SIZE_ ## image_key ## _HEIGHT");
+        openCLDefines.put("GET_IMAGE_DEPTH(image_key)", "IMAGE_SIZE_ ## image_key ## _DEPTH");
 
         // add undefined parameters to define list
         ArrayList<String> variableNames = getImageVariablesFromSource();
@@ -258,30 +241,28 @@ public class CLKernelExecutor {
                 }
             }
             if (!existsAlready) {
-                lOpenCLDefines.put("IMAGE_SIZE_" + variableName + "_WIDTH", 0);
-                lOpenCLDefines.put("IMAGE_SIZE_" + variableName + "_HEIGHT", 0);
-                lOpenCLDefines.put("IMAGE_SIZE_" + variableName + "_DEPTH", 0);
+                openCLDefines.put("IMAGE_SIZE_" + variableName + "_WIDTH", 0);
+                openCLDefines.put("IMAGE_SIZE_" + variableName + "_HEIGHT", 0);
+                openCLDefines.put("IMAGE_SIZE_" + variableName + "_DEPTH", 0);
             }
         }
 
         if (CLIJ.debug) {
-            for (String define : lOpenCLDefines.keySet()) {
-                System.out.println(define + " = " + lOpenCLDefines.get(define));
+            for (String key : openCLDefines.keySet()) {
+                System.out.println(key + " = " + openCLDefines.get(key));
             }
         }
 
 
 
-        ClearCLKernel lClearCLKernel = null;
+        ClearCLKernel clearCLKernel = null;
 
         try {
 
-            if (lOpenCLDefines != null) {
-                lClearCLKernel =
-                        getKernel(mContext, mKernelName, lOpenCLDefines);
+            if (openCLDefines != null) {
+                clearCLKernel = getKernel(context, kernelName, openCLDefines);
             } else {
-                lClearCLKernel =
-                        getKernel(mContext, mKernelName);
+                clearCLKernel = getKernel(context, kernelName);
             }
 
         } catch (IOException e1) {
@@ -289,27 +270,27 @@ public class CLKernelExecutor {
             return false;
         }
 
-        if (lClearCLKernel != null) {
-            if (mGlobalSizes != null) {
-                lClearCLKernel.setGlobalSizes(mGlobalSizes);
-            } else if (lDstImage != null) {
-                lClearCLKernel.setGlobalSizes(lDstImage.getDimensions());
-            } else if (lDstBuffer != null) {
-                lClearCLKernel.setGlobalSizes(lDstBuffer.getDimensions());
+        if (clearCLKernel != null) {
+            if (globalSizes != null) {
+                clearCLKernel.setGlobalSizes(globalSizes);
+            } else if (dstImage != null) {
+                clearCLKernel.setGlobalSizes(dstImage.getDimensions());
+            } else if (dstBuffer != null) {
+                clearCLKernel.setGlobalSizes(dstBuffer.getDimensions());
             }
-            if (mParameterMap != null) {
-                for (String key : mParameterMap.keySet()) {
-                    lClearCLKernel.setArgument(key, mParameterMap.get(key));
+            if (parameterMap != null) {
+                for (String key : parameterMap.keySet()) {
+                    clearCLKernel.setArgument(key, parameterMap.get(key));
                 }
             }
             if (CLIJ.debug) {
-                System.out.println("Executing " + mKernelName);
+                System.out.println("Executing " + kernelName);
             }
 
-            final ClearCLKernel kernel = lClearCLKernel;
+            final ClearCLKernel kernel = clearCLKernel;
             double duration = ElapsedTime.measure("Pure kernel execution", () -> {
                 try {
-                    kernel.run(pWaitToFinish);
+                    kernel.run(waitToFinish);
                 } catch (Exception e) {
                     e.printStackTrace();
 
@@ -317,22 +298,17 @@ public class CLKernelExecutor {
                 }
             });
             if (CLIJ.debug) {
-                System.out.println("Returned from " + mKernelName + " after " + duration + " msec" );
+                System.out.println("Returned from " + kernelName + " after " + duration + " msec" );
             }
-            lClearCLKernel.close();
+            clearCLKernel.close();
         }
-
-        //for (ClearCLProgram program : mProgramCacheMap.values()) {
-        //  program.close();
-        //}
-        //mProgramCacheMap.clear();
 
         return true;
     }
 
     private HashMap<String, ArrayList<String>> variableListMap = new HashMap<String, ArrayList<String>>();
     private ArrayList<String> getImageVariablesFromSource() {
-        String key = mAnchorClass.getName() + "_" + mProgramFilename;
+        String key = anchorClass.getName() + "_" + programFilename;
 
         if (variableListMap.containsKey(key)) {
             return variableListMap.get(key);
@@ -375,13 +351,13 @@ public class CLKernelExecutor {
 
     private HashMap<String, String> sourceCodeCache = new HashMap<String, String>();
     protected String getProgramSource() {
-        String key = mAnchorClass.getName() + "_" + mProgramFilename;
+        String key = anchorClass.getName() + "_" + programFilename;
 
         if (sourceCodeCache.containsKey(key)) {
             return sourceCodeCache.get(key);
         }
         try {
-            ClearCLProgram program = mContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
+            ClearCLProgram program = context.createProgram(this.anchorClass, new String[]{this.programFilename});
             String source = program.getSourceCode();
             sourceCodeCache.put(key, source);
             return source;
@@ -391,44 +367,44 @@ public class CLKernelExecutor {
         return "";
     }
 
-    public void setAnchorClass(Class mAnchorClass) {
-        this.mAnchorClass = mAnchorClass;
+    public void setAnchorClass(Class anchorClass) {
+        this.anchorClass = anchorClass;
     }
 
-    public void setProgramFilename(String mProgramFilename) {
-        this.mProgramFilename = mProgramFilename;
+    public void setProgramFilename(String programFilename) {
+        this.programFilename = programFilename;
     }
 
-    public void setKernelName(String mKernelName) {
-        this.mKernelName = mKernelName;
+    public void setKernelName(String kernelName) {
+        this.kernelName = kernelName;
     }
 
-    public void setGlobalSizes(long[] pGlobalSizes) {
-        mGlobalSizes = pGlobalSizes;
+    public void setGlobalSizes(long[] globalSizes) {
+        this.globalSizes = globalSizes;
     }
 
-    protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName) throws IOException {
-        return this.getKernel(pContext, pKernelName, (Map) null);
+    protected ClearCLKernel getKernel(ClearCLContext context, String kernelName) throws IOException {
+        return this.getKernel(context, kernelName, (Map) null);
     }
 
-    protected ClearCLKernel getKernel(ClearCLContext pContext, String pKernelName, Map<String, Object> pDefines) throws IOException {
+    protected ClearCLKernel getKernel(ClearCLContext context, String kernelName, Map<String, Object> defines) throws IOException {
 
-        String lProgramCacheKey = mAnchorClass.getCanonicalName() + " " + mProgramFilename;
-        for (String key : pDefines.keySet()) {
-            lProgramCacheKey = lProgramCacheKey + " " + (key + " = " + pDefines.get(key));
+        String programCacheKey = anchorClass.getCanonicalName() + " " + programFilename;
+        for (String key : defines.keySet()) {
+            programCacheKey = programCacheKey + " " + (key + " = " + defines.get(key));
         }
         if (CLIJ.debug) {
-            System.out.println("Program cache hash:" + lProgramCacheKey);
+            System.out.println("Program cache hash:" + programCacheKey);
         }
-        ClearCLProgram clProgram = this.mProgramCacheMap.get(lProgramCacheKey);
+        ClearCLProgram clProgram = this.programCacheMap.get(programCacheKey);
         currentProgram = clProgram;
         if (clProgram == null) {
-            clProgram = pContext.createProgram(this.mAnchorClass, new String[]{this.mProgramFilename});
-            if (pDefines != null) {
-                Iterator var4 = pDefines.entrySet().iterator();
+            clProgram = context.createProgram(this.anchorClass, new String[]{this.programFilename});
+            if (defines != null) {
+                Iterator iterator = defines.entrySet().iterator();
 
-                while (var4.hasNext()) {
-                    Map.Entry<String, Object> entry = (Map.Entry) var4.next();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, Object> entry = (Map.Entry) iterator.next();
                     if (entry.getValue() instanceof String) {
                         clProgram.addDefine((String) entry.getKey(), (String) entry.getValue());
                     } else if (entry.getValue() instanceof Number) {
@@ -444,17 +420,16 @@ public class CLKernelExecutor {
             //System.out.println("status: " + mProgram.getBuildStatus());
             //System.out.println("LOG: " + this.mProgram.getBuildLog());
 
-            mProgramCacheMap.put(lProgramCacheKey, clProgram);
+            programCacheMap.put(programCacheKey, clProgram);
         }
         //System.out.println(clProgram.getSourceCode());
         //System.out.println(pKernelName);
 
 
         try {
-            ClearCLKernel lKernel = clProgram.createKernel(pKernelName);
-            return lKernel;
+            return clProgram.createKernel(kernelName);
         } catch (OpenCLException e) {
-            System.out.println("Error when trying to create kernel " + pKernelName);
+            System.out.println("Error when trying to create kernel " + kernelName);
             e.printStackTrace();
             return null;
         }

@@ -27,7 +27,7 @@ public class Release extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJ
 
     @Override
     public String getParameterHelpText() {
-        return "Image image";
+        return "String image";
     }
 
     @Override
