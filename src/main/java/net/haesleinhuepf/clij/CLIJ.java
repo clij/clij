@@ -289,7 +289,7 @@ public class CLIJ {
     }
 
     public void show(ImagePlus input, String title) {
-        ImagePlus imp = new Duplicator().run(input);
+        ImagePlus imp = input; //new Duplicator().run(input);
         imp.setTitle(title);
         imp.setZ(imp.getNSlices() / 2);
         imp.setC(imp.getNChannels() / 2);
