@@ -41,9 +41,8 @@ public class Downsample2D extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     {
         float downsampleX = asFloat(args[2]);
         float downsampleY = asFloat(args[3]);
-        float downsampleZ = asFloat(args[4]);
 
-        return clij.createCLBuffer(new long[]{(long)(input.getWidth() * downsampleX), (long)(input.getHeight() * downsampleY), (long)(input.getDepth() * downsampleZ)}, input.getNativeType());
+        return clij.createCLBuffer(new long[]{(long)(input.getWidth() * downsampleX), (long)(input.getHeight() * downsampleY)}, input.getNativeType());
     }
 
     @Override
