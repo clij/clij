@@ -51,7 +51,7 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
             }
             ByteBuffer byteBuffer = ByteBuffer.wrap(inputArray);
             target.readFrom(byteBuffer, true);
-
+            return target;
 
         } else if (source.getBitDepth() == 16) {
             ClearCLBuffer target = clij.createCLBuffer(dimensions, NativeTypeEnum.UnsignedShort);
@@ -64,6 +64,7 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
             }
             ShortBuffer byteBuffer = ShortBuffer.wrap(inputArray);
             target.readFrom(byteBuffer, true);
+            return target;
         } else{
             ClearCLBuffer target = clij.createCLBuffer(dimensions, NativeTypeEnum.Float);
 
@@ -75,8 +76,8 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
             }
             FloatBuffer byteBuffer = FloatBuffer.wrap(inputArray);
             target.readFrom(byteBuffer, true);
+            return target;
         }
-        return null;
     }
 
     public ClearCLBuffer convertLegacy(ImagePlus source) {
