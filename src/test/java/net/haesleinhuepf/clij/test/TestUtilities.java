@@ -165,10 +165,12 @@ public class TestUtilities
             return false;
         }
 
-        //if (Kernels.sumPixels(clij, buffer1) != Kernels.sumPixels(clij, buffer2)) {
-        //    System.out.println("Sums different");
-        //    return false;
-        //}
+      double sum1 = Kernels.sumPixels(clij, buffer1);
+      double sum2 = Kernels.sumPixels(clij, buffer2);
+        if (sum1 != sum2) {
+            System.out.println("Sums different " + sum1 + " != " + sum2);
+            return false;
+        }
 
         ClearCLBuffer diffBuffer = clij.createCLBuffer(buffer1);
         Kernels.addImagesWeighted(clij, buffer1, buffer2, diffBuffer, 1f, -1f);

@@ -5,6 +5,7 @@ import clearcl.util.ElapsedTime;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import net.haesleinhuepf.clij.CLIJ;
+import net.haesleinhuepf.clij.test.TestUtilities;
 import org.junit.Test;
 
 import static net.haesleinhuepf.clij.test.TestUtilities.clBuffersEqual;
@@ -103,5 +104,27 @@ public class ImagePlusToClearCLBufferConverterTest {
 
         imp1.close();
         imp2.close();
+    }
+
+    @Test
+    public void testSpecialConversion() {
+        CLIJ clij = CLIJ.getInstance();
+
+        ImagePlus imp1 = TestUtilities.getRandomImage(100, 100, 3, 16, 0, 15);
+
+        ImagePlusToClearCLBufferConverter ibConverter = new ImagePlusToClearCLBufferConverter();
+        ibConverter.setCLIJ(clij);
+
+        ElapsedTime.measureForceOutput("conversion", () -> {
+            temp1 = ibConverter.convert(imp1);
+        });
+
+        ElapsedTime.measureForceOutput("legacy conversion", () -> {
+            temp2 = ibConverter.convertLegacy(imp1);
+        });
+
+        assertTrue(clBuffersEqual(clij, temp1, temp2, 0.001));
+        temp1.close();
+        temp2.close();
     }
 }
