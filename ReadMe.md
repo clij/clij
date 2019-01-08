@@ -221,6 +221,8 @@ deploy.bat
 * ClearVolume doesn't work anymore. CLIJ needs developmental versions of dependencies, also ClearVolume needs. If both update sites are activated, Fiji may crash. Install only one of both at a time.
 * CLIJ throws various exceptions, like CL_OUT_OF_HOST_MEMORY on Linux. Try installing an OpenCL-driver such as beignet. On Fedora 27 Linux, this command list helped:
 ```
+
+sudo yum install ocl-icd-devel
 sudo yum install cmake
 sudo yum install llvm
 sudo yum install llvm-devel
@@ -237,10 +239,6 @@ cmake ../
 make
 
 
-
-
-
-sudo yum install ocl-icd-devel
 ```
 More info can be found on the website of the [beignet project](https://www.freedesktop.org/wiki/Software/Beignet/).
 
