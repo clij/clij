@@ -301,7 +301,9 @@ public class CLIJ {
     }
 
     public boolean close() {
-        mCLKernelExecutor.close();
+        if (mCLKernelExecutor != null) {
+            mCLKernelExecutor.close();
+        }
         mCLKernelExecutor = null;
         mClearCLContext.getDevice().close();
         mClearCLContext.close();
