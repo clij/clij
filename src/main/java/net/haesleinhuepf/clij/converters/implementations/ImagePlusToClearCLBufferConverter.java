@@ -75,7 +75,7 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
             }
             //IJ.log("Copy1 took " + (System.currentTimeMillis() - time));
 
-            ShortBuffer byteBuffer = ShortBuffer.allocate((int) numberOfPixels);//wrap(inputArray);
+            ShortBuffer byteBuffer = ShortBuffer.wrap(inputArray);
             //time = System.currentTimeMillis();
             target.readFrom(byteBuffer, true);
             //IJ.log("Copy2 took " + (System.currentTimeMillis() - time));
