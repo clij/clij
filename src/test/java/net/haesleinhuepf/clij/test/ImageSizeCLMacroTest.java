@@ -3,6 +3,7 @@ package net.haesleinhuepf.clij.test;
 import clearcl.ClearCLBuffer;
 import clojure.lang.Obj;
 import coremem.enums.NativeTypeEnum;
+import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
@@ -47,6 +48,8 @@ public class ImageSizeCLMacroTest {
         src1.close();
         src2.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -75,5 +78,7 @@ public class ImageSizeCLMacroTest {
         src1.close();
         src2.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 }

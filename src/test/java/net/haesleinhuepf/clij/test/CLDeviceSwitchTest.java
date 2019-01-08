@@ -1,5 +1,6 @@
 package net.haesleinhuepf.clij.test;
 
+import ij.IJ;
 import net.haesleinhuepf.clij.CLIJ;
 import org.junit.Test;
 

@@ -44,6 +44,8 @@ public class Mean2DSphereTest {
         //clij.show(result, "res");
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+        IJ.exit();
+        clij.close();
     }
 
     @Ignore //ignore test as we know and need to accept that the tested method does not do the same its ImageJ counterpart
@@ -79,6 +81,8 @@ public class Mean2DSphereTest {
         //clij.show(result, "res");
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+        IJ.exit();
+        clij.close();
     }
 
 

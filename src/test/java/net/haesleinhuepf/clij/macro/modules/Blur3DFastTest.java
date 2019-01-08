@@ -41,6 +41,8 @@ public class Blur3DFastTest {
 
         assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlur, 2.0));
         //assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlurSeparableB, 2.0));
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -71,6 +73,8 @@ public class Blur3DFastTest {
 
         assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlur, 2.0));
         //assertTrue(TestUtilities.compareImages(gaussBlurSeparable, gaussBlurSeparableB, 2.0));
+        IJ.exit();
+        clij.close();
     }
 
 }

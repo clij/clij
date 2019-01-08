@@ -1,6 +1,7 @@
 package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.plugin.Duplicator;
@@ -60,6 +61,8 @@ public class SumZProjectionTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -107,5 +110,7 @@ public class SumZProjectionTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 }

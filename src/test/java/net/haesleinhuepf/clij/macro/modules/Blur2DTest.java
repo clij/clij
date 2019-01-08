@@ -35,6 +35,8 @@ public class Blur2DTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -59,6 +61,8 @@ public class Blur2DTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

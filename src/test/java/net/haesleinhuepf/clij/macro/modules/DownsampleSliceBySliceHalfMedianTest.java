@@ -4,6 +4,7 @@ import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
 import coremem.enums.NativeTypeEnum;
+import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
@@ -41,6 +42,8 @@ public class DownsampleSliceBySliceHalfMedianTest {
         ImagePlus reference = clij.convert(testImgSmall, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(result, reference));
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -68,6 +71,8 @@ public class DownsampleSliceBySliceHalfMedianTest {
         ImagePlus reference = clij.convert(testImgSmall, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(result, reference));
+        IJ.exit();
+        clij.close();
     }
 
 

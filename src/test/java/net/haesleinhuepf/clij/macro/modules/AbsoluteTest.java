@@ -34,6 +34,11 @@ public class AbsoluteTest {
         ClearCLImage abs = clij.createCLImage(input);
         Kernels.absolute(clij, input, abs);
         assertEquals(1, Kernels.sumPixels(clij, abs), 0.0001);
+
+        input.close();
+        abs.close();
+        negativeImp.close();
+        clij.close();
     }
 
     @Test
@@ -58,6 +63,12 @@ public class AbsoluteTest {
         ClearCLBuffer abs = clij.createCLBuffer(input);
         Kernels.absolute(clij, input, abs);
         assertEquals(1, Kernels.sumPixels(clij, abs), 0.0001);
+
+
+        input.close();
+        abs.close();
+        negativeImp.close();
+        clij.close();
     }
 
 }

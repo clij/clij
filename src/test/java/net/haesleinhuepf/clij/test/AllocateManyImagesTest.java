@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.test;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import net.haesleinhuepf.clij.CLIJ;
@@ -40,5 +41,7 @@ public class AllocateManyImagesTest {
 
             Kernels.absolute(clij, input, output);
         }
+        IJ.exit();
+        clij.close();
     }
 }

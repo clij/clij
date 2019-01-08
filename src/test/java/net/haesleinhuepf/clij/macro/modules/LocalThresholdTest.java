@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLImage;
 import clearcl.util.ElapsedTime;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.process.ImageProcessor;
@@ -60,5 +61,7 @@ public class LocalThresholdTest {
         output2.close();
         temp.close();
         blurred.close();
+        IJ.exit();
+        clij.close();
     }
 }

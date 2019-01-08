@@ -43,6 +43,8 @@ public class Minimum2DBoxTest {
         minimumSepCL.close();
 
         assertTrue(TestUtilities.compareImages(minimumSepImp, minimumImp, 2.0));
+        IJ.exit();
+        clij.close();
     }
 
     @Ignore //ignore test as we know and need to accept that the tested method does not do the same its ImageJ counterpart
@@ -74,6 +76,8 @@ public class Minimum2DBoxTest {
         minimumSepCL.close();
 
         assertTrue(TestUtilities.compareImages(minimumSepImp, minimumImp, 2.0));
+        IJ.exit();
+        clij.close();
     }
 
 }

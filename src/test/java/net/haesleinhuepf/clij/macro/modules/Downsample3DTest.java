@@ -41,6 +41,8 @@ public class Downsample3DTest {
         ImagePlus downsampledCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -72,5 +74,7 @@ public class Downsample3DTest {
         ImagePlus downsampledCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
+        IJ.exit();
+        clij.close();
     }
 }

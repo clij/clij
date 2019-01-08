@@ -101,6 +101,8 @@ public class AddImagesWeightedTest {
         src.close();
         src1.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -141,6 +143,8 @@ public class AddImagesWeightedTest {
         src.close();
         src1.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -181,6 +185,8 @@ public class AddImagesWeightedTest {
         src.close();
         src1.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

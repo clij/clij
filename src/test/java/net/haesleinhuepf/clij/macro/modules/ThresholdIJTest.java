@@ -53,6 +53,8 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
         bufferOutIJ.close();
         bufferOutCLBinary.close();
         bufferOutIJBinary.close();
+        IJ.exit();
+        clij.close();
     }
 
     private ThresholdIJ makeThresholdIJ(CLIJ clij, Object[] args) {
@@ -90,6 +92,8 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -120,6 +124,8 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -148,6 +154,8 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 
@@ -177,6 +185,8 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -211,5 +221,7 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 }

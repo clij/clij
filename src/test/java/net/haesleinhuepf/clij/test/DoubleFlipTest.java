@@ -87,6 +87,9 @@ public class DoubleFlipTest
       clImage.close();
       srcCLImage.close();
       dstCLImage.close();
+      clij.close();
     }
+
+    IJ.exit();
   }
 }

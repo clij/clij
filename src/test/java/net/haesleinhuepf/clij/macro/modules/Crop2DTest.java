@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.plugin.Duplicator;
@@ -38,6 +39,8 @@ public class Crop2DTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -64,6 +67,8 @@ public class Crop2DTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

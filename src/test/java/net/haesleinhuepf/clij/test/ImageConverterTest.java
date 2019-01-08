@@ -3,6 +3,7 @@ package net.haesleinhuepf.clij.test;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.enums.ImageChannelDataType;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import net.haesleinhuepf.clij.CLIJ;
@@ -64,10 +65,10 @@ public class ImageConverterTest
   @Test
   public void testImgClearCLImageConverter()
   {
-    //for (String deviceName : CLIJ.getAvailableDeviceNames())
-    //{
-      clij = CLIJ.getInstance();
-      //System.out.println("Testing device " + deviceName);
+    for (String deviceName : CLIJ.getAvailableDeviceNames())
+    {
+      clij = CLIJ.getInstance(deviceName);
+      System.out.println("Testing device " + deviceName);
 
       RandomAccessibleInterval<FloatType>
           lFloatImg =
@@ -98,8 +99,13 @@ public class ImageConverterTest
           ArrayImgs.shorts(new long[] { 5, 6, 7 });
       fillTestImage(lShortImg);
       testBackAndForthConversionViaCLImage(lShortImg);
-    //}
-  }
+
+        clij.close();
+
+    }
+
+      IJ.exit();
+    }
 
   @Test public void testBufferConversion()
   {
@@ -123,6 +129,10 @@ public class ImageConverterTest
         lFloatImg), Views.iterable(lRAIconvertedTwice)));
 
     lClearCLBuffer.close();
+
+
+      IJ.exit();
+      clij.close();
   }
 
   private <T extends RealType<T>> void fillTestImage(
@@ -172,6 +182,9 @@ public class ImageConverterTest
 
     testBackAndForthConversionViaCLImage(lRAI);
 
+      IJ.exit();
+      clij.close();
+
   }
 
   @Test public void convertHugeSignedShortImageTest()
@@ -187,6 +200,9 @@ public class ImageConverterTest
 
     testBackAndForthConversionViaCLImage(lRAI);
 
+      IJ.exit();
+      clij.close();
+
   }
 
   @Test public void convertHugeFloatImageTest()
@@ -200,6 +216,9 @@ public class ImageConverterTest
     lRA.get().setReal(-25400);
 
     testBackAndForthConversionViaCLImage(lRAI);
+
+      IJ.exit();
+      clij.close();
   }
 
 
@@ -229,6 +248,9 @@ public class ImageConverterTest
         RandomAccessibleInterval<UnsignedShortType> rai3 = (RandomAccessibleInterval<UnsignedShortType>) clij.convert(clImage2, RandomAccessibleInterval.class);
 
         assertTrue(TestUtilities.compareIterableIntervals(Views.iterable(rai2), Views.iterable(rai3)));
+
+        IJ.exit();
+        clij.close();
 
     }
 

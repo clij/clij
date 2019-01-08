@@ -38,6 +38,8 @@ public class Downsample2DTest {
 
         assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
 
+        IJ.exit();
+        clij.close();
     }
 
 
@@ -66,6 +68,8 @@ public class Downsample2DTest {
 
         assertTrue(TestUtilities.compareImages(downsampled, downsampledCL, 1.0));
 
+        IJ.exit();
+        clij.close();
     }
 
 }

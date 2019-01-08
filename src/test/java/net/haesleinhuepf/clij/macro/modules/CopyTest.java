@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.CLIJ;
@@ -35,6 +36,8 @@ public class CopyTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -54,6 +57,8 @@ public class CopyTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -73,6 +78,8 @@ public class CopyTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -92,6 +99,8 @@ public class CopyTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -113,6 +122,8 @@ public class CopyTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -133,6 +144,8 @@ public class CopyTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -161,6 +174,8 @@ public class CopyTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -189,6 +204,8 @@ public class CopyTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

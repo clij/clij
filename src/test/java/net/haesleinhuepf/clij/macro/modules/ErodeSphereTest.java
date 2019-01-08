@@ -2,7 +2,10 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
+import ij.ImageJ;
 import ij.ImagePlus;
+import ij.gui.WaitForUserDialog;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
 import net.imglib2.img.array.ArrayImgs;
@@ -62,6 +65,8 @@ public class ErodeSphereTest {
 
         maskCL.close();
         maskCLafter.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -105,6 +110,9 @@ public class ErodeSphereTest {
                 maskCLafter = clij.createCLBuffer(maskCL);
 
         Kernels.erodeSphere(clij, maskCL, maskCLafter);
+        //new ImageJ();
+        //clij.show(maskCLafter,"mask");
+        //new WaitForUserDialog("wait").show();
 
         double sum = Kernels.sumPixels(clij, maskCLafter);
 
@@ -112,6 +120,8 @@ public class ErodeSphereTest {
 
         maskCL.close();
         maskCLafter.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -137,6 +147,8 @@ public class ErodeSphereTest {
 
         maskCL.close();
         maskCLafter.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -163,6 +175,8 @@ public class ErodeSphereTest {
 
         maskCL.close();
         maskCLafter.close();
+        IJ.exit();
+        clij.close();
     }
 
 

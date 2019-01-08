@@ -1,6 +1,7 @@
 package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
+import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
@@ -66,6 +67,8 @@ public class ErodeBoxIJTest extends AbstractMacroPluginTest {
         bufferOutIJ.close();
         bufferOutCLBinary.close();
         bufferOutIJBinary.close();
+        IJ.exit();
+        clij.close();
     }
 
     private ErodeBoxIJ makeErodeBoxIJ(CLIJ clij, Object[] args) {
