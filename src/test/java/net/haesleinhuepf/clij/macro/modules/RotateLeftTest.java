@@ -33,7 +33,7 @@ public class RotateLeftTest {
 
         // do operation with OpenCL
         ClearCLImage inputCL = clij.convert(testImage2, ClearCLImage.class);
-        ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getChannelDataType());
+        ClearCLImage outputCL = clij.createCLImage(new long[]{inputCL.getHeight(), inputCL.getWidth()}, inputCL.getChannelDataType());
 
         Kernels.rotateLeft(clij, inputCL, outputCL);
 
@@ -67,7 +67,7 @@ public class RotateLeftTest {
 
         // do operation with OpenCL
         ClearCLBuffer inputCL = clij.convert(testImage2, ClearCLBuffer.class);
-        ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getHeight(), inputCL.getWidth(), inputCL.getDepth()}, inputCL.getNativeType());
+        ClearCLBuffer outputCL = clij.createCLBuffer(new long[]{inputCL.getHeight(), inputCL.getWidth()}, inputCL.getNativeType());
 
         Kernels.rotateLeft(clij, inputCL, outputCL);
 
