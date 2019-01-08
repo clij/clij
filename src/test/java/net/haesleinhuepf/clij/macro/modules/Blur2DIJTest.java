@@ -6,6 +6,7 @@ import ij.ImagePlus;
 import ij.gui.NewImage;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.macro.AbstractMacroPluginTest;
+import net.haesleinhuepf.clij.test.TestUtilities;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -40,7 +41,7 @@ public class Blur2DIJTest extends AbstractMacroPluginTest {
             //new WaitForUserDialog("wait").show();
 
             System.out.println("Sigma " + sigma);
-            assertTrue(clBuffersEqual(clij, bufferOutIJ, bufferOutCL, tolerance));
+            assertTrue(TestUtilities.clBuffersEqual(clij, bufferOutIJ, bufferOutCL, tolerance));
             bufferIn.close();
             bufferOutCL.close();
             bufferOutIJ.close();
