@@ -12,6 +12,7 @@ import net.haesleinhuepf.clij.CLIJ;
 public class ClinfoDemo {
     public static void main(String... args) {
 
+        System.out.println(CLIJ.getAvailableDeviceNames());
         System.out.println(CLIJ.clinfo());
 
     }

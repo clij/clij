@@ -160,11 +160,13 @@ public class CLIJ {
         if (cachedAvailableDeviceNames != null) {
             return cachedAvailableDeviceNames;
         }
+        System.out.println("Scanning for OpenCL devices");
         ArrayList<String> lResultList = new ArrayList<>();
 
         ClearCLBackendInterface lClearCLBackend = ClearCLBackends.getBestBackend();
         ClearCL lClearCL = new ClearCL(lClearCLBackend);
         for (ClearCLDevice lDevice : lClearCL.getAllDevices()) {
+            System.out.println("Device found: " + lDevice);
             lResultList.add(lDevice.getName());
         }
         lClearCL.close();
