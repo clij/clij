@@ -41,9 +41,12 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
         }
 
         int numberOfPixelsPerSlice = (int)(dimensions[0] * dimensions[1]);
-        long numberOfPixels = dimensions[0] * dimensions[1] * dimensions[2];
+        long numberOfPixels = numberOfPixelsPerSlice;
+        if (source.getNSlices() > 1) {
+            numberOfPixels = numberOfPixels * dimensions[2];
+        }
 
-        //NativeTypeEnum type;
+            //NativeTypeEnum type;
         if (source.getBitDepth() == 8) {
             ClearCLBuffer target = clij.createCLBuffer(dimensions, NativeTypeEnum.UnsignedByte);
 
