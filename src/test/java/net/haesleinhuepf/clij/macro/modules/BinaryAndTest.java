@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
@@ -59,6 +60,8 @@ public class BinaryAndTest {
         clearCLImage.close();
         clearCLImageNot.close();
         clearCLImageAnd.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -83,6 +86,8 @@ public class BinaryAndTest {
         clearCLImage.close();
         clearCLImageNot.close();
         clearCLImageAnd.close();
+        IJ.exit();
+        clij.close();
     }
 
 
@@ -108,6 +113,8 @@ public class BinaryAndTest {
         clearCLImage.close();
         clearCLImageNot.close();
         clearCLImageAnd.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

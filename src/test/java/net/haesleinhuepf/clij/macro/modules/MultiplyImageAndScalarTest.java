@@ -34,6 +34,8 @@ public class MultiplyImageAndScalarTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 
@@ -57,6 +59,8 @@ public class MultiplyImageAndScalarTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -79,6 +83,8 @@ public class MultiplyImageAndScalarTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -101,6 +107,8 @@ public class MultiplyImageAndScalarTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -121,6 +129,8 @@ public class MultiplyImageAndScalarTest {
 
         multipliedBy2.close();
         maskCL.close();
+        IJ.exit();
+        clij.close();
 
     }
 
@@ -142,6 +152,8 @@ public class MultiplyImageAndScalarTest {
 
         multipliedBy2.close();
         maskCL.close();
+        IJ.exit();
+        clij.close();
 
     }
 

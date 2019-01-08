@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.process.ImageProcessor;
@@ -36,6 +37,8 @@ public class DilateSphereTest {
 
         maskCL.close();
         maskCLafter.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -62,6 +65,8 @@ public class DilateSphereTest {
 
         maskCL.close();
         maskCLafter.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -86,6 +91,8 @@ public class DilateSphereTest {
 
         maskCL.close();
         maskCLafter.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -109,6 +116,8 @@ public class DilateSphereTest {
 
         maskCL.close();
         maskCLafter.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

@@ -3,6 +3,7 @@ package net.haesleinhuepf.clij.test;
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import clearcl.util.ElapsedTime;
+import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
@@ -43,5 +44,7 @@ public class BlurImageVersusBuffersTest {
         inputImage.close();
         outputBuffer.close();
         outputImage.close();
+        IJ.exit();
+        clij.close();
     }
 }

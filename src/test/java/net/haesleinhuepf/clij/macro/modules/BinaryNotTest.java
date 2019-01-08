@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
@@ -30,6 +31,8 @@ public class BinaryNotTest {
         assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
         clearCLImage.close();
         clearCLImageNot.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -50,6 +53,8 @@ public class BinaryNotTest {
         assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
         clearCLImage.close();
         clearCLImageNot.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -70,6 +75,8 @@ public class BinaryNotTest {
         assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
         clearCLImage.close();
         clearCLImageNot.close();
+        IJ.exit();
+        clij.close();
     }
 
 
@@ -91,6 +98,8 @@ public class BinaryNotTest {
         assertEquals(numberOfPixels, numberOfNegativePixels + numberOfPositivePixels);
         clearCLImage.close();
         clearCLImageNot.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

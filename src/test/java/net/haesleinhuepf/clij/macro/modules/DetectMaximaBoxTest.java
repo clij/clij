@@ -38,7 +38,7 @@ public class DetectMaximaBoxTest {
         ip1.set(60, 60, 10);
         ip1.set(70, 70, 10);
 
-        spotsImage.show();
+        //spotsImage.show();
         //IJ.run(spotsImage, "Find Maxima...", "noise=2 output=[Single Points]");
 
         ByteProcessor
@@ -63,6 +63,8 @@ public class DetectMaximaBoxTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -85,7 +87,7 @@ public class DetectMaximaBoxTest {
         ip1.set(60, 60, 10);
         ip1.set(70, 70, 10);
 
-        spotsImage.show();
+        //spotsImage.show();
         //IJ.run(spotsImage, "Find Maxima...", "noise=2 output=[Single Points]");
 
         ByteProcessor
@@ -110,6 +112,8 @@ public class DetectMaximaBoxTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 
@@ -133,7 +137,7 @@ public class DetectMaximaBoxTest {
         ip1.set(60, 60, 10);
         ip1.set(70, 70, 10);
 
-        spotsImage.show();
+        //spotsImage.show();
         //IJ.run(spotsImage, "Find Maxima...", "noise=2 output=[Single Points]");
 
         ByteProcessor
@@ -158,6 +162,8 @@ public class DetectMaximaBoxTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -180,7 +186,7 @@ public class DetectMaximaBoxTest {
         ip1.set(60, 60, 10);
         ip1.set(70, 70, 10);
 
-        spotsImage.show();
+        //spotsImage.show();
         //IJ.run(spotsImage, "Find Maxima...", "noise=2 output=[Single Points]");
 
         ByteProcessor
@@ -205,6 +211,8 @@ public class DetectMaximaBoxTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 

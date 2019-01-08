@@ -33,6 +33,10 @@ public class AddImageAndScalarTest {
 
         src.close();
         dst.close();
+        testImp1.close();
+        added.close();
+        addedFromCL.close();
+        clij.close();
     }
 
 
@@ -56,6 +60,10 @@ public class AddImageAndScalarTest {
 
         src.close();
         dst.close();
+        testImp1.close();
+        added.close();
+        addedFromCL.close();
+        clij.close();
     }
 
     @Test
@@ -78,6 +86,10 @@ public class AddImageAndScalarTest {
 
         src.close();
         dst.close();
+        testImp2D1.close();
+        added.close();
+        addedFromCL.close();
+        clij.close();
     }
 
     @Test
@@ -99,6 +111,10 @@ public class AddImageAndScalarTest {
 
         src.close();
         dst.close();
+        testImp2D1.close();
+        added.close();
+        addedFromCL.close();
+        clij.close();
     }
 
 }

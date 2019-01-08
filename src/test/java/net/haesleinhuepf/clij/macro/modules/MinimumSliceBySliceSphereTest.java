@@ -70,6 +70,8 @@ public class MinimumSliceBySliceSphereTest {
         //clij.show(result, "res");
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+        IJ.exit();
+        clij.close();
     }
 
 }

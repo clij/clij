@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
@@ -29,6 +30,8 @@ public class MultiplyStackWithPlaneTest {
         mask.close();
         dst.close();
 
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -50,6 +53,8 @@ public class MultiplyStackWithPlaneTest {
         mask.close();
         dst.close();
 
+        IJ.exit();
+        clij.close();
     }
 
 }

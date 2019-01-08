@@ -46,6 +46,8 @@ public class Mean3DSphereTest {
         //clij.show(result, "res");
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -84,6 +86,8 @@ public class Mean3DSphereTest {
         //clij.show(result, "res");
         //new WaitForUserDialog("wait").show();
         assertTrue(TestUtilities.compareImages(reference, result, 0.001));
+        IJ.exit();
+        clij.close();
     }
 
 }

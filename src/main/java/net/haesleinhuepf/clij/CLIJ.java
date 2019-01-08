@@ -12,6 +12,7 @@ import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.converters.CLIJConverterPlugin;
 import net.haesleinhuepf.clij.converters.CLIJConverterService;
+import net.haesleinhuepf.clij.macro.CLIJHandler;
 import net.haesleinhuepf.clij.utilities.CLInfo;
 import net.haesleinhuepf.clij.utilities.CLKernelExecutor;
 import net.imglib2.RandomAccessibleInterval;
@@ -52,8 +53,7 @@ public class CLIJ {
     protected ClearCLContext mClearCLContext;
     private ClearCLDevice mClearCLDevice;
     private ClearCL mClearCL;
-    private CLKernelExecutor
-            mCLKernelExecutor = null;
+    private CLKernelExecutor mCLKernelExecutor = null;
 
     public static boolean debug = false;
 
@@ -289,7 +289,7 @@ public class CLIJ {
     }
 
     public void show(ImagePlus input, String title) {
-        ImagePlus imp = new Duplicator().run(input);
+        ImagePlus imp = input; //new Duplicator().run(input);
         imp.setTitle(title);
         imp.setZ(imp.getNSlices() / 2);
         imp.setC(imp.getNChannels() / 2);
@@ -301,8 +301,20 @@ public class CLIJ {
     }
 
     public boolean close() {
-        mClearCLContext.close();
+        if (mCLKernelExecutor != null) {
+            mCLKernelExecutor.close();
+        }
+        mCLKernelExecutor = null;
         mClearCLContext.getDevice().close();
+        mClearCLContext.close();
+        mClearCLContext = null;
+        mClearCL.close();
+        mClearCL = null;
+
+        /*if (CLIJHandler.getInstance().getCLIJ() == this) {
+            CLIJHandler.getInstance().setCLIJ(null);
+        }*/
+
         if (sInstance == this) {
             sInstance = null;
         }
@@ -322,6 +334,7 @@ public class CLIJ {
             converterService = new Context(CLIJConverterService.class).service(CLIJConverterService.class);
                     //new ImageJ().getContext().service(CLIJConverterService.class);
         }
+        converterService.setCLIJ(this);
         CLIJConverterPlugin<S, T> converter = (CLIJConverterPlugin<S, T>) converterService.getConverter(source.getClass(), targetClass);
         return converter.convert(source);
     }

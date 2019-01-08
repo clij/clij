@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.process.ImageProcessor;
@@ -28,6 +29,8 @@ public class SumOfAllPixelsTest {
         assertEquals(1.0, sum / new Sum().evaluate(sumSliceWise), relativeTolerance);
 
         maskCL.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -42,6 +45,8 @@ public class SumOfAllPixelsTest {
         assertEquals(1.0, sum / new Sum().evaluate(sumSliceWise), relativeTolerance);
 
         maskCL.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -70,6 +75,8 @@ public class SumOfAllPixelsTest {
         maskCL.close();
         maskCL2.close();
         maskCL3.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -98,6 +105,8 @@ public class SumOfAllPixelsTest {
         maskCL.close();
         maskCL2.close();
         maskCL3.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -115,6 +124,8 @@ public class SumOfAllPixelsTest {
         assertTrue(sum == 6);
 
         maskCL.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -132,6 +143,8 @@ public class SumOfAllPixelsTest {
         assertTrue(sum == 6);
 
         maskCL.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

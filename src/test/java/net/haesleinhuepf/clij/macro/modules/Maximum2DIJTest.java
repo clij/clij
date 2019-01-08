@@ -1,6 +1,7 @@
 package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
+import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
@@ -41,6 +42,8 @@ public class Maximum2DIJTest extends AbstractMacroPluginTest {
             bufferOutCL.close();
             bufferOutIJ.close();
         }
+        IJ.exit();
+        clij.close();
     }
 
     private Maximum2DIJ makeMaximum2DIJ(CLIJ clij, Object[] args) {

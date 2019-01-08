@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.ImageCalculator;
 import net.haesleinhuepf.clij.CLIJ;
@@ -36,6 +37,8 @@ public class DivideImagesTest {
         src.close();
         src1.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 
@@ -66,6 +69,8 @@ public class DivideImagesTest {
         src.close();
         src1.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -95,6 +100,8 @@ public class DivideImagesTest {
         src.close();
         src1.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -120,6 +127,8 @@ public class DivideImagesTest {
         src.close();
         src1.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

@@ -267,7 +267,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         String deviceName = gd.getNextChoice();
 
         clij = CLIJ.getInstance(deviceName);
-        CLIJHandler.getInstance().setCLIJ(clij);
+        //CLIJHandler.getInstance().setCLIJ(clij);
 
         recordIfNotRecorded("// run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
 

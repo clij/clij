@@ -33,7 +33,6 @@ public class DoubleFlipTest
     new DoubleFlipTest().testFlipImageTwiceOnAllDevices();
   }
 
-  @Ignore // ignored; clij does currently not work on recent Intel Core I7 8th generation CPU Windows.
   @Test
   public void testFlipImageTwiceOnAllDevices() throws
                                                      IOException
@@ -88,6 +87,9 @@ public class DoubleFlipTest
       clImage.close();
       srcCLImage.close();
       dstCLImage.close();
+      clij.close();
     }
+
+    IJ.exit();
   }
 }

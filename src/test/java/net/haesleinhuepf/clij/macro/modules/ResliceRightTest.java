@@ -43,7 +43,8 @@ public class ResliceRightTest {
 
         assertTrue(TestUtilities.compareImages(reference, result));
 
-
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -75,7 +76,8 @@ public class ResliceRightTest {
 
         assertTrue(TestUtilities.compareImages(reference, result));
 
-
+        IJ.exit();
+        clij.close();
     }
 
 }

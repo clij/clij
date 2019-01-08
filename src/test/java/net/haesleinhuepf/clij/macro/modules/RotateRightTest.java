@@ -43,6 +43,9 @@ public class RotateRightTest {
         //new WaitForUserDialog("wait").show();
 
         assertTrue(TestUtilities.compareImages(reference, result));
+
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -73,6 +76,9 @@ public class RotateRightTest {
         //new WaitForUserDialog("wait").show();
 
         assertTrue(TestUtilities.compareImages(reference, result));
+
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -104,6 +110,9 @@ public class RotateRightTest {
         //new WaitForUserDialog("wait").show();
 
         assertTrue(TestUtilities.compareImages(reference, result));
+
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -135,6 +144,9 @@ public class RotateRightTest {
         //new WaitForUserDialog("wait").show();
 
         assertTrue(TestUtilities.compareImages(reference, result));
+
+        IJ.exit();
+        clij.close();
     }
 
 }

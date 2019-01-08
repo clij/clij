@@ -156,4 +156,41 @@ public class TestUtilities
     return clij.convert(result, ImagePlus.class);
   }
 
+  public static boolean clBuffersEqual(CLIJ clij, ClearCLBuffer buffer1, ClearCLBuffer buffer2, double tolerance) {
+    return clBuffersEqual(clij, buffer1, buffer2, tolerance, false);
+  }
+
+    public static boolean clBuffersEqual(CLIJ clij, ClearCLBuffer buffer1, ClearCLBuffer buffer2, double tolerance, boolean ignoreSum) {
+        if (buffer1.getWidth() != buffer2.getWidth() ||
+                buffer1.getHeight() != buffer2.getHeight() ||
+                buffer1.getDepth() != buffer2.getDepth()
+        ) {
+            System.out.println("Sizes different");
+            return false;
+        }
+
+        if (!ignoreSum) {
+          double sum1 = Kernels.sumPixels(clij, buffer1);
+          double sum2 = Kernels.sumPixels(clij, buffer2);
+          if (Math.abs(sum1 - sum2) > tolerance) {
+            System.out.println("Sums different " + sum1 + " != " + sum2);
+            return false;
+          }
+        }
+
+        ClearCLBuffer diffBuffer = clij.createCLBuffer(buffer1);
+        Kernels.addImagesWeighted(clij, buffer1, buffer2, diffBuffer, 1f, -1f);
+
+        double maxDifference = Kernels.maximumOfAllPixels(clij, diffBuffer);
+        double minDifference = Kernels.minimumOfAllPixels(clij, diffBuffer);
+        diffBuffer.close();
+
+        if (Math.abs(maxDifference) > tolerance || Math.abs(minDifference) > tolerance ) {
+            System.out.println("Difference unequal to zero!");
+            return false;
+        }
+
+
+        return true;
+    }
 }

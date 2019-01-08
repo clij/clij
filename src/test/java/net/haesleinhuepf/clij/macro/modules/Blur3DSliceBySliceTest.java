@@ -35,6 +35,8 @@ public class Blur3DSliceBySliceTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test public void blurSliceBySlice_Buffers()
@@ -63,6 +65,8 @@ public class Blur3DSliceBySliceTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

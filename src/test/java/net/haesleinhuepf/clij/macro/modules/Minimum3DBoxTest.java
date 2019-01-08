@@ -43,6 +43,8 @@ public class Minimum3DBoxTest {
 
         System.out.println("Todo: minimumSphere uses a elipsoid as mask while minimumBox uses a cuboid");
         assertTrue(TestUtilities.compareImages(minimumSepImp, minimumImp, 2.0));
+        IJ.exit();
+        clij.close();
     }
 
     @Ignore //ignore test as we know and need to accept that the tested method does not do the same its ImageJ counterpart
@@ -74,6 +76,8 @@ public class Minimum3DBoxTest {
 
         System.out.println("Todo: minimumSphere uses a elipsoid as mask while minimumBox uses a cuboid");
         assertTrue(TestUtilities.compareImages(minimumSepImp, minimumImp, 2.0));
+        IJ.exit();
+        clij.close();
     }
 
 }

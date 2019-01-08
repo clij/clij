@@ -1,6 +1,7 @@
 package net.haesleinhuepf.clij.test;
 
 import clearcl.ClearCLBuffer;
+import ij.IJ;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
 import coremem.enums.NativeTypeEnum;
@@ -19,6 +20,7 @@ public class BufferDataTypeConverterTests
     ClearCLBuffer bufferOut = clij.createCLBuffer(new long[]{10,10,10}, NativeTypeEnum.Byte);
 
     Kernels.copy(clij, bufferIn, bufferOut);
+    clij.close();
   }
 
 
@@ -29,6 +31,7 @@ public class BufferDataTypeConverterTests
     ClearCLBuffer bufferOut = clij.createCLBuffer(new long[]{10,10,10}, NativeTypeEnum.UnsignedShort);
 
     Kernels.copy(clij, bufferIn, bufferOut);
+    clij.close();
   }
 
 
@@ -39,5 +42,6 @@ public class BufferDataTypeConverterTests
     ClearCLBuffer bufferOut = clij.createCLBuffer(new long[]{10,10,10}, NativeTypeEnum.Byte);
 
     Kernels.copy(clij, bufferIn, bufferOut);
+    clij.close();
   }
 }

@@ -62,6 +62,8 @@ public class MaximumZProjectionTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -110,6 +112,8 @@ public class MaximumZProjectionTest {
 
         src.close();
         dst.close();
+        IJ.exit();
+        clij.close();
     }
 
 }

@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.plugin.Duplicator;
@@ -81,6 +82,8 @@ public class ArgMaximumZProjectionTest {
         src.close();
         dst.close();
         dst_arg.close();
+        IJ.exit();
+        clij.close();
     }
 
     @Test
@@ -149,6 +152,8 @@ public class ArgMaximumZProjectionTest {
         src.close();
         dst.close();
         dst_arg.close();
+        IJ.exit();
+        clij.close();
     }
 
 
