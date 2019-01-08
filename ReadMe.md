@@ -227,13 +227,14 @@ sudo yum install llvm-devel
 sudo yum install libdrm libdrm-devel
 sudo yum install libXext-devel
 sudo yum install libXfixes-devel
+sudo yum install clang-devel
 
 git clone https://github.com/intel/beignet.git
 cd beignet/
 mkdir build
 cd build
 cmake ../
-
+make
 
 
 
