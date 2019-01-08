@@ -1,6 +1,7 @@
 package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
+import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
@@ -41,11 +42,13 @@ public class Blur2DIJTest extends AbstractMacroPluginTest {
             //new WaitForUserDialog("wait").show();
 
             System.out.println("Sigma " + sigma);
-            assertTrue(TestUtilities.clBuffersEqual(clij, bufferOutIJ, bufferOutCL, tolerance));
+            assertTrue(TestUtilities.clBuffersEqual(clij, bufferOutIJ, bufferOutCL, tolerance, true));
             bufferIn.close();
             bufferOutCL.close();
             bufferOutIJ.close();
         }
+        IJ.exit();
+        clij.close();
     }
 
     private Blur2DIJ makeBlur2DIJ(CLIJ clij, Object[] args) {
