@@ -26,6 +26,21 @@ import java.nio.ShortBuffer;
 @Plugin(type = CLIJConverterPlugin.class)
 public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<ImagePlus, ClearCLBuffer> {
 
+    final int THIRD_DIMENSION_Z = 0;
+    final int THIRD_DIMENSION_T = 1;
+    final int THIRD_DIMENSION_C = 2;
+    final int THIRD_DIMENSION_NONE = -1;
+
+    private void setThirdDimension(ImagePlus imp, int thirdDimension, int value) {
+        if (thirdDimension == THIRD_DIMENSION_Z) {
+            imp.setZ(value);
+        } else if (thirdDimension == THIRD_DIMENSION_C) {
+            imp.setC(value);
+        } else if (thirdDimension == THIRD_DIMENSION_T) {
+            imp.setT(value);
+        }
+    }
+
     @Override
     public ClearCLBuffer convert(ImagePlus source) {
         //long time = System.currentTimeMillis();
@@ -33,16 +48,26 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
         //IJ.log("legacy conv took " + (System.currentTimeMillis() - time));
         //long time2 = System.currentTimeMillis();
 
-        long[] dimensions = new long[source.getNSlices() == 1?2:3];
-        dimensions[0] = source.getWidth();
-        dimensions[1] = source.getHeight();
+        long[] dimensions = null; // = new long[source.getNSlices() == 1?2:3];
+        int thirdDimension;
+        // check what's the third dimension
         if (source.getNSlices() > 1) {
-            dimensions[2] = source.getNSlices();
+            dimensions = new long[]{source.getWidth(), source.getHeight(), source.getNSlices()};
+            thirdDimension = THIRD_DIMENSION_Z;
+        } else if (source.getNChannels() > 1) {
+            dimensions = new long[]{source.getWidth(), source.getHeight(), source.getNChannels()};
+            thirdDimension = THIRD_DIMENSION_C;
+        } else if (source.getNFrames() > 1) {
+            dimensions = new long[]{source.getWidth(), source.getHeight(), source.getNFrames()};
+            thirdDimension = THIRD_DIMENSION_T;
+        } else {
+            dimensions = new long[]{source.getWidth(), source.getHeight()};
+            thirdDimension = THIRD_DIMENSION_NONE;
         }
 
         int numberOfPixelsPerSlice = (int)(dimensions[0] * dimensions[1]);
         long numberOfPixels = numberOfPixelsPerSlice;
-        if (source.getNSlices() > 1) {
+        if (thirdDimension != THIRD_DIMENSION_NONE) {
             numberOfPixels = numberOfPixels * dimensions[2];
         }
 
@@ -52,7 +77,8 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
 
             byte[] inputArray = new byte[(int) numberOfPixels];
             for (int z = 0; z < target.getDepth(); z++) {
-                source.setSlice(z + 1);
+                setThirdDimension(source, thirdDimension, z + 1);
+
                 byte[] sourceArray = (byte[])(source.getProcessor().getPixels());
                 System.arraycopy(sourceArray, 0, inputArray, z * numberOfPixelsPerSlice, sourceArray.length);
             }
@@ -69,7 +95,8 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
 
             //time = System.currentTimeMillis();
             for (int z = 0; z < target.getDepth(); z++) {
-                source.setSlice(z + 1);
+                setThirdDimension(source, thirdDimension, z + 1);
+
                 short[] sourceArray = (short[])(source.getProcessor().getPixels());
                 System.arraycopy(sourceArray, 0, inputArray, z * numberOfPixelsPerSlice, sourceArray.length);
             }
@@ -86,7 +113,8 @@ public class ImagePlusToClearCLBufferConverter extends AbstractCLIJConverter<Ima
 
             float[] inputArray = new float[(int) numberOfPixels];
             for (int z = 0; z < target.getDepth(); z++) {
-                source.setSlice(z + 1);
+                setThirdDimension(source, thirdDimension, z + 1);
+
                 float[] sourceArray = (float[])(source.getProcessor().getPixels());
                 System.arraycopy(sourceArray, 0, inputArray, z * numberOfPixelsPerSlice, sourceArray.length);
             }
