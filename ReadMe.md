@@ -219,7 +219,7 @@ deploy.bat
 * "clearcl.exceptions.ClearCLException: problem while setting argument 'parameter_of_type_float'": To hand over parameters of type float, you need to explicitly type it. Use `from java.lang import Float` and `Float(1.5)` to handover a value of 1.5 to an OpenCL parameter of type float.
 * After installation, Fiji doesn't start anymore: Navigate to your Fiji folder. Check if there is clij_0.4.0.jar located in _both_ folders `plugins` and `jars`. Delete both and run the installation instructions again.
 * ClearVolume doesn't work anymore. CLIJ needs developmental versions of dependencies, also ClearVolume needs. If both update sites are activated, Fiji may crash. Install only one of both at a time.
-* CLIJ throws various exceptions, like CL_OUT_OF_HOST_MEMORY on Linux. Try installing an OpenCL-driver such as beignet. On Fedora 27 Linux, this command list helped:
+* CLIJ throws various exceptions, like CL_OUT_OF_HOST_MEMORY on Linux. Try installing an OpenCL-driver such as beignet. On Fedora 27 Linux, this command list helped (warning, don't execute these commands if you don't know what they are doing. [Read the BSD3 license file](license.txt) for details on what why we're not responsible for your actions on your computer ):
 ```
 
 sudo yum install ocl-icd-devel
@@ -238,6 +238,8 @@ cd build
 cmake ../
 make
 
+
+sudo yum install ocl-icd-devel
 
 ```
 More info can be found on the website of the [beignet project](https://www.freedesktop.org/wiki/Software/Beignet/).
