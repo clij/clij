@@ -33,7 +33,7 @@ public class ServiceDemo {
 
         //new ImageJ();
         //CLIJMacroExtensions ext = new CLIJMacroExtensions();
-        CLIJHandler.getInstance().setCLIJ(CLIJ.getInstance());
+        //CLIJHandler.getInstance().setCLIJ(CLIJ.getInstance());
         //ext.clij = CLIJ.getInstance("gfx902");
         //ext.getExtensionFunctions();
 

@@ -434,4 +434,12 @@ public class CLKernelExecutor {
             return null;
         }
     }
+
+    public void close() {
+        for (String key : programCacheMap.keySet()) {
+            ClearCLProgram program = programCacheMap.get(key);
+            program.close();
+        }
+        programCacheMap.clear();
+    }
 }
