@@ -156,7 +156,11 @@ public class TestUtilities
     return clij.convert(result, ImagePlus.class);
   }
 
-    public static boolean clBuffersEqual(CLIJ clij, ClearCLBuffer buffer1, ClearCLBuffer buffer2, double tolerance) {
+  public static boolean clBuffersEqual(CLIJ clij, ClearCLBuffer buffer1, ClearCLBuffer buffer2, double tolerance) {
+    return clBuffersEqual(clij, buffer1, buffer2, tolerance, false);
+  }
+
+    public static boolean clBuffersEqual(CLIJ clij, ClearCLBuffer buffer1, ClearCLBuffer buffer2, double tolerance, boolean ignoreSum) {
         if (buffer1.getWidth() != buffer2.getWidth() ||
                 buffer1.getHeight() != buffer2.getHeight() ||
                 buffer1.getDepth() != buffer2.getDepth()
@@ -165,11 +169,13 @@ public class TestUtilities
             return false;
         }
 
-      double sum1 = Kernels.sumPixels(clij, buffer1);
-      double sum2 = Kernels.sumPixels(clij, buffer2);
-        if (sum1 != sum2) {
+        if (!ignoreSum) {
+          double sum1 = Kernels.sumPixels(clij, buffer1);
+          double sum2 = Kernels.sumPixels(clij, buffer2);
+          if (Math.abs(sum1 - sum2) > tolerance) {
             System.out.println("Sums different " + sum1 + " != " + sum2);
             return false;
+          }
         }
 
         ClearCLBuffer diffBuffer = clij.createCLBuffer(buffer1);
