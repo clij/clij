@@ -257,7 +257,7 @@ public class CLIJ {
 
         return mClearCLContext.createImage(HostAccessType.ReadWrite,
                 KernelAccessType.ReadWrite,
-                ImageChannelOrder.R,
+                ImageChannelOrder.Intensity,
                 pImageChannelType,
                 dimensions);
     }

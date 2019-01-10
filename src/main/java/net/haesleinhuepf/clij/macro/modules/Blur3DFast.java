@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.macro.modules;
 
 import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
+import ij.IJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
 import net.haesleinhuepf.clij.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;
@@ -24,12 +25,13 @@ public class Blur3DFast extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
 
         if (containsCLBufferArguments()) {
             // convert all arguments to CLImages
-            Object[] args = openCLImageArgs();
-            boolean result = Kernels.blurFast(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), sigmaX, sigmaY, sigmaZ);
+            //Object[] args = openCLImageArgs();
+            IJ.log("Hello world; I'm sending buffers ");
+            boolean result = Kernels.blurFast(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), sigmaX, sigmaY, sigmaZ);
             // copy result back to the bufffer
-            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
+            //Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
             // cleanup
-            releaseImages(args);
+            //releaseImages(args);
             return result;
         } else {
             return Kernels.blurFast(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), sigmaX, sigmaY, sigmaZ);

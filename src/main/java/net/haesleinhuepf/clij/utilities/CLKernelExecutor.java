@@ -285,6 +285,9 @@ public class CLKernelExecutor {
             }
             if (CLIJ.debug) {
                 System.out.println("Executing " + kernelName);
+                for (String key : parameterMap.keySet()) {
+                    System.out.println("Parameter " + key + " = " + parameterMap.get(key) + "[" + parameterMap.get(key).getClass().getSimpleName() + "]") ;
+                }
             }
 
             final ClearCLKernel kernel = clearCLKernel;

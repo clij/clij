@@ -295,22 +295,22 @@ public class Kernels {
         return clij.execute(Kernels.class, "blur.cl", "gaussian_blur_image2d_ij", parameters);
     }
 
-    public static boolean blurFast(CLIJ clij, ClearCLImage src, ClearCLImage dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
+    public static boolean blurFast(CLIJ clij, ClearCLImage src, ClearCLImage dst, Float blurSigmaX, Float blurSigmaY, Float blurSigmaZ) {
         return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
     }
 
-    public static boolean blurFast(CLIJ clij, ClearCLImage src, ClearCLBuffer dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
+    public static boolean blurFast(CLIJ clij, ClearCLImage src, ClearCLBuffer dst, Float blurSigmaX, Float blurSigmaY, Float blurSigmaZ) {
         return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
     }
 
-    public static boolean blurFast(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, float blurSigmaX, float blurSigmaY, float blurSigmaZ) {
+    public static boolean blurFast(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Float blurSigmaX, Float blurSigmaY, Float blurSigmaZ) {
         return executeSeparableKernel(clij, src, dst, "blur.cl", "gaussian_blur_sep_image" + src.getDimension() + "d", sigmaToKernelSize(blurSigmaX), sigmaToKernelSize(blurSigmaY), sigmaToKernelSize(blurSigmaZ), blurSigmaX, blurSigmaY, blurSigmaZ, src.getDimension());
     }
 
 
-    private static boolean executeSeparableKernel(CLIJ clij, Object src, Object dst, String clFilename, String kernelname, int kernelSizeX, int kernelSizeY, int kernelSizeZ, float blurSigmaX, float blurSigmaY, float blurSigmaZ, long dimensions) {
-        int[] n = new int[]{kernelSizeX, kernelSizeY, kernelSizeZ};
-        float[] blurSigma = new float[]{blurSigmaX, blurSigmaY, blurSigmaZ};
+    private static boolean executeSeparableKernel(CLIJ clij, Object src, Object dst, String clFilename, String kernelname, Integer kernelSizeX, Integer kernelSizeY, Integer kernelSizeZ, Float blurSigmaX, Float blurSigmaY, Float blurSigmaZ, long dimensions) {
+        Integer[] n = new Integer[]{kernelSizeX, kernelSizeY, kernelSizeZ};
+        Float[] blurSigma = new Float[]{blurSigmaX, blurSigmaY, blurSigmaZ};
 
         Object temp;
         if (src instanceof ClearCLBuffer) {
@@ -960,12 +960,12 @@ public class Kernels {
         return clij.execute(Kernels.class, "filtering.cl", "maximum_slicewise_image3d", parameters);
     }
 
-    public static boolean maximumBox(CLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
-        return executeSeparableKernel(clij, src, dst, "filtering.cl", "max_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    public static boolean maximumBox(CLIJ clij, ClearCLImage src, ClearCLImage dst, Integer radiusX, Integer radiusY, Integer radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "max_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX.floatValue(), radiusY.floatValue(), radiusZ.floatValue(), src.getDimension());
     }
 
-    public static boolean maximumBox(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
-        return executeSeparableKernel(clij, src, dst, "filtering.cl", "max_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    public static boolean maximumBox(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer radiusX, Integer radiusY, Integer radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "max_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX.floatValue(), radiusY.floatValue(), radiusZ.floatValue(), src.getDimension());
     }
 
     public static boolean maximumSliceBySliceSphere(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer kernelSizeX, Integer kernelSizeY) {
@@ -1222,12 +1222,12 @@ public class Kernels {
         return clij.execute(Kernels.class, "filtering.cl", "mean_image3d", parameters);
     }
 
-    public static boolean meanBox(CLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
-        return executeSeparableKernel(clij, src, dst, "filtering.cl", "mean_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    public static boolean meanBox(CLIJ clij, ClearCLImage src, ClearCLImage dst, Integer radiusX, Integer radiusY, Integer radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "mean_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX.floatValue(), radiusY.floatValue(), radiusZ.floatValue(), src.getDimension());
     }
 
-    public static boolean meanBox(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
-        return executeSeparableKernel(clij, src, dst, "filtering.cl", "mean_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    public static boolean meanBox(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer radiusX, Integer radiusY, Integer radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "mean_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX.floatValue(), radiusY.floatValue(), radiusZ.floatValue(), src.getDimension());
     }
 
 
@@ -1392,12 +1392,12 @@ public class Kernels {
     }
 
 
-    public static boolean minimumBox(CLIJ clij, ClearCLImage src, ClearCLImage dst, int radiusX, int radiusY, int radiusZ) {
-        return executeSeparableKernel(clij, src, dst, "filtering.cl", "min_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    public static boolean minimumBox(CLIJ clij, ClearCLImage src, ClearCLImage dst, Integer radiusX, Integer radiusY, Integer radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "min_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX.floatValue(), radiusY.floatValue(), radiusZ.floatValue(), src.getDimension());
     }
 
-    public static boolean minimumBox(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, int radiusX, int radiusY, int radiusZ) {
-        return executeSeparableKernel(clij, src, dst, "filtering.cl", "min_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX, radiusY, radiusZ, src.getDimension());
+    public static boolean minimumBox(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst, Integer radiusX, Integer radiusY, Integer radiusZ) {
+        return executeSeparableKernel(clij, src, dst, "filtering.cl", "min_sep_image" + src.getDimension() + "d", radiusToKernelSize(radiusX), radiusToKernelSize(radiusY), radiusToKernelSize(radiusZ), radiusX.floatValue(), radiusY.floatValue(), radiusZ.floatValue(), src.getDimension());
     }
 
     public static boolean minimumSliceBySliceSphere(CLIJ clij, ClearCLImage src, ClearCLImage dst, Integer kernelSizeX, Integer kernelSizeY) {
