@@ -44,26 +44,25 @@ clij = CLIJ.getInstance();
 Afterwards, you can convert `ImagePlus` objects to ClearCL objects wich makes them accessible on the OpenCL device:
 
 ```python
-imageInput = clij.convert(imp, ClearCLBuffer);
+imageInput = clij.push(imp);
 ```
 
 Furthermore, you can create images, for example with the same size as a given one:
 ```python
-imageOutput = clij.createCLBuffer(imageOutput);
+imageOutput = clij.create(imageOutput);
 ```
 
 Alternatively, create an image with a given size and a given type:
 
 ```python
-imageOutput = clij.createCLBuffer([imageInput.getWidth(), imageInput.getHeight()], imageInput.getChannelDataType());
+imageOutput = clij.create([imageInput.getWidth(), imageInput.getHeight()], imageInput.getNativeType());
 ```
 
-Inplace operations are not well supported by OpenCL 1.2. Thus, after creating two images, you can call a kernel taking the first image and filling the pixels of second image wiht data:
+Inplace operations are not well supported by OpenCL 1.2. Thus, after creating two images, you can call a kernel taking the first image and filling the pixels of second image with data:
 
 ```python
-from net.haesleinhuepf.clij.kernels import Kernels;
 
-Kernels.maximumZProjection(clij, imageInput, imageOutput);
+clij.op().maximumZProjection(clij, imageInput, imageOutput);
 ```
 
 Then, use the `show()` method of `CLIJ` to get the image out of the GPU back to view in ImageJ:
@@ -75,7 +74,7 @@ clij.show(imageOutput, "output");
 You can also get the result image as ImagePlus:
 
 ```python
-result = clij.convert(imageOutput, ImagePlus);
+result = clij.pull(imageOutput);
 ```
 
 ## Low level API
@@ -87,15 +86,15 @@ In order to call your own `kernel.cl` files, use the `clij.execute()` method. Ex
 clij = CLIJ.getInstance();
 
 # convert ImageJ image to CL images (ready for the GPU)
-inputCLBuffer = clij.convert(imp, ClearCLBuffer);
-outputCLBuffer = clij.create(lInputCLBuffer); # allocate memory for result image
+inputCLBuffer = clij.push(imp);
+outputCLBuffer = clij.create(inputCLBuffer); # allocate memory for result image
 
 # downsample the image stack using ClearCL / OpenCL
 resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":inputCLBuffer, "dst":outputCLBuffer});
 
 # convert the result back to imglib2 and show it
-resultRAI = clij.convert(resultStack, RandomAccessibleInterval);
-ImageJFunctions.show(resultRAI);
+result = clij.pull(resultStack);
+result.show();
 ```
 Complete jython examples can be found in the [src/main/jython](https://github.com/clij/clij/blob/master/src/main/jython/) directory. More Java example code can be found in the package net.haesleinhuepf.clij.demo
 
