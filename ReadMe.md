@@ -4,68 +4,35 @@ CLIJ is an ImageJ/Fiji plugin allowing you to run OpenCL GPU accelerated code fr
 
 ## Accessing from ImageJ macro
 
-The ImageJ macro extensions allow access to all methods. See a detailed list below. This allows basic operations such as mathematical operations on images.
-
-Example code (ImageJ macro)
-```javascript
-run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
-Ext.CLIJ_clear();
-
-// push images to GPU
-Ext.CLIJ_push(input);
-
-// Blur in GPU
-Ext.CLIJ_blur3D(input, output, 10, 10, 1);
-
-// Get results back from GPU
-Ext.CLIJ_pull(output);
-```
-[There is a fully functional ImageJ macro file available in this repository.](https://github.com/clij/clij/blob/master/src/main/macro/backgroundSubtraction.ijm)
+Read the detailed documentation for [GPU-accelerated image processing using CLIJ from ImageJ macro](https://clij.github.io/clij-docs/).
 
 ### Installation to ImageJ/Fiji
 
 Add the update site http://sites.imagej.net/clij to your Fiji installation. [Read more about how to activate update sites]( https://imagej.net/Following_an_update_site)
 
-### Supported methods
+### Depending on CLIJ
 
-There are five methods for memory transfer between RAM and GPU:
+If you want to access CLIJ from your Java code, it is recommended to depend on CLIJ via Maven dependencies. Add this dependency to the pom.xml file of your project:
 
-* `Ext.CLIJ_push(image)` sends an image with the given name to the GPU.
-* `Ext.CLIJ_pull(image)` retrieves a given image from the GPU and shows it.
-* `Ext.CLIJ_release(image)` frees the memory in the GPU which is reserved for a given image.
-* `Ext.CLIJ_clear()` releases the memory for all stored images in the GPU.
-
-Furthermore, there is a `help("")` method to assist you in finding the right OpenCL kernel call for your workflow. Just enter the name of the desired operation:
-
-```java
-run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
-Ext.CLIJ_help("mean");
+```xml
+<dependency>
+  <groupId>net.haesleinhuepf</groupId>
+  <artifactId>clij_</artifactId>
+  <version>0.12.2</version>
+</dependency>
 ```
 
-```java
-Found 7 method(s) containing the pattern "mean":
-Ext.CLIJ_mean2DBox(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_mean2DIJ(Image source, Image destination, Number radius);
-Ext.CLIJ_mean2DSphere(Image source, Image destination, Number radiusX, Number radiusY);
-Ext.CLIJ_mean3DBox(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_mean3DSphere(Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ);
-Ext.CLIJ_meanOfAllPixels(Image source);
-Ext.CLIJ_meanSliceBySliceSphere(Image source, Image destination, Number radiusX, Number radiusY);
+To allow maven finding this artifact, add a repository to your pom.xml file:
+
+```xml
+<repository>
+  <id>clij</id>
+  <url>http://dl.bintray.com/haesleinhuepf/clij</url>
+</repository>
 ```
-
-The full list of supported kernels can be retrieved by calling `help("");`
-
-```java
-Found 89 method(s) containing the pattern "":
-Ext.CLIJ_absolute(Image source, Image destination);
-Ext.CLIJ_addImageAndScalar(Image source, Image destination, Number scalar);
-Ext.CLIJ_addImages(Image summand1, Image summand2, Image destination);
-// ...
-```
-
-The whole [reference of all command with description and example code is available online](https://clij.github.io/clij-docs/reference).
 
 ## High level API (Java, Jython, Groovy)
+
 When accessing [the Kernels class](https://github.com/clij/clij/blob/master/src/main/java/net/haesleinhuepf/clij/kernels/Kernels.java) from Java, Python or Groovy, also `ClearCLImage`s can be handled. To start image processing with CLIJ, first create an instance. `CLIJ.getInstance()` takes one optional parameter, which should be part of the name of the OpenCL device. The following [example](https://github.com/clij/clij/blob/master/src/main/jython/maximumProjection.py) shows how to generate a maximum projection of a stack via OpenCL.
 
 ```python
@@ -77,18 +44,18 @@ clij = CLIJ.getInstance();
 Afterwards, you can convert `ImagePlus` objects to ClearCL objects wich makes them accessible on the OpenCL device:
 
 ```python
-imageInput = clij.convert(imp, ClearCLImage);
+imageInput = clij.convert(imp, ClearCLBuffer);
 ```
 
 Furthermore, you can create images, for example with the same size as a given one:
 ```python
-imageOutput = clij.createCLImage(imageOutput);
+imageOutput = clij.createCLBuffer(imageOutput);
 ```
 
 Alternatively, create an image with a given size and a given type:
 
 ```python
-imageOutput = clij.createCLImage([imageInput.getWidth(), imageInput.getHeight()], imageInput.getChannelDataType());
+imageOutput = clij.createCLBuffer([imageInput.getWidth(), imageInput.getHeight()], imageInput.getChannelDataType());
 ```
 
 Inplace operations are not well supported by OpenCL 1.2. Thus, after creating two images, you can call a kernel taking the first image and filling the pixels of second image wiht data:
@@ -96,7 +63,7 @@ Inplace operations are not well supported by OpenCL 1.2. Thus, after creating tw
 ```python
 from net.haesleinhuepf.clij.kernels import Kernels;
 
-Kernels.maxProjection(clij, imageInput, imageOutput);
+Kernels.maximumZProjection(clij, imageInput, imageOutput);
 ```
 
 Then, use the `show()` method of `CLIJ` to get the image out of the GPU back to view in ImageJ:
@@ -120,11 +87,11 @@ In order to call your own `kernel.cl` files, use the `clij.execute()` method. Ex
 clij = CLIJ.getInstance();
 
 # convert ImageJ image to CL images (ready for the GPU)
-inputCLImage = clij.convert(imp, ClearCLImage);
-outputCLImage = clij.create(lInputCLImage); # allocate memory for result image
+inputCLBuffer = clij.convert(imp, ClearCLBuffer);
+outputCLBuffer = clij.create(lInputCLBuffer); # allocate memory for result image
 
 # downsample the image stack using ClearCL / OpenCL
-resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":inputCLImage, "dst":outputCLImage});
+resultStack = clij.execute(DownsampleXYbyHalfTask, "kernels/downsampling.cl", "downsample_xy_by_half_nearest", {"src":inputCLBuffer, "dst":outputCLBuffer});
 
 # convert the result back to imglib2 and show it
 resultRAI = clij.convert(resultStack, RandomAccessibleInterval);
