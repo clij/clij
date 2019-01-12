@@ -1,5 +1,6 @@
 package net.haesleinhuepf.clij.demo;
 
+import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import ij.IJ;
 import ij.ImageJ;
@@ -38,21 +39,20 @@ public class DifferenceOfGaussianCLDemo {
         // ---------------------------------------------------------------
         // Example 1: Flip image in X
         {
-            ClearCLImage srcImage = clij.convert(input, ClearCLImage.class);
-            ClearCLImage dstImage = clij.convert(output, ClearCLImage.class);
+            ClearCLBuffer srcImage = clij.push(input);
+            ClearCLBuffer dstImage = clij.push(output);
 
-            Map<String, Object> lParameterMap = new HashMap<>();
-            lParameterMap.put("input", srcImage);
-            lParameterMap.put("output", dstImage);
-            lParameterMap.put("radius", 6);
-            lParameterMap.put("sigma_minuend", 1.5f);
-            lParameterMap.put("sigma_subtrahend", 3f);
+            Map<String, Object> parameterMap = new HashMap<>();
+            parameterMap.put("src", srcImage);
+            parameterMap.put("dst", dstImage);
+            parameterMap.put("radius", 6);
+            parameterMap.put("sigma_minuend", 1.5f);
+            parameterMap.put("sigma_subtrahend", 3f);
 
-            clij.execute("src/main/jython/differenceOfGaussian/differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", lParameterMap);
+            clij.execute("src/main/jython/differenceOfGaussian/differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", parameterMap);
 
-            RandomAccessibleInterval result = clij.convert(dstImage, RandomAccessibleInterval.class);
-
-            ImageJFunctions.show(result);
+            ImagePlus result = clij.pull(dstImage);
+            result.show();
         }
 
     }

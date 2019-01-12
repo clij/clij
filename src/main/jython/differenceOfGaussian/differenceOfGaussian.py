@@ -7,15 +7,9 @@
 #
 
 from net.haesleinhuepf.clij import CLIJ;
-from ij import ImagePlus;
-from net.imglib2 import RandomAccessibleInterval;
-from clearcl import ClearCLImage
-from net.imglib2.img.display.imagej import ImageJFunctions;
-from net.imglib2.type.numeric.integer import UnsignedShortType;
 from net.imglib2.view import Views;
 from ij import IJ;
 from java.lang import Float
-from net.haesleinhuepf.clij.kernels import Kernels;
 import os;
 import inspect
 
@@ -29,24 +23,24 @@ imp = IJ.openImage("http://imagej.nih.gov/ij/images/t1-head.zip");
 clij = CLIJ.getInstance();
 
 # convert imglib2 image to CL images (ready for the GPU)
-inputCLImage = clij.convert(imp, ClearCLImage);
-tempCLImage = clij.createCLImage([inputCLImage.getWidth(), inputCLImage.getHeight()], inputCLImage.getChannelDataType());
-outputCLImage = clij.createCLImage([inputCLImage.getWidth(), inputCLImage.getHeight()], inputCLImage.getChannelDataType());
+inputCLImage = clij.push(imp);
+tempCLImage = clij.create([inputCLImage.getWidth(), inputCLImage.getHeight()], inputCLImage.getNativeType());
+outputCLImage = clij.create([inputCLImage.getWidth(), inputCLImage.getHeight()], inputCLImage.getNativeType());
 
 # crop out a center plane of the 3D data set
-Kernels.copySlice(clij, inputCLImage, tempCLImage, 64);
+clij.op().copySlice(inputCLImage, tempCLImage, 64);
 
 # apply a filter to the image using ClearCL / OpenCL
 clij.execute(filesPath + "differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", {
-"input":tempCLImage,
-"output":outputCLImage,
+"src":tempCLImage,
+"dst":outputCLImage,
 "radius":6,
 "sigma_minuend":Float(1.5),
 "sigma_subtrahend":Float(3)});
 
 # convert the result back to imglib2 and show it
-resultRAI = clij.convert(outputCLImage, RandomAccessibleInterval);
-ImageJFunctions.show(resultRAI);
+result = clij.pull(outputCLImage);
+result.show();
 IJ.run("Enhance Contrast", "saturated=0.35");
 
 # clean up

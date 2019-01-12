@@ -2,7 +2,6 @@ package net.haesleinhuepf.clij.demo;
 
 import clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.CLIJ;
-import net.haesleinhuepf.clij.kernels.Kernels;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -78,8 +77,8 @@ public class BenchmarkingDemo {
         IJ.run(copy, "Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
         IJ.setRawThreshold(copy, 100, 255, null);
         IJ.run(copy, "Convert to Mask", "method=Default background=Dark");
-        IJ.run(copy, "ErodeBoxIJ", "stack");
-        IJ.run(copy, "DilateBoxIJ", "stack");
+        IJ.run(copy, "Erode", "stack");
+        IJ.run(copy, "Dilate", "stack");
         IJ.run(copy, "Divide...", "value=255 stack");
         ImageCalculator calculator = new ImageCalculator();
 
@@ -131,20 +130,20 @@ public class BenchmarkingDemo {
     }
 
     private static void demoClearCLIJ() throws IOException {
-        ClearCLBuffer input = clij.convert(img, ClearCLBuffer.class);
-        ClearCLBuffer flip = clij.createCLBuffer(input.getDimensions(), input.getNativeType());
-        ClearCLBuffer flop = clij.createCLBuffer(input.getDimensions(), input.getNativeType());
+        ClearCLBuffer input = clij.push(img);
+        ClearCLBuffer flip = clij.create(input.getDimensions(), input.getNativeType());
+        ClearCLBuffer flop = clij.create(input.getDimensions(), input.getNativeType());
 
-        Kernels.blurFast(clij, input, flop, (float) sigma, (float) sigma, (float) sigma);
+        clij.op().blurFast(input, flop, (float) sigma, (float) sigma, (float) sigma);
 
-        Kernels.threshold(clij, flop, flip, 100.0f);
+        clij.op().threshold(flop, flip, 100.0f);
 
-        Kernels.erodeSphere(clij, flip, flop);
-        Kernels.dilateSphere(clij, flop, flip);
+        clij.op().erodeSphere(flip, flop);
+        clij.op().dilateSphere(flop, flip);
 
-        Kernels.multiplyImages(clij, flop, input, flip);
+        clij.op().multiplyImages(flop, input, flip);
 
-        clij.convert(flip, ImagePlus.class).show();
+        clij.pull(flip).show();
 
         flip.close();
         flop.close();

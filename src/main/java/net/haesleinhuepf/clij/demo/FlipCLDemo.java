@@ -1,5 +1,6 @@
 package net.haesleinhuepf.clij.demo;
 
+import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import ij.IJ;
 import ij.ImageJ;
@@ -36,8 +37,8 @@ public class FlipCLDemo {
         // ---------------------------------------------------------------
         // Example 1: Flip image in X
         {
-            ClearCLImage srcImage = clij.convert(input, ClearCLImage.class);
-            ClearCLImage dstImage = clij.convert(output, ClearCLImage.class);
+            ClearCLBuffer srcImage = clij.push(input);
+            ClearCLBuffer dstImage = clij.push(output);
 
             Map<String, Object> lParameterMap = new HashMap<>();
             lParameterMap.put("src", srcImage);
@@ -48,9 +49,8 @@ public class FlipCLDemo {
 
             clij.execute("src/main/java/net/haesleinhuepf/clij/kernels/flip.cl", "flip_3d", lParameterMap);
 
-            RandomAccessibleInterval result = clij.convert(dstImage, RandomAccessibleInterval.class);
-
-            ImageJFunctions.show(result);
+            ImagePlus result = clij.pull(dstImage);
+            result.show();
         }
 
     }

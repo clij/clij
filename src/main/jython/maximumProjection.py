@@ -8,8 +8,6 @@
 from ij import IJ;
 from ij import ImagePlus;
 from net.haesleinhuepf.clij import CLIJ;
-from net.haesleinhuepf.clij.kernels import Kernels;
-from clearcl import ClearCLImage
 
 # Init GPU
 clij = CLIJ.getInstance();
@@ -18,14 +16,14 @@ clij = CLIJ.getInstance();
 imp = IJ.openImage("http://imagej.nih.gov/ij/images/t1-head.zip");
 
 # create and fill memory in GPU
-imageInput = clij.convert(imp, ClearCLImage);
-imageOutput = clij.createCLImage([imageInput.getWidth(), imageInput.getHeight()], imageInput.getChannelDataType());
+imageInput = clij.push(imp);
+imageOutput = clij.create([imageInput.getWidth(), imageInput.getHeight()], imageInput.getNativeType());
 
 # process the image
-Kernels.maximumZProjection(clij, imageInput, imageOutput);
+clij.op().maximumZProjection(imageInput, imageOutput);
 
 # show the result
 clij.show(imageOutput, "output");
 
 # get the result back as variable
-result = clij.convert(imageOutput, ImagePlus);
+result = clij.pull(imageOutput);

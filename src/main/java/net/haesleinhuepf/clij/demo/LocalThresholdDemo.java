@@ -1,5 +1,6 @@
 package net.haesleinhuepf.clij.demo;
 
+import clearcl.ClearCLBuffer;
 import clearcl.ClearCLImage;
 import ij.IJ;
 import ij.ImagePlus;
@@ -21,9 +22,9 @@ public class LocalThresholdDemo {
         CLIJ clij = CLIJ.getInstance();
 
         // conversion
-        ClearCLImage input = clij.convert(imp, ClearCLImage.class);
-        ClearCLImage output = clij.createCLImage(input);
-        ClearCLImage temp = clij.createCLImage(input);
+        ClearCLBuffer input = clij.push(imp);
+        ClearCLBuffer output = clij.create(input);
+        ClearCLBuffer temp = clij.create(input);
 
         // blur
         Kernels.blurFast(clij, input, temp, 2, 2, 2);
