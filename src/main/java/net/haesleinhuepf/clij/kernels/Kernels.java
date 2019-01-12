@@ -37,9 +37,7 @@ public class Kernels {
         return clij.execute(Kernels.class,"math.cl", "absolute_" + src.getDimension() + "d", parameters);
     }
 
-    public static boolean absolute(CLIJ clij,
-                                   ClearCLBuffer src,
-                                   ClearCLBuffer dst) {
+    public static boolean absolute(CLIJ clij, ClearCLBuffer src, ClearCLBuffer dst) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("src", src);
         parameters.put("dst", dst);
@@ -1726,6 +1724,14 @@ public class Kernels {
         }
 
         return clij.execute(Kernels.class, "stacksplitting.cl", "split_" + clImagesOut.length + "_stacks", parameters);
+    }
+
+    public static boolean subtract(CLIJ clij, ClearCLImage source1, ClearCLImage source2, ClearCLImage destination) {
+        return addImagesWeighted(clij, source1, source2, destination, 1f, -1f);
+    }
+
+    public static boolean subtract(CLIJ clij, ClearCLBuffer source1, ClearCLBuffer source2, ClearCLBuffer destination) {
+        return addImagesWeighted(clij, source1, source2, destination, 1f, -1f);
     }
 
     public static double maximumOfAllPixels(CLIJ clij, ClearCLImage clImage) {

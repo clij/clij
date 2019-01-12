@@ -13,6 +13,7 @@ import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.converters.CLIJConverterPlugin;
 import net.haesleinhuepf.clij.converters.CLIJConverterService;
 import net.haesleinhuepf.clij.macro.CLIJHandler;
+import net.haesleinhuepf.clij.utilities.CLIJOps;
 import net.haesleinhuepf.clij.utilities.CLInfo;
 import net.haesleinhuepf.clij.utilities.CLKernelExecutor;
 import net.imglib2.RandomAccessibleInterval;
@@ -59,6 +60,8 @@ public class CLIJ {
 
     public static boolean debug = false;
 
+    private CLIJOps clijOps;
+
 
     @Deprecated
     public CLIJ(int deviceIndex) {
@@ -84,6 +87,8 @@ public class CLIJ {
         mClearCLContext = mClearCLDevice.createContext();
 
         resetStdErrForwarding();
+
+        clijOps = new CLIJOps(this);
     }
 
     /**
@@ -138,6 +143,8 @@ public class CLIJ {
         mClearCLContext = mClearCLDevice.createContext();
 
         resetStdErrForwarding();
+
+        clijOps = new CLIJOps(this);
     }
 
 
@@ -264,8 +271,16 @@ public class CLIJ {
         return lResultMap;
     }
 
+    public ClearCLImage create(ClearCLImage pInputImage) {
+        return createCLImage(pInputImage);
+    }
+
     public ClearCLImage createCLImage(ClearCLImage pInputImage) {
         return mClearCLContext.createImage(pInputImage);
+    }
+
+    public ClearCLImage create(long[] dimensions, ImageChannelDataType pImageChannelType) {
+        return createCLImage(dimensions, pImageChannelType);
     }
 
     public ClearCLImage createCLImage(long[] dimensions, ImageChannelDataType pImageChannelType) {
@@ -277,8 +292,16 @@ public class CLIJ {
                 dimensions);
     }
 
+    public ClearCLBuffer create(ClearCLBuffer inputCL) {
+        return createCLBuffer(inputCL);
+    }
+
     public ClearCLBuffer createCLBuffer(ClearCLBuffer inputCL) {
         return createCLBuffer(inputCL.getDimensions(), inputCL.getNativeType());
+    }
+
+    public ClearCLBuffer create(long[] dimensions, NativeTypeEnum pNativeType) {
+        return createCLBuffer(dimensions, pNativeType);
     }
 
     public ClearCLBuffer createCLBuffer(long[] dimensions, NativeTypeEnum pNativeType) {
@@ -345,6 +368,18 @@ public class CLIJ {
         this.converterService = converterService;
     }
 
+    public ClearCLBuffer push(ImagePlus imp) {
+        return convert(imp, ClearCLBuffer.class);
+    }
+
+    public ClearCLBuffer push(RandomAccessibleInterval rai) {
+        return convert(rai, ClearCLBuffer.class);
+    }
+
+    public ImagePlus pull(ClearCLBuffer buffer) {
+        return convert(buffer, ImagePlus.class);
+    }
+
     public <S, T> T convert(S source, Class<T> targetClass) {
         if (targetClass.isAssignableFrom(source.getClass())) {
             return (T) source;
@@ -356,6 +391,10 @@ public class CLIJ {
         converterService.setCLIJ(this);
         CLIJConverterPlugin<S, T> converter = (CLIJConverterPlugin<S, T>) converterService.getConverter(source.getClass(), targetClass);
         return converter.convert(source);
+    }
+
+    public CLIJOps op() {
+        return clijOps;
     }
 
     private static PrintStream stdErrStreamBackup;
