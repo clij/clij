@@ -23,7 +23,7 @@ public class Blur3DFastTest {
         ClearCLImage dstBlurSeparable = clij.createCLImage(src);
 
         Kernels.blur(clij, src, dstBlur, 9, 9, 9, 2f, 2f, 2f);
-        Kernels.blurFast(clij, src, dstBlurSeparable, 2, 2, 2);
+        Kernels.blurFast(clij, src, dstBlurSeparable, 2f, 2f, 2f);
 
         //ClearCLBuffer srcB = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
         //ClearCLBuffer dstBlurSeparableB = clij.createCLBuffer(srcB);
@@ -55,7 +55,7 @@ public class Blur3DFastTest {
         ClearCLBuffer dstBlurSeparable = clij.createCLBuffer(src);
 
         Kernels.blur(clij, src, dstBlur, 9, 9, 9, 2f, 2f, 2f);
-        Kernels.blurFast(clij, src, dstBlurSeparable, 2, 2, 2);
+        Kernels.blurFast(clij, src, dstBlurSeparable, 2f, 2f, 2f);
 
         //ClearCLBuffer srcB = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
         //ClearCLBuffer dstBlurSeparableB = clij.createCLBuffer(srcB);
