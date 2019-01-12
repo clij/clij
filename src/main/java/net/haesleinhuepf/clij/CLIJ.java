@@ -52,7 +52,9 @@ public class CLIJ {
     private static CLIJ sInstance = null;
     protected ClearCLContext mClearCLContext;
     private ClearCLDevice mClearCLDevice;
-    private ClearCL mClearCL;
+    private static ClearCL mClearCL = null;
+    private static ArrayList<ClearCLDevice> allDevices = null;
+
     private CLKernelExecutor mCLKernelExecutor = null;
 
     public static boolean debug = false;
@@ -60,12 +62,14 @@ public class CLIJ {
 
     @Deprecated
     public CLIJ(int deviceIndex) {
-        ClearCLBackendInterface
-                lClearCLBackend = new ClearCLBackendJOCL();
+        if (mClearCL == null) {
+            ClearCLBackendInterface
+                    lClearCLBackend = new ClearCLBackendJOCL();
 
-        mClearCL = new ClearCL(lClearCLBackend);
+            mClearCL = new ClearCL(lClearCLBackend);
 
-        ArrayList<ClearCLDevice> allDevices = mClearCL.getAllDevices();
+            ArrayList<ClearCLDevice> allDevices = mClearCL.getAllDevices();
+        }
         if (debug) {
             for (int i = 0; i < allDevices.size(); i++) {
                 System.out.println(allDevices.get(i).getName());
@@ -89,23 +93,35 @@ public class CLIJ {
      */
     @Deprecated
     public CLIJ(String pDeviceNameMustContain) {
-        ClearCLBackendInterface
-                lClearCLBackend = new ClearCLBackendJOCL();
 
-        mClearCL = new ClearCL(lClearCLBackend);
+        if (mClearCL == null) {
+            ClearCLBackendInterface
+                    lClearCLBackend = new ClearCLBackendJOCL();
+
+            mClearCL = new ClearCL(lClearCLBackend);
+            allDevices = mClearCL.getAllDevices();
+        }
+
         if (pDeviceNameMustContain == null || pDeviceNameMustContain.length() == 0) {
             mClearCLDevice = null;
         } else {
-            mClearCLDevice = mClearCL.getDeviceByName(pDeviceNameMustContain);
+            for (ClearCLDevice device : allDevices) {
+                if (device.getName().contains(pDeviceNameMustContain)) {
+                    mClearCLDevice = device;
+                    break;
+                }
+            }
+            //mClearCLDevice = mClearCL.getDeviceByName(pDeviceNameMustContain);
         }
 
         if (mClearCLDevice == null) {
             if (debug) {
                 System.out.println("No GPU name specified. Using first GPU device found.");
             }
-            for (ClearCLDevice device : mClearCL.getAllDevices()) {
+            for (ClearCLDevice device : allDevices) {
                 if (!device.getName().contains("CPU")) {
                     mClearCLDevice = device;
+                    break;
                 }
             }
         }
@@ -113,7 +129,7 @@ public class CLIJ {
             if (debug) {
                 System.out.println("Warning: GPU device determination failed. Retrying using first device found.");
             }
-            mClearCLDevice = mClearCL.getAllDevices().get(0);
+            mClearCLDevice = allDevices.get(0);
         }
         if (debug) {
             System.out.println("Using OpenCL device: " + mClearCLDevice.getName());
@@ -144,6 +160,7 @@ public class CLIJ {
                 sInstance = new CLIJ(pDeviceNameMustContain);
             }
         }
+        System.out.println(sInstance.getGPUName());
         return sInstance;
     }
 
@@ -305,11 +322,13 @@ public class CLIJ {
             mCLKernelExecutor.close();
         }
         mCLKernelExecutor = null;
-        mClearCLContext.getDevice().close();
+        //mClearCLContext.getDevice().close();
         mClearCLContext.close();
         mClearCLContext = null;
-        mClearCL.close();
-        mClearCL = null;
+        //mClearCLDevice.close();
+        mClearCLDevice = null;
+        //mClearCL.close();
+        //mClearCL = null;
 
         /*if (CLIJHandler.getInstance().getCLIJ() == this) {
             CLIJHandler.getInstance().setCLIJ(null);
