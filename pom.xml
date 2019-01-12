@@ -91,7 +91,7 @@
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
 			<artifactId>clearcl</artifactId>
-			<version>0.7.1-m</version>
+			<version>0.8.0-m</version>
 		</dependency>
 		<dependency>
 			<groupId>org.scijava</groupId>

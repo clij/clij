@@ -2,6 +2,7 @@ package net.haesleinhuepf.clij.test;
 
 import ij.IJ;
 import net.haesleinhuepf.clij.CLIJ;
+import org.jruby.RubyProcess;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,5 +30,28 @@ public class CLDeviceSwitchTest {
             fromBefore = clij;
         }
         CLIJ.getInstance().close();
+    }
+
+    @Test
+    public void testContextInitialisation() {
+        for( int i = 0; i < 100; i++) {
+            System.out.println(i);
+            CLIJ clij = new CLIJ(0);
+            clij.close();
+        }
+    }
+
+    @Test
+    public void testGetCLDeviceList() {
+        for (String name : CLIJ.getAvailableDeviceNames()) {
+            System.out.println(name);
+        }
+
+        //CLIJ clij1 = new CLIJ(0);
+        //CLIJ clij2 = new CLIJ(0);
+
+        CLIJ clij = CLIJ.getInstance();
+        clij.close();
+        CLIJ.getInstance();
     }
 }
