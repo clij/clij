@@ -6,6 +6,7 @@ import clearcl.backend.ClearCLBackends;
 import clearcl.backend.jocl.ClearCLBackendJOCL;
 import clearcl.enums.*;
 import clearcl.util.ElapsedTime;
+import clearcl.util.OsCheck;
 import coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;
@@ -24,6 +25,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static clearcl.util.OsCheck.OSType.Linux;
 
 /**
  * CLIJ is an entry point for ImageJ/OpenCL compatibility.
@@ -88,13 +91,17 @@ public class CLIJ {
         resetStdErrForwarding();
     }
 
+
+    public CLIJ(String pDeviceNameMustContain) {
+        this(pDeviceNameMustContain, false);
+    }
     /**
      * Deprecated: use getInstance(String) instead
      *
      * @param pDeviceNameMustContain device name
      */
     @Deprecated
-    public CLIJ(String pDeviceNameMustContain) {
+    public CLIJ(String pDeviceNameMustContain, boolean matchExactly) {
         if (mClearCL == null) {
             ClearCLBackendInterface
                     lClearCLBackend = new ClearCLBackendJOCL();
@@ -108,7 +115,7 @@ public class CLIJ {
         } else {
             mClearCLDevice = null;
             for (ClearCLDevice device : allDevices) {
-                if (device.getName().contains(pDeviceNameMustContain)) {
+                if ((device.getName().contains(pDeviceNameMustContain) && !matchExactly) || device.getName().compareTo(pDeviceNameMustContain) == 0) {
                     mClearCLDevice = device;
                 }
             }
@@ -119,9 +126,13 @@ public class CLIJ {
             if (debug) {
                 System.out.println("No GPU name specified. Using first GPU device found.");
             }
+
+            boolean linux = OsCheck.getOperatingSystemType() == Linux;
+
             for (ClearCLDevice device : allDevices) {
                 if (!device.getName().contains("CPU")) {
                     mClearCLDevice = device;
+                    break;
                 }
             }
         }
@@ -146,7 +157,12 @@ public class CLIJ {
         return getInstance(null);
     }
 
+
     public static CLIJ getInstance(String pDeviceNameMustContain) {
+        return getInstance(pDeviceNameMustContain, false);
+    }
+
+    public static CLIJ getInstance(String pDeviceNameMustContain, boolean matchExactly) {
         if (sInstance == null) {
             sInstance = new CLIJ(pDeviceNameMustContain);
         } else {
@@ -157,9 +173,10 @@ public class CLIJ {
                 }
                 sInstance.close();
                 sInstance = null;
-                sInstance = new CLIJ(pDeviceNameMustContain);
+                sInstance = new CLIJ(pDeviceNameMustContain, matchExactly);
             }
         }
+        System.out.println("CLIJ: " + sInstance.getGPUName());
         return sInstance;
     }
 
@@ -245,6 +262,7 @@ public class CLIJ {
         return result[0];
     }
 
+    /*
     public void dispose() {
         mClearCLContext.close();
         converterService = null;
@@ -252,6 +270,7 @@ public class CLIJ {
             sInstance = null;
         }
     }
+    */
 
     public ClearCLContext getClearCLContext() {
         return mClearCLContext;
@@ -273,7 +292,7 @@ public class CLIJ {
 
         return mClearCLContext.createImage(HostAccessType.ReadWrite,
                 KernelAccessType.ReadWrite,
-                ImageChannelOrder.Intensity,
+                ImageChannelOrder.R,
                 pImageChannelType,
                 dimensions);
     }
