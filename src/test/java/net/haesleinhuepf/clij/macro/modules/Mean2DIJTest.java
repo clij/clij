@@ -17,6 +17,9 @@ public class Mean2DIJTest extends AbstractMacroPluginTest {
         new ImageJ();
 
         CLIJ clij = CLIJ.getInstance();
+        clij.close();
+        clij = CLIJ.getInstance();
+
         for (int radius = 1; radius < 50; radius++) {
             ImagePlus testImage = NewImage.createImage("", 200, 200, 1, 8, NewImage.FILL_BLACK);
 

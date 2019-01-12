@@ -15,6 +15,9 @@ public class AbsoluteTest {
     @Test
     public void absolute3d() {
         CLIJ clij = CLIJ.getInstance();
+        clij.close();
+        clij = CLIJ.getInstance();
+
         ImagePlus negativeImp =
                 NewImage.createImage("",
                         2,
