@@ -1,9 +1,9 @@
 package net.haesleinhuepf.clij.converters.implementations;
 
-import clearcl.ClearCLBuffer;
-import clearcl.ClearCLContext;
-import clearcl.ClearCLImage;
-import clearcl.enums.ImageChannelDataType;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLContext;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.enums.ImageChannelDataType;
 import coremem.ContiguousMemoryInterface;
 import coremem.enums.NativeTypeEnum;
 import coremem.offheap.OffHeapMemory;

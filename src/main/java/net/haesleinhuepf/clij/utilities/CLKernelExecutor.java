@@ -1,9 +1,9 @@
 package net.haesleinhuepf.clij.utilities;
 
-import clearcl.*;
-import clearcl.enums.ImageChannelDataType;
-import clearcl.exceptions.OpenCLException;
-import clearcl.util.ElapsedTime;
+import net.haesleinhuepf.clij.clearcl.*;
+import net.haesleinhuepf.clij.clearcl.enums.ImageChannelDataType;
+import net.haesleinhuepf.clij.clearcl.exceptions.OpenCLException;
+import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
 import coremem.enums.NativeTypeEnum;
 import net.haesleinhuepf.clij.CLIJ;
 

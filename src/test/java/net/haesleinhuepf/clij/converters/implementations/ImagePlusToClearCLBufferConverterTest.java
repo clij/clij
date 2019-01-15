@@ -1,7 +1,7 @@
 package net.haesleinhuepf.clij.converters.implementations;
 
-import clearcl.ClearCLBuffer;
-import clearcl.util.ElapsedTime;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import net.haesleinhuepf.clij.CLIJ;

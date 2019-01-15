@@ -1,7 +1,7 @@
 package net.haesleinhuepf.clij.macro.modules;
 
-import clearcl.ClearCLImage;
-import clearcl.util.ElapsedTime;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;

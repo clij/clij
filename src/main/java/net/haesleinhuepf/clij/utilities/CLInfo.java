@@ -1,9 +1,9 @@
 package net.haesleinhuepf.clij.utilities;
 
-import clearcl.*;
-import clearcl.backend.ClearCLBackendInterface;
-import clearcl.backend.ClearCLBackends;
-import clearcl.enums.*;
+import net.haesleinhuepf.clij.clearcl.*;
+import net.haesleinhuepf.clij.clearcl.backend.ClearCLBackendInterface;
+import net.haesleinhuepf.clij.clearcl.backend.ClearCLBackends;
+import net.haesleinhuepf.clij.clearcl.enums.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

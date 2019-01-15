@@ -1,6 +1,6 @@
 package net.haesleinhuepf.clij.macro;
 
-import clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.test.TestUtilities;
 

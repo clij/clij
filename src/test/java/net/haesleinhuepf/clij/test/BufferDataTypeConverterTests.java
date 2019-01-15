@@ -1,6 +1,6 @@
 package net.haesleinhuepf.clij.test;
 
-import clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import ij.IJ;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;

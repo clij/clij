@@ -1,7 +1,7 @@
 package net.haesleinhuepf.clij.macro.modules;
 
-import clearcl.ClearCLBuffer;
-import clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import net.haesleinhuepf.clij.kernels.Kernels;
 import net.haesleinhuepf.clij.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;

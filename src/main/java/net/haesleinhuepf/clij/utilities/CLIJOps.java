@@ -1,8 +1,8 @@
 package net.haesleinhuepf.clij.utilities;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
-import clearcl.ClearCLBuffer;
-import clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import coremem.enums.NativeTypeEnum;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.utilities.CLKernelExecutor;

@@ -1,7 +1,7 @@
 package net.haesleinhuepf.clij.macro;
 
-import clearcl.ClearCLBuffer;
-import clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import fiji.util.gui.GenericDialogPlus;
 import ij.IJ;
 import ij.ImagePlus;

@@ -1,8 +1,8 @@
 package net.haesleinhuepf.clij.test;
 
-import clearcl.ClearCLBuffer;
-import clearcl.ClearCLImage;
-import clearcl.enums.ImageChannelDataType;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.enums.ImageChannelDataType;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;

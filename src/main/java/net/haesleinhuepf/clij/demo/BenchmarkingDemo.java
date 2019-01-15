@@ -1,6 +1,6 @@
 package net.haesleinhuepf.clij.demo;
 
-import clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.CLIJ;
 import ij.IJ;
 import ij.ImagePlus;

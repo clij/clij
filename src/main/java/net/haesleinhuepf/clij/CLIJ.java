@@ -1,11 +1,11 @@
 package net.haesleinhuepf.clij;
 
-import clearcl.*;
-import clearcl.backend.ClearCLBackendInterface;
-import clearcl.backend.ClearCLBackends;
-import clearcl.backend.jocl.ClearCLBackendJOCL;
-import clearcl.enums.*;
-import clearcl.util.ElapsedTime;
+import net.haesleinhuepf.clij.clearcl.*;
+import net.haesleinhuepf.clij.clearcl.backend.ClearCLBackendInterface;
+import net.haesleinhuepf.clij.clearcl.backend.ClearCLBackends;
+import net.haesleinhuepf.clij.clearcl.backend.jocl.ClearCLBackendJOCL;
+import net.haesleinhuepf.clij.clearcl.enums.*;
+import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
 import coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;

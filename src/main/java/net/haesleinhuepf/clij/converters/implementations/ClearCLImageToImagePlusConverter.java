@@ -1,6 +1,6 @@
 package net.haesleinhuepf.clij.converters.implementations;
 
-import clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.converters.AbstractCLIJConverter;
 import net.haesleinhuepf.clij.converters.CLIJConverterPlugin;

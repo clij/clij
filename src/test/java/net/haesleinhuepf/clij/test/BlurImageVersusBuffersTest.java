@@ -1,8 +1,8 @@
 package net.haesleinhuepf.clij.test;
 
-import clearcl.ClearCLBuffer;
-import clearcl.ClearCLImage;
-import clearcl.util.ElapsedTime;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
 import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.CLIJ;

@@ -1,6 +1,6 @@
 package net.haesleinhuepf.clij.test;
 
-import clearcl.ClearCLImage;
+import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
 import ij.IJ;
