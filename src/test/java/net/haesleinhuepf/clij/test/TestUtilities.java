@@ -1,7 +1,7 @@
 package net.haesleinhuepf.clij.test;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import ij.ImagePlus;
 import ij.gui.NewImage;
 import ij.process.ImageProcessor;

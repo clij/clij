@@ -1,7 +1,7 @@
 package net.haesleinhuepf.clij.converters.implementations;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import net.haesleinhuepf.clij.converters.AbstractCLIJConverter;
 import net.haesleinhuepf.clij.converters.CLIJConverterPlugin;
 import net.haesleinhuepf.clij.converters.ConverterUtilities;

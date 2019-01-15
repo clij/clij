@@ -4,7 +4,7 @@ import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import ij.IJ;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
-import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import org.junit.Test;
 
 /**

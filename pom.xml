@@ -86,7 +86,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
-			<artifactId>coremem</artifactId>
+			<artifactId>clij-coremem</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
@@ -120,14 +120,6 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jocl</groupId>
-			<artifactId>jocl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.nativelibs4java</groupId>
-			<artifactId>javacl</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>

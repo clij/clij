@@ -6,7 +6,7 @@ import net.haesleinhuepf.clij.clearcl.backend.ClearCLBackends;
 import net.haesleinhuepf.clij.clearcl.backend.jocl.ClearCLBackendJOCL;
 import net.haesleinhuepf.clij.clearcl.enums.*;
 import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
-import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;

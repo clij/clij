@@ -2,7 +2,7 @@ package net.haesleinhuepf.clij.test;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import clojure.lang.Obj;
-import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.CLIJ;

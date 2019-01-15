@@ -4,7 +4,7 @@ import net.haesleinhuepf.clij.clearcl.*;
 import net.haesleinhuepf.clij.clearcl.enums.ImageChannelDataType;
 import net.haesleinhuepf.clij.clearcl.exceptions.OpenCLException;
 import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
-import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import net.haesleinhuepf.clij.CLIJ;
 
 import java.io.IOException;

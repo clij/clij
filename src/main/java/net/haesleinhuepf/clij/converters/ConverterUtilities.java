@@ -1,7 +1,7 @@
 package net.haesleinhuepf.clij.converters;
 
 import net.haesleinhuepf.clij.clearcl.enums.ImageChannelDataType;
-import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.ByteType;
 import net.imglib2.type.numeric.integer.ShortType;

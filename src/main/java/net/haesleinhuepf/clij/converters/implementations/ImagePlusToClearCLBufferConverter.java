@@ -1,8 +1,8 @@
 package net.haesleinhuepf.clij.converters.implementations;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import coremem.ContiguousMemoryInterface;
-import coremem.enums.NativeTypeEnum;
+import net.haesleinhuepf.clij.coremem.ContiguousMemoryInterface;
+import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;
 import net.haesleinhuepf.clij.converters.AbstractCLIJConverter;
