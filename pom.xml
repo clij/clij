@@ -8,13 +8,13 @@
 	<parent>
 		<groupId>net.haesleinhuepf</groupId>
 		<artifactId>clij-parent-pom</artifactId>
-		<version>0.7.0</version>
+		<version>0.7.1</version>
 		<relativePath />
 	</parent>
 
 	<groupId>net.haesleinhuepf</groupId>
 	<artifactId>clij_</artifactId>
-	<version>0.15.0</version>
+	<version>0.15.1</version>
 
 	<name>clij</name>
 	<description>clij</description>
@@ -107,7 +107,7 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
-			<version>0.35.0</version>
+			<version>0.35.1-haesleinhuepf</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
