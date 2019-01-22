@@ -1,15 +1,13 @@
 package net.haesleinhuepf.clij.demo;
 
-import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import net.haesleinhuepf.clij.clearcl.ClearCLImage;
-import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
-import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.CLIJ;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+import net.imagej.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.img.Img;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.view.Views;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,16 +21,14 @@ import java.util.Map;
  */
 public class DifferenceOfGaussianCLDemo {
     public static void main(String... args) throws IOException {
-        new ImageJ();
-        ImagePlus inputImp = IJ.openImage("src/main/resources/flybrain.tif");
+        ImageJ ij = new ImageJ();
+        Img img = (Img) ij.io().open("src/main/resources/flybrain.tif");
 
-        inputImp = new Duplicator().run(inputImp, 25, 25);
+        RandomAccessibleInterval<UnsignedShortType> input = Views.hyperSlice(img, img.numDimensions()-1, 25);
 
-        RandomAccessibleInterval<UnsignedShortType> input = ImageJFunctions.wrap(inputImp);
+        RandomAccessibleInterval<UnsignedShortType> output = ij.op().create().img(input);
 
-        RandomAccessibleInterval<UnsignedShortType> output = ImageJFunctions.wrap(new Duplicator().run(inputImp));
-
-        ImageJFunctions.show(input);
+        ij.ui().show(input);
 
         CLIJ clij = CLIJ.getInstance("hd"); //CLIJ.getInstance();
 
@@ -51,8 +47,8 @@ public class DifferenceOfGaussianCLDemo {
 
             clij.execute("src/main/jython/differenceOfGaussian/differenceOfGaussian.cl", "subtract_convolved_images_2d_fast", parameterMap);
 
-            ImagePlus result = clij.pull(dstImage);
-            result.show();
+            Img result = clij.pull(dstImage);
+            ij.ui().show(result);
         }
 
     }

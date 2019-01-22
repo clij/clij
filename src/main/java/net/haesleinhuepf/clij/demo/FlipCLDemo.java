@@ -1,14 +1,14 @@
 package net.haesleinhuepf.clij.demo;
 
+import ij.IJ;
+import ij.ImagePlus;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.clearcl.ClearCLImage;
-import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.CLIJ;
+import net.imagej.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.img.Img;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 import java.io.IOException;
@@ -23,14 +23,13 @@ import java.util.Map;
  */
 public class FlipCLDemo {
     public static void main(String... args) throws IOException {
-        new ImageJ();
-        ImagePlus lInputImagePlus = IJ.openImage("src/main/resources/flybrain.tif");
+        ImageJ ij = new ImageJ();
 
-        RandomAccessibleInterval<UnsignedShortType> input = ImageJFunctions.wrap(lInputImagePlus);
+        RandomAccessibleInterval<UnsignedShortType> input = (Img) ij.io().open("src/main/resources/flybrain.tif");
 
-        RandomAccessibleInterval<UnsignedShortType> output = ImageJFunctions.wrap(new Duplicator().run(lInputImagePlus));
+        RandomAccessibleInterval<UnsignedShortType> output = ij.op().create().img(input);
 
-        ImageJFunctions.show(input);
+        ij.ui().show(input);
 
         CLIJ clij = CLIJ.getInstance("hd");
 
@@ -49,8 +48,8 @@ public class FlipCLDemo {
 
             clij.execute("src/main/java/net/haesleinhuepf/clij/kernels/flip.cl", "flip_3d", lParameterMap);
 
-            ImagePlus result = clij.pull(dstImage);
-            result.show();
+            Img result = clij.pull(dstImage);
+            ij.ui().show(result);
         }
 
     }

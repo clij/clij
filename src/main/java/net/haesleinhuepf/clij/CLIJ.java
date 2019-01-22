@@ -9,14 +9,13 @@ import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
 import net.haesleinhuepf.clij.coremem.enums.NativeTypeEnum;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.converters.CLIJConverterPlugin;
 import net.haesleinhuepf.clij.converters.CLIJConverterService;
-import net.haesleinhuepf.clij.macro.CLIJHandler;
 import net.haesleinhuepf.clij.utilities.CLIJOps;
 import net.haesleinhuepf.clij.utilities.CLInfo;
 import net.haesleinhuepf.clij.utilities.CLKernelExecutor;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
 import org.scijava.Context;
 
 import java.io.ByteArrayOutputStream;
@@ -368,16 +367,16 @@ public class CLIJ {
         this.converterService = converterService;
     }
 
-    public ClearCLBuffer push(ImagePlus imp) {
-        return convert(imp, ClearCLBuffer.class);
+    public ClearCLBuffer push(Img img) {
+        return convert(img, ClearCLBuffer.class);
     }
 
     public ClearCLBuffer push(RandomAccessibleInterval rai) {
         return convert(rai, ClearCLBuffer.class);
     }
 
-    public ImagePlus pull(ClearCLBuffer buffer) {
-        return convert(buffer, ImagePlus.class);
+    public Img pull(ClearCLBuffer buffer) {
+        return convert(buffer, Img.class);
     }
 
     public <S, T> T convert(S source, Class<T> targetClass) {

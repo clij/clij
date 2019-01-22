@@ -1,16 +1,11 @@
 package net.haesleinhuepf.clij.demo;
 
-import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import net.haesleinhuepf.clij.clearcl.ClearCLImage;
-import ij.IJ;
-import ij.ImageJ;
-import ij.ImagePlus;
-import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.CLIJ;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.kernels.Kernels;
+import net.imagej.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.img.Img;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,14 +22,14 @@ public class PipelineCLDemo {
 
     public static void main(String... args) throws IOException {
         // Initialize ImageJ and example images
-        new ImageJ();
-        ImagePlus inputImp = IJ.openImage("src/main/resources/flybrain.tif");
-        inputImp.show();
+        ImageJ ij = new ImageJ();
+        Img input = (Img) ij.io().open("src/main/resources/flybrain.tif");
+        ij.ui().show(input);
 
         // Startup OpenCL device, convert images to ClearCL format
         CLIJ clij = CLIJ.getInstance();
 
-        ClearCLBuffer inputCLBuffer = clij.push(inputImp);
+        ClearCLBuffer inputCLBuffer = clij.push(input);
         ClearCLBuffer outputCLBuffer = clij.create(inputCLBuffer);
 
         // ---------------------------------------------------------------
@@ -52,7 +47,7 @@ public class PipelineCLDemo {
         // Convert/copy and show intermediate result
         RandomAccessibleInterval intermediateResult = clij.convert(outputCLBuffer, RandomAccessibleInterval.class);
 
-        ImageJFunctions.show(intermediateResult);
+        ij.ui().show(intermediateResult);
 
         // ---------------------------------------------------------------
         // Example Step 2: Bluring
@@ -74,7 +69,7 @@ public class PipelineCLDemo {
         // Convert and show final result
         RandomAccessibleInterval result = clij.convert(inputCLBuffer, RandomAccessibleInterval.class);
 
-        ImageJFunctions.show(result);
+        ij.ui().show(result);
 
 
     }

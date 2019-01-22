@@ -1,18 +1,12 @@
 package net.haesleinhuepf.clij.demo;
 
-import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.CLIJ;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.Prefs;
-import ij.plugin.Duplicator;
-import ij.plugin.ImageCalculator;
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.imagej.ImageJ;
 import net.imglib2.IterableInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.neighborhood.DiamondShape;
 import net.imglib2.img.Img;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.roi.Regions;
 import net.imglib2.type.BooleanType;
 import net.imglib2.type.numeric.RealType;
@@ -37,6 +31,8 @@ public class BenchmarkingDemo {
     private static CLIJ clij;
     private static double sigma = 3;
 
+    private static Img img;
+
     public static void main(String... args) throws IOException {
 
         // ---------------------------------------
@@ -45,17 +41,13 @@ public class BenchmarkingDemo {
         ij.ui().showUI();
         clij = CLIJ.getInstance("TITAN");
 
-        input = IJ.openImage("src/main/resources/flybrain.tif");
-        input.show();
-        IJ.run(input, "8-bit", "");
-        img = ImageJFunctions.wrapReal(input);
+        img = (Img) ij.io().open("src/main/resources/flybrain.tif");
+        ij.ui().show(img);
 
         for (int i = 0; i < 100; i++) {
             // ---------------------------------------
-            // three test scenarios
+            // two test scenarios
             long timestamp = System.currentTimeMillis();
-            demoImageJ1();
-            System.out.println("The ImageJ1 way took " + (System.currentTimeMillis() - timestamp) + " msec");
 
             timestamp = System.currentTimeMillis();
             demoImageJ2();
@@ -66,24 +58,6 @@ public class BenchmarkingDemo {
             System.out.println("The ClearCL way took " + (System.currentTimeMillis() - timestamp) + " msec");
             // ---------------------------------------
         }
-    }
-
-    private static ImagePlus input;
-    private static Img img;
-
-    private static void demoImageJ1() {
-        ImagePlus copy = new Duplicator().run(input, 1, input.getNSlices());
-        Prefs.blackBackground = false;
-        IJ.run(copy, "Gaussian Blur 3D...", "x=" + sigma + " y=" + sigma + " z=" + sigma + "");
-        IJ.setRawThreshold(copy, 100, 255, null);
-        IJ.run(copy, "Convert to Mask", "method=Default background=Dark");
-        IJ.run(copy, "Erode", "stack");
-        IJ.run(copy, "Dilate", "stack");
-        IJ.run(copy, "Divide...", "value=255 stack");
-        ImageCalculator calculator = new ImageCalculator();
-
-        ImagePlus result = calculator.run("Multiply create stack", copy, input);
-        result.show();
     }
 
     private static <T extends RealType<T>, B extends BooleanType<B>> void demoImageJ2() {
@@ -114,7 +88,7 @@ public class BenchmarkingDemo {
         );
         sample.forEach(pair -> pair.getA().set(pair.getB()));
 
-        ImageJFunctions.show(output);
+        ij.ui().show(output);
 
     }
 
@@ -143,7 +117,7 @@ public class BenchmarkingDemo {
 
         clij.op().multiplyImages(flop, input, flip);
 
-        clij.pull(flip).show();
+        ij.ui().show(clij.pull(flip));
 
         flip.close();
         flop.close();
