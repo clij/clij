@@ -16,7 +16,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_rotate")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_rotate3D")
 public class Rotate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
