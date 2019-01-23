@@ -21,7 +21,7 @@ rename("original");
 getDimensions(width, height, channels, depth, frames);
 
 // reserve the right amount of memory for the result image
-newImage("target", "32-bit black", width, height, 360 / angle_step + 1);
+newImage("target", "32-bit black", width, height, 360 / angle_step);
 
 // reserve a bit more pixels in Z for translated and rotated image because we
 // need space for the shoulders if we rotated the patient around the Y-axis
