@@ -29,7 +29,8 @@ newImage("rotated", "32-bit black", width, height, depth * 2);
 newImage("translated", "32-bit black", width, height, depth * 2);
 
 // init GPU
-run("CLIJ Macro Extensions", "cl_device=[Intel(R) UHD Graphics 620]");
+run("CLIJ Macro Extensions", "cl_device=");
+Ext.CLIJ_clear();
 
 // push images to GPU
 Ext.CLIJ_push("original");
