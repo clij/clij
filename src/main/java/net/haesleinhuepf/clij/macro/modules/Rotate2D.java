@@ -1,7 +1,6 @@
 package net.haesleinhuepf.clij.macro.modules;
 
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
-import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import net.haesleinhuepf.clij.kernels.Kernels;
 import net.haesleinhuepf.clij.macro.AbstractCLIJPlugin;
 import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;
@@ -16,15 +15,13 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_rotate3D")
-public class Rotate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_rotate2D")
+public class Rotate2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
-        float angleX = (float)(-asFloat(args[2]) / 180.0f * Math.PI);
-        float angleY = (float)(-asFloat(args[3]) / 180.0f * Math.PI);
-        float angleZ = (float)(-asFloat(args[4]) / 180.0f * Math.PI);
-        boolean rotateAroundCenter = asBoolean(args[5]);
+        float angleZ = (float)(-asFloat(args[2]) / 180.0f * Math.PI);
+        boolean rotateAroundCenter = asBoolean(args[3]);
 
         AffineTransform3D at = new AffineTransform3D();
         Object[] args = openCLBufferArgs();
@@ -33,8 +30,6 @@ public class Rotate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
             ClearCLBuffer input = (ClearCLBuffer) args[0];
             at.translate(-input.getWidth() / 2, -input.getHeight() / 2, -input.getDepth() / 2);
         }
-        at.rotate(0, angleX);
-        at.rotate(1, angleY);
         at.rotate(2, angleZ);
         if (rotateAroundCenter) {
             ClearCLBuffer input = (ClearCLBuffer) args[0];
@@ -49,18 +44,18 @@ public class Rotate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number angleX, Number angleY, Number angleZ, Boolean rotateAroundCenter";
+        return "Image source, Image destination, Number angle, Boolean rotateAroundCenter";
     }
 
     @Override
     public String getDescription() {
-        return "Rotates an image stack in 3D. All angles are entered in degrees. If the image is not rotated around \n" +
+        return "Rotates an image in plane. All angles are entered in degrees. If the image is not rotated around \n" +
                 "the center, it is rotated around the coordinate origin.\n\n" +
-                "It is recommended to apply the rotation to an isotropic image stack.";
+                "It is recommended to apply the rotation to an isotropic image.";
     }
 
     @Override
     public String getAvailableForDimensions() {
-        return "3D";
+        return "2D";
     }
 }
