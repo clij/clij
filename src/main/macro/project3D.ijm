@@ -43,7 +43,7 @@ run("Close All");
 
 // we need to translate the stack in Z to get some space for the shoulders 
 // when we rotate the head around the y-axis 
-Ext.CLIJ_translate3D("original", "translated", 0, 0, depth / 4);
+Ext.CLIJ_translate3D("original", "translated", 0, 0, depth / 2);
 	
 count = 0;
 for (angle = 0; angle < 360; angle += angle_step) {

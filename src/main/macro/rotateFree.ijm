@@ -39,7 +39,7 @@ count = 0;
 for (angle = 0; angle < 360; angle += angle_step) {
 	Ext.CLIJ_rotate2D("original", "rotated", angle, true);
 
-	// put the maximum projection in the right place in the result stack
+	// put the rotated image in the right place in the result stack
 	Ext.CLIJ_copySlice("rotated", "target", count);
 	
 	count++;
