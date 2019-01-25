@@ -1,4 +1,4 @@
-// CLIJ example macro: project3D.ijm
+// CLIJ example macro: rotateOverwriteOriginal.ijm
 //
 // This macro shows how to rotate an image in the GPU.
 //
