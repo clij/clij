@@ -186,6 +186,7 @@ deploy.bat
 "TdrDelay"=dword:0000003c
 "TdrDdiDelay"=dword:0000003c
 ```
+  Here is more information about what TDR is: https://docs.microsoft.com/en-us/windows-hardware/drivers/display/tdr-registry-keys
 * Fiji crashes when calling the first CLIJ filter: Check if the initialisation contains a proper name for a GPU.
 * "java.io.IOException: Cannot find source: [Object] <path/filename.cl>" exception: Navigate to the jars subdirectory of your Fiji installation and locate `clearcl.jar` files, e.g. by typing `dir clearcl*` or `ls clearcl*`. If there are several versions installed, remove the older one. In order to fix this exception, you need at least `clearcl-0.5.5-RH.jar`.
 * "clearcl.exceptions.ClearCLException: problem while setting argument 'parameter_of_type_float'": To hand over parameters of type float, you need to explicitly type it. Use `from java.lang import Float` and `Float(1.5)` to handover a value of 1.5 to an OpenCL parameter of type float.
