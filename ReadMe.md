@@ -180,12 +180,18 @@ deploy.bat
 ```
 
 # Troubleshooting
+* Errors when processing big images on NVidia cards on Windows (CL_INVALID_COMMAND_QUEUE, CL_INVALID_PROGRAM_EXECUTABLE, CL_MEM_OBJECT_ALLOCATION_FAILURE): The issue is related to a timeout of the operating system interrupting processing on the GPU. Add these keys to the windows registry and restart the machine (warning, don't do this if you're not sure. Ask you IT department for support. [Read the BSD3 license file](license.txt) for details on what why we're not responsible for your actions on your computer ):
+```
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GraphicsDrivers]
+"TdrDelay"=dword:0000003c
+"TdrDdiDelay"=dword:0000003c
+```
 * Fiji crashes when calling the first CLIJ filter: Check if the initialisation contains a proper name for a GPU.
 * "java.io.IOException: Cannot find source: [Object] <path/filename.cl>" exception: Navigate to the jars subdirectory of your Fiji installation and locate `clearcl.jar` files, e.g. by typing `dir clearcl*` or `ls clearcl*`. If there are several versions installed, remove the older one. In order to fix this exception, you need at least `clearcl-0.5.5-RH.jar`.
 * "clearcl.exceptions.ClearCLException: problem while setting argument 'parameter_of_type_float'": To hand over parameters of type float, you need to explicitly type it. Use `from java.lang import Float` and `Float(1.5)` to handover a value of 1.5 to an OpenCL parameter of type float.
 * After installation, Fiji doesn't start anymore: Navigate to your Fiji folder. Check if there is clij_0.4.0.jar located in _both_ folders `plugins` and `jars`. Delete both and run the installation instructions again.
 * ClearVolume doesn't work anymore. CLIJ needs developmental versions of dependencies, also ClearVolume needs. If both update sites are activated, Fiji may crash. Install only one of both at a time.
-* CLIJ throws various exceptions, like CL_OUT_OF_HOST_MEMORY on Linux. Try installing an OpenCL-driver such as beignet. On Fedora 27 Linux, this command list helped (warning, don't execute these commands if you don't know what they are doing. [Read the BSD3 license file](license.txt) for details on what why we're not responsible for your actions on your computer ):
+* CLIJ throws various exceptions, like CL_OUT_OF_HOST_MEMORY on Linux. Try installing an OpenCL-driver such as beignet. On Fedora 27 Linux, this command list helped (warning, don't execute these commands if you don't know what they are doing. Ask you IT department for support. [Read the BSD3 license file](license.txt) for details on what why we're not responsible for your actions on your computer ):
 
 ```
 sudo yum install ocl-icd-devel
