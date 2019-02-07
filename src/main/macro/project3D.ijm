@@ -18,6 +18,11 @@ angle_step = 10;
 run("32-bit");
 rename("original");
 
+time  = getTime();
+run("3D Project...", "projection=[Brightest Point] axis=Y-Axis slice=1 initial=0 total=360 rotation=" + angle_step + " lower=1 upper=255 opacity=0 surface=100 interior=50 interpolate");
+close();
+IJ.log("CPU 3D projection took " + (getTime()-time) + " msec");
+
 getDimensions(width, height, channels, depth, frames);
 
 // reserve the right amount of memory for the result image
@@ -31,6 +36,8 @@ newImage("translated", "32-bit black", width, height, depth * 2);
 // init GPU
 run("CLIJ Macro Extensions", "cl_device=");
 Ext.CLIJ_clear();
+
+time = getTime();
 
 // push images to GPU
 Ext.CLIJ_push("original");
@@ -58,3 +65,5 @@ for (angle = 0; angle < 360; angle += angle_step) {
 
 // show result
 Ext.CLIJ_pull("target");
+
+IJ.log("GPU 3D projection took " + (getTime()-time) + " msec");
