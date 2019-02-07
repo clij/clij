@@ -40,7 +40,7 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
 
             if (plugin instanceof OffersDocumentation) {
                 description = "<html><body>" +
-                        new HTMLDocumentationTemplate(((OffersDocumentation) plugin).getDescription(), ((OffersDocumentation) plugin).getAvailableForDimensions(), plugin).toString() +
+                        new HTMLDocumentationTemplate(((OffersDocumentation) plugin).getDescription(), ((OffersDocumentation) plugin).getAvailableForDimensions(), plugin).toString(true) +
                         "</body></html>";
 
             }
