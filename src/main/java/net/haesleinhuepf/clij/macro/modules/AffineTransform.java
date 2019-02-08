@@ -71,7 +71,7 @@ public class AffineTransform extends AbstractCLIJPlugin implements CLIJMacroPlug
                 at.translate(0,Double.parseDouble(commandParts[1]), 0);
             } else if (commandParts[0].compareTo("translatez") == 0) {
                 at.translate(0, 0, Double.parseDouble(commandParts[1]));
-            } else if (commandParts[0].compareTo("shearx") == 0) {
+            } else if (commandParts[0].compareTo("shearxy") == 0) {
                 double shear = Double.parseDouble(commandParts[1]);
                 AffineTransform3D shearTransform = new AffineTransform3D();
                 shearTransform.set(1.0, 0, 0 );
@@ -80,22 +80,44 @@ public class AffineTransform extends AbstractCLIJPlugin implements CLIJMacroPlug
                 shearTransform.set(shear, 0, 1);
                 //shearTransform.set(shear, 0, 2);
                 at.concatenate(shearTransform);
-            } else if (commandParts[0].compareTo("sheary") == 0) {
+            } else if (commandParts[0].compareTo("shearxz") == 0) {
+                double shear = Double.parseDouble(commandParts[1]);
+                AffineTransform3D shearTransform = new AffineTransform3D();
+                shearTransform.set(1.0, 0, 0 );
+                shearTransform.set(1.0, 1, 1 );
+                shearTransform.set(1.0, 2, 2 );
+                shearTransform.set(shear, 0, 2);
+                at.concatenate(shearTransform);
+            } else if (commandParts[0].compareTo("shearyx") == 0) {
                 double shear = Double.parseDouble(commandParts[1]);
                 AffineTransform3D shearTransform = new AffineTransform3D();
                 shearTransform.set(1.0, 0, 0 );
                 shearTransform.set(1.0, 1, 1 );
                 shearTransform.set(1.0, 2, 2 );
                 shearTransform.set(shear, 1, 0);
-                //shearTransform.set(shear, 1, 2);
                 at.concatenate(shearTransform);
-            } else if (commandParts[0].compareTo("shearz") == 0) {
+            } else if (commandParts[0].compareTo("shearyz") == 0) {
                 double shear = Double.parseDouble(commandParts[1]);
                 AffineTransform3D shearTransform = new AffineTransform3D();
                 shearTransform.set(1.0, 0, 0 );
                 shearTransform.set(1.0, 1, 1 );
                 shearTransform.set(1.0, 2, 2 );
-                //shearTransform.set(shear, 2, 0);
+                shearTransform.set(shear, 1, 2);
+                at.concatenate(shearTransform);
+            } else if (commandParts[0].compareTo("shearzx") == 0) {
+                double shear = Double.parseDouble(commandParts[1]);
+                AffineTransform3D shearTransform = new AffineTransform3D();
+                shearTransform.set(1.0, 0, 0 );
+                shearTransform.set(1.0, 1, 1 );
+                shearTransform.set(1.0, 2, 2 );
+                shearTransform.set(shear, 2, 0);
+                at.concatenate(shearTransform);
+            } else if (commandParts[0].compareTo("shearzy") == 0) {
+                double shear = Double.parseDouble(commandParts[1]);
+                AffineTransform3D shearTransform = new AffineTransform3D();
+                shearTransform.set(1.0, 0, 0 );
+                shearTransform.set(1.0, 1, 1 );
+                shearTransform.set(1.0, 2, 2 );
                 shearTransform.set(shear, 2, 1);
                 at.concatenate(shearTransform);
             } else {
@@ -132,9 +154,12 @@ public class AffineTransform extends AbstractCLIJPlugin implements CLIJMacroPlug
                 "\n* scaleX=[factor]: scaling along X-axis according to given zoom factor" +
                 "\n* scaleY=[factor]: scaling along Y-axis according to given zoom factor" +
                 "\n* scaleZ=[factor]: scaling along Z-axis according to given zoom factor" +
-                "\n* shearX=[factor]: shearing along X-axis according to given factor" +
-                "\n* shearY=[factor]: shearing along Y-axis according to given factor" +
-                "\n* shearZ=[factor]: shearing along Z-axis according to given factor" +
+                "\n* shearXY=[factor]: shearing along X-axis in XY plane according to given factor" +
+                "\n* shearXZ=[factor]: shearing along X-axis in XZ plane according to given factor" +
+                "\n* shearYX=[factor]: shearing along Y-axis in XY plane according to given factor" +
+                "\n* shearYZ=[factor]: shearing along Y-axis in YZ plane according to given factor" +
+                "\n* shearZX=[factor]: shearing along Z-axis in XZ plane according to given factor" +
+                "\n* shearZY=[factor]: shearing along Z-axis in YZ plane according to given factor" +
                 "\n* translateX=[distance]: translate along X-axis by distance given in pixels" +
                 "\n* translateY=[distance]: translate along X-axis by distance given in pixels" +
                 "\n* translateZ=[distance]: translate along X-axis by distance given in pixels" +
