@@ -36,7 +36,7 @@ public class Median3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number radiusX, Number radiusY";
+        return "Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ";
     }
 
     @Override
