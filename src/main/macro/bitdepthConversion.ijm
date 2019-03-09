@@ -24,8 +24,8 @@ intensityScalingFactor = 255;
 Ext.CLIJ_multiplyImageAndScalar("image32", "temp", intensityScalingFactor);
 
 // convert it to 8 bit
-Ext.CLIJ_convertUInt16("temp", "image8");
+Ext.CLIJ_convertUInt16("temp", "image16");
 
 // get converted image back from GPU
-Ext.CLIJ_pull("image8");
+Ext.CLIJ_pull("image16");
 
