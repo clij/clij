@@ -1,5 +1,5 @@
-// This script demonstrates how to apply a 
-// vector field in order to transform it non-rigidly
+// This script demonstrates how to apply a vector field
+// to an image in order to transform it non-rigidly
 //
 // Author: Robert Haase, rhaase@mpi-cbg.de
 // March 2019
@@ -15,7 +15,8 @@ rename("blobs");
 // create two images describing local shift
 newImage("shiftX", "32-bit black", 256, 254, 1);
 newImage("shiftY", "32-bit black", 256, 254, 1);
-// reserve memory for the result video
+
+// reserve memory for the result video
 newImage("resultStack", "32-bit black", 256, 254, 36);
 
 
