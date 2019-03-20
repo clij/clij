@@ -37,7 +37,7 @@ public class AffineTransform extends AbstractCLIJPlugin implements CLIJMacroPlug
                 ClearCLBuffer input = (ClearCLBuffer) args[0];
                 at.translate(input.getWidth() / 2, input.getHeight() / 2, input.getDepth() / 2);
             } else if (commandParts[0].compareTo("scale") == 0) {
-                at.scale(Double.parseDouble(commandParts[1]));
+                at.scale(1.0 / Double.parseDouble(commandParts[1]));
             } else if (commandParts[0].compareTo("scalex") == 0) {
                 AffineTransform3D scaleTransform = new AffineTransform3D();
                 scaleTransform.set(1.0 / Double.parseDouble(commandParts[1]),0,0);
