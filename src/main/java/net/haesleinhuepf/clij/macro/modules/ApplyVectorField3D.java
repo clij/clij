@@ -50,7 +50,7 @@ public class ApplyVectorField3D extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getDescription() {
-        return " ";
+        return "Image source, Image vectorX, Image vectorY, Image vectorZ, Image destination";
     }
 
     @Override
