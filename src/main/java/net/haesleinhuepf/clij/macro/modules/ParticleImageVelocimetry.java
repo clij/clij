@@ -13,16 +13,16 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_displacement")
-public class Displacement extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_particleImageVelocimetry")
+public class ParticleImageVelocimetry extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.displacement(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]), (ClearCLImage)(args[3]), asInteger(args[4]), asInteger(args[5]));
+            return Kernels.particleImageVelocimetry2D(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]), (ClearCLImage)(args[3]), asInteger(args[4]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.displacement(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]), (ClearCLBuffer)(args[3]), asInteger(args[4]), asInteger(args[5]));
+            boolean result = Kernels.particleImageVelocimetry2D(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), (ClearCLBuffer)(args[2]), (ClearCLBuffer)(args[3]), asInteger(args[4]));
             releaseBuffers(args);
             return result;
         }
@@ -30,7 +30,7 @@ public class Displacement extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getParameterHelpText() {
-        return "Image source1, Image source2, Image destinationDeltaX, Image destinationDeltaY, Number radiusX, Number radiusY";
+        return "Image source1, Image source2, Image destinationDeltaX, Image destinationDeltaY, Number maxDelta";
     }
 
     @Override
