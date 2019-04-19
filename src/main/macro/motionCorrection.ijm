@@ -47,7 +47,7 @@ for (z = 0; z  < slices; z++) {
 	Ext.CLIJ_copySlice(inputStack, slice, z);
 
 	// determine center of mass
-	Ext.CLIJ_thresholdIJ(slice, binary, threshold);
+	Ext.CLIJ_threshold(slice, binary, threshold);
 	Ext.CLIJ_centerOfMass(binary);
 	x = getResult("MassX", nResults() - 1);
 	y = getResult("MassY", nResults() - 1);

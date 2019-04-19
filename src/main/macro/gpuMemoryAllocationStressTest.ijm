@@ -13,7 +13,7 @@ newImage("Untitled", "16-bit black", 1024, 1024, 256);
 for (i = 0; i < 100; i++) {
 	run("Absolute of an image on GPU", "cl_device=gfx902 source=Untitled");
 	run("Close");
-	run("Blur3D (fast) on GPU", "cl_device=gfx902 source=Untitled sigmax=2 sigmay=2 sigmaz=2");
+	run("Blur3D on GPU", "cl_device=gfx902 source=Untitled sigmax=2 sigmay=2 sigmaz=2");
 	run("Close");
 	run("Report about GPU memory usage", "cl_device=gfx902");
 }

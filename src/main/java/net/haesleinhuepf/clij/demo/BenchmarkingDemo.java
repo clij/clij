@@ -134,7 +134,7 @@ public class BenchmarkingDemo {
         ClearCLBuffer flip = clij.create(input.getDimensions(), input.getNativeType());
         ClearCLBuffer flop = clij.create(input.getDimensions(), input.getNativeType());
 
-        clij.op().blurFast(input, flop, (float) sigma, (float) sigma, (float) sigma);
+        clij.op().blur(input, flop, (float) sigma, (float) sigma, (float) sigma);
 
         clij.op().threshold(flop, flip, 100.0f);
 

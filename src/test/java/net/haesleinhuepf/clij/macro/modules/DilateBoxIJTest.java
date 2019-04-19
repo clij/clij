@@ -5,7 +5,6 @@ import ij.IJ;
 import ij.ImageJ;
 import ij.ImagePlus;
 import ij.gui.NewImage;
-import ij.gui.WaitForUserDialog;
 import ij.process.ImageProcessor;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
@@ -76,8 +75,8 @@ public class DilateBoxIJTest extends AbstractMacroPluginTest {
         clij.close();
     }
 
-    private DilateBoxIJ makeDilateBoxIJ(CLIJ clij, Object[] args) {
-        DilateBoxIJ dilateBoxIJ = new DilateBoxIJ();
+    private DilateBox makeDilateBoxIJ(CLIJ clij, Object[] args) {
+        DilateBox dilateBoxIJ = new DilateBox();
         dilateBoxIJ.setClij(clij);
         dilateBoxIJ.setArgs(args);
         return dilateBoxIJ;

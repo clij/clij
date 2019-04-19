@@ -18,16 +18,16 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeBoxIJ")
-public class ErodeBoxIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_dilateBox")
+public class DilateBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
         if (containsCLImageArguments()) {
-            return Kernels.erodeBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
+            return Kernels.dilateBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.erodeBox(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
+            boolean result = Kernels.dilateBox(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
             releaseBuffers(args);
             return result;
         }
@@ -38,13 +38,12 @@ public class ErodeBoxIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
         return "Image source, Image destination";
     }
 
-
     @Override
     public boolean executeIJ() {
         Object[] args = imageJArgs();
         ImagePlus input = (ImagePlus) args[0];
 
-        IJ.run(input, "Erode", "");
+        IJ.run(input, "Dilate", "");
         input = new Duplicator().run(input);
 
         ClearCLBuffer result = clij.convert(input, ClearCLBuffer.class);
@@ -62,13 +61,12 @@ public class ErodeBoxIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
         return true;
     }
 
-
     @Override
     public String getDescription() {
-        return "Computes a binary image with pixel values 0 and 1 containing the binary erosion of a given input image.\n" +
-                "The erosion takes the Moore-neighborhood (8 pixels in 2D and 26 pixels in 3d) into account.\n" +
+        return "Computes a binary image with pixel values 0 and 1 containing the binary dilation of a given input image.\n" +
+                "The dilation takes the Moore-neighborhood (8 pixels in 2D and 26 pixels in 3d) into account.\n" +
                 "The pixels in the input image with pixel value not equal to 0 will be interpreted as 1.\n\n" +
-                "This method is comparable to the 'Erode' menu in ImageJ in case it is applied to a 2D image. The only\n" +
+                "This method is comparable to the 'Dilate' menu in ImageJ in case it is applied to a 2D image. The only\n" +
                 "difference is that the output image contains values 0 and 1 instead of 0 and 255.";
     }
 
@@ -76,5 +74,4 @@ public class ErodeBoxIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
     public String getAvailableForDimensions() {
         return "2D, 3D";
     }
-
 }

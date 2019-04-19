@@ -9,8 +9,6 @@ import net.haesleinhuepf.clij.macro.CLIJOpenCLProcessor;
 import net.haesleinhuepf.clij.macro.documentation.OffersDocumentation;
 import org.scijava.plugin.Plugin;
 
-import static net.haesleinhuepf.clij.utilities.CLIJUtilities.sigmaToKernelSize;
-
 /**
  * Author: @haesleinhuepf
  * 12 2018
@@ -23,34 +21,38 @@ public class Blur3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         float sigmaX = asFloat(args[2]);
         float sigmaY = asFloat(args[3]);
         float sigmaZ = asFloat(args[4]);
-        int nX = sigmaToKernelSize(sigmaX);
-        int nY = sigmaToKernelSize(sigmaY);
-        int nZ = sigmaToKernelSize(sigmaZ);
 
-        if (containsCLImageArguments()) {
-            return Kernels.blur(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), nX, nY, nZ, sigmaX, sigmaY, sigmaZ);
-        } else {
-            Object[] args = openCLBufferArgs();
-            boolean result = Kernels.blur(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), nX, nY, nZ, sigmaX, sigmaY, sigmaZ);
-            releaseBuffers(args);
+        if (containsCLBufferArguments()) {
+            // convert all arguments to CLImages
+            Object[] args = openCLImageArgs();
+            boolean result = Kernels.blur(clij, (ClearCLImage) (args[0]), (ClearCLImage) (args[1]), sigmaX, sigmaY, sigmaZ);
+            // copy result back to the bufffer
+            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
+            // cleanup
+            releaseImages(args);
             return result;
+        } else {
+            return Kernels.blur(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), sigmaX, sigmaY, sigmaZ);
         }
     }
+
 
     @Override
     public String getParameterHelpText() {
         return "Image source, Image destination, Number sigmaX, Number sigmaY, Number sigmaZ";
     }
 
+
     @Override
     public String getDescription() {
         return "Computes the Gaussian blurred image of an image given two sigma values in X, Y and Z. Thus, the filter" +
-                "kernel can have non-isotropic shape.";
+                "kernel can have non-isotropic shape.\n\n" +
+                "" +
+                "The 'fast' implementation is done separable. In case a sigma equals zero, the direction is not blurred.";
     }
 
     @Override
     public String getAvailableForDimensions() {
         return "3D";
     }
-
 }

@@ -27,7 +27,7 @@ Ext.CLIJ_push(input);
 close();
 
 // Blur in GPU
-Ext.CLIJ_blur3DFast(input, background, 10, 10, 1);
+Ext.CLIJ_blur3D(input, background, 10, 10, 1);
 
 // subtraction from original
 Ext.CLIJ_addImagesWeighted(input, background, background_subtracted, 1, -1);
