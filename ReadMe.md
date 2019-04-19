@@ -79,6 +79,8 @@ You can also get the result image as ImagePlus:
 result = clij.pull(imageOutput);
 ```
 
+A list of all `clij.op()....` methods is [available online](https://clij.github.io/clij-docs/referenceGroovy).
+
 ## Low level API
 
 In order to call your own `kernel.cl` files, use the `clij.execute()` method. Example code (Jython):
