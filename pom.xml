@@ -111,7 +111,6 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
-			<version>0.35.1-haesleinhuepf</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
