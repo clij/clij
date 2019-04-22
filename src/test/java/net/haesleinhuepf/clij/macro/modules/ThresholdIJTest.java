@@ -13,9 +13,6 @@ import net.haesleinhuepf.clij.macro.AbstractMacroPluginTest;
 import net.haesleinhuepf.clij.test.TestUtilities;
 import org.junit.Test;
 
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-
 import static org.junit.Assert.assertTrue;
 
 public class ThresholdIJTest extends AbstractMacroPluginTest {
@@ -57,8 +54,8 @@ public class ThresholdIJTest extends AbstractMacroPluginTest {
         clij.close();
     }
 
-    private ThresholdIJ makeThresholdIJ(CLIJ clij, Object[] args) {
-        ThresholdIJ thresholdIJ = new ThresholdIJ();
+    private Threshold makeThresholdIJ(CLIJ clij, Object[] args) {
+        Threshold thresholdIJ = new Threshold();
         thresholdIJ.setClij(clij);
         thresholdIJ.setArgs(args);
         return thresholdIJ;

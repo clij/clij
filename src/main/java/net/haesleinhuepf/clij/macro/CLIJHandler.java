@@ -127,21 +127,25 @@ public class CLIJHandler implements MacroExtension {
                 plugin.setClij(CLIJ.getInstance());
 
                 // fill missing images
-                if (existingImageIndices.size() > 0) {
-                    for (int i : missingImageIndices.keySet()) {
-                        String nameInCache = missingImageIndices.get(i);
-                        String parameterDescription = missingImageIndicesDescriptions.get(i);
-                        if (parameterDescription.toLowerCase().contains("destination")) { // only generate destination images
-                            if (bufferMap.keySet().contains(nameInCache)) {
-                                parsedArguments[i] = bufferMap.get(nameInCache);
-                            } else {
-                                // copy first to hand over all parameters as they came
-                                plugin.setArgs(parsedArguments);
-                                parsedArguments[i] = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(nameInCache, plugin, (ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
+                //if (existingImageIndices.size() > 0) {
+                for (int i : missingImageIndices.keySet()) {
+                    String nameInCache = missingImageIndices.get(i);
+                    String parameterDescription = missingImageIndicesDescriptions.get(i);
+                    if (parameterDescription.toLowerCase().contains("destination")) { // only generate destination images
+                        if (bufferMap.keySet().contains(nameInCache)) {
+                            parsedArguments[i] = bufferMap.get(nameInCache);
+                        } else {
+                            // copy first to hand over all parameters as they came
+                            plugin.setArgs(parsedArguments);
+                            ClearCLBuffer template = null;
+                            if (existingImageIndices.size() > 0) {
+                                template = (ClearCLBuffer) parsedArguments[existingImageIndices.get(0)];
                             }
+                            parsedArguments[i] = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(nameInCache, plugin, template);
                         }
                     }
                 }
+                //}
 
                 // hand over complete parameters again
                 plugin.setArgs(parsedArguments);
@@ -309,22 +313,22 @@ public class CLIJHandler implements MacroExtension {
         return stringBuilder.toString();
     }
 
-    private String humanReadableBytes(long bytesSum) {
+    private String humanReadableBytes(double bytesSum) {
         if (bytesSum > 1024) {
             bytesSum = bytesSum / 1024;
             if (bytesSum > 1024) {
                 bytesSum = bytesSum / 1024;
                 if (bytesSum > 1024) {
                     bytesSum = bytesSum / 1024;
-                    return (bytesSum + " Gb");
+                    return (Math.round(bytesSum * 10.0) / 10.0 + " Gb");
                 } else {
-                    return (bytesSum + " Mb");
+                    return (Math.round(bytesSum * 10.0) / 10.0 + " Mb");
                 }
             } else {
-                return (bytesSum + " kb");
+                return (Math.round(bytesSum * 10.0) / 10.0 + " kb");
             }
         }
-        return bytesSum + " b";
+        return Math.round(bytesSum * 10.0) / 10.0 + " b";
     }
 
     HashMap<ClearCLBuffer, ClearCLImage> bufferAsImageMap = new HashMap<ClearCLBuffer, ClearCLImage>();

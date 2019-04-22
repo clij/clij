@@ -33,7 +33,7 @@ public class LocalThresholdTest {
         ClearCLImage temp = clij.createCLImage(input);
         ClearCLImage blurred = clij.createCLImage(input);
 
-        Kernels.blurFast(clij, input, blurred, 2, 2, 2);
+        Kernels.blur(clij, input, blurred, 2f, 2f, 2f);
 
         // usual way: blur, subtract, threshold
         ElapsedTime.measureForceOutput("traditional thresholding", () -> {

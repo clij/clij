@@ -28,7 +28,7 @@ public class Blur2DTest {
         ClearCLImage src = clij.convert(gaussCopy, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
-        Kernels.blur(clij, src, dst, 15, 15, 2f, 2f);
+        Kernels.blur(clij, src, dst, 2f, 2f);
         ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));
@@ -54,7 +54,7 @@ public class Blur2DTest {
         ClearCLBuffer src = clij.convert(gaussCopy, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
-        Kernels.blur(clij, src, dst, 15, 15, 2f, 2f);
+        Kernels.blur(clij, src, dst, 2f, 2f);
         ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         assertTrue(TestUtilities.compareImages(gauss, gaussFromCL, 2));

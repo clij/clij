@@ -71,8 +71,8 @@ public class ErodeBoxIJTest extends AbstractMacroPluginTest {
         clij.close();
     }
 
-    private ErodeBoxIJ makeErodeBoxIJ(CLIJ clij, Object[] args) {
-        ErodeBoxIJ erodeBoxIJ = new ErodeBoxIJ();
+    private ErodeBox makeErodeBoxIJ(CLIJ clij, Object[] args) {
+        ErodeBox erodeBoxIJ = new ErodeBox();
         erodeBoxIJ.setClij(clij);
         erodeBoxIJ.setArgs(args);
         return erodeBoxIJ;

@@ -17,18 +17,17 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur2DIJ")
-public class Blur2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
+
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeBox")
+public class ErodeBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
-        float sigma = asFloat(args[2]);
-
         if (containsCLImageArguments()) {
-            return Kernels.blurIJ(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), sigma);
+            return Kernels.erodeBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.blurIJ(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), sigma);
+            boolean result = Kernels.erodeBox(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
             releaseBuffers(args);
             return result;
         }
@@ -36,16 +35,16 @@ public class Blur2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number sigma";
+        return "Image source, Image destination";
     }
+
 
     @Override
     public boolean executeIJ() {
         Object[] args = imageJArgs();
         ImagePlus input = (ImagePlus) args[0];
-        int sigma = asInteger(args[2]);
 
-        IJ.run(input, "Gaussian Blur...", "sigma=" + sigma);
+        IJ.run(input, "Erode", "");
         input = new Duplicator().run(input);
 
         ClearCLBuffer result = clij.convert(input, ClearCLBuffer.class);
@@ -66,13 +65,16 @@ public class Blur2DIJ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public String getDescription() {
-        return "Computes the Gaussian blurred image of an image given a sigma.\n\n" +
-                "The implementation is close to ImageJs Gaussian blur filter. Differences in pixel values compared to \n" +
-                "ImageJ of up to 0.5% need to be tolerated.";
+        return "Computes a binary image with pixel values 0 and 1 containing the binary erosion of a given input image.\n" +
+                "The erosion takes the Moore-neighborhood (8 pixels in 2D and 26 pixels in 3d) into account.\n" +
+                "The pixels in the input image with pixel value not equal to 0 will be interpreted as 1.\n\n" +
+                "This method is comparable to the 'Erode' menu in ImageJ in case it is applied to a 2D image. The only\n" +
+                "difference is that the output image contains values 0 and 1 instead of 0 and 255.";
     }
 
     @Override
     public String getAvailableForDimensions() {
-        return "2D";
+        return "2D, 3D";
     }
+
 }

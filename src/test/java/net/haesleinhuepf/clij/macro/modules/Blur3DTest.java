@@ -30,7 +30,7 @@ public class Blur3DTest {
         ClearCLImage src = clij.convert(testImp1, ClearCLImage.class);
         ClearCLImage dst = clij.createCLImage(src);
 
-        Kernels.blur(clij, src, dst, 9, 9, 9, 2f, 2f, 2f);
+        Kernels.blur(clij, src, dst, 2f, 2f, 2f);
         ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         double tolerance = relativeTolerance * Kernels.maximumOfAllPixels(clij, dst);
@@ -57,7 +57,7 @@ public class Blur3DTest {
         ClearCLBuffer src = clij.convert(testImp1, ClearCLBuffer.class);
         ClearCLBuffer dst = clij.createCLBuffer(src);
 
-        Kernels.blur(clij, src, dst, 9, 9, 9, 2f, 2f, 2f);
+        Kernels.blur(clij, src, dst, 2f, 2f, 2f);
         ImagePlus gaussFromCL = clij.convert(dst, ImagePlus.class);
 
         // ignore borders

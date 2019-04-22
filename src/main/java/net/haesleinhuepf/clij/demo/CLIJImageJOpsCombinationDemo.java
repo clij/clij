@@ -40,7 +40,7 @@ public class CLIJImageJOpsCombinationDemo {
         ClearCLBuffer thresholded = clij.createCLBuffer(input.getDimensions(), NativeTypeEnum.Byte);
 
         // Gaussian blur
-        clij.op().blurFast(input, blurred, sigma, sigma, sigma);
+        clij.op().blur(input, blurred, sigma, sigma, sigma);
 
         // Apply Otsu threshold
         clij.op().automaticThreshold(blurred, thresholded, "Otsu");
