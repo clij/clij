@@ -313,22 +313,22 @@ public class CLIJHandler implements MacroExtension {
         return stringBuilder.toString();
     }
 
-    private String humanReadableBytes(long bytesSum) {
+    private String humanReadableBytes(double bytesSum) {
         if (bytesSum > 1024) {
             bytesSum = bytesSum / 1024;
             if (bytesSum > 1024) {
                 bytesSum = bytesSum / 1024;
                 if (bytesSum > 1024) {
                     bytesSum = bytesSum / 1024;
-                    return (bytesSum + " Gb");
+                    return (Math.round(bytesSum * 10.0) / 10.0 + " Gb");
                 } else {
-                    return (bytesSum + " Mb");
+                    return (Math.round(bytesSum * 10.0) / 10.0 + " Mb");
                 }
             } else {
-                return (bytesSum + " kb");
+                return (Math.round(bytesSum * 10.0) / 10.0 + " kb");
             }
         }
-        return bytesSum + " b";
+        return Math.round(bytesSum * 10.0) / 10.0 + " b";
     }
 
     HashMap<ClearCLBuffer, ClearCLImage> bufferAsImageMap = new HashMap<ClearCLBuffer, ClearCLImage>();
