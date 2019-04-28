@@ -4,3 +4,5 @@ description: GPU-accelerated image processing in ImageJ using CLIJ
 show_downloads: false
 google_analytics:
 theme: jekyll-theme-minimal
+github.owner_name: haesleinhuepf
+github.owner_url: https://github.com/haesleinhuepf/
