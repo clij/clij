@@ -1,1 +1,2 @@
-[![Image](images/clij_docs.png)](https://clij.github.io/clij-docs)
+![Image](images/clij_docs.png)
+[CLIJ documentation](https://clij.github.io/clij-docs)
