@@ -106,7 +106,6 @@ public abstract class CLIJAutoCompleteSupportPlugin extends AbstractLanguageSupp
                         e.getKeyCode() == KeyEvent.VK_LEFT || // arrow keys left/right were pressed
                         e.getKeyCode() == KeyEvent.VK_RIGHT
                 ) {
-                    System.out.println("cloooose");
                     ac.hideChildWindows();
                 } else if (e.getKeyCode() >= 65 // a
                         && e.getKeyCode() <= 90 // z
