@@ -37,7 +37,7 @@ public class CopySlice extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
     public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
     {
         if (input.getDimension() == 2) {
-            return clij.createCLBuffer(new long[]{ input.getWidth(), input.getHeight(), asInteger(args[2])}, input.getNativeType());
+            return clij.createCLBuffer(new long[]{ input.getWidth(), input.getHeight(), asInteger(args[2]) + 1}, input.getNativeType());
         } else  {
             return clij.createCLBuffer(new long[]{ input.getWidth(), input.getHeight()}, input.getNativeType());
         }
