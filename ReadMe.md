@@ -1,4 +1,4 @@
-# CLIJ - GPU-accelerated image processing in ImageJ
+# CLIJ: GPU-accelerated image processing in Fiji
 ## Introduction
 CLIJ is an OpenCL - ImageJ bridge and a [Fiji](https://fiji.sc/) plugin allowing users with no computer science background to exploit GPU-acceleration for their image processing workflows. Increased efforts were put on documentation, code examples, interoperability, and extensibility.
 CLIJ is based on [ClearCL](http://github.com/ClearControl/ClearCL), [Imglib2](https://github.com/imglib), [ImageJ](http://image.net) and [SciJava](https://github.com/SciJava)
