@@ -22,6 +22,8 @@ If you search for support, please open a thread on the [image.sc](https://image.
   * [CLIJ for Java programmers](https://clij.github.io/clij-docs/api_intro)
   * [ImageJ Jupyter notebooks in Groovy](https://github.com/clij/clij-notebooks/blob/master/clij-intro.ipynb)
   * [Execution from the command line](https://github.com/clij/clij-executable-example)
+  * [CLIJ ImageJ Ops in Java](https://clij.github.io/clij-docs/clij_imagej_ops_java.md)
+  * [CLIJ ImageJ Ops in the Script Editor](https://clij.github.io/clij-docs/clij_imagej_ops_scripteditor.md)
   * [Release notes](https://github.com/clij/clij/releases)
 * Application programming interface (API)
   * [API design principles](https://clij.github.io/clij-docs/api_design_priciples)
@@ -36,6 +38,8 @@ If you search for support, please open a thread on the [image.sc](https://image.
   * [JavaScript](https://github.com/clij/clij-docs/tree/master/src/main/javascript)
   * [Groovy](https://github.com/clij/clij-docs/tree/master/src/main/groovy)
   * [Java](https://github.com/clij/clij-docs/tree/master/src/main/java/net/haesleinhuepf/clij/examples)
+  * [ImageJ Ops in Java](https://github.com/clij/clij-ops/tree/master/src/test/java/net/haesleinhuepf/clij/ops/examples)
+  * [ImageJ Ops in Jython](https://github.com/clij/clij-ops/tree/master/src/test/resources/jython)
 * Extending CLIJ functionality
   * [Plugin template](https://github.com/clij/clij-plugin-template/)
   * [Example plugin for convolution/deconvolution](https://github.com/clij/clij-custom-convolution-plugin/)
@@ -51,6 +55,7 @@ Curtis Rueden (UW-Madison LOCI),
 Damir Krunic (DKFZ),
 Daniel J. White (GE),
 Gaby G. Martins (IGC),
+Siân Culley (LMCB MRC),
 Giovanni Cardone (MPI Biochem),
 Jan Brocher (Biovoxxel), 
 Johannes Girstmair (MPI CBG),
