@@ -28,8 +28,6 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
 
         ArrayList<BasicCompletion> completions = new ArrayList<BasicCompletion>();
         for (String key : pluginService.getCLIJMethodNames()) {
-            System.out.println("parsing " + key);
-
             CLIJMacroPlugin plugin = pluginService.getCLIJMacroPlugin(key);
             String headline =
                     "Ext." + key + "(" +

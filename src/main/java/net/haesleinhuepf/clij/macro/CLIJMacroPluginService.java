@@ -49,7 +49,6 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
         final PluginInfo<CLIJMacroPlugin> info = clijPlugins.get(name);
 
         if (info == null) {
-            //throw new IllegalArgumentException("No clij plugin of name " + name);
             return null;
         }
 

@@ -34,19 +34,7 @@ public class CLIJHandler implements MacroExtension {
         return instance;
     }
 
-    // CLIJ clij;
     HashMap<String, ClearCLBuffer> bufferMap = new HashMap<String, ClearCLBuffer>();
-
-    //public void setCLIJ(CLIJ clij) {
-    //    this.clij = clij;
-    //}
-
-    //public CLIJ getCLIJ() {
-        //if (clij == null) {
-        //    clij = CLIJ.getInstance();
-        //}
-        //return clij;
-    //}
 
     public void setPluginService(CLIJMacroPluginService pluginService) {
         this.pluginService = pluginService;
@@ -65,11 +53,8 @@ public class CLIJHandler implements MacroExtension {
             HashMap<Integer, String> missingImageIndicesDescriptions = new HashMap<Integer, String>();
 
             CLIJMacroPlugin plugin = null;
-            //System.out.println("Handle Ext " + name);
             try {
                 plugin = pluginService.getCLIJMacroPlugin(name);
-
-                //System.out.println("plugins " + CLIJHandler.getInstance().pluginService.getCLIJMethodNames().size());
 
                 if (plugin == null) {
                     // this should never happen, because Macro extensions do a similar check before calling this method
@@ -77,23 +62,17 @@ public class CLIJHandler implements MacroExtension {
                     return;
                 }
 
-                //System.out.println("Check method: " + name);
                 String[] pluginParameters = plugin.getParameterHelpText().split(",");
                 Object[] parsedArguments = new Object[0];
                 if (args != null) {
                     parsedArguments = new Object[args.length];
                     for (int i = 0; i < args.length; i++) {
-                        //System.out.println("Parsing args: " + args[i] + " " + args[i].getClass());
                         if (args[i] instanceof Double) {
-                            //System.out.println("numeric");
                             parsedArguments[i] = args[i];
                         } else {
                             if (pluginParameters[i].trim().startsWith("Image")) {
-                                //System.out.println("not numeric");
                                 ClearCLBuffer bufferImage = bufferMap.get(args[i]);
                                 if (bufferImage == null) {
-                                    //IJ.log("Warning: Image \"" + args[i] + "\" doesn't exist in GPU memory. Try this:");
-                                    //IJ.log("Ext.CLIJ_push(\"" + args[i] + "\");");
                                     missingImageIndices.put(i, (String) args[i]);
                                     missingImageIndicesDescriptions.put(i, pluginParameters[i]);
                                     parsedArguments[i] = (String) args[i];
@@ -105,21 +84,8 @@ public class CLIJHandler implements MacroExtension {
                                 parsedArguments[i] = args[i];
                             }
                         }
-                        //System.out.println("Parsed args: " + parsedArguments[i + 1]);
                     }
                 }
-                // create missing images by making images as given images
-            /*if (existingImageIndices.size() > 0) {
-                for (int i : missingImageIndices.keySet()) {
-                    String nameInCache = missingImageIndices.get(i);
-                    if (bufferMap.keySet().contains(nameInCache)) {
-                        parsedArguments[i] = bufferMap.get(nameInCache);
-                    } else {
-                        parsedArguments[i] = clij.createCLBuffer((ClearCLBuffer) parsedArguments[existingImageIndices.get(0)]);
-                        bufferMap.put(nameInCache, (ClearCLBuffer) parsedArguments[i]);
-                    }
-                }
-            }*/
 
                 if (CLIJ.debug) {
                     System.out.println("Invoking plugin " + name + " " + Arrays.toString(args));
@@ -127,7 +93,6 @@ public class CLIJHandler implements MacroExtension {
                 plugin.setClij(CLIJ.getInstance());
 
                 // fill missing images
-                //if (existingImageIndices.size() > 0) {
                 for (int i : missingImageIndices.keySet()) {
                     String nameInCache = missingImageIndices.get(i);
                     String parameterDescription = missingImageIndicesDescriptions.get(i);
@@ -145,7 +110,6 @@ public class CLIJHandler implements MacroExtension {
                         }
                     }
                 }
-                //}
 
                 // hand over complete parameters again
                 plugin.setArgs(parsedArguments);
@@ -332,9 +296,7 @@ public class CLIJHandler implements MacroExtension {
     }
 
     HashMap<ClearCLBuffer, ClearCLImage> bufferAsImageMap = new HashMap<ClearCLBuffer, ClearCLImage>();
-    //public void cacheImageWithBuffer(ClearCLBuffer buffer, ClearCLImage image) {
-    //
-    //}
+
     public ClearCLImage getChachedImageByBuffer(ClearCLBuffer buffer) {
         if (bufferAsImageMap.containsKey(buffer)) {
             ClearCLImage image = bufferAsImageMap.get(buffer);
