@@ -15,8 +15,8 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_medianSliceBySliceSphere")
-public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_median2DBox")
+public class Median2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
@@ -24,10 +24,10 @@ public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJ
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
 
         if (containsCLImageArguments()) {
-            return Kernels.medianSliceBySliceSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
+            return Kernels.medianBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.medianSliceBySliceSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
+            boolean result = Kernels.medianBox(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
             releaseBuffers(args);
             return result;
         }
@@ -40,14 +40,13 @@ public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJ
 
     @Override
     public String getDescription() {
-        return "Computes the local median of a pixels ellipsoidal neighborhood. This is done slice-by-slice in a 3D \n" +
-                "image stack. The ellipses size is specified by its half-width and half-height (radius).\n\n" +
-                "For technical reasons, the area of the ellipse must have less than 1000 pixels.";
+        return "Computes the local median of a pixels rectangular neighborhood. The rectangle is specified by \n" +
+                "its half-width and half-height (radius).\n\n" +
+                "For technical reasons, the area of the rectangle must have less than 1000 pixels.";
     }
 
     @Override
     public String getAvailableForDimensions() {
-        return "3D";
+        return "2D";
     }
-
 }

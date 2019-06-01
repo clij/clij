@@ -47,6 +47,6 @@ public class Median2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getAvailableForDimensions() {
-        return "3D";
+        return "2D";
     }
 }

@@ -15,19 +15,20 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_medianSliceBySliceSphere")
-public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_median3DBox")
+public class Median3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
         int kernelSizeX = radiusToKernelSize(asInteger(args[2]));
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
+        int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
         if (containsCLImageArguments()) {
-            return Kernels.medianSliceBySliceSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
+            return Kernels.medianBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
         } else {
             Object[] args = openCLBufferArgs();
-            boolean result = Kernels.medianSliceBySliceSphere(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY);
+            boolean result = Kernels.medianBox(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
             releaseBuffers(args);
             return result;
         }
@@ -35,14 +36,14 @@ public class MedianSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJ
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number radiusX, Number radiusY";
+        return "Image source, Image destination, Number radiusX, Number radiusY, Number radiusZ";
     }
 
     @Override
     public String getDescription() {
-        return "Computes the local median of a pixels ellipsoidal neighborhood. This is done slice-by-slice in a 3D \n" +
-                "image stack. The ellipses size is specified by its half-width and half-height (radius).\n\n" +
-                "For technical reasons, the area of the ellipse must have less than 1000 pixels.";
+        return "Computes the local median of a pixels cuboid neighborhood. The cuboid size is specified by \n" +
+                "its half-width, half-height and half-depth (radius).\n\n" +
+                "For technical reasons, the volume of the cuboid must contain less than 1000 voxels.";
     }
 
     @Override
