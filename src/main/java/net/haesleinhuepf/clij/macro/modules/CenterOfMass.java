@@ -31,54 +31,25 @@ public class CenterOfMass extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
         if (containsCLImageArguments()) {
             ClearCLImage input = (ClearCLImage)( args[0]);
+            double[] center = clij.op().centerOfMass(input);
 
-            ClearCLImage multipliedWithCoordinate = clij.create(input.getDimensions(), ImageChannelDataType.Float);
-            sum = clij.op().sumPixels(input);
-
-
-            // X:
-            clij.op().multiplyImageAndCoordinate(input, multipliedWithCoordinate, 0);
-            double sumX = clij.op().sumPixels(multipliedWithCoordinate);
-            table.addValue("MassX", sumX / sum);
-
-            // Y:
-            clij.op().multiplyImageAndCoordinate(input, multipliedWithCoordinate, 1);
-            double sumY = clij.op().sumPixels(multipliedWithCoordinate);
-            table.addValue("MassY", sumY / sum);
-
-            // Z:
+            table.addValue("MassX", center[0]);
+            table.addValue("MassY", center[1]);
             if (input.getDimension() > 2 && input.getDepth() > 1) {
-                clij.op().multiplyImageAndCoordinate(input, multipliedWithCoordinate, 2);
-                double sumZ = clij.op().sumPixels(multipliedWithCoordinate);
-                table.addValue("MassZ", sumZ / sum);
+                table.addValue("MassZ", center[2]);
             }
-            multipliedWithCoordinate.close();
 
         } else {
             Object[] args = openCLBufferArgs();
             ClearCLBuffer input = (ClearCLBuffer)( args[0]);
 
-            ClearCLBuffer multipliedWithCoordinate = clij.create(input.getDimensions(), NativeTypeEnum.Float);
-            sum = clij.op().sumPixels(input);
+            double[] center = clij.op().centerOfMass(input);
 
-
-            // X:
-            clij.op().multiplyImageAndCoordinate(input, multipliedWithCoordinate, 0);
-            double sumX = clij.op().sumPixels(multipliedWithCoordinate);
-            table.addValue("MassX", sumX / sum);
-
-            // Y:
-            clij.op().multiplyImageAndCoordinate(input, multipliedWithCoordinate, 1);
-            double sumY = clij.op().sumPixels(multipliedWithCoordinate);
-            table.addValue("MassY", sumY / sum);
-
-            // Z:
+            table.addValue("MassX", center[0]);
+            table.addValue("MassY", center[1]);
             if (input.getDimension() > 2 && input.getDepth() > 1) {
-                clij.op().multiplyImageAndCoordinate(input, multipliedWithCoordinate, 2);
-                double sumZ = clij.op().sumPixels(multipliedWithCoordinate);
-                table.addValue("MassZ", sumZ / sum);
+                table.addValue("MassZ", center[2]);
             }
-            multipliedWithCoordinate.close();
             releaseBuffers(args);
         }
 
