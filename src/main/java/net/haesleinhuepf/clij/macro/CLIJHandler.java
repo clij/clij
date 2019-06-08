@@ -12,6 +12,7 @@ import ij.macro.ExtensionDescriptor;
 import ij.macro.MacroExtension;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
+import net.haesleinhuepf.clij.macro.modules.Clear;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -210,7 +211,19 @@ public class CLIJHandler implements MacroExtension {
         ImagePlus imp = WindowManager.getImage(arg);
         imp.changes = false;
 
-        ClearCLBuffer temp = CLIJ.getInstance().convert(imp, ClearCLBuffer.class);
+        ClearCLBuffer temp = CLIJ.getInstance().push(imp);
+        return pushInternal(temp, arg);
+    }
+
+    public ClearCLBuffer pushCurrentSliceToGPU(String arg) {
+        ImagePlus imp = WindowManager.getImage(arg);
+        imp.changes = false;
+
+        ClearCLBuffer temp = CLIJ.getInstance().pushCurrentSlice(imp);
+        return pushInternal(temp, arg);
+    }
+
+    private ClearCLBuffer pushInternal(ClearCLBuffer temp, String arg) {
         if (bufferMap.containsKey(arg)) {
             ClearCLBuffer preExistingBuffer = bufferMap.get(arg);
 
