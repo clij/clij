@@ -13,7 +13,7 @@ CLIJ is based on
 Robert Haase, Loic Alain Royer, Peter Steinbach, Deborah Schmidt, 
 Alexandr Dibrov, Uwe Schmidt, Martin Weigert, Nicola Maghelli, Pavel Tomancak, 
 Florian Jug, Eugene W Myers. 
-*CLIJ: Enabling GPU-accelerated image processing in Fiji*. BioRxiv preprint. https://doi.org/10.1101/660704
+*CLIJ: Enabling GPU-accelerated image processing in Fiji*. BioRxiv preprint. [https://doi.org/10.1101/660704](https://doi.org/10.1101/660704)
 
 If you search for support, please open a thread on the [image.sc](https://image.sc) forum.
 
