@@ -26,6 +26,7 @@ If you search for support, please open a thread on the [image.sc](https://image.
 * [CLIJ - a quick tour](https://clij.github.io/clij-docs/quickTour)
 * Installation
   * [Fiji update site](https://clij.github.io/clij-docs/installationInFiji)
+  * [MicroManager 2.0](https://clij.github.io/clij-docs/installationInMicroManager)
   * [Depending on CLIJ via maven](https://clij.github.io/clij-docs/dependingViaMaven)
 * Introduction to CLIJ programming
   * [CLIJ for ImageJ Macro programmers](https://clij.github.io/clij-docs/macro_intro)
