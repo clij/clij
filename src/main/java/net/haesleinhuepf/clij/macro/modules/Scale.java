@@ -40,15 +40,22 @@ public class Scale extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOp
             at.translate(input.getWidth() / 2, input.getHeight() / 2, input.getDepth() / 2);
         }
 
-        ClearCLImage input = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[0]);
-        ClearCLImage output = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[1]);
+        if (clij.getOpenCLVersion() < 1.2) {
+            ClearCLBuffer input = ((ClearCLBuffer) args[0]);
+            ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 
-        boolean result = Kernels.affineTransform(clij, input, output, AffineTransform.matrixToFloatArray(at));
+            return Kernels.affineTransform(clij, input, output, AffineTransform.matrixToFloatArray(at));
 
-        Kernels.copy(clij, output, (ClearCLBuffer)args[1]);
+        } else {
+            ClearCLImage input = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[0]);
+            ClearCLImage output = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[1]);
 
-        return result;
+            boolean result = Kernels.affineTransform(clij, input, output, AffineTransform.matrixToFloatArray(at));
 
+            Kernels.copy(clij, output, (ClearCLBuffer) args[1]);
+
+            return result;
+        }
     }
 
     @Override
