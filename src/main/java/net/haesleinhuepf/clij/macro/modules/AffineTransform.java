@@ -125,14 +125,21 @@ public class AffineTransform extends AbstractCLIJPlugin implements CLIJMacroPlug
             }
         }
 
-        ClearCLImage input = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[0]);
-        ClearCLImage output = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[1]);
+        if (clij.getOpenCLVersion() < 1.2) {
+            ClearCLBuffer input = ((ClearCLBuffer) args[0]);
+            ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 
-        boolean result = Kernels.affineTransform(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray(at));
+            return Kernels.affineTransform(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray(at));
+        } else {
+            ClearCLImage input = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[0]);
+            ClearCLImage output = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[1]);
 
-        Kernels.copy(clij, output, (ClearCLBuffer)args[1]);
+            boolean result = Kernels.affineTransform(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray(at));
 
-        return result;
+            Kernels.copy(clij, output, (ClearCLBuffer) args[1]);
+
+            return result;
+        }
     }
 
     @Override
