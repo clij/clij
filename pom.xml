@@ -50,7 +50,9 @@
 	</developers>
 	<contributors>
 		<contributor>
-			<name>none</name>
+			<name>Curtis Rueden</name>
+			<url>https://imagej.net/User:Rueden</url>
+			<properties><id>ctrueden</id></properties>
 		</contributor>
 	</contributors>
 
@@ -84,50 +86,91 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>net.clearcontrol</groupId>
-			<artifactId>clij-coremem</artifactId>
-		</dependency>
+		<!-- CLIJ dependencies -->
 		<dependency>
 			<groupId>net.clearcontrol</groupId>
 			<artifactId>clij-clearcl</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.clearcontrol</groupId>
+			<artifactId>clij-coremem</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>net.haesleinhuepf</groupId>
 			<artifactId>clij-core</artifactId>
 		</dependency>
+
+		<!-- ImageJ dependencies -->
 		<dependency>
-			<groupId>org.scijava</groupId>
-			<artifactId>scijava-common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2</artifactId>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
-			<artifactId>imagej</artifactId>
+			<artifactId>imagej-common</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
+		</dependency>
+
+		<!-- ImgLib2 dependencies -->
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-ij</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>compile</scope>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-realtransform</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-roi</artifactId>
 		</dependency>
+
+		<!-- SciJava dependencies -->
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>script-editor</artifactId>
+		</dependency>
+
+		<!-- Fiji dependencies -->
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>fiji-lib</artifactId>
+		</dependency>
+
+		<!-- Third party dependencies -->
+		<dependency>
+			<groupId>com.fifesoft</groupId>
+			<artifactId>languagesupport</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fifesoft</groupId>
+			<artifactId>rsyntaxtextarea</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fifesoft</groupId>
+			<artifactId>autocomplete</artifactId>
+		</dependency>
+
+		<!-- Test scope dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
