@@ -122,18 +122,18 @@ public class CLIJHandler implements MacroExtension {
                     if (parameter.startsWith("Image")) {
                         if (!(parsedArguments[i] instanceof ClearCLBuffer)) {
                             String parameterName = parameter.split(" ")[1];
-                            GenericDialog gd = new GenericDialog(plugin.getName() + " Error");
-                            gd.addMessage("Error when calling " + plugin.getName() + ": " +
-                                    "The image parameter " + parameterName+ "('" + parsedArguments[i] + "') doesn't exist in GPUs memory. Consider calling\n\n" +
-                                    "Ext.CLIJ_push(\"" + parsedArguments[i] + "\");");
-                            gd.showDialog();
+                            //GenericDialog gd = new GenericDialog(plugin.getName() + " Error");
+                            //gd.addMessage("Error when calling " + plugin.getName() + ": " +
+                            //        "The image parameter " + parameterName+ "('" + parsedArguments[i] + "') doesn't exist in GPUs memory. Consider calling\n\n" +
+                            //        "Ext.CLIJ_push(\"" + parsedArguments[i] + "\");");
+                            //gd.showDialog();
 
                             if (CLIJ.debug) {
                                 System.out.println("Couldn't execute CLIJ plugin: Image '" + parameterName+ "' not found in GPU memory!");
                             }
-                            Macro.abort();
+                            //Macro.abort();
                             allImagesSet = false;
-                            break;
+                            throw new IllegalArgumentException("Error when calling " + plugin.getName() + ": The image parameter " + parameterName+ "('" + parsedArguments[i] + "') doesn't exist in GPUs memory.");
                         }
                     }
                     i++;
