@@ -1,4 +1,4 @@
-# CLIJ: GPU-accelerated image processing in Fiji
+# CLIJ: GPU-accelerated image processing for everyone
 ## Introduction
 CLIJ is an OpenCL - ImageJ bridge and a [Fiji](https://fiji.sc/) plugin allowing users with entry-level skills in programming 
 to build GPU-accelerated workflows to speed up their image processing. Increased efforts were put on documentation, code examples, interoperability, and extensibility.
@@ -27,6 +27,7 @@ If you search for support, please open a thread on the [image.sc](https://image.
 * Installation
   * [Fiji update site](https://clij.github.io/clij-docs/installationInFiji)
   * [MicroManager 2.0](https://clij.github.io/clij-docs/installationInMicroManager)
+  * [ImageJ1](https://github.com/clij/clij-legacy/) (experimental)
   * [Depending on CLIJ via maven](https://clij.github.io/clij-docs/dependingViaMaven)
 * Introduction to CLIJ programming
   * [CLIJ for ImageJ Macro programmers](https://clij.github.io/clij-docs/macro_intro)
@@ -65,6 +66,7 @@ If you search for support, please open a thread on the [image.sc](https://image.
 
 ## Acknowledgements
 Development of CLIJ is a community effort. We would like to thank everybody who helped developing and testing. In particular thanks goes to
+Brenton Cavanagh (RCSI),
 Bruno C. Vellutini (MPI CBG),
 Curtis Rueden (UW-Madison LOCI),
 Damir Krunic (DKFZ),
@@ -78,7 +80,6 @@ Juergen Gluch (Fraunhofer IKTS),
 Kota Miura (Heidelberg),
 Laurent Thomas (Acquifer), 
 Nico Stuurman (UCSF),
-Pavel Tomancak (MPI CBG),
 Pradeep Rajasekhar (Monash University),
 Tobias Pietzsch (MPI-CBG),
 Wilsom Adams (VU Biophotonics)
