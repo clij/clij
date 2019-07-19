@@ -9,10 +9,9 @@ import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
 import net.haesleinhuepf.clij.test.TestUtilities;
 import org.junit.Test;
-
 import static org.junit.Assert.*;
-
 import org.junit.Ignore;
+
 
 public class ExpTest {
     private final static double tolerance = 0.01;
