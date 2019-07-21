@@ -9,7 +9,7 @@ import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.clij.macro.CLIJOpenCLProcessor;
 import net.haesleinhuepf.clij.macro.documentation.OffersDocumentation;
 import net.haesleinhuepf.clij.utilities.AffineTransform;
-import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.realtransform.AffineTransform2D;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -18,14 +18,14 @@ import org.scijava.plugin.Plugin;
  */
 
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_scale")
-public class Scale extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
+public class Scale2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
         float scaleFactor = asFloat(args[2]);
         boolean rotateAroundCenter = asBoolean(args[3]);
 
-        AffineTransform3D at = new AffineTransform3D();
+        AffineTransform2D at = new AffineTransform2D();
         Object[] args = openCLBufferArgs();
 
         if (rotateAroundCenter) {
@@ -44,13 +44,13 @@ public class Scale extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOp
             ClearCLBuffer input = ((ClearCLBuffer) args[0]);
             ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 
-            return Kernels.affineTransform(clij, input, output, AffineTransform.matrixToFloatArray(at));
+            return Kernels.affineTransform2D(clij, input, output, AffineTransform.matrixToFloatArray2D(at));
 
         } else {
             ClearCLImage input = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[0]);
             ClearCLImage output = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[1]);
 
-            boolean result = Kernels.affineTransform(clij, input, output, AffineTransform.matrixToFloatArray(at));
+            boolean result = Kernels.affineTransform2D(clij, input, output, AffineTransform.matrixToFloatArray2D(at));
 
             Kernels.copy(clij, output, (ClearCLBuffer) args[1]);
 
@@ -70,6 +70,6 @@ public class Scale extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOp
 
     @Override
     public String getAvailableForDimensions() {
-        return "2D, 3D";
+        return "2D";
     }
 }
