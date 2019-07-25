@@ -41,8 +41,8 @@ public class ArgMaximumZProjection extends AbstractCLIJPlugin implements CLIJMac
 
     @Override
     public String getDescription() {
-        return "Determines the maximum projection of an image along Z." +
-                "\nFurthermore, another image is generated containing the z-index where the maximum was found (zero based).";
+        return "Determines the maximum projection of an image stack along Z." +
+                "\nFurthermore, another 2D image is generated with pixels containing the z-index where the maximum was found (zero based).";
     }
 
     @Override

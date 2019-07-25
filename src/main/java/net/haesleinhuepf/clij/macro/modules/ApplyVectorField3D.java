@@ -45,7 +45,8 @@ public class ApplyVectorField3D extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getParameterHelpText() {
-        return "Deforms an image according to distances provided in the given vector images. It is recommended to use 32-bit images for input, output and vector images. ";
+        return "Deforms an image stack according to distances provided in the given vector image stacks. " +
+                "It is recommended to use 32-bit image stacks for input, output and vector image stacks. ";
     }
 
     @Override

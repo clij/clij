@@ -39,7 +39,7 @@ public class ConvertUInt16 extends AbstractCLIJPlugin implements CLIJMacroPlugin
     public String getDescription() {
         return "Convert the input image to a unsigned integer image with 16 bits per pixel.\n" +
                 "Pixel values are copied as they are. Use multiplyImageWithScalar in order to scale" +
-                "pixel values when reducing bit-depth to prevent cuting-off intensity ranges.\n" +
+                "pixel values when reducing bit-depth to prevent cutting-off intensity ranges.\n" +
                 "The target image should not exist with a different type before this \n" +
                 "method is called.";
     }

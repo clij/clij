@@ -42,7 +42,8 @@ public class MinimumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
     @Override
     public String getDescription() {
         return "Computes the local minimum of a pixels ellipsoidal 2D neighborhood in an image stack \n" +
-                "slice by slice. The ellipses size is specified by its half-width and half-height (radius).";
+                "slice by slice. The ellipses size is specified by its half-width and half-height (radius).\n\n" +
+                "This filter is applied slice by slice in 2D.";
     }
 
     @Override

@@ -64,7 +64,8 @@ public class CenterOfMass extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getDescription() {
-        return "Determines the center of mass of an image or image stack.";
+        return "Determines the center of mass of an image or image stack and writes the result in the results table\n" +
+                "in the columns MassX, MassY and MassZ.";
     }
 
     @Override
