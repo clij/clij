@@ -36,7 +36,7 @@ public class Absolute extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public String getDescription() {
-        return "Computes the absolute value of every individual pixel x in a given image.\n\nf(x) = |x| ";
+        return "Computes the absolute value of every individual pixel x in a given image.\n\n<pre>f(x) = |x| </pre>";
     }
 
     @Override

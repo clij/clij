@@ -36,7 +36,7 @@ public class DivideImages extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getDescription() {
-        return "Divides two images X and Y by each other pixel wise.\n\nf(x, y) = x / y";
+        return "Divides two images X and Y by each other pixel wise.\n\n<pre>f(x, y) = x / y</pre>";
     }
 
     @Override

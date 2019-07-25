@@ -35,7 +35,7 @@ public class AddImageAndScalar extends AbstractCLIJPlugin implements CLIJMacroPl
 
     @Override
     public String getDescription() {
-        return "Adds a scalar value s to all pixels x of a given image X.\n\nf(x, s) = x + s";
+        return "Adds a scalar value s to all pixels x of a given image X.\n\n<pre>f(x, s) = x + s</pre>";
     }
 
     @Override

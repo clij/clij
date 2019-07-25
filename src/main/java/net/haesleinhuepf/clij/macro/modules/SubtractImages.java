@@ -36,7 +36,7 @@ public class SubtractImages extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getDescription() {
-        return "Subtracts one image X from another image Y pixel wise.\n\nf(x, y) = x - y";
+        return "Subtracts one image X from another image Y pixel wise.\n\n<pre>f(x, y) = x - y</pre>";
     }
 
     @Override

@@ -36,7 +36,7 @@ public class MinimumImages extends AbstractCLIJPlugin implements CLIJMacroPlugin
 
     @Override
     public String getDescription() {
-        return "Computes the minimum of a pair of pixel values x, y from two given images X and Y.\n\nf(x, s) = min(x, y)";
+        return "Computes the minimum of a pair of pixel values x, y from two given images X and Y.\n\n<pre>f(x, y) = min(x, y)</pre>";
     }
 
     @Override

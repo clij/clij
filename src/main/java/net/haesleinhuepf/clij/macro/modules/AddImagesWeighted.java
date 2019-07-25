@@ -36,7 +36,7 @@ public class AddImagesWeighted extends AbstractCLIJPlugin implements CLIJMacroPl
     @Override
     public String getDescription() {
         return "Calculates the sum of pairs of pixels x and y from images X and Y weighted with factors a and b." +
-                "\n\nf(x, y, a, b) = x * a + y * b";
+                "\n\n<pre>f(x, y, a, b) = x * a + y * b</pre>";
     }
 
     @Override

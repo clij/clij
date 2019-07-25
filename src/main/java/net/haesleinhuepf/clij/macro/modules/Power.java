@@ -35,7 +35,7 @@ public class Power extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOp
 
     @Override
     public String getDescription() {
-        return "Computes all pixels value x to the power of a given exponent a.\n\nf(x, a) = x * a";
+        return "Computes all pixels value x to the power of a given exponent a.\n\n<pre>f(x, a) = x * a</pre>";
     }
 
     @Override

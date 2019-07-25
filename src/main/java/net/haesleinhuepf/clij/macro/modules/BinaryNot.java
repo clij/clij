@@ -39,7 +39,7 @@ public class BinaryNot extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
         return "Computes a binary image (containing pixel values 0 and 1) from and image X by negating its pixel values\n" +
                 "x using the binary NOT operator !\n" +
                 "All pixel values except 0 in the input image are interpreted as 1.\n\n" +
-                "f(x) = !x";
+                "<pre>f(x) = !x</pre>";
     }
 
     @Override

@@ -36,7 +36,7 @@ public class Copy extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
 
     @Override
     public String getDescription() {
-        return "Copies an image.\n\nf(x) = x";
+        return "Copies an image.\n\n<pre>f(x) = x</pre>";
     }
 
     @Override

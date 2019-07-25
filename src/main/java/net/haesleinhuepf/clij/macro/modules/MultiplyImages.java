@@ -37,7 +37,7 @@ public class MultiplyImages extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getDescription() {
-        return "Multiplies all pairs of pixel values x and y from two image X and Y.\n\nf(x, y) = x * y";
+        return "Multiplies all pairs of pixel values x and y from two image X and Y.\n\n<pre>f(x, y) = x * y</pre>";
     }
 
     @Override

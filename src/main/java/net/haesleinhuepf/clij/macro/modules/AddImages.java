@@ -36,7 +36,7 @@ public class AddImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
 
     @Override
     public String getDescription() {
-        return "Calculates the sum of pairs of pixels x and y of two images X and Y.\n\nf(x, y) = x + y";
+        return "Calculates the sum of pairs of pixels x and y of two images X and Y.\n\n<pre>f(x, y) = x + y</pre>";
     }
 
     @Override

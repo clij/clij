@@ -38,7 +38,7 @@ public class GradientZ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
     public String getDescription() {
         return "Computes the gradient of gray values along Z. Assuming a, b and c are three adjacent\n " +
                 "pixels in Z direction. In the target image will be saved as: " +
-                "b = c - a;";
+                "<pre>b' = c - a;</pre>";
     }
 
     @Override

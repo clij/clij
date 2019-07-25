@@ -35,7 +35,7 @@ public class MultiplyImageAndScalar extends AbstractCLIJPlugin implements CLIJMa
 
     @Override
     public String getDescription() {
-        return "Multiplies all pixels value x in a given image X with a constant scalar s.\n\nf(x, s) = x * s";
+        return "Multiplies all pixels value x in a given image X with a constant scalar s.\n\n<pre>f(x, s) = x * s</pre>";
     }
 
     @Override
