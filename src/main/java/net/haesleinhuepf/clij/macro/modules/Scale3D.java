@@ -17,7 +17,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_scale")
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_scale3D")
 public class Scale3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override

@@ -9,8 +9,8 @@ import net.haesleinhuepf.clij.macro.CLIJHandler;
 import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.clij.macro.CLIJOpenCLProcessor;
 import net.haesleinhuepf.clij.macro.documentation.OffersDocumentation;
-import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.realtransform.RealTransformSequence;
+import net.haesleinhuepf.clij.utilities.AffineTransform;
+import net.imglib2.realtransform.AffineTransform2D;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -18,22 +18,17 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_affineTransform")
-public class AffineTransform extends net.haesleinhuepf.clij.macro.modules.AffineTransform3D {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_scale")
+public class Scale extends Scale3D {
 
     @Override
     public boolean executeCL() {
-        IJ.log("CLIJ affineTransform is deprecated. Use affineTransform2D or affineTransform3D instead.");
+        IJ.log("CLIJ scale() is deprecated. Use scale2D or scale3D instead.");
         return super.executeCL();
     }
 
     @Override
     public String getDescription() {
-        return "CLIJ affineTransform is deprecated. Use affineTransform2D or affineTransform3D instead.\n\n" + super.getDescription();
-    }
-
-    @Override
-    public String getAvailableForDimensions() {
-        return "2D, 3D";
+        return "DEPRECATED: CLIJ scale() is deprecated. Use scale2D or scale3D instead!";
     }
 }
