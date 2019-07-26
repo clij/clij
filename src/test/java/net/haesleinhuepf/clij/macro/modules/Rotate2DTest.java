@@ -18,17 +18,13 @@ import org.junit.Ignore;
 
 
 public class Rotate2DTest {
-    private final static double tolerance = 0.1;
+    private final static float tolerance = 1f;
     private final static double angle = 45.0;
 
-    
-    @Ignore  
-    // Only as principle test
-    // Differences between rotIJ and are to big for direct pixel comparison
-    @Test
-    public void rotateLeft2d() throws InterruptedException {
 
-        CLIJ clij = CLIJ.getInstance();
+    @Test
+    public void rotate2d() throws InterruptedException {
+        CLIJ clij = CLIJ.getInstance("1070");
         
         ImagePlus test2D = IJ.openImage("src/main/resources/blobs.tif");
         IJ.run(test2D, "Invert LUT", "");
@@ -38,7 +34,7 @@ public class Rotate2DTest {
 
         // do operation with ImageJ
         ImagePlus rotIJ = test2D.duplicate();
-        IJ.run(rotIJ, "Rotate... ", "angle=" + angle + " interpolation=Bicubic");
+        IJ.run(rotIJ, "Rotate... ", "angle=" + angle + " interpolation=Bilinear");
         rotIJ.show();
 
         // do operation with OpenCL
@@ -56,10 +52,18 @@ public class Rotate2DTest {
      
         ImagePlus rotCL = clij.convert(dst, ImagePlus.class);
 
-        clij.show(rotCL, "rotCL");
-        new WaitForUserDialog("wait").show();
+        ClearCLImage imageJResult = clij.convert(rotIJ, ClearCLImage.class);
+        long countNonZeroPixels = TestUtilities.countPixelsWithDifferenceAboveTolerance(clij, imageJResult, dst, tolerance);
 
-        assertTrue(TestUtilities.compareImages(rotIJ, rotCL, tolerance));
+        // differences are an edge-artefact. Check that only a number of pixels is affected that's
+        // smaller than all edge pixels
+        System.out.println("pixels with huge differences: " + countNonZeroPixels);
+
+        assertTrue( countNonZeroPixels < 2 * imageJResult.getWidth() + 2 * imageJResult.getHeight());
+
+        imageJResult.close();
+
+        clij.show(rotCL, "rotCL");
 
         src.close();
         dst.close();
@@ -68,15 +72,9 @@ public class Rotate2DTest {
         clij.close();
     }
 
-    
-    @Ignore  
-    // Problem with Buffer version.
-    // Error: passing 'float2' (vector of 2 'float' values) to parameter 
-    // of incompatible type 'int2' (vector of 2 'int' values)
-    // (Maybe due to used OpenCLVersion 1.2 and 2.0)
-    // (Buffer version are called in modules for getOpenCLVersion() < 1.2 only)
+
     @Test
-    public void rotateLeft2d_Buffers() throws InterruptedException {
+    public void rotate2d_Buffers() throws InterruptedException {
 
         CLIJ clij = CLIJ.getInstance();
         
@@ -88,7 +86,7 @@ public class Rotate2DTest {
 
         // do operation with ImageJ
         ImagePlus rotIJ = test2D.duplicate();
-        IJ.run(rotIJ, "Rotate... ", "angle=" + angle + " interpolation=Bicubic");
+        IJ.run(rotIJ, "Rotate... ", "angle=" + angle + " interpolation=None");
         rotIJ.show();
 
         // do operation with OpenCL
@@ -106,10 +104,16 @@ public class Rotate2DTest {
 
         ImagePlus rotCL = clij.convert(dst, ImagePlus.class);
 
-        clij.show(dst, "rotCL");
-        new WaitForUserDialog("wait").show();
+        ClearCLBuffer imageJResult = clij.convert(rotIJ, ClearCLBuffer.class);
+        long countNonZeroPixels = TestUtilities.countPixelsWithDifferenceAboveTolerance(clij, imageJResult, dst, tolerance);
 
-        assertTrue(TestUtilities.compareImages(rotIJ, rotCL, tolerance));
+        // differences are an edge-artefact. Check that only a number of pixels is affected that's
+        // smaller than all edge pixels
+        System.out.println("pixels with huge differences: " + countNonZeroPixels);
+
+        assertTrue( countNonZeroPixels < 2 * imageJResult.getWidth() + 2 * imageJResult.getHeight());
+
+        imageJResult.close();
 
         src.close();
         dst.close();
