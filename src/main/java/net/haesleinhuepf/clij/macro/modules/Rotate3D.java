@@ -48,14 +48,14 @@ public class Rotate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
             ClearCLBuffer input = ((ClearCLBuffer) args[0]);
             ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 
-            return Kernels.affineTransform(clij, input, output, AffineTransform.matrixToFloatArray(at));
+            return Kernels.affineTransform3D(clij, input, output, AffineTransform.matrixToFloatArray(at));
 
         } else {
 
             ClearCLImage input = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[0]);
             ClearCLImage output = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[1]);
 
-            boolean result = Kernels.affineTransform(clij, input, output, AffineTransform.matrixToFloatArray(at));
+            boolean result = Kernels.affineTransform3D(clij, input, output, AffineTransform.matrixToFloatArray(at));
 
             Kernels.copy(clij, output, (ClearCLBuffer) args[1]);
 

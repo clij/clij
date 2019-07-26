@@ -17,33 +17,40 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
-@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_translate3D")
-public class Translate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
+@Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_scale")
+public class Scale3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
     @Override
     public boolean executeCL() {
-        float translateX = -asFloat(args[2]);
-        float translateY = -asFloat(args[3]);
-        float translateZ = -asFloat(args[4]);
+        float scaleFactor = asFloat(args[2]);
+        boolean rotateAroundCenter = asBoolean(args[3]);
 
         AffineTransform3D at = new AffineTransform3D();
         Object[] args = openCLBufferArgs();
 
-        at.translate(translateX, translateY, translateZ);
+        if (rotateAroundCenter) {
+            ClearCLBuffer input = (ClearCLBuffer) args[0];
+            at.translate(-input.getWidth() / 2, -input.getHeight() / 2, -input.getDepth() / 2);
+        }
 
-        //boolean result = Kernels.affineTransform(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), AffineTransform.matrixToFloatArray(at));
-        //releaseBuffers(args);
-        //return result;
+        at.scale(scaleFactor);
+
+        if (rotateAroundCenter) {
+            ClearCLBuffer input = (ClearCLBuffer) args[0];
+            at.translate(input.getWidth() / 2, input.getHeight() / 2, input.getDepth() / 2);
+        }
+
         if (clij.getOpenCLVersion() < 1.2) {
             ClearCLBuffer input = ((ClearCLBuffer) args[0]);
             ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 
-            return Kernels.affineTransform3D(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray(at));
+            return Kernels.affineTransform3D(clij, input, output, AffineTransform.matrixToFloatArray(at));
+
         } else {
             ClearCLImage input = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[0]);
             ClearCLImage output = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[1]);
 
-            boolean result = Kernels.affineTransform3D(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray(at));
+            boolean result = Kernels.affineTransform3D(clij, input, output, AffineTransform.matrixToFloatArray(at));
 
             Kernels.copy(clij, output, (ClearCLBuffer) args[1]);
 
@@ -53,12 +60,12 @@ public class Translate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
 
     @Override
     public String getParameterHelpText() {
-        return "Image source, Image destination, Number translateX, Number translateY, Number translateZ";
+        return "Image source, Image destination, Number scaling_factor, Boolean scale_to_center";
     }
 
     @Override
     public String getDescription() {
-        return "Translate an image stack in X, Y and Z.";
+        return "Scales an image with a given factor.";
     }
 
     @Override
