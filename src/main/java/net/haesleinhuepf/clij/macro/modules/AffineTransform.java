@@ -21,9 +21,13 @@ import org.scijava.plugin.Plugin;
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_affineTransform")
 public class AffineTransform extends net.haesleinhuepf.clij.macro.modules.AffineTransform3D {
 
+    private static boolean notifiedDeprecated = false;
     @Override
     public boolean executeCL() {
-        IJ.log("CLIJ affineTransform is deprecated. Use affineTransform2D or affineTransform3D instead.");
+        if (!notifiedDeprecated) {
+            IJ.log("CLIJ affineTransform is deprecated. Use affineTransform2D or affineTransform3D instead.");
+            notifiedDeprecated = true;
+        }
         return super.executeCL();
     }
 

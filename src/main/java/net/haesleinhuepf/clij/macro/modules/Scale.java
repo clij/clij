@@ -21,9 +21,13 @@ import org.scijava.plugin.Plugin;
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_scale")
 public class Scale extends Scale3D {
 
+    private static boolean notifiedDeprecated = false;
     @Override
     public boolean executeCL() {
-        IJ.log("CLIJ scale() is deprecated. Use scale2D or scale3D instead.");
+        if (!notifiedDeprecated) {
+            IJ.log("CLIJ scale() is deprecated. Use scale2D or scale3D instead.");
+            notifiedDeprecated = true;
+        }
         return super.executeCL();
     }
 
