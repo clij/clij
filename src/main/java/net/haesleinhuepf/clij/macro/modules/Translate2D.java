@@ -9,7 +9,7 @@ import net.haesleinhuepf.clij.macro.CLIJMacroPlugin;
 import net.haesleinhuepf.clij.macro.CLIJOpenCLProcessor;
 import net.haesleinhuepf.clij.macro.documentation.OffersDocumentation;
 import net.haesleinhuepf.clij.utilities.AffineTransform;
-import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.realtransform.AffineTransform2D;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -25,10 +25,10 @@ public class Translate2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
         float translateX = -asFloat(args[2]);
         float translateY = -asFloat(args[3]);
 
-        AffineTransform3D at = new AffineTransform3D();
+        AffineTransform2D at = new AffineTransform2D();
         Object[] args = openCLBufferArgs();
 
-        at.translate(translateX, translateY, 0);
+        at.translate(translateX, translateY);
 
         //boolean result = Kernels.affineTransform(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), AffineTransform.matrixToFloatArray(at));
         //releaseBuffers(args);
@@ -37,12 +37,12 @@ public class Translate2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
             ClearCLBuffer input = ((ClearCLBuffer) args[0]);
             ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 
-            return Kernels.affineTransform3D(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray(at));
+            return Kernels.affineTransform3D(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray2D(at));
         } else {
             ClearCLImage input = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[0]);
             ClearCLImage output = CLIJHandler.getInstance().getChachedImageByBuffer((ClearCLBuffer) args[1]);
 
-            boolean result = Kernels.affineTransform3D(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray(at));
+            boolean result = Kernels.affineTransform2D(clij, input, output, net.haesleinhuepf.clij.utilities.AffineTransform.matrixToFloatArray2D(at));
 
             Kernels.copy(clij, output, (ClearCLBuffer) args[1]);
 
