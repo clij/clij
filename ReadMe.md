@@ -39,7 +39,6 @@ If you search for support, please open a thread on the [image.sc](https://image.
   * [Release notes](https://github.com/clij/clij/releases)
   * [Release cycle](https://clij.github.io/clij-docs/release_cycle)
 * Application programming interface (API)
-  * [API design principles](https://clij.github.io/clij-docs/api_design_priciples)
   * [ImageJ Macro](https://clij.github.io/clij-docs/reference)
   * [Jython](https://clij.github.io/clij-docs/referenceJython)
   * [Java](https://clij.github.io/clij-docs/referenceJava)
@@ -59,7 +58,8 @@ If you search for support, please open a thread on the [image.sc](https://image.
 * Extending CLIJ functionality
   * [Plugin template](https://github.com/clij/clij-plugin-template/)
   * [Example plugin for convolution/deconvolution](https://github.com/clij/clij-custom-convolution-plugin/)
-* Troubleshooting
+* FAQ / support
+  * [Frequently asked questions](https://clij.github.io/clij-docs/faq)
   * [List of tested systems](https://clij.github.io/clij-docs/testedsystems)
   * [Troubleshooting](https://clij.github.io/clij-docs/troubleshooting)
   * [Support](https://image.sc)
@@ -67,6 +67,7 @@ If you search for support, please open a thread on the [image.sc](https://image.
 ## Acknowledgements
 Development of CLIJ is a community effort. We would like to thank everybody who helped developing and testing. In particular thanks goes to
 Brenton Cavanagh (RCSI),
+Brian Northan (True North Intelligent Algorithms),
 Bruno C. Vellutini (MPI CBG),
 Curtis Rueden (UW-Madison LOCI),
 Damir Krunic (DKFZ),
@@ -80,7 +81,9 @@ Juergen Gluch (Fraunhofer IKTS),
 Kota Miura (Heidelberg),
 Laurent Thomas (Acquifer), 
 Nico Stuurman (UCSF),
+Peter Haub,
 Pradeep Rajasekhar (Monash University),
+Tanner Fadero (UNC-Chapel Hill),
 Tobias Pietzsch (MPI-CBG),
 Wilsom Adams (VU Biophotonics)
 
