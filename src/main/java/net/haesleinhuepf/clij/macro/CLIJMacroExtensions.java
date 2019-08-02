@@ -25,6 +25,8 @@ public class CLIJMacroExtensions implements Command {
     @Parameter
     CLIJConverterService clijConverterService;
 
+    private static boolean warnedOutdatedOpenCLVersion = false;
+
     @Override
     public void run() {
         ArrayList<String> deviceList = CLIJ.getAvailableDeviceNames();
@@ -43,6 +45,13 @@ public class CLIJMacroExtensions implements Command {
         CLIJ clij = CLIJ.getInstance(gd.getNextChoice());
         clijConverterService.setCLIJ(clij);
         clij.setConverterService(clijConverterService);
+
+        if (!warnedOutdatedOpenCLVersion) {
+            if (clij.getOpenCLVersion() < 1.2) {
+                IJ.log("Warning: Your GPU does not support OpenCL 1.2. Some operations may not work precisely. For example: CLIJ does not support linear interpolation; it uses nearest-neighbor interpolation instead. Consider upgrading GPU Driver version or GPU hardware.");
+                warnedOutdatedOpenCLVersion = true;
+            }
+        }
 
         if (!IJ.macroRunning()) {
             IJ.error("Cannot install extensions from outside a macro.");
