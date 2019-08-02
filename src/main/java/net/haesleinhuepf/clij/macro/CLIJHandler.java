@@ -207,6 +207,12 @@ public class CLIJHandler implements MacroExtension {
         CLIJ.getInstance().show(buffer, arg);
     }
 
+    public void pullBinaryFromGPU(String arg) {
+        ClearCLBuffer buffer = bufferMap.get(arg);
+        ImagePlus imp = CLIJ.getInstance().pullBinary(buffer);
+        imp.show();
+    }
+
     public ClearCLBuffer pushToGPU(String arg) {
         ImagePlus imp = WindowManager.getImage(arg);
         imp.changes = false;
