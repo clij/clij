@@ -19,7 +19,7 @@ public class Minimum3DBoxTest {
     @Test
     public void minimum3dSeparable() throws InterruptedException {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         ClearCLImage src = clij.convert(testFlyBrain3D, ClearCLImage.class);;
         ClearCLImage minimumCL = clij.createCLImage(src);
@@ -51,7 +51,7 @@ public class Minimum3DBoxTest {
     @Test
     public void minimum3dSeparable_Buffer() throws InterruptedException {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         ClearCLBuffer src = clij.convert(testFlyBrain3D, ClearCLBuffer.class);
         ClearCLBuffer minimumCL = clij.createCLBuffer(src);

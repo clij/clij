@@ -18,7 +18,7 @@ public class Downsample3DTest {
     public void downsample3d() throws InterruptedException {
 
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testImp1 = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testImp1 = IJ.openImage("src/test/resources/flybrain.tif");
 
         // do operation with ImageJ
         new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
@@ -49,7 +49,7 @@ public class Downsample3DTest {
     public void downsample3d_Buffers() throws InterruptedException {
 
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testImp1 = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testImp1 = IJ.openImage("src/test/resources/flybrain.tif");
 
 
         // do operation with ImageJ

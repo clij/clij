@@ -26,7 +26,7 @@ public class Rotate2DTest {
     public void rotate2d() throws InterruptedException {
         CLIJ clij = CLIJ.getInstance("1070");
         
-        ImagePlus test2D = IJ.openImage("src/main/resources/blobs.tif");
+        ImagePlus test2D = IJ.openImage("src/test/resources/blobs.tif");
         IJ.run(test2D, "Invert LUT", "");
         IJ.run(test2D, "32-bit", "");
 
@@ -78,7 +78,7 @@ public class Rotate2DTest {
 
         CLIJ clij = CLIJ.getInstance();
         
-        ImagePlus test2D = IJ.openImage("src/main/resources/blobs.tif");
+        ImagePlus test2D = IJ.openImage("src/test/resources/blobs.tif");
         IJ.run(test2D, "Invert LUT", "");
         IJ.run(test2D, "32-bit", "");
 

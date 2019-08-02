@@ -18,7 +18,7 @@ public class Blur3DSliceBySliceTest {
     @Test
     public void blurSliceBySlice() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         // do operation with ImageJ
         ImagePlus gauss = new Duplicator().run(testFlyBrain3D);
@@ -42,7 +42,7 @@ public class Blur3DSliceBySliceTest {
     @Test public void blurSliceBySlice_Buffers()
     {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         // do operation with ImageJ
         ImagePlus gauss = new Duplicator().run(testFlyBrain3D);

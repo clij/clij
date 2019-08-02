@@ -18,7 +18,7 @@ public class Minimum2DSphereTest {
     @Test
     public void minimum2d() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
         IJ.run(testImage, "32-bit", "");
@@ -49,7 +49,7 @@ public class Minimum2DSphereTest {
     @Test
     public void minimum2d_Buffers() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 20, 20);
         IJ.run(testImage, "32-bit", "");

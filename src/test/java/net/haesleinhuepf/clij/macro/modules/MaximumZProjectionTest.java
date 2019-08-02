@@ -19,7 +19,7 @@ public class MaximumZProjectionTest {
     @Test
     public void maxProjection() throws InterruptedException {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testImp1 = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testImp1 = IJ.openImage("src/test/resources/flybrain.tif");
 
         // do operation with ImageJ
         ImagePlus
@@ -69,7 +69,7 @@ public class MaximumZProjectionTest {
     @Test
     public void maxProjection_Buffers() throws InterruptedException {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testImp1 = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testImp1 = IJ.openImage("src/test/resources/flybrain.tif");
 
         // do operation with ImageJ
         ImagePlus

@@ -19,7 +19,7 @@ public class MeanSliceBySliceSphereTest {
     @Test
     public void meanSliceBySlice() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
         IJ.run(testImage, "32-bit", "");
@@ -50,7 +50,7 @@ public class MeanSliceBySliceSphereTest {
     @Test
     public void meanSliceBySlice_Buffers() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
         IJ.run(testImage, "32-bit", "");

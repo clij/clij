@@ -16,7 +16,7 @@ public class Blur2DTest {
     @Test
     public void blur2d() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
         ImagePlus testFlyBrain2D = new Duplicator().run(testFlyBrain3D, 1, 1);
 
         // do operation with ImageJ
@@ -42,7 +42,7 @@ public class Blur2DTest {
     @Test
     public void blur2d_Buffers() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
         ImagePlus testFlyBrain2D = new Duplicator().run(testFlyBrain3D, 1, 1);
 
         // do operation with ImageJ

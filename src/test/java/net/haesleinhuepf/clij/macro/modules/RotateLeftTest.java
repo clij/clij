@@ -19,7 +19,7 @@ public class RotateLeftTest {
     public void rotateLeft2d() throws InterruptedException {
 
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         testFlyBrain3D.setRoi(0, 0, 256, 128);
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 10, 10);
@@ -53,7 +53,7 @@ public class RotateLeftTest {
     public void rotateLeft2d_Buffers() throws InterruptedException {
 
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         testFlyBrain3D.setRoi(0, 0, 256, 128);
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D, 10, 10);
@@ -87,7 +87,7 @@ public class RotateLeftTest {
     public void rotateLeft3d() throws InterruptedException {
 
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         testFlyBrain3D.setRoi(0, 0, 256, 128);
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);
@@ -121,7 +121,7 @@ public class RotateLeftTest {
     public void rotateLeft3d_Buffers() throws InterruptedException {
 
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         testFlyBrain3D.setRoi(0, 0, 256, 128);
         ImagePlus testImage = new Duplicator().run(testFlyBrain3D);

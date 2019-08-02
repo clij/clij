@@ -19,7 +19,7 @@ public class Minimum2DBoxTest {
     @Test
     public void minimum2dSeparable() throws InterruptedException {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         ImagePlus testFlyBrain2D = new Duplicator().run(testFlyBrain3D, 20, 20);
         ClearCLImage src = clij.convert(testFlyBrain2D, ClearCLImage.class);
@@ -51,7 +51,7 @@ public class Minimum2DBoxTest {
     @Test
     public void minimum2dSeparable_Buffer() throws InterruptedException {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testFlyBrain3D = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testFlyBrain3D = IJ.openImage("src/test/resources/flybrain.tif");
 
         ImagePlus testFlyBrain2D = new Duplicator().run(testFlyBrain3D, 20, 20);
         ClearCLBuffer src = clij.convert(testFlyBrain2D, ClearCLBuffer.class);

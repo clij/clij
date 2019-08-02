@@ -20,7 +20,7 @@ public class Blur3DTest {
     @Test
     public void blur3d() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testImp1 = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testImp1 = IJ.openImage("src/test/resources/flybrain.tif");
 
         // do operation with ImageJ
         ImagePlus gauss = new Duplicator().run(testImp1);
@@ -46,7 +46,7 @@ public class Blur3DTest {
     @Test
     public void blur3d_Buffers() {
         CLIJ clij = CLIJ.getInstance();
-        ImagePlus testImp1 = IJ.openImage("src/main/resources/flybrain.tif");
+        ImagePlus testImp1 = IJ.openImage("src/test/resources/flybrain.tif");
         IJ.run(testImp1, "32-bit","");
 
         // do operation with ImageJ
