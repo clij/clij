@@ -64,13 +64,13 @@ public class ScriptingAutoCompleteProvider extends DefaultCompletionProvider
         Method[] methods = c.getDeclaredMethods();
         for (Method method : methods) {
             //if (Modifier.isStatic(method.getModifiers()) || prefix.substring(0,0) == prefix.substring(0,0).toLowerCase()) {
-                System.out.println(method.toString());
+                //System.out.println(method.toString());
                 String description = "<b>" + method.getName() + "</b><br>";
                 String headline = prefix + method.getName() + "(";
                 String name = prefix + method.getName();
 
                 for (Parameter parameter : method.getParameters()) {
-                    System.out.println(parameter);
+                    //System.out.println(parameter);
                     if (!headline.endsWith("(")) {
                         headline = headline + ", ";
                     }
