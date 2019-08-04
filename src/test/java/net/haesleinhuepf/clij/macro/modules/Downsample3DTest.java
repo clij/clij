@@ -1,5 +1,6 @@
 package net.haesleinhuepf.clij.macro.modules;
 
+import ij.plugin.Duplicator;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import ij.IJ;
@@ -19,7 +20,9 @@ public class Downsample3DTest {
 
         CLIJ clij = CLIJ.getInstance();
         ImagePlus testImp1 = IJ.openImage("src/test/resources/flybrain.tif");
-
+        if (testImp1.getNSlices() % 2 == 1) {
+            testImp1 = new Duplicator().run(testImp1, 1, testImp1.getNSlices() - 1);
+        }
         // do operation with ImageJ
         new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
         testImp1.show();
@@ -32,7 +35,7 @@ public class Downsample3DTest {
         ClearCLImage dst =
                 clij.createCLImage(new long[]{src.getWidth() / 2,
                                 src.getHeight() / 2,
-                                (long) (src.getDepth() - 0.5) / 2},
+                                (long) (src.getDepth()) / 2},
                         src.getChannelDataType());
 
 
@@ -50,7 +53,9 @@ public class Downsample3DTest {
 
         CLIJ clij = CLIJ.getInstance();
         ImagePlus testImp1 = IJ.openImage("src/test/resources/flybrain.tif");
-
+        if (testImp1.getNSlices() % 2 == 1) {
+            testImp1 = new Duplicator().run(testImp1, 1, testImp1.getNSlices() - 1);
+        }
 
         // do operation with ImageJ
         new ImageJ(); // the menu command 'Scale...' can only be executed successfully if the ImageJ UI is visible; apparently
@@ -65,7 +70,7 @@ public class Downsample3DTest {
         ClearCLBuffer dst =
                 clij.createCLBuffer(new long[]{src.getWidth() / 2,
                                 src.getHeight() / 2,
-                                (long) (src.getDepth() - 0.5) / 2},
+                                (long) (src.getDepth()) / 2},
                         src.getNativeType());
 
 
