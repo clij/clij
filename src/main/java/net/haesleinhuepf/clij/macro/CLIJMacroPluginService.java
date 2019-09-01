@@ -77,6 +77,8 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
                     parameterTypes[i] = MacroExtension.ARG_STRING;
                 } else if (parameter.trim().startsWith("String")) {
                     parameterTypes[i] = MacroExtension.ARG_STRING;
+                } else if (parameter.trim().startsWith("Array")) {
+                    parameterTypes[i] = MacroExtension.ARG_ARRAY;
                 } else {
                     parameterTypes[i] = MacroExtension.ARG_NUMBER;
                 }
