@@ -13,7 +13,7 @@ CLIJ is based on
 Robert Haase, Loic Alain Royer, Peter Steinbach, Deborah Schmidt, 
 Alexandr Dibrov, Uwe Schmidt, Martin Weigert, Nicola Maghelli, Pavel Tomancak, 
 Florian Jug, Eugene W Myers. 
-*CLIJ: Enabling GPU-accelerated image processing in Fiji*. BioRxiv preprint. [https://doi.org/10.1101/660704](https://doi.org/10.1101/660704)
+*CLIJ: GPU-accelerated image processing for everyone*. BioRxiv preprint. [https://doi.org/10.1101/660704](https://doi.org/10.1101/660704)
 
 If you search for support, please open a thread on the [image.sc](https://image.sc) forum.
 
@@ -26,9 +26,12 @@ If you search for support, please open a thread on the [image.sc](https://image.
 * [CLIJ - a quick tour](https://clij.github.io/clij-docs/quickTour)
 * Installation
   * [Fiji update site](https://clij.github.io/clij-docs/installationInFiji)
-  * [MicroManager 2.0](https://clij.github.io/clij-docs/installationInMicroManager)
-  * [ImageJ1](https://github.com/clij/clij-legacy/) (experimental)
   * [Depending on CLIJ via maven](https://clij.github.io/clij-docs/dependingViaMaven)
+  * [Icy](https://clij.github.io/clicy/) (experimental)
+  * [ImageJ1](https://github.com/clij/clij-legacy/) (experimental)
+  * [Matlab](https://clij.github.io/clatlab/) (experimental)
+  * [MicroManager 2.0](https://clij.github.io/clij-docs/installationInMicroManager) (experimental)
+  * [Python](https://clij.github.io/clijpy/) (experimental)
 * Introduction to CLIJ programming
   * [CLIJ for ImageJ Macro programmers](https://clij.github.io/clij-docs/macro_intro)
   * [CLIJ for Java programmers](https://clij.github.io/clij-docs/api_intro)
@@ -40,6 +43,7 @@ If you search for support, please open a thread on the [image.sc](https://image.
   * [Release cycle](https://clij.github.io/clij-docs/release_cycle)
 * Application programming interface (API)
   * [ImageJ Macro](https://clij.github.io/clij-docs/reference)
+  * [ImageJ Macro cheat sheet](https://github.com/clij/clij-docs/blob/master/clij_cheatsheet.pdf)
   * [Jython](https://clij.github.io/clij-docs/referenceJython)
   * [Java](https://clij.github.io/clij-docs/referenceJava)
   * [Groovy](https://clij.github.io/clij-docs/referenceGroovy)
@@ -78,12 +82,14 @@ Giovanni Cardone (MPI Biochem),
 Jan Brocher (Biovoxxel), 
 Johannes Girstmair (MPI CBG),
 Juergen Gluch (Fraunhofer IKTS),
-Kota Miura (Heidelberg),
+Kota Miura,
 Laurent Thomas (Acquifer), 
 Nico Stuurman (UCSF),
 Peter Haub,
+Pete Bankhead (University of Edinburgh),
 Pradeep Rajasekhar (Monash University),
 Tanner Fadero (UNC-Chapel Hill),
+Thomas Irmer (Zeiss),
 Tobias Pietzsch (MPI-CBG),
 Wilsom Adams (VU Biophotonics)
 
