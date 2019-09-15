@@ -48,7 +48,7 @@ public class CLIJHandler implements MacroExtension {
     @Override
     public String handleExtension(String name, Object[] args) {
 
-        ElapsedTime.measure("exec name", () -> {
+        ElapsedTime.measure("exec " + name, () -> {
             ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
             HashMap<Integer, String> missingImageIndices = new HashMap<Integer, String>();
             HashMap<Integer, String> missingImageIndicesDescriptions = new HashMap<Integer, String>();
