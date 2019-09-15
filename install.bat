@@ -1,1 +1,1 @@
-mvn -Denforcer.skip -Dmaven.test.skip=true clean install
+mvn -Dmaven.test.skip=true clean install
