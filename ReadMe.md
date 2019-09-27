@@ -57,7 +57,8 @@ If you search for support, please open a thread on the [image.sc](https://image.
   * [ImageJ Ops in Java](https://github.com/clij/clij-ops/tree/master/src/test/java/net/haesleinhuepf/clij/ops/examples)
   * [ImageJ Ops in Jython](https://github.com/clij/clij-ops/tree/master/src/test/resources/jython)
 * Benchmarking
-  * [Benchmarking CLIJ operations versus ImageJ/Fiji operations](https://clij.github.io/clij-benchmarking/benchmarking_operations)
+  * [Benchmarking CLIJ operations versus ImageJ/Fiji operations using JMH](https://github.com/clij/clij-benchmarking-jmh)
+  * [Benchmarking CLIJ operations versus ImageJ/Fiji operations (archived)](https://clij.github.io/clij-benchmarking/benchmarking_operations)
   * [Benchmarking a CLIJ workflow versus ImageJ/Fiji](https://clij.github.io/clij-benchmarking/benchmarking_workflow_spot_count)
 * Extending CLIJ functionality
   * [Plugin template](https://github.com/clij/clij-plugin-template/)
@@ -70,6 +71,7 @@ If you search for support, please open a thread on the [image.sc](https://image.
 
 ## Acknowledgements
 Development of CLIJ is a community effort. We would like to thank everybody who helped developing and testing. In particular thanks goes to
+Alex Herbert (University of Sussex),
 Brenton Cavanagh (RCSI),
 Brian Northan (True North Intelligent Algorithms),
 Bruno C. Vellutini (MPI CBG),
@@ -91,7 +93,7 @@ Pradeep Rajasekhar (Monash University),
 Tanner Fadero (UNC-Chapel Hill),
 Thomas Irmer (Zeiss),
 Tobias Pietzsch (MPI-CBG),
-Wilsom Adams (VU Biophotonics)
+Wilson Adams (VU Biophotonics)
 
 
   
