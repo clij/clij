@@ -19,13 +19,6 @@ import org.scijava.plugin.Plugin;
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean3DBox")
 public class Mean3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
-    public static void main(String... args) {
-        new ImageJ();
-        ImagePlus imp = NewImage.createShortImage("", 256,256, 10, NewImage.FILL_RANDOM);
-        imp.show();
-        new Mean3DBox().run(imp.getProcessor());
-    }
-
     @Override
     public boolean executeCL() {
         int radiusX = asInteger(args[2]);
