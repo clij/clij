@@ -15,6 +15,8 @@ import net.haesleinhuepf.clij.utilities.CLIJUtilities;
 import net.imglib2.RandomAccessibleInterval;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -269,7 +271,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         clij = CLIJ.getInstance(deviceName);
         //CLIJHandler.getInstance().setCLIJ(clij);
 
-        recordIfNotRecorded("// run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
+        recordIfNotRecorded("run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
 
         ArrayList<ClearCLBuffer> allBuffers = new ArrayList<ClearCLBuffer>();
 
@@ -293,7 +295,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                         if (firstImageTitle.length() == 0) {
                             firstImageTitle = imp.getTitle();
                         }
-                        recordIfNotRecorded("// Ext.CLIJ_push", "\"" + imp.getTitle() + "\"");
+                        recordIfNotRecorded("Ext.CLIJ_push", "\"" + imp.getTitle() + "\"");
                         args[i] = CLIJHandler.getInstance().pushToGPU(imp.getTitle());
                                 //clij.convert(imp, ClearCLBuffer.class);
                         allBuffers.add((ClearCLBuffer) args[i]);
@@ -341,13 +343,20 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             ((CLIJImageJProcessor)this).executeIJ();
         }
 
-        record("// Ext." + name, calledParameters);
+        record("Ext." + name, calledParameters);
 
         for (String destinationName : destinations.keySet()) {
-            record("// Ext.CLIJ_pull", "\"" + destinationName + "\"");
+            record("Ext.CLIJ_pull", "\"" + destinationName + "\"");
+        }
+
+        Recorder.setCommand(null);
+        boolean recordBefore = Recorder.record;
+        Recorder.record = false;
+        for (String destinationName : destinations.keySet()) {
             clij.show(destinations.get(destinationName), destinationName);
         }
-        
+        Recorder.record = recordBefore;
+
         allBuffers.clear();
         if (!isMacro) {
             CLIJHandler.getInstance().clearGPU();
