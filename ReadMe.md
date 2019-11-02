@@ -57,7 +57,7 @@ If you search for support, please open a thread on the [image.sc](https://image.
   * [ImageJ Ops in Java](https://github.com/clij/clij-ops/tree/master/src/test/java/net/haesleinhuepf/clij/ops/examples)
   * [ImageJ Ops in Jython](https://github.com/clij/clij-ops/tree/master/src/test/resources/jython)
 * Benchmarking
-  * [Benchmarking CLIJ operations versus ImageJ/Fiji operations using JMH](https://github.com/clij/clij-benchmarking-jmh)
+  * [Benchmarking CLIJ operations versus ImageJ/Fiji operations using JMH](https://clij.github.io/clij-benchmarking/benchmarking_operations_jmh)
   * [Benchmarking CLIJ operations versus ImageJ/Fiji operations (archived)](https://clij.github.io/clij-benchmarking/benchmarking_operations)
   * [Benchmarking a CLIJ workflow versus ImageJ/Fiji](https://clij.github.io/clij-benchmarking/benchmarking_workflow_spot_count)
 * Extending CLIJ functionality
@@ -72,6 +72,7 @@ If you search for support, please open a thread on the [image.sc](https://image.
 ## Acknowledgements
 Development of CLIJ is a community effort. We would like to thank everybody who helped developing and testing. In particular thanks goes to
 Alex Herbert (University of Sussex),
+Bram van den Broek (Netherlands Cancer Institute),
 Brenton Cavanagh (RCSI),
 Brian Northan (True North Intelligent Algorithms),
 Bruno C. Vellutini (MPI CBG),
@@ -79,13 +80,16 @@ Curtis Rueden (UW-Madison LOCI),
 Damir Krunic (DKFZ),
 Daniel J. White (GE),
 Gaby G. Martins (IGC),
+Guillaume Witz (Bern University),
 Si&acirc;n Culley (LMCB MRC),
 Giovanni Cardone (MPI Biochem),
 Jan Brocher (Biovoxxel), 
+Jean-Yves Tinevez (Institute Pasteur),
 Johannes Girstmair (MPI CBG),
 Juergen Gluch (Fraunhofer IKTS),
 Kota Miura,
 Laurent Thomas (Acquifer), 
+Matthew Foley (University of Sydney),
 Nico Stuurman (UCSF),
 Peter Haub,
 Pete Bankhead (University of Edinburgh),
