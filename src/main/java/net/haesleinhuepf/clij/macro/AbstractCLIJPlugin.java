@@ -32,6 +32,9 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
     protected String name;
     public AbstractCLIJPlugin() {
         this.name = CLIJUtilities.classToName(this.getClass());
+        if (!this.getClass().getPackage().toString().contains(".clij.")) {
+            this.name = this.name.replace("CLIJ_", "CLIJx_");
+        }
     }
 
     public void setClij(CLIJ clij) {
