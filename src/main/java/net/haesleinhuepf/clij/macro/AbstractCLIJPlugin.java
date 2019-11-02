@@ -15,6 +15,7 @@ import net.haesleinhuepf.clij.utilities.CLIJUtilities;
 import net.imglib2.RandomAccessibleInterval;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -216,9 +217,39 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return PlugInFilter.DOES_ALL;
     }
 
+    private boolean myWasOKed = false;
+    private boolean myWasCancelled = false;
+    private class MyGenericDialogPlus extends GenericDialogPlus {
+        public MyGenericDialogPlus(String title) {
+            super(title);
+        }
+
+        public void keyPressed(KeyEvent e) {
+            int keyCode = e.getKeyCode();
+            IJ.setKeyDown(keyCode);
+
+            if (keyCode == 10 && this.textArea1 == null) {
+                myWasOKed = true;
+                myWasCancelled = false;
+                this.dispose();
+            } else if (keyCode == 27) {
+                myWasOKed = false;
+                myWasCancelled = true;
+                this.dispose();
+                IJ.resetEscape();
+            } else if (keyCode == 87 && (e.getModifiers() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 0) {
+                myWasOKed = false;
+                myWasCancelled = true;
+                this.dispose();
+            }
+
+        }
+
+    }
+
     @Override
     public void run(ImageProcessor ip) {
-        GenericDialogPlus gd = new GenericDialogPlus(name);
+        GenericDialogPlus gd = new MyGenericDialogPlus(name);
 
         ArrayList<String> deviceList = CLIJ.getAvailableDeviceNames();
         if (clij == null) {
@@ -255,9 +286,13 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     "</body></html>"
             ));
         }
+        gd.addHelp("http://clij.github.io/");
+        gd.setHelpLabel("CLIJ online");
 
+        myWasCancelled = false;
+        myWasOKed = false;
         gd.showDialog();
-        if (gd.wasCanceled()) {
+        if (gd.wasCanceled() || myWasCancelled || (!myWasOKed && !gd.wasOKed())) {
             return;
         }
 
