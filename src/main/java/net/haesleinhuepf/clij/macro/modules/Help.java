@@ -23,10 +23,11 @@ public class Help extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
         if (args.length > 0) {
             searchString = (String) (args[0]);
         }
+        searchString = searchString.toLowerCase();
         ArrayList<String> helpList = new ArrayList<String>();
 
         for (String name : pluginService.getCLIJMethodNames()) {
-            if (searchString.length() == 0 || name.contains(searchString)) {
+            if (searchString.length() == 0 || name.toLowerCase().contains(searchString)) {
 
                 helpList.add(name + "(" + pluginService.getCLIJMacroPlugin(name).getParameterHelpText() + ")");
                 //IJ.log(key + "(" + methodMap.get(key).parameters + ")");
