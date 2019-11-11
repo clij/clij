@@ -27,11 +27,6 @@ If you search for support, please open a thread on the [image.sc](https://image.
 * Installation
   * [Fiji update site](https://clij.github.io/clij-docs/installationInFiji)
   * [Depending on CLIJ via maven](https://clij.github.io/clij-docs/dependingViaMaven)
-  * [Icy](https://clij.github.io/clicy/) (experimental)
-  * [ImageJ1](https://github.com/clij/clij-legacy/) (experimental)
-  * [Matlab](https://clij.github.io/clatlab/) (experimental)
-  * [MicroManager 2.0](https://clij.github.io/clij-docs/installationInMicroManager) (experimental)
-  * [Python](https://clij.github.io/clijpy/) (experimental)
 * Introduction to CLIJ programming
   * [CLIJ for ImageJ Macro programmers](https://clij.github.io/clij-docs/macro_intro)
   * [CLIJ for Java programmers](https://clij.github.io/clij-docs/api_intro)
@@ -63,11 +58,19 @@ If you search for support, please open a thread on the [image.sc](https://image.
 * Extending CLIJ functionality
   * [Plugin template](https://github.com/clij/clij-plugin-template/)
   * [Example plugin for convolution/deconvolution](https://github.com/clij/clij-custom-convolution-plugin/)
+* CLIJx - the upcoming successor of CLIJ
+  * [CLIJ2 development repository](https://github.com/clij/clij-advanced-filters) (experimental)
+  * [Icy](https://clij.github.io/clicy/) (experimental)
+  * [ImageJ1](https://github.com/clij/clij-legacy/) (experimental)
+  * [Matlab](https://clij.github.io/clatlab/) (experimental)
+  * [MicroManager 2.0](https://clij.github.io/clij-docs/installationInMicroManager) (experimental)
+  * [Python](https://clij.github.io/clijpy/) (experimental)  
 * FAQ / support
   * [Frequently asked questions](https://clij.github.io/clij-docs/faq)
   * [List of tested systems](https://clij.github.io/clij-docs/testedsystems)
   * [Troubleshooting](https://clij.github.io/clij-docs/troubleshooting)
   * [Support](https://image.sc)
+  * [Imprint](https://clij.github.io/imprint)
 
 ## Acknowledgements
 Development of CLIJ is a community effort. We would like to thank everybody who helped developing and testing. In particular thanks goes to
@@ -99,5 +102,16 @@ Thomas Irmer (Zeiss),
 Tobias Pietzsch (MPI-CBG),
 Wilson Adams (VU Biophotonics)
 
+R.H. was supported by the German Federal Ministry of
+Research and Education (BMBF) under the code 031L0044
+(Sysbio II) and D.S. received support from the German
+Research Foundation (DFG) under the code JU3110/1-1.
+P.T. was supported by the European Regional
+Development Fund in the IT4Innovations national
+supercomputing center-path to exascale project,
+project number CZ.02.1.01/0.0/0.0/16_013/0001791
+within the Operational Programme Research, Development
+and Education.
 
+[Imprint](https://clij.github.io/imprint)
   
