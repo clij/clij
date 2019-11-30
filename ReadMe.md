@@ -61,7 +61,9 @@ If you search for support, please open a thread on the [image.sc](https://image.
   * [Plugin template](https://github.com/clij/clij-plugin-template/)
   * [Example plugin for convolution/deconvolution](https://github.com/clij/clij-custom-convolution-plugin/)
 * CLIJx - the upcoming successor of CLIJ
-  * [CLIJ2 development repository](https://github.com/clij/clij-advanced-filters) (experimental)
+  * [CLIJx](https://clij.github.io/clij-advanced-filters/)
+  * [Reference](https://clij.github.io/clij-advanced-filters/reference)
+  * [development repository](https://github.com/clij/clij-advanced-filters) (experimental)
   * [Icy](https://clij.github.io/clicy/) (experimental)
   * [ImageJ1](https://github.com/clij/clij-legacy/) (experimental)
   * [Matlab](https://clij.github.io/clatlab/) (experimental)
