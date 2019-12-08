@@ -23,7 +23,7 @@ public class Blur3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         float sigmaZ = asFloat(args[4]);
 
         if (containsCLBufferArguments()) {
-            if (clij.getOpenCLVersion() < 1.2) {
+            if (!clij.hasImageSupport()) {
                 return Kernels.blur(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), sigmaX, sigmaY, sigmaZ);
             } else {
                 // convert all arguments to CLImages

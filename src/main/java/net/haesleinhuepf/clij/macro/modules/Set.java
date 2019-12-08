@@ -18,7 +18,7 @@ public class Set extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpen
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.set(clij, (ClearCLImage)( args[0]), asFloat(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

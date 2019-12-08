@@ -22,11 +22,13 @@ public class Maximum3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin,
         int radiusY = asInteger(args[3]);
         int radiusZ = asInteger(args[4]);
 
-        if (containsCLBufferArguments()) {
-            boolean result = Kernels.maximumBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
-            return result;
-        } else {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.maximumBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
+        } else {
+            Object[] args = openCLBufferArgs();
+            boolean result = Kernels.maximumBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
+            releaseBuffers(args);
+            return result;
         }
     }
 

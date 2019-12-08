@@ -19,7 +19,7 @@ public class GradientZ extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.gradientZ(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

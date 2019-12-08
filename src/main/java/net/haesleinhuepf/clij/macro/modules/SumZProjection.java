@@ -18,7 +18,7 @@ public class SumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.sumZProjection(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

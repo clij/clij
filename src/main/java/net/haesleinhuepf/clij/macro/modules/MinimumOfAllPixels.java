@@ -20,7 +20,7 @@ public class MinimumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroP
     @Override
     public boolean executeCL() {
         double minimumGreyValue = 0;
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             minimumGreyValue = Kernels.minimumOfAllPixels(clij, (ClearCLImage)( args[0]));
             } else {
             Object[] args = openCLBufferArgs();

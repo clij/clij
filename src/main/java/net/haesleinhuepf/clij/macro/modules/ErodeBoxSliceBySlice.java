@@ -23,7 +23,7 @@ public class ErodeBoxSliceBySlice extends AbstractCLIJPlugin implements CLIJMacr
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.erodeBoxSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

@@ -18,7 +18,7 @@ public class DetectMaximaBox extends AbstractCLIJPlugin implements CLIJMacroPlug
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.detectMaximaBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]));
         } else {
             Object[] args = openCLBufferArgs();

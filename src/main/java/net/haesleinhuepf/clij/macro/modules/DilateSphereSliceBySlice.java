@@ -19,7 +19,7 @@ public class DilateSphereSliceBySlice extends AbstractCLIJPlugin implements CLIJ
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.dilateSphereSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

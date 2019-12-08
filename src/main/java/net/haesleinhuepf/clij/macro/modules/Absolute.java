@@ -19,7 +19,7 @@ public class Absolute extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.absolute(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

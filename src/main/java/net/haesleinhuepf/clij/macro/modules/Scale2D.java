@@ -40,7 +40,7 @@ public class Scale2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJ
             at.translate(input.getWidth() / 2, input.getHeight() / 2, input.getDepth() / 2);
         }
 
-        if (clij.getOpenCLVersion() < 1.2) {
+        if (!clij.hasImageSupport()) {
             ClearCLBuffer input = ((ClearCLBuffer) args[0]);
             ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 

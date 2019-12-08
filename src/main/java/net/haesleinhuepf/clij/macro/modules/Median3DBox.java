@@ -24,7 +24,7 @@ public class Median3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
         int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.medianBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY, kernelSizeZ);
         } else {
             Object[] args = openCLBufferArgs();

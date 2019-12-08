@@ -19,7 +19,7 @@ public class ErodeSphereSliceBySlice extends AbstractCLIJPlugin implements CLIJM
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.erodeSphereSliceBySlice(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

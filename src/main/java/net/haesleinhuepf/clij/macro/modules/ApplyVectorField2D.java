@@ -19,7 +19,7 @@ public class ApplyVectorField2D extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.applyVectorfield(clij,
                     (ClearCLImage)( args[0]),
                     (ClearCLImage)( args[1]),

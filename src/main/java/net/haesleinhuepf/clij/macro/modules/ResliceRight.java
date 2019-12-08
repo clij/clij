@@ -19,7 +19,7 @@ public class ResliceRight extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.resliceRight(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

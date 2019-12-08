@@ -21,7 +21,7 @@ public class Flip2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         Boolean flipX = asBoolean(args[2]);
         Boolean flipY = asBoolean(args[3]);
 
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.flip(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), flipX, flipY);
         } else {
             Object[] args = openCLBufferArgs();

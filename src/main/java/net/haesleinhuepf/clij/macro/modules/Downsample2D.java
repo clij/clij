@@ -21,7 +21,7 @@ public class Downsample2D extends AbstractCLIJPlugin implements CLIJMacroPlugin,
         float downsampleX = asFloat(args[2]);
         float downsampleY = asFloat(args[3]);
 
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.downsample(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), downsampleX, downsampleY);
         } else {
             Object[] args = openCLBufferArgs();

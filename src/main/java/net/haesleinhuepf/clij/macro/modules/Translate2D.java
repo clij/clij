@@ -33,7 +33,7 @@ public class Translate2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
         //boolean result = Kernels.affineTransform(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]), AffineTransform.matrixToFloatArray(at));
         //releaseBuffers(args);
         //return result;
-        if (clij.getOpenCLVersion() < 1.2) {
+        if (!clij.hasImageSupport()) {
             ClearCLBuffer input = ((ClearCLBuffer) args[0]);
             ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 

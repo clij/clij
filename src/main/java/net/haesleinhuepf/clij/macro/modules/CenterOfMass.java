@@ -29,7 +29,7 @@ public class CenterOfMass extends AbstractCLIJPlugin implements CLIJMacroPlugin,
         ResultsTable table = ResultsTable.getResultsTable();
         table.incrementCounter();
 
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             ClearCLImage input = (ClearCLImage)( args[0]);
             double[] center = clij.op().centerOfMass(input);
 

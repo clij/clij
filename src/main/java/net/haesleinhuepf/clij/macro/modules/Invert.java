@@ -19,7 +19,7 @@ public class Invert extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.invert(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             // convert everything to images

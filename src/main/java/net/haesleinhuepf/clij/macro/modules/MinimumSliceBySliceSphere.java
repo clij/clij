@@ -24,7 +24,7 @@ public class MinimumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
         //int kernelSizeZ = radiusToKernelSize(asInteger(args[4]));
 
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.minimumSliceBySliceSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();

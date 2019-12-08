@@ -22,7 +22,7 @@ public class Blur2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         float sigmaY = asFloat(args[3]);
 
         if (containsCLBufferArguments()) {
-            if (clij.getOpenCLVersion() < 1.2) {
+            if (!clij.hasImageSupport()) {
                 return Kernels.blur(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), sigmaX, sigmaY, 0f);
             } else {
                 // convert all arguments to CLImages

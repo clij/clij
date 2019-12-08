@@ -18,7 +18,7 @@ public class AddImagesWeighted extends AbstractCLIJPlugin implements CLIJMacroPl
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.addImagesWeighted(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]), asFloat(args[3]), asFloat(args[3]));
         } else {
             Object[] args = openCLBufferArgs();

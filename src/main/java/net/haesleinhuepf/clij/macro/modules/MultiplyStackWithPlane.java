@@ -18,7 +18,7 @@ public class MultiplyStackWithPlane extends AbstractCLIJPlugin implements CLIJMa
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.multiplyStackWithPlane(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), (ClearCLImage)(args[2]));
         } else {
             Object[] args = openCLBufferArgs();

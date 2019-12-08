@@ -25,11 +25,13 @@ public class Mean3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
         int radiusY = asInteger(args[3]);
         int radiusZ = asInteger(args[4]);
 
-        if (containsCLBufferArguments()) {
-            boolean result = Kernels.meanBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
-            return result;
-        } else {
+        if (containsCLImageArguments()  && clij.hasImageSupport()) {
             return Kernels.meanBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, radiusZ);
+        } else {
+            Object[] args = openCLBufferArgs();
+            boolean result = Kernels.meanBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, radiusZ);
+            releaseBuffers(args);
+            return result;
         }
     }
 

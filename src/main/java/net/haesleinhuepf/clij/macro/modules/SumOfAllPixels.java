@@ -20,7 +20,7 @@ public class SumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlugi
     @Override
     public boolean executeCL() {
         double sum = 0;
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             sum = Kernels.sumPixels(clij, (ClearCLImage)( args[0]));
             } else {
             Object[] args = openCLBufferArgs();

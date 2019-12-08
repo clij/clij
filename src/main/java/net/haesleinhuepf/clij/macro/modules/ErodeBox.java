@@ -23,7 +23,7 @@ public class ErodeBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.erodeBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

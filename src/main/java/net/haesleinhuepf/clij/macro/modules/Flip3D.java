@@ -22,7 +22,7 @@ public class Flip3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         Boolean flipY = asBoolean(args[3]);
         Boolean flipZ = asBoolean(args[4]);
 
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.flip(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), flipX, flipY, flipZ);
         } else {
             Object[] args = openCLBufferArgs();

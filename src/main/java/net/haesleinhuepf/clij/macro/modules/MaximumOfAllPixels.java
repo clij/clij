@@ -20,7 +20,7 @@ public class MaximumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroP
     @Override
     public boolean executeCL() {
         double maximumGreyValue = 0;
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             maximumGreyValue = Kernels.maximumOfAllPixels(clij, (ClearCLImage)( args[0]));
         } else {
             Object[] args = openCLBufferArgs();

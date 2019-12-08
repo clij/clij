@@ -18,7 +18,7 @@ public class CountNonZeroVoxels3DSphere extends AbstractCLIJPlugin implements CL
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.countNonZeroVoxelsLocally(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), asInteger(args[2]), asInteger(args[3]), asInteger(args[4]));
         } else {
             Object[] args = openCLBufferArgs();

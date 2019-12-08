@@ -122,7 +122,7 @@ public class AffineTransform3D extends AbstractCLIJPlugin implements CLIJMacroPl
             }
         }
 
-        if (clij.getOpenCLVersion() < 1.2) {
+        if (!clij.hasImageSupport()) {
             ClearCLBuffer input = ((ClearCLBuffer) args[0]);
             ClearCLBuffer output = ((ClearCLBuffer) args[1]);
 

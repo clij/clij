@@ -23,7 +23,7 @@ public class MaximumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
         int kernelSizeX = radiusToKernelSize(asInteger(args[2]));
         int kernelSizeY = radiusToKernelSize(asInteger(args[3]));
 
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.maximumSliceBySliceSphere(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), kernelSizeX, kernelSizeY);
         } else {
             Object[] args = openCLBufferArgs();

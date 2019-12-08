@@ -23,7 +23,7 @@ public class DilateBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
 
     @Override
     public boolean executeCL() {
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             return Kernels.dilateBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             Object[] args = openCLBufferArgs();

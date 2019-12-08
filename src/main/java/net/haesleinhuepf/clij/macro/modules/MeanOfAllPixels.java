@@ -21,7 +21,7 @@ public class MeanOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlug
     public boolean executeCL() {
         double sum = 0;
         double numberOfPixels = 0;
-        if (containsCLImageArguments()) {
+        if (containsCLImageArguments() && clij.hasImageSupport()) {
             ClearCLImage image = (ClearCLImage)( args[0]);
             sum = Kernels.sumPixels(clij, image);
             numberOfPixels = image.getWidth() * image.getHeight() * image.getDepth();

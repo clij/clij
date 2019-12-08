@@ -21,11 +21,13 @@ public class Mean2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
         int radiusX = asInteger(args[2]);
         int radiusY = asInteger(args[3]);
 
-        if (containsCLBufferArguments()) {
-            boolean result = Kernels.meanBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, 0);
-            return result;
-        } else {
+        if (containsCLImageArguments()  && clij.hasImageSupport()) {
             return Kernels.meanBox(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]), radiusX, radiusY, 0);
+        } else {
+            Object[] args = openCLBufferArgs();
+            boolean result = Kernels.meanBox(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), radiusX, radiusY, 0);
+            releaseBuffers(args);
+            return result;
         }
     }
 

@@ -26,7 +26,7 @@ public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroP
         int nY = sigmaToKernelSize(sigmaY);
 
         if (containsCLBufferArguments()) {
-            if (clij.getOpenCLVersion() < 1.2) {
+            if (!clij.hasImageSupport()) {
                 return Kernels.blurSliceBySlice(clij, (ClearCLBuffer) (args[0]), (ClearCLBuffer) (args[1]), nX, nY, sigmaX, sigmaY);
             } else {
                 // convert all arguments to CLImages
