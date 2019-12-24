@@ -4,6 +4,7 @@ CLIJ is an OpenCL - ImageJ bridge and a [Fiji](https://fiji.sc/) plugin allowing
 to build GPU-accelerated workflows to speed up their image processing. Increased efforts were put on documentation, code examples, interoperability, and extensibility.
 CLIJ is based on 
 [ClearCL](http://github.com/ClearControl/ClearCL), 
+[JOCL](http://github.com/gpu/JOCL), 
 [Imglib2](https://github.com/imglib), 
 [ImageJ](http://imagej.net) and 
 [SciJava](https://github.com/SciJava).
