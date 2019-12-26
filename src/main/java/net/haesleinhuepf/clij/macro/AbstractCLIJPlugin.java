@@ -33,8 +33,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
     protected String name;
     public AbstractCLIJPlugin() {
         this.name = CLIJUtilities.classToName(this.getClass());
-        if (!this.getClass().getPackage().toString().contains(".clij.")) {
+        if (this.getClass().getPackage().toString().contains(".clijx.")) {
             this.name = this.name.replace("CLIJ_", "CLIJx_");
+        } else if (this.getClass().getPackage().toString().contains(".clij2.")) {
+            this.name = this.name.replace("CLIJ_", "CLIJ2_");
         }
     }
 
@@ -171,7 +173,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return false;
     }
 
-    protected Float asFloat(Object number) {
+    protected static Float asFloat(Object number) {
         if (number instanceof Float ) {
             return (Float)number;
         } else {
@@ -180,8 +182,8 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
     }
 
 
-    protected Boolean asBoolean(Object object) {
-        System.out.println("asBoolean " + object);
+    protected static Boolean asBoolean(Object object) {
+        //System.out.println("asBoolean " + object);
         if (object instanceof Boolean ) {
             return (Boolean) object;
         } else if (object instanceof Double) {
@@ -194,7 +196,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         }
     }
 
-    protected Integer asInteger(Object number) {
+    protected static Integer asInteger(Object number) {
         if (number instanceof Integer ) {
             return (Integer)number;
         } else {
