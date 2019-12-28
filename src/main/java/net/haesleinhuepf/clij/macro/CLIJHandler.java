@@ -162,6 +162,14 @@ public class CLIJHandler implements MacroExtension {
         bufferMap.put(nameInCache, buffer);
     }
 
+    @Deprecated
+    public ClearCLBuffer getFromCache(String nameInCache) {
+        if (bufferMap.containsKey(nameInCache)) {
+            return bufferMap.get(nameInCache);
+        }
+        return null;
+    }
+
     ClearCLBuffer getFromCacheOrCreateByPlugin(String nameInCache, CLIJMacroPlugin plugin, ClearCLBuffer template) {
         if (bufferMap.containsKey(nameInCache)) {
             return bufferMap.get(nameInCache);
