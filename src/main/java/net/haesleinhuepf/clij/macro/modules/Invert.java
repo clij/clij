@@ -23,12 +23,12 @@ public class Invert extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
             return Kernels.invert(clij, (ClearCLImage)( args[0]), (ClearCLImage)(args[1]));
         } else {
             // convert everything to images
-            Object[] args = openCLImageArgs();
+            //Object[] args = openCLBufferArgs();
             boolean result = Kernels.invert(clij, (ClearCLBuffer)( args[0]), (ClearCLBuffer)(args[1]));
             // copy result back to the buffer
-            Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
+            //Kernels.copy(clij, (ClearCLImage)args[1], (ClearCLBuffer)this.args[1]);
             // cleanup
-            releaseImages(args);
+            //releaseImages(args);
             return result;
         }
     }
