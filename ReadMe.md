@@ -14,7 +14,7 @@ CLIJ is based on
 Robert Haase, Loic Alain Royer, Peter Steinbach, Deborah Schmidt, 
 Alexandr Dibrov, Uwe Schmidt, Martin Weigert, Nicola Maghelli, Pavel Tomancak, 
 Florian Jug, Eugene W Myers. 
-*CLIJ: GPU-accelerated image processing for everyone*. [Nat Methods (2019) doi:10.1038/s41592-019-0650-1](https://doi.org/10.1038/s41592-019-0650-1)
+*CLIJ: GPU-accelerated image processing for everyone*. [Nat Methods 17, 5–6 (2020) doi:10.1038/s41592-019-0650-1](https://doi.org/10.1038/s41592-019-0650-1)
 
 [Older version in BioRxiv](https://doi.org/10.1101/660704)
 
