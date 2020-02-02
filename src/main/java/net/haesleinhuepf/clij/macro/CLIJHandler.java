@@ -238,6 +238,14 @@ public class CLIJHandler implements MacroExtension {
         return pushInternal(temp, arg);
     }
 
+    public ClearCLBuffer pushCurrentSelectionToGPU(String arg) {
+        ImagePlus imp = WindowManager.getImage(arg);
+        imp.changes = false;
+
+        ClearCLBuffer temp = CLIJ.getInstance().pushCurrentSelection(imp);
+        return pushInternal(temp, arg);
+    }
+
     public ClearCLBuffer pushCurrentZStackToGPU(String arg) {
         ImagePlus imp = WindowManager.getImage(arg);
         imp.changes = false;
