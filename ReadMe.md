@@ -54,6 +54,12 @@ If you search for support, please open a thread on the [image.sc](https://image.
   * [Java](https://github.com/clij/clij-docs/tree/master/src/main/java/net/haesleinhuepf/clij/examples)
   * [ImageJ Ops in Java](https://github.com/clij/clij-ops/tree/master/src/test/java/net/haesleinhuepf/clij/ops/examples)
   * [ImageJ Ops in Jython](https://github.com/clij/clij-ops/tree/master/src/test/resources/jython)
+* Slides
+  * [NEUBIAS Symposium 2020, Bordeaux](https://git.mpi-cbg.de/rhaase/clij_neubias_2020)
+  * [NEUBIAS Training School TS14, Bordeaux](https://git.mpi-cbg.de/rhaase/neubias_ts14)
+  * [MTZ Image Processing Seminar, TU Dresden](https://git.mpi-cbg.de/rhaase/clij_mtz_2020)
+  * [Quantitative BioImaging Conference 2020, Oxford](slides/2020-01-QBI_SmartMicroscopy_Haase_V2.pdf)
+  * [NEUBIAS Training School TS13, Porto](https://git.mpi-cbg.de/rhaase/neubias_ts14)
 * Benchmarking
   * [Benchmarking CLIJ operations versus ImageJ/Fiji operations using JMH](https://clij.github.io/clij-benchmarking/benchmarking_operations_jmh)
   * [Benchmarking CLIJ operations versus ImageJ/Fiji operations (archived)](https://clij.github.io/clij-benchmarking/benchmarking_operations)
@@ -98,6 +104,7 @@ Juergen Gluch (Fraunhofer IKTS),
 Kota Miura,
 Laurent Thomas (Acquifer), 
 Matthew Foley (University of Sydney),
+Matthias Arzt (MPI-CBG),
 Nico Stuurman (UCSF),
 Peter Haub,
 Pete Bankhead (University of Edinburgh),
