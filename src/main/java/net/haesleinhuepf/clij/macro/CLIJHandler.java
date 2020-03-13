@@ -254,7 +254,8 @@ public class CLIJHandler implements MacroExtension {
         return pushInternal(temp, arg);
     }
 
-    private ClearCLBuffer pushInternal(ClearCLBuffer temp, String arg) {
+    @Deprecated
+    public ClearCLBuffer pushInternal(ClearCLBuffer temp, String arg) {
         if (bufferMap.containsKey(arg)) {
             ClearCLBuffer preExistingBuffer = bufferMap.get(arg);
 
