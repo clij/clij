@@ -71,8 +71,17 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
 
         if (parameters.length > 1 || parameters[0].length() > 0) {
             parameterTypes = new int[parameters.length];
-            int i = 0;
-            for (String parameter : parameters) {
+            //int i = 0;
+            for (int i = 0; i < parameters.length; i++) {
+//            for (String parameter : parameters) {
+              String parameter = parameters[i].trim();
+              boolean byref = false;
+              if (parameter.startsWith("ByRef")) {
+                  parameter = parameter.substring(5).trim();
+                  byref = true;
+              }
+              byref = byref && CLIJHandler.automaticOutputVariableNaming;
+
                 if (parameter.trim().startsWith("Image")) {
                     parameterTypes[i] = MacroExtension.ARG_STRING;
                 } else if (parameter.trim().startsWith("String")) {
@@ -82,7 +91,11 @@ public class CLIJMacroPluginService  extends AbstractPTService<CLIJMacroPlugin> 
                 } else {
                     parameterTypes[i] = MacroExtension.ARG_NUMBER;
                 }
-                i++;
+
+                if (byref) {
+                    parameterTypes[i] = parameterTypes[i] | MacroExtension.ARG_OUTPUT;
+                }
+  //              i++;
             }
         }
         return new ExtensionDescriptor(name, parameterTypes, CLIJHandler.getInstance());

@@ -25,6 +25,8 @@ import java.util.HashMap;
  * December 2018
  */
 public class CLIJHandler implements MacroExtension {
+    public static boolean automaticOutputVariableNaming = false;
+
     static CLIJHandler instance = null;
     private CLIJMacroPluginService pluginService = null;
 
@@ -47,7 +49,6 @@ public class CLIJHandler implements MacroExtension {
 
     @Override
     public String handleExtension(String name, Object[] args) {
-
         ElapsedTime.measure("exec " + name, () -> {
             ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
             HashMap<Integer, String> missingImageIndices = new HashMap<Integer, String>();
@@ -71,12 +72,19 @@ public class CLIJHandler implements MacroExtension {
                         if (args[i] instanceof Double) {
                             parsedArguments[i] = args[i];
                         } else {
-                            if (pluginParameters[i].trim().startsWith("Image")) {
-                                ClearCLBuffer bufferImage = bufferMap.get(args[i]);
+                            String parameterType = pluginParameters[i].trim();
+                            boolean byRef = false;
+                            if (parameterType.startsWith("ByRef")) {
+                                parameterType = parameterType.substring(5).trim();
+                                byRef = true;
+                            }
+                            if (parameterType.startsWith("Image")) {
+                                String argument = byRef?handleByRefArgument(name, args[i]):(String)args[i];
+                                ClearCLBuffer bufferImage = bufferMap.get(argument);
                                 if (bufferImage == null) {
-                                    missingImageIndices.put(i, (String) args[i]);
+                                    missingImageIndices.put(i, argument);
                                     missingImageIndicesDescriptions.put(i, pluginParameters[i]);
-                                    parsedArguments[i] = (String) args[i];
+                                    parsedArguments[i] = argument;
                                 } else {
                                     existingImageIndices.add(i);
                                     parsedArguments[i] = bufferImage;
@@ -154,6 +162,22 @@ public class CLIJHandler implements MacroExtension {
             }
         });
         return null;
+    }
+
+    private int imageCounter = 0;
+    private String handleByRefArgument(String methodName, Object arg) {
+        if (arg instanceof String[]) {
+            String firstArg = ((String[])arg)[0];
+            if (firstArg == null || firstArg.length() == 0) {
+                imageCounter = imageCounter + 1;
+                ((String[])arg)[0] = methodName + "_result" + imageCounter;
+                return ((String[])arg)[0];
+            } else {
+                return firstArg;
+            }
+        } else {
+            return (String)arg;
+        }
     }
 
     @Deprecated

@@ -268,8 +268,14 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 String[] parameterParts = parameters[i].trim().split(" ");
                 String parameterType = parameterParts[0];
                 String parameterName = parameterParts[1];
+                boolean byRef = false;
+                if (parameterType.compareTo("ByRef") == 0) {
+                    parameterType = parameterParts[1];
+                    parameterName = parameterParts[2];
+                    byRef = true;
+                }
                 if (parameterType.compareTo("Image") == 0) {
-                    if (!parameterName.contains("destination")) {
+                    if (!parameterName.contains("destination") || byRef) {
                         gd.addImageChoice(parameterName, IJ.getImage().getTitle());
                     }
                 } else if (parameterType.compareTo("String") == 0) {
@@ -325,8 +331,14 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 String[] parameterParts = parameters[i].trim().split(" ");
                 String parameterType = parameterParts[0];
                 String parameterName = parameterParts[1];
+                boolean byRef = false;
+                if (parameterType.compareTo("ByRef") == 0) {
+                    parameterType = parameterParts[1];
+                    parameterName = parameterParts[2];
+                    byRef = true;
+                }
                 if (parameterType.compareTo("Image") == 0) {
-                    if (parameterName.contains("destination")) {
+                    if (parameterName.contains("destination") || byRef) {
                         // Creation of output buffers needs to be done after all other parameters have been read.
                         String destinationName = name + "_" + parameterName + "_" + firstImageTitle;
                         calledParameters = calledParameters + "\"" + destinationName + "\"";
@@ -360,8 +372,14 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 String[] parameterParts = parameters[i].trim().split(" ");
                 String parameterType = parameterParts[0];
                 String parameterName = parameterParts[1];
+                boolean byRef = false;
+                if (parameterType.compareTo("ByRef") == 0) {
+                    parameterType = parameterParts[1];
+                    parameterName = parameterParts[2];
+                    byRef = true;
+                }
                 if (parameterType.compareTo("Image") == 0) {
-                    if (parameterName.contains("destination")) {
+                    if (parameterName.contains("destination") || byRef) {
                         ClearCLBuffer template = null;
                         if (allBuffers.size() > 0) {
                             template = allBuffers.get(0);
