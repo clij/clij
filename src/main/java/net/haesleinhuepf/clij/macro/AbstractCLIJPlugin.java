@@ -275,7 +275,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     byRef = true;
                 }
                 if (parameterType.compareTo("Image") == 0) {
-                    if (!parameterName.contains("destination") || byRef) {
+                    if (!(parameterName.contains("destination") || byRef)) {
                         gd.addImageChoice(parameterName, IJ.getImage().getTitle());
                     }
                 } else if (parameterType.compareTo("String") == 0) {
@@ -319,6 +319,16 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
         recordIfNotRecorded("run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
 
+        String className = this.getClass().getSimpleName();
+        className = className.replace("2D", "");
+        className = className.replace("3D", "");
+        className = className.replace("Box", "");
+        className = className.replace("Sphere", "");
+        className = className.replace("Diamond", "");
+        className = makeNiceName(className, " ");
+        className = className.substring(1);
+        record(("\n// " + className).replace("  ", " "));
+
         ArrayList<ClearCLBuffer> allBuffers = new ArrayList<ClearCLBuffer>();
 
         HashMap<String, ClearCLBuffer> destinations = new HashMap<String, ClearCLBuffer>();
@@ -337,32 +347,39 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     parameterName = parameterParts[2];
                     byRef = true;
                 }
+                String parameterNiceName = makeNiceName(parameterName, "_");
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination") || byRef) {
                         // Creation of output buffers needs to be done after all other parameters have been read.
-                        String destinationName = name + "_" + parameterName + "_" + firstImageTitle;
-                        calledParameters = calledParameters + "\"" + destinationName + "\"";
+                        String destinationName = getImageVariableName(className.replace(" ", "_") + (name + "_" + parameterName + "_" + firstImageTitle).hashCode());
+                        calledParameters = calledParameters + destinationName;
                     } else {
                         ImagePlus imp = gd.getNextImage();
                         if (firstImageTitle.length() == 0) {
                             firstImageTitle = imp.getTitle();
                         }
-                        recordIfNotRecorded("Ext.CLIJ_push", "\"" + imp.getTitle() + "\"");
+
+                        String variable = getImageVariableName(imp.getTitle());
+
+                        recordIfNotRecorded("Ext.CLIJ_push", variable);
                         args[i] = CLIJHandler.getInstance().pushToGPU(imp.getTitle());
                                 //clij.convert(imp, ClearCLBuffer.class);
                         allBuffers.add((ClearCLBuffer) args[i]);
-                        calledParameters = calledParameters + "\"" + imp.getTitle() + "\"";
+                        calledParameters = calledParameters + variable;
                     }
                 } else if (parameterType.compareTo("String") == 0) {
                     args[i] = gd.getNextString();
-                    calledParameters = calledParameters + "\"" + args[i] + "\"";
+                    record(parameterNiceName + " = \"" + args[i] + "\";");
+                    calledParameters = calledParameters + parameterNiceName;
                 } else if (parameterType.compareTo("Boolean") == 0) {
                     boolean value = gd.getNextBoolean();
                     args[i] = value ? 1.0 : 0.0;
-                    calledParameters = calledParameters + (value ? "true" : "false");
+                    record(parameterNiceName + " = " + (value ? "true" : "false") + ";");
+                    calledParameters = calledParameters + parameterNiceName;
                 } else { // Number
                     args[i] = gd.getNextNumber();
-                    calledParameters = calledParameters + args[i];
+                    record(parameterNiceName + " = " + args[i] + ";");
+                    calledParameters = calledParameters + parameterNiceName;
                 }
                 if (calledParameters.length() > 0 && i < parameters.length - 1) {
                     calledParameters = calledParameters + ", ";
@@ -378,6 +395,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     parameterName = parameterParts[2];
                     byRef = true;
                 }
+                String parameterNiceName = makeNiceName(parameterName, "_");
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination") || byRef) {
                         ClearCLBuffer template = null;
@@ -385,7 +403,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                             template = allBuffers.get(0);
                         }
 
-                        String destinationName = name + "_" + parameterName + "_" + firstImageTitle;
+                        String destinationName = className.replace(" ", "_") + (name + "_" + parameterName + "_" + firstImageTitle).hashCode(); // name + "_" + parameterName + "_" + firstImageTitle;
                         ClearCLBuffer destination = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(destinationName, this, template);
                         args[i] = destination;
                         allBuffers.add(destination);
@@ -404,7 +422,8 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         record("Ext." + name, calledParameters);
 
         for (String destinationName : destinations.keySet()) {
-            record("Ext.CLIJ_pull", "\"" + destinationName + "\"");
+            String variable = getImageVariableName(destinationName);
+            record("Ext.CLIJ_pull", variable);
         }
 
         Recorder.setCommand(null);
@@ -421,6 +440,38 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         }
     }
 
+    private String makeNiceName(String className, String spacer) {
+        StringBuilder niceName = new StringBuilder();
+        for (int i = 0; i < className.length(); i++){
+            if (className.substring(i,i+1).compareTo("_") == 0) {
+                niceName.append(spacer);
+            } else {
+                if (className.substring(i, i + 1).compareTo(className.substring(i, i + 1).toLowerCase()) != 0) {
+                    niceName.append(spacer);
+                }
+                niceName.append(className.substring(i, i + 1).toLowerCase());
+            }
+        }
+        return niceName.toString();
+    }
+
+    private static int imageCounter = 0;
+    protected String getImageVariableName(String destinationName) {
+        String text = Recorder.getInstance().getText();
+        String searchString = " = \"" + destinationName + "\";";
+        if (text.contains(searchString)) {
+            String[] temp = text.split(searchString);
+            temp = temp[0].split("\n");
+            return temp[temp.length - 1];
+        } else {
+            imageCounter++;
+            String imageName = "image" + imageCounter;
+            record(imageName + searchString);
+            return imageName;
+        }
+
+    }
+
     private void recordIfNotRecorded(String recordMethod, String recordParameters) {
         if (Recorder.getInstance() == null) {
             return;
@@ -432,11 +483,30 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         record(recordMethod, recordParameters);
     }
 
+    private void recordIfNotRecorded(String textToRecord) {
+        if (Recorder.getInstance() == null) {
+            return;
+        }
+        String text = Recorder.getInstance().getText();
+        if (text.contains(textToRecord)) {
+            return;
+        }
+        record(textToRecord);
+    }
+
     private void record(String recordMethod, String recordParameters) {
         if (Recorder.getInstance() == null) {
             return;
         }
         Recorder.recordString(recordMethod + "(" + recordParameters + ");\n");
+        Recorder.record = true;
+    }
+
+    private void record(String text) {
+        if (Recorder.getInstance() == null) {
+            return;
+        }
+        Recorder.recordString(text + "\n");
         Recorder.record = true;
     }
 
