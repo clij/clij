@@ -457,6 +457,9 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
     private static int imageCounter = 0;
     protected String getImageVariableName(String destinationName) {
+        if (Recorder.getInstance() == null) {
+            return "";
+        }
         String text = Recorder.getInstance().getText();
         String searchString = " = \"" + destinationName + "\";";
         if (text.contains(searchString)) {
