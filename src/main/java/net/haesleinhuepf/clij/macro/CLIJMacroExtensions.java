@@ -35,7 +35,6 @@ public class CLIJMacroExtensions implements Command {
 
         GenericDialog gd = new GenericDialog("CLIJ");
         gd.addChoice("CL_Device", deviceArray, deviceArray[0]);
-        gd.addCheckbox("automatic_output_naming", CLIJHandler.automaticOutputVariableNaming);
         gd.showDialog();
 
         if (gd.wasCanceled()) {
@@ -44,7 +43,6 @@ public class CLIJMacroExtensions implements Command {
 
         // macro extensions and converters must use the same CLIJ instance in order to make everything run on the same GPU.
         CLIJ clij = CLIJ.getInstance(gd.getNextChoice());
-        CLIJHandler.automaticOutputVariableNaming = gd.getNextBoolean();
 
         clijConverterService.setCLIJ(clij);
         clij.setConverterService(clijConverterService);
