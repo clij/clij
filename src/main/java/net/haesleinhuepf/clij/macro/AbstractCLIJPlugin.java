@@ -317,7 +317,11 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         clij = CLIJ.getInstance(deviceName);
         //CLIJHandler.getInstance().setCLIJ(clij);
 
-        recordIfNotRecorded("run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
+        if (this.getClass().getPackage().toString().contains(".clij2.")) {
+            recordIfNotRecorded("run", "\"CLIJ2 Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
+        } else {
+            recordIfNotRecorded("run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
+        }
 
         String className = this.getClass().getSimpleName();
         className = className.replace("2D", "");
@@ -333,7 +337,15 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
         HashMap<String, ClearCLBuffer> destinations = new HashMap<String, ClearCLBuffer>();
 
-        String firstImageTitle = "";
+        String allParametersAsString = "";
+        if (parameters.length > 0 && parameters[0].length() > 0) {
+            for (int i = 0; i < parameters.length; i++) {
+                String temp = args[i]!=null?args[i].toString():"";
+                allParametersAsString = allParametersAsString + "#" + parameters[i].trim().replace(" ", "%") + temp;
+            }
+        }
+
+        //String firstImageTitle = "";
         String calledParameters = "";
 
         if (parameters.length > 0 && parameters[0].length() > 0) {
@@ -351,13 +363,13 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination") || byRef) {
                         // Creation of output buffers needs to be done after all other parameters have been read.
-                        String destinationName = getImageVariableName(className.replace(" ", "_") + (name + "_" + parameterName + "_" + firstImageTitle).hashCode());
+                        String destinationName = getImageVariableName(className.replace(" ", "_") + (name + "_" + parameterName + "_" + allParametersAsString).hashCode());
                         calledParameters = calledParameters + destinationName;
                     } else {
                         ImagePlus imp = gd.getNextImage();
-                        if (firstImageTitle.length() == 0) {
-                            firstImageTitle = imp.getTitle();
-                        }
+                        //if (firstImageTitle.length() == 0) {
+                        //    firstImageTitle = imp.getTitle();
+                        //}
 
                         String variable = getImageVariableName(imp.getTitle());
 
@@ -403,7 +415,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                             template = allBuffers.get(0);
                         }
 
-                        String destinationName = className.replace(" ", "_") + (name + "_" + parameterName + "_" + firstImageTitle).hashCode(); // name + "_" + parameterName + "_" + firstImageTitle;
+                        String destinationName = className.replace(" ", "_") + (name + "_" + parameterName + "_" + allParametersAsString).hashCode(); // name + "_" + parameterName + "_" + firstImageTitle;
                         ClearCLBuffer destination = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(destinationName, this, template);
                         args[i] = destination;
                         allBuffers.add(destination);
@@ -480,7 +492,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             return;
         }
         String text = Recorder.getInstance().getText();
-        if (text.contains(recordMethod) && text.contains(recordParameters)) {
+        if ( (
+                text.contains(recordMethod.replace("CLIJ", "CLIJ2")) ||
+                text.contains(recordMethod.replace("CLIJ2", "CLIJ"))) &&
+            text.contains(recordParameters)) {
             return;
         }
         record(recordMethod, recordParameters);

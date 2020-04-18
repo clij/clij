@@ -29,9 +29,16 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
         ArrayList<BasicCompletion> completions = new ArrayList<BasicCompletion>();
         for (String key : pluginService.getCLIJMethodNames()) {
             CLIJMacroPlugin plugin = pluginService.getCLIJMacroPlugin(key);
+
+
+            String parametersMacro = plugin.getParameterHelpText();
+            parametersMacro = parametersMacro.replace(" ", "_");
+            parametersMacro = parametersMacro.replace(",_", ", ");
+            parametersMacro = parametersMacro.replace("ByRef_", "");
+
             String headline =
                     "Ext." + key + "(" +
-                    plugin.getParameterHelpText() +
+                    parametersMacro +
                     ");";
 
             String description = headline;
