@@ -1,12 +1,9 @@
 package net.haesleinhuepf.clij.macro;
 
+import ij.*;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.Macro;
-import ij.WindowManager;
 import ij.gui.GenericDialog;
 import ij.macro.ExtensionDescriptor;
 import ij.macro.MacroExtension;
@@ -49,6 +46,10 @@ public class CLIJHandler implements MacroExtension {
 
     @Override
     public String handleExtension(String name, Object[] args) {
+        if (MacroHook.wasAborted()) {
+            throw new RuntimeException("Macro aborted");
+        }
+
         ElapsedTime.measure("exec " + name, () -> {
             ArrayList<Integer> existingImageIndices = new ArrayList<Integer>();
             HashMap<Integer, String> missingImageIndices = new HashMap<Integer, String>();
@@ -148,6 +149,16 @@ public class CLIJHandler implements MacroExtension {
                 }
 
                 if (allImagesSet) {
+                    if (CLIJHandler.automaticOutputVariableNaming == true && plugin.getClass().getPackage().toString().contains(".clij.")) {
+                        System.out.println("CLIJ2 warning: You are accessing a CLIJ plugin (" + plugin.getName() + ") via CLIJ2 macro extensions.\nYou may have to turn image names hand over as strings to variables holding these strings.");
+                    } else if (CLIJHandler.automaticOutputVariableNaming == false && plugin.getClass().getPackage().toString().contains(".clij2.")) {
+                        System.out.println("CLIJ2 error: You are accessing a CLIJ2 plugin (" + plugin.getName() + ") via CLIJ macro extensions.\nPlease make sure you run \"CLIJ2 Macro Extensions\" before calling Ext.CLIJ2 plugins.");
+                        Macro.abort();
+                    } else if (CLIJHandler.automaticOutputVariableNaming == false && plugin.getClass().getPackage().toString().contains(".clijx.")) {
+                        System.out.println("CLIJx warning: You are accessing a CLIJx plugin (" + plugin.getName() + ") via CLIJ macro extensions.\nPlease make sure you run \"CLIJ2 Macro Extensions\" before calling Ext.CLIJ2 plugins.");
+                    }
+
+
                     if (plugin instanceof CLIJOpenCLProcessor) {
                         ((CLIJOpenCLProcessor) plugin).executeCL();
                     } else {

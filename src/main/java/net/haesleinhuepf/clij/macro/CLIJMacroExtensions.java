@@ -43,6 +43,7 @@ public class CLIJMacroExtensions implements Command {
 
         // macro extensions and converters must use the same CLIJ instance in order to make everything run on the same GPU.
         CLIJ clij = CLIJ.getInstance(gd.getNextChoice());
+        CLIJHandler.automaticOutputVariableNaming = false;
 
         clijConverterService.setCLIJ(clij);
         clij.setConverterService(clijConverterService);

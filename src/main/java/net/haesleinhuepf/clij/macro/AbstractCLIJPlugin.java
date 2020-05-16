@@ -1,5 +1,7 @@
 package net.haesleinhuepf.clij.macro;
 
+import ij.Macro;
+import ij.MacroHook;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import fiji.util.gui.GenericDialogPlus;
@@ -48,6 +50,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         this.args = args;
     }
 
+    @Deprecated
     protected Object[] imageJArgs() {
         Object[] result = new Object[args.length];
         int i = 0;
@@ -68,6 +71,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return result;
     }
 
+    @Deprecated
     protected Object[] openCLBufferArgs() {
         Object[] result = new Object[args.length];
         int i = 0;
@@ -88,6 +92,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return result;
     }
 
+    @Deprecated
     protected Object[] openCLImageArgs() {
         Object[] result = new Object[args.length];
         int i = 0;
@@ -110,6 +115,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return result;
     }
 
+    @Deprecated
     protected Object[] imageJ2Args() {
         Object[] result = new Object[args.length];
         int i = 0;
@@ -130,6 +136,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return result;
     }
 
+    @Deprecated
     protected boolean containsCLImageArguments() {
         for (Object item : args) {
             if (item instanceof ClearCLImage) {
@@ -153,7 +160,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         }
     }
 
-
+    @Deprecated
     protected void releaseBuffers(Object[] args) {
         for (int i = 0; i < args.length; i ++) {
             Object item = args[i];
@@ -163,7 +170,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         }
     }
 
-
+    @Deprecated
     protected boolean containsCLBufferArguments() {
         for (Object item : args) {
             if (item instanceof ClearCLBuffer) {
@@ -173,7 +180,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         return false;
     }
 
-    protected static Float asFloat(Object number) {
+    public static Float asFloat(Object number) {
         if (number instanceof Float ) {
             return (Float)number;
         } else {
@@ -182,7 +189,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
     }
 
 
-    protected static Boolean asBoolean(Object object) {
+    public static Boolean asBoolean(Object object) {
         //System.out.println("asBoolean " + object);
         if (object instanceof Boolean ) {
             return (Boolean) object;
@@ -196,7 +203,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         }
     }
 
-    protected static Integer asInteger(Object number) {
+    public static Integer asInteger(Object number) {
         if (number instanceof Integer ) {
             return (Integer)number;
         } else {
@@ -373,7 +380,11 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
                         String variable = getImageVariableName(imp.getTitle());
 
-                        recordIfNotRecorded("Ext.CLIJ_push", variable);
+                        if (name.contains("CLIJ2_")) {
+                            recordIfNotRecorded("Ext.CLIJ2_push", variable);
+                        } else {
+                            recordIfNotRecorded("Ext.CLIJ_push", variable);
+                        }
                         args[i] = CLIJHandler.getInstance().pushToGPU(imp.getTitle());
                                 //clij.convert(imp, ClearCLBuffer.class);
                         allBuffers.add((ClearCLBuffer) args[i]);
@@ -425,6 +436,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
             }
         }
 
+
         if (this instanceof CLIJOpenCLProcessor) {
             ((CLIJOpenCLProcessor)this).executeCL();
         } else if (this instanceof CLIJImageJProcessor) {
@@ -435,7 +447,11 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
         for (String destinationName : destinations.keySet()) {
             String variable = getImageVariableName(destinationName);
-            record("Ext.CLIJ_pull", variable);
+            if (name.contains("CLIJ2_")) {
+                record("Ext.CLIJ2_pull", variable);
+            } else {
+                record("Ext.CLIJ_pull", variable);
+            }
         }
 
         Recorder.setCommand(null);
