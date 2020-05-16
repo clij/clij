@@ -48,6 +48,10 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
                         new HTMLDocumentationTemplate(((OffersDocumentation) plugin).getDescription(), ((OffersDocumentation) plugin).getAvailableForDimensions(), plugin).toString(true) +
                         "</body></html>";
 
+                if (description.contains("DEPRECATED")) {
+                    headline = headline + " // This method is deprecated. Check the documentation for a replacement https://clij.github.io/clij2-docs/";
+                }
+
             }
 
             BasicCompletion basicCompletion = new BasicCompletion(completionProvider, headline, null, description);
