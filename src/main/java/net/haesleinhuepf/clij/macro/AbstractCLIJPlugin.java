@@ -1,7 +1,5 @@
 package net.haesleinhuepf.clij.macro;
 
-import ij.Macro;
-import ij.MacroHook;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import fiji.util.gui.GenericDialogPlus;
@@ -19,7 +17,6 @@ import net.imglib2.RandomAccessibleInterval;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -32,7 +29,7 @@ import java.util.HashMap;
 public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugin {
     protected CLIJ clij;
     protected Object[] args;
-    protected Object[] default_values = null;
+    protected static Object[] default_values = null;
 
     protected String name;
     public AbstractCLIJPlugin() {
@@ -301,7 +298,6 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                         gd.addCheckbox(parameterName, true);
                     }
                 } else { // Number
-                    IJ.log("default_values! " + default_values);
                     if (default_values != null) {
                         gd.addNumericField(parameterName, (Double)default_values[i], 2);
                     } else {
