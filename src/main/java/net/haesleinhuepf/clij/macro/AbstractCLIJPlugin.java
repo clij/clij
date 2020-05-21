@@ -32,6 +32,8 @@ import java.util.HashMap;
 public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugin {
     protected CLIJ clij;
     protected Object[] args;
+    protected Object[] default_values = null;
+
     protected String name;
     public AbstractCLIJPlugin() {
         this.name = CLIJUtilities.classToName(this.getClass());
@@ -258,6 +260,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
     @Override
     public void run(ImageProcessor ip) {
+        default_values = getDefaultValues();
         GenericDialogPlus gd = new MyGenericDialogPlus(name);
 
         ArrayList<String> deviceList = CLIJ.getAvailableDeviceNames();
@@ -286,11 +289,24 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                         gd.addImageChoice(parameterName, IJ.getImage().getTitle());
                     }
                 } else if (parameterType.compareTo("String") == 0) {
-                    gd.addStringField(parameterName, "");
+                    if (default_values != null) {
+                        gd.addStringField(parameterName, (String)default_values[i], 2);
+                    } else {
+                        gd.addStringField(parameterName, "");
+                    }
                 } else if (parameterType.compareTo("Boolean") == 0) {
-                    gd.addCheckbox(parameterName, true);
+                    if (default_values != null) {
+                        gd.addCheckbox(parameterName, (Boolean)default_values[i]);
+                    } else {
+                        gd.addCheckbox(parameterName, true);
+                    }
                 } else { // Number
-                    gd.addNumericField(parameterName, 2, 2);
+                    IJ.log("default_values! " + default_values);
+                    if (default_values != null) {
+                        gd.addNumericField(parameterName, (Double)default_values[i], 2);
+                    } else {
+                        gd.addNumericField(parameterName, 2, 2);
+                    }
                 }
             }
         }
@@ -344,19 +360,23 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
         HashMap<String, ClearCLBuffer> destinations = new HashMap<String, ClearCLBuffer>();
 
-        String allParametersAsString = "";
-        if (parameters.length > 0 && parameters[0].length() > 0) {
-            for (int i = 0; i < parameters.length; i++) {
-                String temp = args[i]!=null?args[i].toString():"";
-                allParametersAsString = allParametersAsString + "#" + parameters[i].trim().replace(" ", "%") + temp;
-            }
-        }
 
+        String allParametersAsString = "";
         //String firstImageTitle = "";
         String calledParameters = "";
 
         if (parameters.length > 0 && parameters[0].length() > 0) {
             for (int i = 0; i < parameters.length; i++) {
+
+                allParametersAsString = "";
+                if (parameters.length > 0 && parameters[0].length() > 0) {
+                    for (int j = 0; j < parameters.length; j++) {
+                        String temp = args[j]!=null?args[j].toString():"";
+                        allParametersAsString = allParametersAsString + "#" + parameters[j].trim().replace(" ", "%") + temp;
+                    }
+                }
+
+
                 String[] parameterParts = parameters[i].trim().split(" ");
                 String parameterType = parameterParts[0];
                 String parameterName = parameterParts[1];
@@ -392,15 +412,24 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     }
                 } else if (parameterType.compareTo("String") == 0) {
                     args[i] = gd.getNextString();
+                    if (default_values != null) {
+                        default_values[i] = (String)args[i];
+                    }
                     record(parameterNiceName + " = \"" + args[i] + "\";");
                     calledParameters = calledParameters + parameterNiceName;
                 } else if (parameterType.compareTo("Boolean") == 0) {
                     boolean value = gd.getNextBoolean();
                     args[i] = value ? 1.0 : 0.0;
+                    if (default_values != null) {
+                        default_values[i] = Boolean.valueOf((boolean)args[i]);
+                    }
                     record(parameterNiceName + " = " + (value ? "true" : "false") + ";");
                     calledParameters = calledParameters + parameterNiceName;
                 } else { // Number
                     args[i] = gd.getNextNumber();
+                    if (default_values != null) {
+                        default_values[i] = Double.valueOf((double)args[i]);
+                    }
                     record(parameterNiceName + " = " + args[i] + ";");
                     calledParameters = calledParameters + parameterNiceName;
                 }
@@ -466,6 +495,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         if (!isMacro) {
             CLIJHandler.getInstance().clearGPU();
         }
+    }
+
+    protected Object[] getDefaultValues() {
+        return null;
     }
 
     private String makeNiceName(String className, String spacer) {
