@@ -293,13 +293,13 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     }
                 } else if (parameterType.compareTo("Boolean") == 0) {
                     if (default_values != null) {
-                        gd.addCheckbox(parameterName, (Boolean)default_values[i]);
+                        gd.addCheckbox(parameterName, Boolean.valueOf("" + default_values[i]));
                     } else {
                         gd.addCheckbox(parameterName, true);
                     }
                 } else { // Number
                     if (default_values != null) {
-                        gd.addNumericField(parameterName, (Double)default_values[i], 2);
+                        gd.addNumericField(parameterName, Double.valueOf("" + default_values[i]), 2);
                     } else {
                         gd.addNumericField(parameterName, 2, 2);
                     }
