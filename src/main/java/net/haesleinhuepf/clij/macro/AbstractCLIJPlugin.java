@@ -364,13 +364,6 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         if (parameters.length > 0 && parameters[0].length() > 0) {
             for (int i = 0; i < parameters.length; i++) {
 
-                allParametersAsString = "";
-                if (parameters.length > 0 && parameters[0].length() > 0) {
-                    for (int j = 0; j < parameters.length; j++) {
-                        String temp = args[j]!=null?args[j].toString():"";
-                        allParametersAsString = allParametersAsString + "#" + parameters[j].trim().replace(" ", "%") + temp;
-                    }
-                }
 
 
                 String[] parameterParts = parameters[i].trim().split(" ");
@@ -382,6 +375,15 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     parameterName = parameterParts[2];
                     byRef = true;
                 }
+
+                allParametersAsString = "";
+                if (parameters.length > 0 && parameters[0].length() > 0) {
+                    for (int j = 0; j < parameters.length; j++) {
+                        String temp = args[j]!=null?args[j].toString():"";
+                        allParametersAsString = allParametersAsString + "#" + parameters[j].trim().replace(" ", "%") + temp;
+                    }
+                }
+
                 String parameterNiceName = makeNiceName(parameterName, "_");
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination") || byRef) {
