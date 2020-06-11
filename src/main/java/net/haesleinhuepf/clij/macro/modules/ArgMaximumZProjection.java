@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_argMaximumZProjection")
 public class ArgMaximumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -42,7 +43,8 @@ public class ArgMaximumZProjection extends AbstractCLIJPlugin implements CLIJMac
     @Override
     public String getDescription() {
         return "Determines the maximum projection of an image stack along Z." +
-                "\nFurthermore, another 2D image is generated with pixels containing the z-index where the maximum was found (zero based).";
+                "\nFurthermore, another 2D image is generated with pixels containing the z-index where the maximum was found (zero based)." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -22,6 +22,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_create2D")
 public class Create2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -37,7 +38,8 @@ public class Create2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public String getDescription() {
-        return "Allocated memory for a new 2D image in the GPU memory. BitDepth must be 8 (unsigned byte), 16 (unsigned short) or 32 (float).";
+        return "Allocated memory for a new 2D image in the GPU memory. BitDepth must be 8 (unsigned byte), 16 (unsigned short) or 32 (float)." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean2DBox")
 public class Mean2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,8 @@ public class Mean2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
     @Override
     public String getDescription() {
         return "Computes the local mean average of a pixels rectangular neighborhood. The rectangles size is specified by \n" +
-                "its half-width and half-height (radius).";
+                "its half-width and half-height (radius)." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

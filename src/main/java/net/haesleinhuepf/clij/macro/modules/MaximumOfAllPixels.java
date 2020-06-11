@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximumOfAllPixels")
 public class MaximumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -43,7 +44,8 @@ public class MaximumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroP
     @Override
     public String getDescription() {
         return "Determines the maximum of all pixels in a given image. It will be stored in a new row of ImageJs\n" +
-                "Results table in the column 'Max'.";
+                "Results table in the column 'Max'." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

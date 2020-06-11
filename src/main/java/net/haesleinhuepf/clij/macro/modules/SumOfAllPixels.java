@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_sumOfAllPixels")
 public class SumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -43,7 +44,8 @@ public class SumOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlugi
     @Override
     public String getDescription() {
         return "Determines the sum of all pixels in a given image. It will be stored in a new row of ImageJs\n" +
-                "Results table in the column 'Sum'.";
+                "Results table in the column 'Sum'." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

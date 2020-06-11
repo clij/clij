@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_addImageAndScalar")
 public class AddImageAndScalar extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -35,7 +36,8 @@ public class AddImageAndScalar extends AbstractCLIJPlugin implements CLIJMacroPl
 
     @Override
     public String getDescription() {
-        return "Adds a scalar value s to all pixels x of a given image X.\n\n<pre>f(x, s) = x + s</pre>";
+        return "Adds a scalar value s to all pixels x of a given image X.\n\n<pre>f(x, s) = x + s</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_countNonZeroPixels2DSphere")
 public class CountNonZeroPixels2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class CountNonZeroPixels2DSphere extends AbstractCLIJPlugin implements CL
     @Override
     public String getDescription() {
         return "Counts non-zero pixels in a sphere around every pixel." +
-                "Put the number in the result image.";
+                "Put the number in the result image." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

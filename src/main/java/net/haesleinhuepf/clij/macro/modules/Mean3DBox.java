@@ -16,6 +16,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_mean3DBox")
 public class Mean3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -43,7 +44,8 @@ public class Mean3DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
     @Override
     public String getDescription() {
         return "Computes the local mean average of a pixels cube neighborhood. The cubes size is specified by \n" +
-                "its half-width, half-height and half-depth (radius).";
+                "its half-width, half-height and half-depth (radius)." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

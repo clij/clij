@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_invert")
 public class Invert extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -43,7 +44,8 @@ public class Invert extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         return "Computes the negative value of all pixels in a given image. It is recommended to convert images to \n" +
                 "32-bit float before applying this operation.\n\n" +
                 "<pre>f(x) = - x</pre>\n\n" +
-                "For binary images, use binaryNot.";
+                "For binary images, use binaryNot." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

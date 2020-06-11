@@ -18,6 +18,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeBoxSliceBySlice")
 public class ErodeBoxSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -45,7 +46,8 @@ public class ErodeBoxSliceBySlice extends AbstractCLIJPlugin implements CLIJMacr
                 "The pixels in the input image with pixel value not equal to 0 will be interpreted as 1.\n\n" +
                 "This method is comparable to the 'Erode' menu in ImageJ in case it is applied to a 2D image. The only\n" +
                 "difference is that the output image contains values 0 and 1 instead of 0 and 255.\n\n" +
-                "This filter is applied slice by slice in 2D.";
+                "This filter is applied slice by slice in 2D." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

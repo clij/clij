@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_meanOfAllPixels")
 public class MeanOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -48,7 +49,8 @@ public class MeanOfAllPixels extends AbstractCLIJPlugin implements CLIJMacroPlug
     @Override
     public String getDescription() {
         return "Determines the mean average of all pixels in a given image. It will be stored in a new row of ImageJs\n" +
-                "Results table in the column 'Mean'.";
+                "Results table in the column 'Mean'." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_power")
 public class Power extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -35,7 +36,8 @@ public class Power extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOp
 
     @Override
     public String getDescription() {
-        return "Computes all pixels value x to the power of a given exponent a.\n\n<pre>f(x, a) = x ^ a</pre>";
+        return "Computes all pixels value x to the power of a given exponent a.\n\n<pre>f(x, a) = x ^ a</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -15,6 +15,7 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximum2DSphere")
 public class Maximum2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -41,7 +42,8 @@ public class Maximum2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlug
     @Override
     public String getDescription() {
         return "Computes the local maximum of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
-                "its half-width and half-height (radius).";
+                "its half-width and half-height (radius)." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximumZProjection")
 public class MaximumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -41,7 +42,8 @@ public class MaximumZProjection extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getDescription() {
-        return "Determines the maximum projection of an image along Z.";
+        return "Determines the maximum projection of an image along Z." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

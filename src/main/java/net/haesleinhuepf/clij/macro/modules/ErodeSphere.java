@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeSphere")
 public class ErodeSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,8 @@ public class ErodeSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
     public String getDescription() {
         return "Computes a binary image with pixel values 0 and 1 containing the binary erosion of a given input image.\n" +
                 "The erosion takes the von-Neumann-neighborhood (4 pixels in 2D and 6 pixels in 3d) into account.\n" +
-                "The pixels in the input image with pixel value not equal to 0 will be interpreted as 1.";
+                "The pixels in the input image with pixel value not equal to 0 will be interpreted as 1." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

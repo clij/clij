@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_binaryAnd")
 public class BinaryAnd extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,8 @@ public class BinaryAnd extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
         return "Computes a binary image (containing pixel values 0 and 1) from two images X and Y by connecting pairs of\n" +
                 "pixels x and y with the binary AND operator &.\n" +
                 "All pixel values except 0 in the input images are interpreted as 1.\n\n" +
-                "<pre>f(x, y) = x & y</pre>";
+                "<pre>f(x, y) = x & y</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

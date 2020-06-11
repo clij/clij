@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_addImagesWeighted")
 public class AddImagesWeighted extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class AddImagesWeighted extends AbstractCLIJPlugin implements CLIJMacroPl
     @Override
     public String getDescription() {
         return "Calculates the sum of pairs of pixels x and y from images X and Y weighted with factors a and b." +
-                "\n\n<pre>f(x, y, a, b) = x * a + y * b</pre>";
+                "\n\n<pre>f(x, y, a, b) = x * a + y * b</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

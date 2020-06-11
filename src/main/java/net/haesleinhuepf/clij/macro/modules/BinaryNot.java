@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_binaryNot")
 public class BinaryNot extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,8 @@ public class BinaryNot extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
         return "Computes a binary image (containing pixel values 0 and 1) from an image X by negating its pixel values\n" +
                 "x using the binary NOT operator !\n" +
                 "All pixel values except 0 in the input image are interpreted as 1.\n\n" +
-                "<pre>f(x) = !x</pre>";
+                "<pre>f(x) = !x</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

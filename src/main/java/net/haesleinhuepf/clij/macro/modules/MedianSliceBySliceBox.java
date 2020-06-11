@@ -15,6 +15,7 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_medianSliceBySliceBox")
 public class MedianSliceBySliceBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -42,7 +43,8 @@ public class MedianSliceBySliceBox extends AbstractCLIJPlugin implements CLIJMac
     public String getDescription() {
         return "Computes the local median of a pixels rectangular neighborhood. This is done slice-by-slice in a 3D \n" +
                 "image stack. The rectangle is specified by its half-width and half-height (radius).\n\n" +
-                "For technical reasons, the area of the rectangle must have less than 1000 pixels.";
+                "For technical reasons, the area of the rectangle must have less than 1000 pixels." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

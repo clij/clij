@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_applyVectorField2D")
 public class ApplyVectorField2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -49,7 +50,8 @@ public class ApplyVectorField2D extends AbstractCLIJPlugin implements CLIJMacroP
     @Override
     public String getDescription() {
         return "Deforms an image according to distances provided in the given vector images. " +
-                "It is recommended to use 32-bit images for input, output and vector images. ";
+                "It is recommended to use 32-bit images for input, output and vector images. " +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_crop2D")
 public class Crop2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -45,7 +46,8 @@ public class Crop2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
     @Override
     public String getDescription() {
         return "Crops a given rectangle out of a given image.\n\n" +
-                "Note: If the destination image pre-exists already, it will be overwritten and keep it's dimensions.";
+                "Note: If the destination image pre-exists already, it will be overwritten and keep it's dimensions." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

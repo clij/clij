@@ -17,6 +17,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_translate2D")
 public class Translate2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -58,7 +59,8 @@ public class Translate2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
 
     @Override
     public String getDescription() {
-        return "Translate an image stack in X and Y.";
+        return "Translate an image stack in X and Y." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

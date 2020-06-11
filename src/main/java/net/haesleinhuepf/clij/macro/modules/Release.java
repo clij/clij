@@ -16,6 +16,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_release")
 public class Release extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -32,7 +33,8 @@ public class Release extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJ
 
     @Override
     public String getDescription() {
-        return "Frees memory of a specified image in GPU memory.";
+        return "Frees memory of a specified image in GPU memory." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

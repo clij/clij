@@ -15,6 +15,7 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_minimum3DSphere")
 public class Minimum3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -42,7 +43,8 @@ public class Minimum3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlug
     @Override
     public String getDescription() {
         return "Computes the local minimum of a pixels spherical neighborhood. The spheres size is specified by \n" +
-                "its half-width, half-height and half-depth (radius).";
+                "its half-width, half-height and half-depth (radius)." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

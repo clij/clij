@@ -351,6 +351,11 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         className = makeNiceName(className, " ");
         className = className.substring(1);
         record(("\n// " + className).replace("  ", " "));
+        System.out.println(this.getClass().getPackage().toString());
+        if (this.getClass().getPackage().toString().contains(".clij.macro.modules")) {
+            record(("// (DEPRECATED: This method is deprecated. Use CLIJ2 instead. See the documentation for details: https://clij.github.io/clij2-docs/)").replace("  ", " "));
+        }
+
 
         ArrayList<ClearCLBuffer> allBuffers = new ArrayList<ClearCLBuffer>();
 
@@ -358,6 +363,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
 
         String allParametersAsString = "";
+        boolean allParametersAsString_locked = false;
         //String firstImageTitle = "";
         String calledParameters = "";
 
@@ -376,17 +382,20 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     byRef = true;
                 }
 
-                allParametersAsString = "";
-                if (parameters.length > 0 && parameters[0].length() > 0) {
-                    for (int j = 0; j < parameters.length; j++) {
-                        String temp = args[j]!=null?args[j].toString():"";
-                        allParametersAsString = allParametersAsString + "#" + parameters[j].trim().replace(" ", "%") + temp;
+                if (!allParametersAsString_locked) {
+                    allParametersAsString = "";
+                    if (parameters.length > 0 && parameters[0].length() > 0) {
+                        for (int j = 0; j < parameters.length; j++) {
+                            String temp = args[j] != null ? args[j].toString() : "";
+                            allParametersAsString = allParametersAsString + "#" + parameters[j].trim().replace(" ", "%") + temp;
+                        }
                     }
                 }
 
                 String parameterNiceName = makeNiceName(parameterName, "_");
                 if (parameterType.compareTo("Image") == 0) {
                     if (parameterName.contains("destination") || byRef) {
+                        allParametersAsString_locked = true;
                         // Creation of output buffers needs to be done after all other parameters have been read.
                         String destinationName = getImageVariableName(className.replace(" ", "_") + (name + "_" + parameterName + "_" + allParametersAsString).hashCode());
                         calledParameters = calledParameters + destinationName;
@@ -453,6 +462,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                             template = allBuffers.get(0);
                         }
 
+                        allParametersAsString_locked = true;
                         String destinationName = className.replace(" ", "_") + (name + "_" + parameterName + "_" + allParametersAsString).hashCode(); // name + "_" + parameterName + "_" + firstImageTitle;
                         ClearCLBuffer destination = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(destinationName, this, template);
                         args[i] = destination;

@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_copy")
 public class Copy extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class Copy extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
 
     @Override
     public String getDescription() {
-        return "Copies an image.\n\n<pre>f(x) = x</pre>";
+        return "Copies an image.\n\n<pre>f(x) = x</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

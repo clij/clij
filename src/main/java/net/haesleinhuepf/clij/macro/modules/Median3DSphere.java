@@ -15,6 +15,7 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_median3DSphere")
 public class Median3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -43,7 +44,8 @@ public class Median3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugi
     public String getDescription() {
         return "Computes the local median of a pixels spherical neighborhood. The spheres size is specified by \n" +
                 "its half-width, half-height and half-depth (radius).\n\n" +
-                "For technical reasons, the volume of the sphere must contain less than 1000 voxels.";
+                "For technical reasons, the volume of the sphere must contain less than 1000 voxels." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

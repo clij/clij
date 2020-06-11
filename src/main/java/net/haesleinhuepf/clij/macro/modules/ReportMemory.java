@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_reportMemory")
 public class ReportMemory extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -31,7 +32,7 @@ public class ReportMemory extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     @Override
     public String getDescription() {
         return "Prints a list of all images cached in the GPU to ImageJs log window together with a sum of memory \n" +
-                "consumption.";
+                "consumption.\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

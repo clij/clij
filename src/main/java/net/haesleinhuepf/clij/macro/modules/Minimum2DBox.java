@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_minimum2DBox")
 public class Minimum2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,8 @@ public class Minimum2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     @Override
     public String getDescription() {
         return "Computes the local minimum of a pixels rectangular neighborhood. The rectangles size is specified by \n" +
-                "its half-width and half-height (radius).";
+                "its half-width and half-height (radius)." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

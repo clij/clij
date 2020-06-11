@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_multiplyImageAndScalar")
 public class MultiplyImageAndScalar extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -35,7 +36,8 @@ public class MultiplyImageAndScalar extends AbstractCLIJPlugin implements CLIJMa
 
     @Override
     public String getDescription() {
-        return "Multiplies all pixels value x in a given image X with a constant scalar s.\n\n<pre>f(x, s) = x * s</pre>";
+        return "Multiplies all pixels value x in a given image X with a constant scalar s.\n\n<pre>f(x, s) = x * s</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

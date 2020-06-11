@@ -15,6 +15,7 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_median2DBox")
 public class Median2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -42,7 +43,8 @@ public class Median2DBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, 
     public String getDescription() {
         return "Computes the local median of a pixels rectangular neighborhood. The rectangle is specified by \n" +
                 "its half-width and half-height (radius).\n\n" +
-                "For technical reasons, the area of the rectangle must have less than 1000 pixels.";
+                "For technical reasons, the area of the rectangle must have less than 1000 pixels." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

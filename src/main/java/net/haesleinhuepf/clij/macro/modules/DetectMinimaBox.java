@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_detectMinimaBox")
 public class DetectMinimaBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class DetectMinimaBox extends AbstractCLIJPlugin implements CLIJMacroPlug
     @Override
     public String getDescription() {
         return "Detects local minima in a given square/cubic neighborhood. Pixels in the resulting image are set to 1 if\n" +
-                "there is no other pixel in a given radius which has a lower intensity, and to 0 otherwise.";
+                "there is no other pixel in a given radius which has a lower intensity, and to 0 otherwise." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

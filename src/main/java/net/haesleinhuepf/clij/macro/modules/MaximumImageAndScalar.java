@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximumImageAndScalar")
 public class MaximumImageAndScalar extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -37,7 +38,8 @@ public class MaximumImageAndScalar extends AbstractCLIJPlugin implements CLIJMac
 
     @Override
     public String getDescription() {
-        return "Computes the maximum of a constant scalar s and each pixel value x in a given image X.\n\n<pre>f(x, s) = max(x, s)</pre>";
+        return "Computes the maximum of a constant scalar s and each pixel value x in a given image X.\n\n<pre>f(x, s) = max(x, s)</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

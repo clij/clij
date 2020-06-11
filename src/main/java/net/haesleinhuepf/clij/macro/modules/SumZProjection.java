@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_sumZProjection")
 public class SumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -41,7 +42,8 @@ public class SumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getDescription() {
-        return "Determines the sum projection of an image along Z.";
+        return "Determines the sum projection of an image along Z." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -20,6 +20,7 @@ import java.util.Arrays;
  * Author: @haesleinhuepf
  * January 2019
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_automaticThreshold")
 public class AutomaticThreshold extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,7 @@ public class AutomaticThreshold extends AbstractCLIJPlugin implements CLIJMacroP
         doc.append("The automatic thresholder utilizes the threshold methods from ImageJ on a histogram determined on \n" +
                 "the GPU to create binary images as similar as possible to ImageJ 'Apply Threshold' method. Enter one \n" +
                 "of these methods in the method text field:\n" +
-                Arrays.toString(AutoThresholder.getMethods()) );
+                Arrays.toString(AutoThresholder.getMethods()) +"\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead." );
         return doc.toString();
     }
 

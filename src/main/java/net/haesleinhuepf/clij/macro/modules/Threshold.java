@@ -17,6 +17,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_threshold")
 public class Threshold extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
@@ -71,7 +72,8 @@ public class Threshold extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
         return "Computes a binary image with pixel values 0 and 1. All pixel values x of a given input image with \n" +
                 "value larger or equal to a given threshold t will be set to 1.\n\n" +
                 "f(x,t) = (1 if (x >= t); (0 otherwise))\n\n" +
-                "This plugin is comparable to setting a raw threshold in ImageJ and using the 'Convert to Mask' menu.";
+                "This plugin is comparable to setting a raw threshold in ImageJ and using the 'Convert to Mask' menu." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

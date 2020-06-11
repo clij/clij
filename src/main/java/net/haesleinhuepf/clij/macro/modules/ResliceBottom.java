@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_resliceBottom")
 public class ResliceBottom extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -44,7 +45,8 @@ public class ResliceBottom extends AbstractCLIJPlugin implements CLIJMacroPlugin
     @Override
     public String getDescription() {
         return "Flippes Y and Z axis of an image stack. This operation is similar to ImageJs 'Reslice [/]' method but\n" +
-                "offers less flexibility such as interpolation.";
+                "offers less flexibility such as interpolation." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

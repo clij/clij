@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_flip2D")
 public class Flip2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -38,7 +39,8 @@ public class Flip2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
 
     @Override
     public String getDescription() {
-        return "Flips an image in X and/or Y direction depending on boolean flags.";
+        return "Flips an image in X and/or Y direction depending on boolean flags." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maximumXYZProjection")
 public class MaximumXYZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -46,7 +47,7 @@ public class MaximumXYZProjection extends AbstractCLIJPlugin implements CLIJMacr
                 " dimesions of the resulting image must be specified by the user according to its definition:\n" +
                 "X = 0\n" +
                 "Y = 1\n" +
-                "Z = 2\n";
+                "Z = 2\n\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

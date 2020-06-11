@@ -15,6 +15,7 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_minimumSliceBySliceSphere")
 public class MinimumSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -43,7 +44,8 @@ public class MinimumSliceBySliceSphere extends AbstractCLIJPlugin implements CLI
     public String getDescription() {
         return "Computes the local minimum of a pixels ellipsoidal 2D neighborhood in an image stack \n" +
                 "slice by slice. The ellipses size is specified by its half-width and half-height (radius).\n\n" +
-                "This filter is applied slice by slice in 2D.";
+                "This filter is applied slice by slice in 2D." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

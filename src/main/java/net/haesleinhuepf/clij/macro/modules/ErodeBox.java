@@ -18,6 +18,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_erodeBox")
 public class ErodeBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, CLIJImageJProcessor, OffersDocumentation {
 
@@ -69,7 +70,8 @@ public class ErodeBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
                 "The erosion takes the Moore-neighborhood (8 pixels in 2D and 26 pixels in 3d) into account.\n" +
                 "The pixels in the input image with pixel value not equal to 0 will be interpreted as 1.\n\n" +
                 "This method is comparable to the 'Erode' menu in ImageJ in case it is applied to a 2D image. The only\n" +
-                "difference is that the output image contains values 0 and 1 instead of 0 and 255.";
+                "difference is that the output image contains values 0 and 1 instead of 0 and 255." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_clear")
 public class Clear extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -25,7 +26,8 @@ public class Clear extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOp
 
     @Override
     public String getDescription() {
-        return "Resets the GPUs memory by deleting all cached images.";
+        return "Resets the GPUs memory by deleting all cached images." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

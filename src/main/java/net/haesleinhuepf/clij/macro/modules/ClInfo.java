@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_clInfo")
 public class ClInfo extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -30,7 +31,8 @@ public class ClInfo extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
 
     @Override
     public String getDescription() {
-        return "Outputs information about available OpenCL devices.";
+        return "Outputs information about available OpenCL devices." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

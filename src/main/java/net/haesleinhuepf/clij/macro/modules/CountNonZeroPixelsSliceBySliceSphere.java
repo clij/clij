@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_countNonZeroPixelsSliceBySliceSphere")
 public class CountNonZeroPixelsSliceBySliceSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -35,7 +36,9 @@ public class CountNonZeroPixelsSliceBySliceSphere extends AbstractCLIJPlugin imp
 
     @Override
     public String getDescription() {
-        return "Counts non-zero pixels in a sphere around every pixel slice by slice in a stack and puts the resulting number in the destination image stack.";
+        return "Counts non-zero pixels in a sphere around every pixel slice by slice in a stack and puts the resulting " +
+                "number in the destination image stack." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

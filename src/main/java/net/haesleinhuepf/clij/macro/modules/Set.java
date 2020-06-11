@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_set")
 public class Set extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class Set extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpen
     @Override
     public String getDescription() {
         return "Sets all pixel values x of a given image X to a constant value v.\n\n" +
-                "<pre>f(x) = v</pre>";
+                "<pre>f(x) = v</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

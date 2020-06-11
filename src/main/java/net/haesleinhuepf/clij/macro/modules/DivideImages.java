@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_divideImages")
 public class DivideImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class DivideImages extends AbstractCLIJPlugin implements CLIJMacroPlugin,
 
     @Override
     public String getDescription() {
-        return "Divides two images X and Y by each other pixel wise.\n\n<pre>f(x, y) = x / y</pre>";
+        return "Divides two images X and Y by each other pixel wise.\n\n<pre>f(x, y) = x / y</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

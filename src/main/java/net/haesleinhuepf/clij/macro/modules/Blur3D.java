@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur3D")
 public class Blur3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -52,7 +53,8 @@ public class Blur3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJO
         return "Computes the Gaussian blurred image of an image given two sigma values in X, Y and Z. Thus, the filter" +
                 "kernel can have non-isotropic shape.\n\n" +
                 "" +
-                "The implementation is done separable. In case a sigma equals zero, the direction is not blurred.";
+                "The implementation is done separable. In case a sigma equals zero, the direction is not blurred." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

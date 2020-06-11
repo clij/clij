@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_downsampleSliceBySliceHalfMedian")
 public class DownsampleSliceBySliceHalfMedian extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -45,7 +46,8 @@ public class DownsampleSliceBySliceHalfMedian extends AbstractCLIJPlugin impleme
     public String getDescription() {
         return "Scales an image using scaling factors 0.5 for X and Y dimensions. The Z dimension stays untouched. Thus, each slice is processed separately.\n" +
                 "The median method is applied. Thus, each pixel value in the destination image equals to the median of\n" +
-                "four corresponding pixels in the source image.";
+                "four corresponding pixels in the source image." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

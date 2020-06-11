@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_countNonZeroVoxels3DSphere")
 public class CountNonZeroVoxels3DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class CountNonZeroVoxels3DSphere extends AbstractCLIJPlugin implements CL
     @Override
     public String getDescription() {
         return "Counts non-zero voxels in a sphere around every voxel." +
-                "Put the number in the result image.";
+                "Put the number in the result image." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

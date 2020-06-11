@@ -17,6 +17,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_resliceRadial")
 public class ResliceRadial extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -51,7 +52,8 @@ public class ResliceRadial extends AbstractCLIJPlugin implements CLIJMacroPlugin
     public String getDescription() {
         return "Computes a radial projection of an image stack. Starting point for the line is the center in any \n" +
                 "X/Y-plane of a given input image stack. " +
-                "This operation is similar to ImageJs 'Radial Reslice' method but offers less flexibility.";
+                "This operation is similar to ImageJs 'Radial Reslice' method but offers less flexibility." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

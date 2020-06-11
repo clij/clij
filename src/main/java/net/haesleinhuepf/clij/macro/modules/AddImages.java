@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_addImages")
 public class AddImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class AddImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
 
     @Override
     public String getDescription() {
-        return "Calculates the sum of pairs of pixels x and y of two images X and Y.\n\n<pre>f(x, y) = x + y</pre>";
+        return "Calculates the sum of pairs of pixels x and y of two images X and Y.\n\n<pre>f(x, y) = x + y</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

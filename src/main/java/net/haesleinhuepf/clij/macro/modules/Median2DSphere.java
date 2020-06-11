@@ -15,6 +15,7 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.radiusToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_median2DSphere")
 public class Median2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -42,7 +43,8 @@ public class Median2DSphere extends AbstractCLIJPlugin implements CLIJMacroPlugi
     public String getDescription() {
         return "Computes the local median of a pixels ellipsoidal neighborhood. The ellipses size is specified by \n" +
                 "its half-width and half-height (radius).\n\n" +
-                "For technical reasons, the area of the ellipse must have less than 1000 pixels.";
+                "For technical reasons, the area of the ellipse must have less than 1000 pixels." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

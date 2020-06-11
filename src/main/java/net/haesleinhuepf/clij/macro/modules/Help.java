@@ -13,6 +13,7 @@ import java.util.Collections;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_help")
 public class Help extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -50,7 +51,8 @@ public class Help extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
     @Override
     public String getDescription() {
         return "Searches in the list of CLIJ commands for a given pattern. Lists all commands in case\"\" is handed\n" +
-                "over as parameter.";
+                "over as parameter." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

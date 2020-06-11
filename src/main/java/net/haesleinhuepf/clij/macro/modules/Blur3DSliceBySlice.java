@@ -15,6 +15,7 @@ import static net.haesleinhuepf.clij.utilities.CLIJUtilities.sigmaToKernelSize;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_blur3DSliceBySlice")
 public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -54,7 +55,8 @@ public class Blur3DSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroP
         return "Computes the Gaussian blurred image of an image given two sigma values in X and Y. Thus, the filter" +
                 "kernel can have non-isotropic shape.\n\n" +
                 "" +
-                "The Gaussian blur is applied slice by slice in 2D.";
+                "The Gaussian blur is applied slice by slice in 2D." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

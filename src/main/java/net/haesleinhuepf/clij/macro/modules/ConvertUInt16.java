@@ -15,6 +15,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_convertUInt16")
 public class ConvertUInt16 extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -41,7 +42,8 @@ public class ConvertUInt16 extends AbstractCLIJPlugin implements CLIJMacroPlugin
                 "Pixel values are copied as they are. Use multiplyImageWithScalar in order to scale" +
                 "pixel values when reducing bit-depth to prevent cutting-off intensity ranges.\n" +
                 "The target image should not exist with a different type before this \n" +
-                "method is called.";
+                "method is called." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

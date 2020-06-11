@@ -13,7 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
-
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_absolute")
 public class Absolute extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +36,8 @@ public class Absolute extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
 
     @Override
     public String getDescription() {
-        return "Computes the absolute value of every individual pixel x in a given image.\n\n<pre>f(x) = |x| </pre>";
+        return "Computes the absolute value of every individual pixel x in a given image.\n\n<pre>f(x) = |x| </pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

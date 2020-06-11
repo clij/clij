@@ -16,6 +16,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_pull")
 public class Pull extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -32,7 +33,8 @@ public class Pull extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpe
 
     @Override
     public String getDescription() {
-        return "Copies an image specified by its name from GPU memory back to ImageJ and shows it.";
+        return "Copies an image specified by its name from GPU memory back to ImageJ and shows it." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

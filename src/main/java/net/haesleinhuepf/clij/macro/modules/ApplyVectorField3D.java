@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_applyVectorField3D")
 public class ApplyVectorField3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -51,7 +52,8 @@ public class ApplyVectorField3D extends AbstractCLIJPlugin implements CLIJMacroP
     @Override
     public String getDescription() {
         return "Deforms an image stack according to distances provided in the given vector image stacks. " +
-                "It is recommended to use 32-bit image stacks for input, output and vector image stacks. ";
+                "It is recommended to use 32-bit image stacks for input, output and vector image stacks. " +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

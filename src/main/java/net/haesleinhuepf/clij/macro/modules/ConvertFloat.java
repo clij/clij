@@ -15,6 +15,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_convertFloat")
 public class ConvertFloat extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,8 @@ public class ConvertFloat extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     public String getDescription() {
         return "Convert the input image to a float image with 32 bits per pixel.\n" +
                 "The target image should not exist with a different type before this \n" +
-                "method is called.";
+                "method is called." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

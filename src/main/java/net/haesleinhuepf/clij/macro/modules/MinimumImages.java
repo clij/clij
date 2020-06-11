@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_minimumImages")
 public class MinimumImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class MinimumImages extends AbstractCLIJPlugin implements CLIJMacroPlugin
 
     @Override
     public String getDescription() {
-        return "Computes the minimum of a pair of pixel values x, y from two given images X and Y.\n\n<pre>f(x, y) = min(x, y)</pre>";
+        return "Computes the minimum of a pair of pixel values x, y from two given images X and Y.\n\n<pre>f(x, y) = min(x, y)</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

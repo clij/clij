@@ -15,6 +15,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_affineTransform2D")
 public class AffineTransform2D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -101,7 +102,8 @@ public class AffineTransform2D extends AbstractCLIJPlugin implements CLIJMacroPl
                 "\n* translateX=[distance]: translate along X-axis by distance given in pixels" +
                 "\n* translateY=[distance]: translate along X-axis by distance given in pixels" +
                 "\n\nExample transform:" +
-                "\ntransform = \"center scale=2 rotate=45 -center\";";
+                "\ntransform = \"center scale=2 rotate=45 -center\";" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

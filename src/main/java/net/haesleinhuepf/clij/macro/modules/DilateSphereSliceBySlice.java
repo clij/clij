@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_dilateSphereSliceBySlice")
 public class DilateSphereSliceBySlice extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,8 @@ public class DilateSphereSliceBySlice extends AbstractCLIJPlugin implements CLIJ
         return "Computes a binary image with pixel values 0 and 1 containing the binary dilation of a given input image.\n" +
                 "The dilation takes the von-Neumann-neighborhood (4 pixels in 2D and 6 pixels in 3d) into account.\n" +
                 "The pixels in the input image with pixel value not equal to 0 will be interpreted as 1.\n\n" +
-                "This filter is applied slice by slice in 2D.";
+                "This filter is applied slice by slice in 2D." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

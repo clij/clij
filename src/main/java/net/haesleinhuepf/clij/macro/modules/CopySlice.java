@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_copySlice")
 public class CopySlice extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -51,7 +52,8 @@ public class CopySlice extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
                 "It copies a given slice at position z in an image stack to a 2D image.\n\n" +
                 "The first case is only available via ImageJ macro. If you are using it, it is recommended that the \n" +
                 "target 3D image already pre-exists in GPU memory before calling this method. Otherwise, CLIJ create \n" +
-                "the image stack with z planes.";
+                "the image stack with z planes." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

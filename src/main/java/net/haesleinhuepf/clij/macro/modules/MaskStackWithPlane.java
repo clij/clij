@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_maskStackWithPlane")
 public class MaskStackWithPlane extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -39,7 +40,8 @@ public class MaskStackWithPlane extends AbstractCLIJPlugin implements CLIJMacroP
         return "Computes a masked image by applying a 2D mask to an image stack. All pixel values x of image X will be copied\n" +
                 "to the destination image in case pixel value m at the same spatial position in the mask image is not equal to \n" +
                 "zero.\n\n" +
-                "<pre>f(x,m) = (x if (m != 0); (0 otherwise))</pre>";
+                "<pre>f(x,m) = (x if (m != 0); (0 otherwise))</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

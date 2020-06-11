@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_downsample3D")
 public class Downsample3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -50,7 +51,8 @@ public class Downsample3D extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     @Override
     public String getDescription() {
         return "Scales an image using given scaling factors for X and Y dimensions. The nearest-neighbor method\n" +
-                "is applied. In ImageJ the method which is similar is called 'Interpolation method: none'.";
+                "is applied. In ImageJ the method which is similar is called 'Interpolation method: none'." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

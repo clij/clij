@@ -17,6 +17,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_rotate3D")
 public class Rotate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -73,7 +74,8 @@ public class Rotate3D extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLI
     public String getDescription() {
         return "Rotates an image stack in 3D. All angles are entered in degrees. If the image is not rotated around \n" +
                 "the center, it is rotated around the coordinate origin.\n\n" +
-                "It is recommended to apply the rotation to an isotropic image stack.";
+                "It is recommended to apply the rotation to an isotropic image stack." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

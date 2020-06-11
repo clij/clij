@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_multiplyStackWithPlane")
 public class MultiplyStackWithPlane extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class MultiplyStackWithPlane extends AbstractCLIJPlugin implements CLIJMa
     @Override
     public String getDescription() {
         return "Multiplies all pairs of pixel values x and y from an image stack X and a 2D image Y. x and y are at \n" +
-                "the same spatial position within a plane.\n\n<pre>f(x, y) = x * y</pre>";
+                "the same spatial position within a plane.\n\n<pre>f(x, y) = x * y</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

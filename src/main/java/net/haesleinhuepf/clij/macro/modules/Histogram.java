@@ -17,6 +17,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * 12 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_histogram")
 public class Histogram extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -79,7 +80,8 @@ public class Histogram extends AbstractCLIJPlugin implements CLIJMacroPlugin, CL
 
     @Override
     public String getDescription() {
-        return "Determines the histogram of a given image.";
+        return "Determines the histogram of a given image." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

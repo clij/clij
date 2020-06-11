@@ -18,6 +18,7 @@ import java.time.temporal.Temporal;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_centerOfMass")
 public class CenterOfMass extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -65,7 +66,8 @@ public class CenterOfMass extends AbstractCLIJPlugin implements CLIJMacroPlugin,
     @Override
     public String getDescription() {
         return "Determines the center of mass of an image or image stack and writes the result in the results table\n" +
-                "in the columns MassX, MassY and MassZ.";
+                "in the columns MassX, MassY and MassZ." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

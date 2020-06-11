@@ -16,6 +16,7 @@ import org.scijava.plugin.Plugin;
  * August 2019
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_pullBinary")
 public class PullBinary extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -33,7 +34,8 @@ public class PullBinary extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
     @Override
     public String getDescription() {
         return "Copies a binary image specified by its name from GPU memory back to ImageJ and shows it. " +
-                "This binary image will have 0 and 255 pixel intensities as needed for ImageJ to interpret it as binary.";
+                "This binary image will have 0 and 255 pixel intensities as needed for ImageJ to interpret it as binary." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

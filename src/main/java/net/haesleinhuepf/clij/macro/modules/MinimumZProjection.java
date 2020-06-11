@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_minimumZProjection")
 public class MinimumZProjection extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -41,7 +42,7 @@ public class MinimumZProjection extends AbstractCLIJPlugin implements CLIJMacroP
 
     @Override
     public String getDescription() {
-        return "Determines the minimum projection of an image along Z.";
+        return "Determines the minimum projection of an image along Z.\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

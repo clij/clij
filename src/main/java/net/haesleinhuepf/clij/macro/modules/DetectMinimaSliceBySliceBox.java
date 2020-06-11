@@ -13,6 +13,7 @@ import org.scijava.plugin.Plugin;
  * Author: @haesleinhuepf
  * December 2018
  */
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_detectMinimaSliceBySliceBox")
 public class DetectMinimaSliceBySliceBox extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -37,7 +38,8 @@ public class DetectMinimaSliceBySliceBox extends AbstractCLIJPlugin implements C
     public String getDescription() {
         return "Detects local minima in a given square neighborhood of an input image stack. The input image stack is \n" +
                 "processed slice by slice. Pixels in the resulting image are set to 1 if there is no other pixel in a \n" +
-                "given radius which has a lower intensity, and to 0 otherwise.";
+                "given radius which has a lower intensity, and to 0 otherwise." +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

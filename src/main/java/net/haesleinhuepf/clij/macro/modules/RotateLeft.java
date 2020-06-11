@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_rotateLeft")
 public class RotateLeft extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -48,7 +49,7 @@ public class RotateLeft extends AbstractCLIJPlugin implements CLIJMacroPlugin, C
     public String getDescription() {
         return "Rotates a given input image by 90 degrees counter-clockwise. For that, X and Y axis of an image stack\n" +
                 "are flipped. This operation is similar to ImageJs 'Reslice [/]' method but offers less flexibility \n" +
-                "such as interpolation.";
+                "such as interpolation.\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_multiplyImages")
 public class MultiplyImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -37,7 +38,8 @@ public class MultiplyImages extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getDescription() {
-        return "Multiplies all pairs of pixel values x and y from two image X and Y.\n\n<pre>f(x, y) = x * y</pre>";
+        return "Multiplies all pairs of pixel values x and y from two image X and Y.\n\n<pre>f(x, y) = x * y</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

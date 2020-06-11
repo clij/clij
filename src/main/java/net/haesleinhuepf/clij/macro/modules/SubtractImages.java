@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_subtractImages")
 public class SubtractImages extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -36,7 +37,8 @@ public class SubtractImages extends AbstractCLIJPlugin implements CLIJMacroPlugi
 
     @Override
     public String getDescription() {
-        return "Subtracts one image X from another image Y pixel wise.\n\n<pre>f(x, y) = x - y</pre>";
+        return "Subtracts one image X from another image Y pixel wise.\n\n<pre>f(x, y) = x - y</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override

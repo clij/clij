@@ -14,6 +14,7 @@ import org.scijava.plugin.Plugin;
  * 12 2018
  */
 
+@Deprecated
 @Plugin(type = CLIJMacroPlugin.class, name = "CLIJ_localThreshold")
 public class LocalThreshold extends AbstractCLIJPlugin implements CLIJMacroPlugin, CLIJOpenCLProcessor, OffersDocumentation {
 
@@ -38,7 +39,8 @@ public class LocalThreshold extends AbstractCLIJPlugin implements CLIJMacroPlugi
     public String getDescription() {
         return "Computes a binary image with pixel values 0 and 1 depending on if a pixel value x in image X \n" +
                 "was above of equal to the pixel value m in mask image M.\n\n" +
-                "<pre>f(x) = (1 if (x >=  m)); (0 otherwise)</pre>";
+                "<pre>f(x) = (1 if (x >=  m)); (0 otherwise)</pre>" +
+                "\n\nDEPRECATED: This method is deprecated. Use CLIJ2 instead.";
     }
 
     @Override
