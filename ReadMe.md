@@ -1,4 +1,11 @@
 # CLIJ: GPU-accelerated image processing for everyone
+
+---
+
+CLIJ is deprecated. Visit the [CLIJ2 website](https://clij.github.io/clij2-docs/) to learn more.
+
+---
+
 ## Introduction
 CLIJ is an OpenCL - ImageJ bridge and a [Fiji](https://fiji.sc/) plugin allowing users with entry-level skills in programming 
 to build GPU-accelerated workflows to speed up their image processing. Increased efforts were put on documentation, code examples, interoperability, and extensibility.
