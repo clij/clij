@@ -193,7 +193,9 @@ public class CLIJHandler implements MacroExtension {
 
     @Deprecated
     void putInCache(String nameInCache, ClearCLBuffer buffer) {
-        System.out.println("Putting " + nameInCache);
+        if (CLIJ.debug) {
+            System.out.println("Putting " + nameInCache);
+        }
         bufferMap.put(nameInCache, buffer);
     }
 
@@ -216,7 +218,6 @@ public class CLIJHandler implements MacroExtension {
     }
 
     public void releaseBufferInGPU(String arg) {
-        System.out.println("Releasing buffer " + arg);
         if (CLIJ.debug) {
             System.out.println("Releasing " + arg);
         }
@@ -234,7 +235,9 @@ public class CLIJHandler implements MacroExtension {
     }
 
     public void clearGPU() {
-        System.out.println("Clearing ");
+        if (CLIJ.debug) {
+            System.out.println("Clearing ");
+        }
         ArrayList<String> keysToRelease = new ArrayList<String>();
         for (String key : bufferMap.keySet()) {
             keysToRelease.add(key);
