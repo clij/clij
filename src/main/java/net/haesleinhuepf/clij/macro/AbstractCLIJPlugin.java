@@ -428,7 +428,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     boolean value = gd.getNextBoolean();
                     args[i] = value ? 1.0 : 0.0;
                     if (default_values != null) {
-                        default_values[i] = Boolean.valueOf((boolean)args[i]);
+                        default_values[i] = Boolean.valueOf((double)args[i] != 0);
                     }
                     record(parameterNiceName + " = " + (value ? "true" : "false") + ";");
                     calledParameters = calledParameters + parameterNiceName;
