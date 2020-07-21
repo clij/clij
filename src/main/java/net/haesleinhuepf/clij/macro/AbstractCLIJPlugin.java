@@ -505,7 +505,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         }
     }
 
-    protected Object[] getDefaultValues() {
+    public Object[] getDefaultValues() {
         return null;
     }
 
