@@ -1,5 +1,7 @@
 package net.haesleinhuepf.clij.macro;
 
+import ij.ImagePlus;
+
 /**
  * CLIJOpenCLProcessor
  * <p>
@@ -8,4 +10,6 @@ package net.haesleinhuepf.clij.macro;
  */
 public interface CLIJImageJProcessor {
     boolean executeIJ();
+
+    ImagePlus create(ImagePlus imp);
 }

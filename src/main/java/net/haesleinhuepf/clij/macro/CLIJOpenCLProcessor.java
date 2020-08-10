@@ -1,5 +1,7 @@
 package net.haesleinhuepf.clij.macro;
 
+import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
+
 /**
  * CLIJOpenCLProcessor
  * <p>
@@ -8,4 +10,6 @@ package net.haesleinhuepf.clij.macro;
  */
 public interface CLIJOpenCLProcessor {
     boolean executeCL();
+
+    ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input);
 }

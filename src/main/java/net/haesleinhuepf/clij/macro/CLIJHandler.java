@@ -1,15 +1,21 @@
 package net.haesleinhuepf.clij.macro;
 
 import ij.*;
+import net.haesleinhuepf.clij.clearcl.ClearCL;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import net.haesleinhuepf.clij.clearcl.util.ElapsedTime;
-import ij.gui.GenericDialog;
 import ij.macro.ExtensionDescriptor;
 import ij.macro.MacroExtension;
 import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.kernels.Kernels;
-import net.haesleinhuepf.clij.macro.modules.Clear;
+import net.haesleinhuepf.common.ClearCLBufferContainer;
+import net.haesleinhuepf.common.Container;
+import net.haesleinhuepf.common.ImagePlusContainer;
+import net.haesleinhuepf.common.RandomAccessibleIntervalContainer;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.Img;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +40,7 @@ public class CLIJHandler implements MacroExtension {
         return instance;
     }
 
-    HashMap<String, ClearCLBuffer> bufferMap = new HashMap<String, ClearCLBuffer>();
+    HashMap<String, Container> bufferMap = new HashMap<String, Container>();
 
     public void setPluginService(CLIJMacroPluginService pluginService) {
         this.pluginService = pluginService;
@@ -81,14 +87,17 @@ public class CLIJHandler implements MacroExtension {
                             }
                             if (parameterType.startsWith("Image")) {
                                 String argument = byRef?handleByRefArgument(name, args[i]):(String)args[i];
-                                ClearCLBuffer bufferImage = bufferMap.get(argument);
+                                Container bufferImage = bufferMap.get(argument);
                                 if (bufferImage == null) {
+                                    IJ.log("Container: null");
                                     missingImageIndices.put(i, argument);
                                     missingImageIndicesDescriptions.put(i, pluginParameters[i]);
                                     parsedArguments[i] = argument;
                                 } else {
+                                    IJ.log("Container: " + bufferImage.getClass().getSimpleName());
                                     existingImageIndices.add(i);
-                                    parsedArguments[i] = bufferImage;
+
+                                    parsedArguments[i] = bufferImage.get();
                                 }
                             } else {
                                 parsedArguments[i] = args[i];
@@ -108,15 +117,17 @@ public class CLIJHandler implements MacroExtension {
                     String parameterDescription = missingImageIndicesDescriptions.get(i);
                     if (parameterDescription.toLowerCase().contains("destination")) { // only generate destination images
                         if (bufferMap.keySet().contains(nameInCache)) {
-                            parsedArguments[i] = bufferMap.get(nameInCache);
+                            parsedArguments[i] = bufferMap.get(nameInCache).get();
                         } else {
                             // copy first to hand over all parameters as they came
                             plugin.setArgs(parsedArguments);
                             ClearCLBuffer template = null;
                             if (existingImageIndices.size() > 0) {
-                                template = (ClearCLBuffer) parsedArguments[existingImageIndices.get(0)];
+                                if (parsedArguments[existingImageIndices.get(0)] instanceof  ClearCLBuffer) {
+                                    template = (ClearCLBuffer) parsedArguments[existingImageIndices.get(0)];
+                                }
                             }
-                            parsedArguments[i] = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(nameInCache, plugin, template);
+                            parsedArguments[i] = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(nameInCache, plugin, template).get();
                         }
                     }
                 }
@@ -129,7 +140,10 @@ public class CLIJHandler implements MacroExtension {
                 int i = 0;
                 for(String parameter : pluginParameters) {
                     if (parameter.startsWith("Image")) {
-                        if (!(parsedArguments[i] instanceof ClearCLBuffer)) {
+                        if ((parsedArguments[i] instanceof ClearCLBuffer)) {
+                        } else if ((parsedArguments[i] instanceof RandomAccessibleInterval)) {
+                        } else if ((parsedArguments[i] instanceof ImagePlus)) {
+                        } else {
                             String parameterName = parameter.split(" ")[1];
                             //GenericDialog gd = new GenericDialog(plugin.getName() + " Error");
                             //gd.addMessage("Error when calling " + plugin.getName() + ": " +
@@ -161,6 +175,10 @@ public class CLIJHandler implements MacroExtension {
 
                     if (plugin instanceof CLIJOpenCLProcessor) {
                         ((CLIJOpenCLProcessor) plugin).executeCL();
+                    } else if (plugin instanceof CLIJImglib2Processor) {
+                        ((CLIJImglib2Processor) plugin).executeImglib2();
+                    } else if (plugin instanceof CLIJImageJProcessor) {
+                        ((CLIJImageJProcessor) plugin).executeIJ();
                     } else {
 
                         if (CLIJ.debug) {
@@ -196,41 +214,114 @@ public class CLIJHandler implements MacroExtension {
         if (CLIJ.debug) {
             System.out.println("Putting " + nameInCache);
         }
-        bufferMap.put(nameInCache, buffer);
+        bufferMap.put(nameInCache, new ClearCLBufferContainer(buffer));
+    }
+
+
+    @Deprecated
+    void putInCache(String nameInCache, RandomAccessibleInterval rai) {
+        if (CLIJ.debug) {
+            System.out.println("Putting " + nameInCache);
+        }
+        bufferMap.put(nameInCache, new RandomAccessibleIntervalContainer(rai));
+    }
+
+    @Deprecated
+    void putInCache(String nameInCache, ImagePlus imp) {
+        if (CLIJ.debug) {
+            System.out.println("Putting " + nameInCache);
+        }
+        bufferMap.put(nameInCache, new ImagePlusContainer(imp));
     }
 
     @Deprecated
     public ClearCLBuffer getFromCache(String nameInCache) {
         if (bufferMap.containsKey(nameInCache)) {
-            return bufferMap.get(nameInCache);
+            Container container = bufferMap.get(nameInCache);
+            if (container instanceof ClearCLBufferContainer) {
+                return (ClearCLBuffer) (container.get());
+            } else if (container instanceof RandomAccessibleIntervalContainer) {
+                return CLIJ.getInstance().push((RandomAccessibleInterval) (container.get()));
+            } else if (container instanceof ImagePlusContainer) {
+                return CLIJ.getInstance().push((RandomAccessibleInterval) (container.get()));
+            } else {
+                return null;
+            }
         }
         return null;
     }
 
-    ClearCLBuffer getFromCacheOrCreateByPlugin(String nameInCache, CLIJMacroPlugin plugin, ClearCLBuffer template) {
+    @Deprecated
+    public RandomAccessibleInterval getRAIFromCache(String nameInCache) {
+        if (bufferMap.containsKey(nameInCache)) {
+            Container container = bufferMap.get(nameInCache);
+            if (container instanceof ClearCLBufferContainer) {
+                return CLIJ.getInstance().pullRAI((ClearCLBuffer) (container.get()));
+            } else if (container instanceof RandomAccessibleIntervalContainer) {
+                return (RandomAccessibleInterval) (container.get());
+            } else if (container instanceof ImagePlusContainer) {
+                return CLIJ.getInstance().convert((ImagePlus) (container.get()), RandomAccessibleInterval.class);
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
+    @Deprecated
+    public ImagePlus getImagePlusFromCache(String nameInCache) {
+        if (bufferMap.containsKey(nameInCache)) {
+            Container container = bufferMap.get(nameInCache);
+            if (container instanceof ClearCLBufferContainer) {
+                return CLIJ.getInstance().pull((ClearCLBuffer) (container.get()));
+            } else if (container instanceof RandomAccessibleIntervalContainer) {
+                return CLIJ.getInstance().convert (container.get(), ImagePlus.class);
+            } else if (container instanceof ImagePlusContainer) {
+                return (ImagePlus) (container.get());
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    Container getFromCacheOrCreateByPlugin(String nameInCache, CLIJMacroPlugin plugin, ClearCLBuffer template) {
         if (bufferMap.containsKey(nameInCache)) {
             return bufferMap.get(nameInCache);
         } else {
-            ClearCLBuffer buffer = plugin.createOutputBufferFromSource(template);
-            bufferMap.put(nameInCache, buffer);
-            return buffer;
+            if (plugin instanceof CLIJOpenCLProcessor) {
+                ClearCLBufferContainer buffer = new ClearCLBufferContainer(((CLIJOpenCLProcessor) plugin).createOutputBufferFromSource(template));
+                bufferMap.put(nameInCache, buffer);
+                return buffer;
+            } else if (plugin instanceof CLIJImglib2Processor) {
+                RandomAccessibleIntervalContainer buffer = new RandomAccessibleIntervalContainer(((CLIJImglib2Processor) plugin).create());
+                bufferMap.put(nameInCache, buffer);
+                return buffer;
+            } else if (plugin instanceof CLIJImageJProcessor) {
+                ImagePlusContainer buffer = new ImagePlusContainer(((CLIJImageJProcessor) plugin).create(null));
+                bufferMap.put(nameInCache, buffer);
+                return buffer;
+            }
         }
+        return null;
     }
 
     public void releaseBufferInGPU(String arg) {
         if (CLIJ.debug) {
             System.out.println("Releasing " + arg);
         }
-        ClearCLBuffer buffer = bufferMap.get(arg);
-        if (bufferAsImageMap.containsKey(buffer)) {
-            System.out.println("Releasing image " + arg);
-            ClearCLImage image = bufferAsImageMap.get(buffer);
-            image.close();
-            bufferAsImageMap.remove(buffer);
+        Container buffer = bufferMap.get(arg);
+        if ( buffer instanceof ClearCLBufferContainer) {
+            if (bufferAsImageMap.containsKey(buffer)) {
+                System.out.println("Releasing image " + arg);
+                ClearCLImage image = bufferAsImageMap.get(buffer);
+                image.close();
+                bufferAsImageMap.remove(buffer);
+            }
+
+            ((ClearCLBuffer)buffer.get()).close();
         }
-
-
-        buffer.close();
         bufferMap.remove(arg);
     }
 
@@ -249,13 +340,14 @@ public class CLIJHandler implements MacroExtension {
     }
 
     public void pullFromGPU(String arg) {
-        ClearCLBuffer buffer = bufferMap.get(arg);
+        Object buffer = bufferMap.get(arg).get();
         CLIJ.getInstance().show(buffer, arg);
     }
 
     public void pullBinaryFromGPU(String arg) {
-        ClearCLBuffer buffer = bufferMap.get(arg);
-        ImagePlus imp = CLIJ.getInstance().pullBinary(buffer);
+        Object buffer = bufferMap.get(arg).get();
+        // todo: we shouldn't push it here just to pull it back right afterwards
+        ImagePlus imp = CLIJ.getInstance().pullBinary(CLIJ.getInstance().convert(buffer, ClearCLBuffer.class));
         imp.setTitle(arg);
         imp.show();
     }
@@ -266,6 +358,21 @@ public class CLIJHandler implements MacroExtension {
 
         ClearCLBuffer temp = CLIJ.getInstance().push(imp);
         return pushInternal(temp, arg);
+    }
+
+    public RandomAccessibleInterval pushToImglib2(String arg) {
+        ImagePlus imp = WindowManager.getImage(arg);
+        imp.changes = false;
+
+        Img temp = ImageJFunctions.convertFloat(imp);
+        return pushInternal(temp, arg);
+    }
+
+
+    public ImagePlus pushToImageJ(String arg) {
+        ImagePlus imp = WindowManager.getImage(arg);
+        imp.changes = false;
+        return pushInternal(imp, arg);
     }
 
     public ClearCLBuffer pushCurrentSliceToGPU(String arg) {
@@ -304,31 +411,55 @@ public class CLIJHandler implements MacroExtension {
     @Deprecated
     public ClearCLBuffer pushInternal(ClearCLBuffer temp, String arg) {
         if (bufferMap.containsKey(arg)) {
-            ClearCLBuffer preExistingBuffer = bufferMap.get(arg);
+            Container container = bufferMap.get(arg);
+            if (container instanceof ClearCLBufferContainer) {
+                ClearCLBuffer preExistingBuffer = (ClearCLBuffer) bufferMap.get(arg).get();
 
-            if (
-                    temp.getWidth() == preExistingBuffer.getWidth() &&
-                            temp.getHeight() == preExistingBuffer.getHeight() &&
-                            temp.getDepth() == preExistingBuffer.getDepth() &&
-                            temp.getNativeType() == preExistingBuffer.getNativeType()
-            ) {
-                System.out.println("Overwriting image in cache.");
-                Kernels.copy(CLIJ.getInstance(), temp, preExistingBuffer);
-                temp.close();
+                if (
+                        temp.getWidth() == preExistingBuffer.getWidth() &&
+                                temp.getHeight() == preExistingBuffer.getHeight() &&
+                                temp.getDepth() == preExistingBuffer.getDepth() &&
+                                temp.getNativeType() == preExistingBuffer.getNativeType()
+                ) {
+                    System.out.println("Overwriting image in cache.");
+                    Kernels.copy(CLIJ.getInstance(), temp, preExistingBuffer);
+                    temp.close();
+                } else {
+                    System.out.println("Dropping image in cache.");
+                    releaseBufferInGPU(arg);
+                }
             } else {
-                System.out.println("Dropping image in cache.");
-                releaseBufferInGPU(arg);
+                bufferMap.remove(arg);
             }
         }
         if (!bufferMap.containsKey(arg)) {
-            bufferMap.put(arg, temp);
+            bufferMap.put(arg, new ClearCLBufferContainer(temp));
             return temp;
         } else {
-            return bufferMap.get(arg);
+            return (ClearCLBuffer) bufferMap.get(arg).get();
         }
     }
 
-    @Override
+    @Deprecated
+    public ImagePlus pushInternal(ImagePlus temp, String arg) {
+        if (bufferMap.containsKey(arg)) {
+            releaseBufferInGPU(arg);
+        }
+        bufferMap.put(arg, new ImagePlusContainer(temp));
+        return temp;
+    }
+
+
+    @Deprecated
+    public RandomAccessibleInterval pushInternal(RandomAccessibleInterval temp, String arg) {
+        if (bufferMap.containsKey(arg)) {
+            releaseBufferInGPU(arg);
+        }
+        bufferMap.put(arg, new RandomAccessibleIntervalContainer(temp));
+        return temp;
+    }
+
+        @Override
     public ExtensionDescriptor[] getExtensionFunctions() {
         int numberOfPlugins = (pluginService != null)?pluginService.getCLIJMethodNames().size():0;
 
@@ -351,7 +482,9 @@ public class CLIJHandler implements MacroExtension {
         boolean foundBufferAsImage = false;
         stringBuilder.append("GPU contains " + (bufferMap.keySet().size() + bufferAsImageMap.size() )+ " images.\n");
         for (String key : bufferMap.keySet()) {
-            ClearCLBuffer buffer = bufferMap.get(key);
+            // todo: determine size
+            /*Container container = bufferMap.get(key);
+
             stringBuilder.append("- " + key + "[" + buffer.getPeerPointer() + "] " + humanReadableBytes(buffer.getSizeInBytes()) + "\n");
             if (bufferAsImageMap.containsKey(buffer)) {
                 ClearCLImage image = bufferAsImageMap.get(buffer);
@@ -360,6 +493,7 @@ public class CLIJHandler implements MacroExtension {
                 foundBufferAsImage = true;
             }
             bytesSum = bytesSum + buffer.getSizeInBytes();
+             */
         }
         stringBuilder.append("= " + humanReadableBytes(bytesSum) +"\n");
         if (foundBufferAsImage) {

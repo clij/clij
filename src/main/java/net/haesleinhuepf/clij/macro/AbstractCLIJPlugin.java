@@ -1,5 +1,6 @@
 package net.haesleinhuepf.clij.macro;
 
+import ij.gui.NewImage;
 import net.haesleinhuepf.clij.clearcl.ClearCLBuffer;
 import net.haesleinhuepf.clij.clearcl.ClearCLImage;
 import fiji.util.gui.GenericDialogPlus;
@@ -12,6 +13,10 @@ import net.haesleinhuepf.clij.CLIJ;
 import net.haesleinhuepf.clij.macro.documentation.HTMLDocumentationTemplate;
 import net.haesleinhuepf.clij.macro.documentation.OffersDocumentation;
 import net.haesleinhuepf.clij.utilities.CLIJUtilities;
+import net.haesleinhuepf.common.ClearCLBufferContainer;
+import net.haesleinhuepf.common.Container;
+import net.haesleinhuepf.common.ImagePlusContainer;
+import net.haesleinhuepf.common.RandomAccessibleIntervalContainer;
 import net.imglib2.RandomAccessibleInterval;
 
 import javax.swing.*;
@@ -210,12 +215,17 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         }
     }
 
-    @Override
+    //@Override
     public ClearCLBuffer createOutputBufferFromSource(ClearCLBuffer input)
     {
         return clij.createCLBuffer(input);
     }
 
+    public ImagePlus create(ImagePlus input)
+    {
+        input = (ImagePlus) args[0];
+        return NewImage.createFloatImage("", input.getWidth(), input.getHeight(), input.getNSlices(), NewImage.FILL_BLACK);
+    }
 
 
 
@@ -357,9 +367,9 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         }
 
 
-        ArrayList<ClearCLBuffer> allBuffers = new ArrayList<ClearCLBuffer>();
+        ArrayList<Container> allBuffers = new ArrayList<Container>();
 
-        HashMap<String, ClearCLBuffer> destinations = new HashMap<String, ClearCLBuffer>();
+        HashMap<String, Container> destinations = new HashMap<String, Container>();
 
 
         String allParametersAsString = "";
@@ -412,9 +422,19 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                         } else {
                             recordIfNotRecorded("Ext.CLIJ_push", variable);
                         }
-                        args[i] = CLIJHandler.getInstance().pushToGPU(imp.getTitle());
-                                //clij.convert(imp, ClearCLBuffer.class);
-                        allBuffers.add((ClearCLBuffer) args[i]);
+                        if (this instanceof CLIJOpenCLProcessor) {
+                            args[i] = CLIJHandler.getInstance().pushToGPU(imp.getTitle());
+                            //clij.convert(imp, ClearCLBuffer.class);
+                            allBuffers.add(new ClearCLBufferContainer((ClearCLBuffer) args[i]));
+                        } else if (this instanceof CLIJImglib2Processor) {
+                            args[i] = CLIJHandler.getInstance().pushToImglib2(imp.getTitle());
+                            //clij.convert(imp, ClearCLBuffer.class);
+                            allBuffers.add(new RandomAccessibleIntervalContainer((RandomAccessibleInterval) args[i]));
+                        } if (this instanceof CLIJImageJProcessor) {
+                            args[i] = CLIJHandler.getInstance().pushToImageJ(imp.getTitle());
+                            //clij.convert(imp, ClearCLBuffer.class);
+                            allBuffers.add(new ImagePlusContainer((ImagePlus) args[i]));
+                        }
                         calledParameters = calledParameters + variable;
                     }
                 } else if (parameterType.compareTo("String") == 0) {
@@ -459,15 +479,18 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
                     if (parameterName.contains("destination") || byRef) {
                         ClearCLBuffer template = null;
                         if (allBuffers.size() > 0) {
-                            template = allBuffers.get(0);
+                            Container container = allBuffers.get(0);
+                            if (container instanceof ClearCLBufferContainer) {
+                                template = (ClearCLBuffer) container.get();
+                            }
                         }
 
                         allParametersAsString_locked = true;
                         String destinationName = className.replace(" ", "_") + (name + "_" + parameterName + "_" + allParametersAsString).hashCode(); // name + "_" + parameterName + "_" + firstImageTitle;
-                        ClearCLBuffer destination = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(destinationName, this, template);
-                        args[i] = destination;
-                        allBuffers.add(destination);
-                        destinations.put(destinationName, destination);
+                        Container container = CLIJHandler.getInstance().getFromCacheOrCreateByPlugin(destinationName, this, template);
+                        args[i] = container.get();
+                        allBuffers.add(container);
+                        destinations.put(destinationName, container);
                     }
                 }
             }
@@ -476,6 +499,8 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
         if (this instanceof CLIJOpenCLProcessor) {
             ((CLIJOpenCLProcessor)this).executeCL();
+        } else if (this instanceof CLIJImglib2Processor) {
+            ((CLIJImglib2Processor)this).executeImglib2();
         } else if (this instanceof CLIJImageJProcessor) {
             ((CLIJImageJProcessor)this).executeIJ();
         }
@@ -495,7 +520,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         boolean recordBefore = Recorder.record;
         Recorder.record = false;
         for (String destinationName : destinations.keySet()) {
-            clij.show(destinations.get(destinationName), destinationName);
+            clij.show(destinations.get(destinationName).get(), destinationName);
         }
         Recorder.record = recordBefore;
 
