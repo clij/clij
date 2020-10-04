@@ -336,10 +336,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         clij = CLIJ.getInstance(deviceName);
         //CLIJHandler.getInstance().setCLIJ(clij);
 
-        if (this.getClass().getPackage().toString().contains(".clij2.")) {
-            recordIfNotRecorded("run", "\"CLIJ2 Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
-        } else {
+        if (this.getClass().getPackage().toString().contains(".clij.macro.")) {
             recordIfNotRecorded("run", "\"CLIJ Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
+        } else {
+            recordIfNotRecorded("run", "\"CLIJ2 Macro Extensions\", \"cl_device=[" + deviceName + "]\"");
         }
 
         String className = this.getClass().getSimpleName();
@@ -407,10 +407,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
                         String variable = getImageVariableName(imp.getTitle());
 
-                        if (name.contains("CLIJ2_")) {
-                            recordIfNotRecorded("Ext.CLIJ2_push", variable);
-                        } else {
+                        if (this.getClass().getPackage().toString().contains(".clij.macro.")) {
                             recordIfNotRecorded("Ext.CLIJ_push", variable);
+                        } else {
+                            recordIfNotRecorded("Ext.CLIJ2_push", variable);
                         }
                         args[i] = CLIJHandler.getInstance().pushToGPU(imp.getTitle());
                                 //clij.convert(imp, ClearCLBuffer.class);
@@ -484,10 +484,10 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
 
         for (String destinationName : destinations.keySet()) {
             String variable = getImageVariableName(destinationName);
-            if (name.contains("CLIJ2_")) {
-                record("Ext.CLIJ2_pull", variable);
-            } else {
+            if (this.getClass().getPackage().toString().contains(".clij.macro.")) {
                 record("Ext.CLIJ_pull", variable);
+            } else {
+                record("Ext.CLIJ2_pull", variable);
             }
         }
 
