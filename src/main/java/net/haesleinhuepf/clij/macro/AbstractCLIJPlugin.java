@@ -309,7 +309,7 @@ public abstract class AbstractCLIJPlugin implements PlugInFilter, CLIJMacroPlugi
         // gd.addNumericField("Radius (in pixels)", 2, 0);
         if (this instanceof OffersDocumentation) {
             gd.addComponent(new JLabel("<html><body>" +
-                    new HTMLDocumentationTemplate(((OffersDocumentation) this).getDescription(), ((OffersDocumentation) this).getAvailableForDimensions(), this).toString() +
+                    new HTMLDocumentationTemplate(((OffersDocumentation) this).getDescription(), ((OffersDocumentation) this).getAvailableForDimensions(), this, true).toString() +
                     "</body></html>"
             ));
         }

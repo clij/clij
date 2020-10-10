@@ -18,6 +18,9 @@ public class HTMLDocumentationTemplate {
     private String author = null;
 
     public HTMLDocumentationTemplate(String description, String availableForDimensions, CLIJMacroPlugin source) {
+        this(description, availableForDimensions, source, false);
+    }
+    public HTMLDocumentationTemplate(String description, String availableForDimensions, CLIJMacroPlugin source, boolean short_license) {
         this.description = description;
         this.availableForDimensions = availableForDimensions;
 
@@ -41,6 +44,17 @@ public class HTMLDocumentationTemplate {
         }
         if (source instanceof HasLicense) {
             license = ((HasLicense) source).getLicense();
+            if (short_license) {
+                String[] temp = license.split("\n");
+                if (temp.length > 5) {
+                    license =
+                            temp[0] + "\n" +
+                                    temp[1] + "\n" +
+                                    temp[2] + "\n" +
+                                    temp[3] + "\n" +
+                                    temp[4] + "...";
+                }
+            }
             if (license != null){
                 this.description = this.description +
                         "License: " + license + "\n\n";
