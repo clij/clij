@@ -26,9 +26,10 @@ public class HTMLDocumentationTemplate {
 
         this.headline = CLIJUtilities.classToName(source.getClass());
         this.parameterHelpText = source.getParameterHelpText();
-        if (source.getClass().getPackage().toString().contains(".clij2.")) {
+        String package_string = source.getClass().getPackage().toString();
+        if (package_string.contains(".clij2.") || package_string.contains(".clijx.") )  {
             this.sourceUrl = DocumentationUtilities.clij2rootSourceUrl + source.getClass().getName().replace(".", "/") + ".java";
-            this.docsUrl = DocumentationUtilities.clij2docsSourceUrl + "reference_" + headline.replace("CLIJ2_", "");
+            this.docsUrl = DocumentationUtilities.clij2docsSourceUrl + "reference_" + headline.replace("CLIJ2_", "").replace("CLIJx_", "");
         } else {
             this.sourceUrl = DocumentationUtilities.rootSourceUrl + source.getClass().getName().replace(".", "/") + ".java";
             this.docsUrl = DocumentationUtilities.docsSourceUrl + "reference#" + headline;
