@@ -30,6 +30,10 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
         for (String key : pluginService.getCLIJMethodNames()) {
             CLIJMacroPlugin plugin = pluginService.getCLIJMacroPlugin(key);
 
+            // do not show wrapped clij2 plugins which are part of clijx
+            if (plugin.getClass().getPackage().toString().contains("wrapper")){
+                continue;
+            }
 
             String parametersMacro = plugin.getParameterHelpText();
             parametersMacro = parametersMacro.replace(" ", "_");
