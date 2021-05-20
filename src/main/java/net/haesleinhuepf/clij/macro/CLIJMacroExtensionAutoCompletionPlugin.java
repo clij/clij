@@ -58,6 +58,10 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
 
             }
 
+            if (description.toLowerCase().contains("deprecated")) {
+                continue;
+            }
+
             BasicCompletion basicCompletion = new BasicCompletion(completionProvider, headline, null, description);
             completions.add(basicCompletion);
         }
