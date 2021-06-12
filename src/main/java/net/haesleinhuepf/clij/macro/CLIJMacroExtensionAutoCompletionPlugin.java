@@ -30,6 +30,10 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
         for (String key : pluginService.getCLIJMethodNames()) {
             CLIJMacroPlugin plugin = pluginService.getCLIJMacroPlugin(key);
 
+            // do not show wrapped clij2 plugins which are part of clijx
+            if (plugin.getClass().getPackage().toString().contains("wrapper")){
+                continue;
+            }
 
             String parametersMacro = plugin.getParameterHelpText();
             parametersMacro = parametersMacro.replace(" ", "_");
@@ -52,6 +56,10 @@ public class CLIJMacroExtensionAutoCompletionPlugin implements MacroExtensionAut
                 //    headline = headline + " // This method is deprecated. Check the documentation for a replacement https://clij.github.io/clij2-docs/";
                 //}
 
+            }
+
+            if (description.toLowerCase().contains("deprecated")) {
+                continue;
             }
 
             BasicCompletion basicCompletion = new BasicCompletion(completionProvider, headline, null, description);

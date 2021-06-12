@@ -1,1 +1,1 @@
-mvn -Dmaven.test.skip=true clean install
+mvn -DskipTests clean install -Dgpg.skip
